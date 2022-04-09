@@ -29,16 +29,18 @@ const asobject = Object;
  * @param {function} func The function to apply to each item in *list*
  * @param {(array|iterable|object)} list The list of items to apply *func* to
  * @example
- *     const iterate = require('functionish/iterate');
- * 
- *     const printdouble = x => console.log( (x*2) );
- * 
- *     iterate(printdouble, [1,2,3]); // prints `2`, `4` and `6`
  *     
- *     const printdoubleproperty = entry => console.log( entry[0] + ': ' + (entry[1] * 2) );
- *     const obj = { a:42, b:30 }
+ * const iterate = require('functionish/iterate');
  * 
- *     iterate(printdoubleproperty, obj); // prints `a:84` and `b:60`
+ * const printdouble = x => console.log( (x*2) );
+ * 
+ * iterate(printdouble, [1,2,3]); // prints `2`, `4` and `6`
+ *     
+ * const printdoubleproperty = entry => console.log( entry[0] + ': ' + (entry[1] * 2) );
+ * const obj = { a:42, b:30 }
+ * 
+ * iterate(printdoubleproperty, obj); // prints `a:84` and `b:60`
+ * 
  */
 module.exports = require('./curry2')(
 

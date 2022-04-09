@@ -13,16 +13,18 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * @param {any} value The value to negate
  * @returns {(function|boolean)}
  * @example
- *    const not = require('functionish/not');
+ *    
+ * const not = require('functionish/not');
  * 
- *    const iseven = x => (x%2) === 0;
- *    const isodd = not(iseven);
+ * const iseven = x => (x%2) === 0;
+ * const isodd = not(iseven);
  * 
- *    isodd(42); // returns false
- *    isodd(43); // returns true
+ * isodd(42); // returns false
+ * isodd(43); // returns true
  * 
- *    not(true); // returns false
- *    not(false); // returns true
+ * not(true); // returns false
+ * not(false); // returns true
+ * 
  */
 module.exports = NAMED_FUNCTIONS ? not_named : not;
 

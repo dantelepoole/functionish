@@ -24,20 +24,21 @@ const asobject = Object;
  * @param {(array|iterable|any)} list The source to remove *values* from
  * @returns {(array|object)}
  * @example
- *     const without = require('functionish/without');
+ *     
+ * const without = require('functionish/without');
  * 
- *     without( [1,2], [1,2,3] ); // returns [3]
- *     without( 1, [1,2,3] ); // returns [2,3]
- *     without( [], [1,2,3] ); // returns [1,2,3]
+ * without( [1,2], [1,2,3] ); // returns [3]
+ * without( 1, [1,2,3] ); // returns [2,3]
+ * without( [], [1,2,3] ); // returns [1,2,3]
  * 
- *     without( 'a', {a:'aaa', b:'bbb'} ); // returns {b:'bbb'}
- *     without( ['a','b'], {a:'aaa', b:'bbb'} ); // returns {}
- *     without( [], {a:'aaa', b:'bbb'} ); // returns {a:'aaa', b:'bbb'}
+ * without( 'a', {a:'aaa', b:'bbb'} ); // returns {b:'bbb'}
+ * without( ['a','b'], {a:'aaa', b:'bbb'} ); // returns {}
+ * without( [], {a:'aaa', b:'bbb'} ); // returns {a:'aaa', b:'bbb'}
  * 
- *     without( [1,2], 2 ); // returns `undefined`
- *     without( [1,2], 3 ); // returns 3
- *     without( [1,2], null ); // returns `null`
- *     without( null, null ); // returns `undefined`
+ * without( [1,2], 2 ); // returns `undefined`
+ * without( [1,2], 3 ); // returns 3
+ * without( [1,2], null ); // returns `null`
+ * without( null, null ); // returns `undefined`
  * 
  */
 module.exports = require('./curry2')(

@@ -24,15 +24,17 @@ const id = require('./id');
  * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is falsy
  * @returns {any}
  * @example
- *     const when = require('functionish/when');
+ *     
+ * const when = require('functionish/when');
  * 
- *     const isodd = x => (x%2) === 1;
- *     const increment = x => (x+1);
+ * const isodd = x => (x%2) === 1;
+ * const increment = x => (x+1);
  * 
- *     const coercetoeven = when(isodd, increment);
+ * const coercetoeven = when(isodd, increment);
  * 
- *     coercetoeven(42); // returns 42
- *     coercetoeven(41); // returns 42
+ * coercetoeven(42); // returns 42
+ * coercetoeven(41); // returns 42
+ * 
  */
 module.exports = require('./curry2')(NAMED_FUNCTIONS ? when_named : when )
 

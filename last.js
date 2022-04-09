@@ -11,11 +11,13 @@ const isiterable = require('./lib/isiterable');
  * @param {(array|iterable|any)} list The list to get the last item from
  * @returns {any}
  * @example
- *     const last = require('functionish/last');
+ *     
+ * const last = require('functionish/last');
  * 
- *     last([1,2,3]); // returns 3
- *     last(1); // returns 1
- *     last([]); // returns `undefined`
+ * last([1,2,3]); // returns 3
+ * last(1); // returns 1
+ * last([]); // returns `undefined`
+ * 
  */
 module.exports = function last(list) {
 

@@ -17,13 +17,15 @@ module.exports = NAMED_FUNCTIONS ? flip_named : flip;
  * @param {function} func The function to flip the parameters for
  * @returns {function}
  * @example
- *     const flip = require('functionish/flip');
+ *     
+ * const flip = require('functionish/flip');
  * 
- *     const isgreaterthan = (x,y) => (x > y);
- *     const islessthanorequal = flip( isgreaterthan );
+ * const isgreaterthan = (x,y) => (x > y);
+ * const islessthanorequal = flip( isgreaterthan );
  * 
- *     isgreaterthan(1,42); // returns `false`
- *     islessthanorequal(1,42); // returns `true`
+ * isgreaterthan(1,42); // returns `false`
+ * islessthanorequal(1,42); // returns `true`
+ * 
  */
 function flip(func) {
 

@@ -18,33 +18,35 @@ module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap )
  * @param {function} wrapperfunc 
  * @returns {function}
  * @example
- *     const wrap = require('functionish/wrap');
+ *     
+ * const wrap = require('functionish/wrap');
  * 
- *     function dosomething(arg1, arg2) { return 'dosomething was invoked' }
+ * function dosomething(arg1, arg2) { return 'dosomething was invoked' }
  * 
- *     function logwrapper(func, ...args) {
+ * function logwrapper(func, ...args) {
  * 
- *        const functionname = func.name;
+ * const functionname = func.name;
  * 
- *        console.log(`${functionname} called with args:`, args);
+ * console.log(`${functionname} called with args:`, args);
  * 
- *        try {
+ * try {
  * 
- *           const result = func(...args);
+ *     const result = func(...args);
  * 
- *           console.log(`${functionname} completed, return value:`, result);
+ *     console.log(`${functionname} completed, return value:`, result);
  * 
- *           return result;
+ *     return result;
  * 
- *        } catch (error) {
- *           console.error(`${functionname} threw:`, error);
- *           throw error;
- *        }
+ *     } catch (error) {
+ *         console.error(`${functionname} threw:`, error);
+ *         throw error;
  *     }
+ * }
  * 
- *     const dosomething_logged = wrap(dosomething, logwrapper);
+ * const dosomething_logged = wrap(dosomething, logwrapper);
  * 
- *     dosomething_logged(42, 'foobar'); // runs logs the arguments, runs dosomething() and logs the result
+ * dosomething_logged(42, 'foobar'); // runs logs the arguments, runs dosomething() and logs the result
+ * 
  */
 module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap );
 

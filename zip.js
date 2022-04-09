@@ -21,12 +21,14 @@ const minimumvalue = Math.min;
  * @param {(array|iterable|any)} list2 The second list of items
  * @returns {array[]}
  * @example
- *     const zip = require('functionish/zip');
  * 
- *     const list1 = [1,3,5];
- *     const list2 = [2,4,6];
+ * const zip = require('functionish/zip');
  * 
- *     zip(list1, list2); // returns [ [1,2], [3,4], [5,6] ]
+ * const list1 = [1,3,5];
+ * const list2 = [2,4,6];
+ * 
+ * zip(list1, list2); // returns [ [1,2], [3,4], [5,6] ]
+ * 
  */
 module.exports = require('./curry2')(
 

@@ -19,14 +19,16 @@ const isiterable = require('./lib/isiterable');
  * @param {(array|iterable|any)} list The list of values to search for
  * @returns {(any|undefined)}
  * @example
- *     const find = require('functionish/find');
+ *     
+ * const find = require('functionish/find');
  * 
- *     const iseven = x => (x%2) === 0;
+ * const iseven = x => (x%2) === 0;
  * 
- *     find(iseven, [1,2,3,4]); // returns 2
- *     find(iseven, [1,3,5]); // returns `undefined`
- *     find(iseven, 2); // returns 2
- *     find(iseven, 1); // returns `undefined`
+ * find(iseven, [1,2,3,4]); // returns 2
+ * find(iseven, [1,3,5]); // returns `undefined`
+ * find(iseven, 2); // returns 2
+ * find(iseven, 1); // returns `undefined`
+ * 
  */
 module.exports = require('./curry2')(
 

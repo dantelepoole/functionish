@@ -27,15 +27,17 @@ module.exports = require('./curry2')(NAMED_FUNCTIONS ? unless_named : unless);
  * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is truthy
  * @returns {any}
  * @example
- *     const unless = require('functionish/unless');
+ *     
+ * const unless = require('functionish/unless');
  * 
- *     const iseven = x => (x%2) === 0;
- *     const increment = x => (x+1);
+ * const iseven = x => (x%2) === 0;
+ * const increment = x => (x+1);
  * 
- *     const coercetoeven = unless(iseven, increment);
+ * const coercetoeven = unless(iseven, increment);
  * 
- *     coercetoeven(42); // returns 42
- *     coercetoeven(41); // returns 42
+ * coercetoeven(42); // returns 42
+ * coercetoeven(41); // returns 42
+ * 
  */
 function unless(predicate, mainbranch, alternativebranch=id) {
     return when(predicate, alternativebranch, mainbranch);

@@ -19,18 +19,19 @@ const callable = require('./callable');
  * @param {(function|any)} otherclause The second clause to evaluate
  * @returns {boolean}
  * @example
- *     const xor = require('functionish/xor');
  * 
- *     // a rather contrived example, but it's the best I could come up with
+ * // a rather contrived example, but it's the best I could come up with
  * 
- *     function haspositivecharge(particle) { ... }
- *     function hasnegativecharge(particle) { ... }
+ * const xor = require('functionish/xor');
  * 
- *     const ischarged = xor(haspositivecharge, hasnegativecharge);
+ * function haspositivecharge(particle) { ... }
+ * function hasnegativecharge(particle) { ... }
  * 
- *     function analyze(particle) {
- *         return ischarged(particle) ? 'charged' : 'not charged';
- *     }
+ * const ischarged = xor(haspositivecharge, hasnegativecharge);
+ * 
+ * function analyze(particle) {
+ *     return ischarged(particle) ? 'charged' : 'not charged';
+ * }
  */
 module.exports = require('./curry2')(
 

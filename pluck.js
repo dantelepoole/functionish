@@ -21,25 +21,27 @@ const notobject = value => (typeof value !== 'object' || value === null);
  * @param {object} source The object to resolve *path* against
  * @returns {any}
  * @example
- *     const pluck = require('functionish/pluck');
  * 
- *     const source = {
- *       name  : 'Hari Seldon',
- *       world : 'Trantor',
- *       book  : {
- *         title  : 'Foundation',
- *         author : {
- *           name : 'Isaac Asimov',
- *         },
- *         year   : 1942
- *       }
- *     }
+ * const pluck = require('functionish/pluck');
  * 
- *     pluck('name', source); // returns 'Hari Seldon'
- *     pluck('book.author.name', source); // returns 'Isaac Asimov'
- *     pluck('book.year', source); // returns 1942
- *     pluck('book.pagecount', source); // returns `undefined`
- *     pluck('name.length', source); // returns `undefined`
+ * const source = {
+ *   name  : 'Hari Seldon',
+ *   world : 'Trantor',
+ *   book  : {
+ *     title  : 'Foundation',
+ *     author : {
+ *       name : 'Isaac Asimov',
+ *     },
+ *     year   : 1942
+ *   }
+ * }
+ * 
+ * pluck('name', source); // returns 'Hari Seldon'
+ * pluck('book.author.name', source); // returns 'Isaac Asimov'
+ * pluck('book.year', source); // returns 1942
+ * pluck('book.pagecount', source); // returns `undefined`
+ * pluck('name.length', source); // returns `undefined`
+ * 
  */
 module.exports = require('./curry2')(
 

@@ -27,20 +27,22 @@ const islenient = spec => ! spec?.[KEY_STRICT];
  * @param {object} subject The object to match against *specification*'s rules
  * @returns {boolean}
  * @example
- *     const where = require('functionish/where');
+ *     
+ * const where = require('functionish/where');
  * 
- *     const iseven = x => (x%2) === 0;
- *     const isstring = x => (typeof x === 'string');
+ * const iseven = x => (x%2) === 0;
+ * const isstring = x => (typeof x === 'string');
  * 
- *     const spec = { age:iseven, name:isstring };
- *     const test = { age:42, name: 'Hari Seldon' }
+ * const spec = { age:iseven, name:isstring };
+ * const test = { age:42, name: 'Hari Seldon' }
  * 
- *     where(spec, test); // returns true
+ * where(spec, test); // returns true
  * 
- *     spec._strict_ = true;
- *     test.city = 'Trantor';
+ * spec._strict_ = true;
+ * test.city = 'Trantor';
  * 
- *     where(spec, test); // returns false
+ * where(spec, test); // returns false
+ * 
  */
 module.exports = require('./curry2')(
 

@@ -18,13 +18,15 @@ const isiterable = require('./lib/isiterable');
  * @param {(array|iterable|any)} list The list of values to search for
  * @returns {number} The index of the found item or `-1` if the item was not found
  * @example
- *     const findindex = require('functionish/findindex');
+ *     
+ * const findindex = require('functionish/findindex');
  * 
- *     const iseven = x => (x%2) === 0;
+ * const iseven = x => (x%2) === 0;
  * 
- *     findindex(iseven, [1,2,3,4]); // returns 1
- *     findindex(iseven, [1,3,5]); // returns -1
- *     findindex(iseven, 2); // returns -1
+ * findindex(iseven, [1,2,3,4]); // returns 1
+ * findindex(iseven, [1,3,5]); // returns -1
+ * findindex(iseven, 2); // returns -1
+ * 
  */
 module.exports = require('./curry2')(
 

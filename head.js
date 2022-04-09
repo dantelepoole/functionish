@@ -15,11 +15,13 @@ const iterablehead = iterable => { for(const item of iterable) return item }
  * @param {(array|iterable|any)} list The list to get the first item from
  * @returns {any}
  * @example
- *     const head = require('functionish/head');
+ *     
+ * const head = require('functionish/head');
  * 
- *     head([1,2,3]); // returns 1
- *     head(1); // returns 1
- *     head([]); // returns `undefined`
+ * head([1,2,3]); // returns 1
+ * head(1); // returns 1
+ * head([]); // returns `undefined`
+ * 
  */
 module.exports = function head(list) {
 

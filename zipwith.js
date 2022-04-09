@@ -16,14 +16,16 @@ const isiterable = require('./lib/isiterable');
  * @param {(array|iterable|any)} list2 The second list of items
  * @returns {array[]}
  * @example
- *     const zipwith = require('functionish/zipwith');
+ *     
+ * const zipwith = require('functionish/zipwith');
  * 
- *     function multiply(x,y) { return (x*y) }
+ * function multiply(x,y) { return (x*y) }
  * 
- *     const list1 = [1,3,5];
- *     const list2 = [2,4,6];
+ * const list1 = [1,3,5];
+ * const list2 = [2,4,6];
  * 
- *     zipwith(multiply, list1, list2); // returns [ 2, 12, 30 ]
+ * zipwith(multiply, list1, list2); // returns [ 2, 12, 30 ]
+ * 
  */
 module.exports = require('./curry3')(
 
