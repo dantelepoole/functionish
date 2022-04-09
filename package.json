@@ -1,0 +1,27 @@
+{
+  "name": "functionish",
+  "version": "1.0.0",
+  "description": "A functional-ish programming library for Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dantelepoole/functionish.git"
+  },
+  "keywords": [
+    "Javascript",
+    "Node",
+    "Functional Programming"
+  ],
+  "author": "Dante le Poole <dantelepoole@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dantelepoole/functionish/issues"
+  },
+  "homepage": "https://github.com/dantelepoole/functionish#readme",
+  "devDependencies": {
+    "chai": "*"
+  }
+}
