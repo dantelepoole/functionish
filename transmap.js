@@ -12,8 +12,6 @@
  * @param {function[]} transformations The transformation functions to apply
  * @param {any[]} list The list of items to transform
  * @returns {any[]}
- * @example
- * 
  * 
  */
 'use strict';
