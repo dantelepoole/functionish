@@ -1,4 +1,6 @@
 node_modules/
 docs/
 .vscode/
+out/
+doc/
 jsdoc.conf.json
