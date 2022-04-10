@@ -1,3 +1,7 @@
+/**
+ * @module curry3
+ */
+
 'use strict';
 
 const curry = require('./curry');
@@ -5,7 +9,7 @@ const curry = require('./curry');
 /**
  * Convenience function that simply passes *func* to {@link module:curry curry()} with an arity of `3`.
  * 
- * @module curry3
+ * @func curry3
  * @see {@link module:curry curry()}
  * @see {@link module:curry1 curry1()}
  * @see {@link module:curry2 curry2()}

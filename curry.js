@@ -1,3 +1,7 @@
+/**
+ * @module curry
+ */
+
 'use strict';
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
@@ -22,19 +26,13 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * 
  * If the FUNCTIONISH_NAMED_FUNCTIONS environment variable has been set, a curried function's name will reflect its
  * curried state by having "curried" prepended to its name along with the arity. This can aid in debugging.
- * 
- * @module curry
- * @see {@link module:curry1 curry1()}
- * @see {@link module:curry2 curry2()}
- * @see {@link module:curry3 curry3()}
- * @param {number} arity The number of arguments to curry
- * @param {function} func The function to curry
- * @returns {function}
+ *
  * @example
  * 
- * const curry = require('functionish/curry'); // prefer curry1(), curry2() or curry3()
+ * const curry = require('functionish/curry');
  *
- * const sum = curry(     // no need to pass an arity, since the function has only fixed parameters
+ * const sum = curry( 2,
+ *  
  *    function sum(a,b) { 
  *       return (a+b)
  *    } 
@@ -43,7 +41,15 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * const increment = sum(1);
  * 
  * increment(42); // returns '43'
- * 
+ *  
+ * @func curry
+ * @see {@link module:curry1 curry1()}
+ * @see {@link module:curry2 curry2()}
+ * @see {@link module:curry3 curry3()}
+ * @param {number} arity The number of arguments to curry
+ * @param {function} func The function to curry
+ * @returns {function}
+
  */
 module.exports = NAMED_FUNCTIONS ? curry_named : curry;
 

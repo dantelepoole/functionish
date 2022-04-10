@@ -1,24 +1,5 @@
 /**
- * Return an array of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
- * a batch size of `1` will be used.
- * 
- * If *list* is neither an array nor an iterable, it is assumed to be the only item and will be returned as the only
- * item in a single-batch array.
- * 
- * `batch()` is curried by default.
- * 
  * @module batch
- * @param {number} batchsize The maximum number of items in each batch
- * @param {(any[]|iterable|any)} list The list of items to batch
- * @returns {any[]}
- * @example
- * 
- * const batch = require('functionish/batch');
- * 
- * const list = [1,2,3,4,5,6,7,8,9,10,11,12];
- *  
- * batch(5, list); // returns [ [1,2,3,4,5], [6,7,8,9,10], [11,12] ]
- * 
  */
 
 'use strict';
@@ -28,6 +9,29 @@ const isiterable = require('./lib/isiterable');
 
 const maximumvalue = Math.max;
 const toarray = item => [item];
+
+/**
+ * Return an array of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
+ * a batch size of `1` will be used.
+ * 
+ * If *list* is neither an array nor an iterable, it is assumed to be the only item and will be returned as the only
+ * item in a single-batch array.
+ * 
+ * `batch()` is curried by default.
+ * 
+ * @example
+ * 
+ * const batch = require('functionish/batch');
+ * 
+ * const list = [1,2,3,4,5,6,7,8,9,10,11,12];
+ *  
+ * batch(5, list); // returns [ [1,2,3,4,5], [6,7,8,9,10], [11,12] ]
+ * 
+ * @func batch
+ * @param {number} batchsize The maximum number of items in each batch
+ * @param {(any[]|iterable|any)} list The list of items to batch
+ * @returns {any[]}
+ */
 
 module.exports = require('./curry2')(
     

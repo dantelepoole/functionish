@@ -1,12 +1,18 @@
 /**
- * If *list* is concatable (i.e. has a `concat()` method), pass *otherlists* to it and return the result. Otherwise,
- * if *list* is iterable, convert it to an array and pass *otherlists* to the array's `concat()` method. If *list* is
- * neither, create a single-element array with *list* and concatenate *otherlists* to it.
- * 
  * @module concat
- * @param {any[]} list The array or iterable of items to concat the other lists to
- * @param  {...any} otherlists The other lists or items to concat to *list*
- * @returns {any[]}
+ */
+
+'use strict';
+
+const isiterable = require('./lib/isiterable');
+
+const isconcatable = value => (typeof value?.concat === 'function');
+
+/**
+ * If *list1* has a `concat()` method, pass *list2* to it and return the result. Otherwise, if *list1* is iterable
+ * convert it to an array and its `concat()` method with *list2*. If *list1* is neither, convert *list1* to a
+ * single-item array call its `concat()` method with *list2*.
+ * 
  * @example
  * 
  * const concat = require('functionish/concat');
@@ -17,21 +23,17 @@
  * 
  * const list1 = [1,2];
  * const list2 = [3,4];
- * const list3 = [5,6];
- * concat(list1, list2, list3); // prints '[1,2,3,4,5,6]
+ * concat(list1, list2); // returns '[1,2,3,4]
  * 
+ * @func concat
+ * @param {(any[]|iterable)} list1 The array or iterable of items to concat list2 to
+ * @param  {(any[]|iterable)} list2 The list of items to concat to *list1*
+ * @returns {any[]}
  */
 
-'use strict';
+module.exports = function concat(list1, list2) {
 
-const isiterable = require('./lib/isiterable');
-
-const isconcatable = value => (typeof value?.concat === 'function');
-
-module.exports = function concat(list, ...otherlists) {
-
-    return isconcatable(list) ? list.concat(...otherlists)
-        : isiterable(list) ? [...list].concat(...otherlists)
-        : (arguments.length > 0) ? [ list ].concat(...otherlists)
-        : [];
+    return isconcatable(list1) ? list1.concat(list2)
+        : isiterable(list1) ? [...list1].concat(list2)
+        : [ list1 ].concat(list2);
 }

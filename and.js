@@ -1,4 +1,13 @@
 /**
+ * @module and
+ */
+
+'use strict';
+
+const evaluate = require('./evaluate');
+const partial = require('./partial');
+
+/**
  * Return a function that passes its arguments to each *clause* and returns `true` if and only if each *clause*
  * returns a truthy false. Otherwise, it returns `false`. Each *clause* may be either a function (the result of which
  * is evaluated) or a value to evaluate itself. 
@@ -8,12 +17,6 @@
  * 
  * If the *clauses* array is empty, the function returns `true`.
  * 
- * @module and
- * @see {@link module:or or()}
- * @see {@link module:not not()}
- * @see {@link module:xor xor()}
- * @param {...any} clauses One or more clauses to test
- * @returns {boolean}
  * @example
  * 
  * const and = require('functionish/and');
@@ -24,15 +27,15 @@
  * 
  * const isevennumberonatuesday = and(isnumber, iseven, istuesday);
  * 
- * console.log( isevennumberonatuesday(42) ) // prints 'true'
+ * isevennumberonatuesday(42); // returns 'true'
  * 
+ * @func and
+ * @see {@link module:or or()}
+ * @see {@link module:not not()}
+ * @see {@link module:xor xor()}
+ * @param {...any} clauses One or more clauses to test
+ * @returns {boolean}
  */
-
-'use strict';
-
-const evaluate = require('./evaluate');
-const partial = require('./partial');
-
 module.exports = function and(...clauses) {
 
     function _and(index, clauses, ...args) {

@@ -1,3 +1,7 @@
+/**
+ * @module all
+ */
+
 'use strict';
 
 const isarray = require('./lib/isarray');
@@ -21,13 +25,7 @@ const isiterable = require('./lib/isiterable');
  * the *predicate* function is always passed exactly one argument and no more.
  * 
  * `all()` is curried by default.
- * 
- * @module all
- * @see {@link module:any any()}
- * @see {@link module:none none()}
- * @param {function} predicate The predicate function
- * @param {(array|iterable|any)} list The list of items to test
- * @return {boolean}
+ *
  * @example
  * 
  * const all = require('functionish/all')
@@ -37,6 +35,12 @@ const isiterable = require('./lib/isiterable');
  * all(iseven, [2,4,6]); // returns `true`
  * all(iseven, [1,42,3]);  // returns `false`
  * 
+ * @func all
+ * @see {@link module:any any()}
+ * @see {@link module:none none()}
+ * @param {function} predicate The predicate function
+ * @param {(array|iterable|any)} list The list of items to test
+ * @returns {boolean}
  */
 module.exports = require('./curry2')(
 

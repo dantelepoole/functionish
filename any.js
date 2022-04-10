@@ -1,4 +1,13 @@
 /**
+ * @module any
+ */
+
+'use strict';
+
+const isarray = require('./lib/isarray');
+const isiterable = require('./lib/isiterable');
+
+/**
  * Apply the *predicate* function to each item in *list* and return `true` when *predicate* returns a truthy value. If
  * *predicate* returns a falsy value for each item, return `false`.
  * 
@@ -17,12 +26,6 @@
  * 
  * `any()` is curried by default.
  * 
- * @module any
- * @see {@link module:all all()}
- * @see {@link module:none none()}
- * @param {function} predicate The predicate function
- * @param {(array|iterable|any)} list The list of items to test
- * @return {boolean}
  * @example
  * 
  * const any = require('functionish/any')
@@ -31,12 +34,13 @@
  *     
  * any(iseven, [1,3,7,42,9]); // returns `true`
  * 
+ * @func any
+ * @see {@link module:all all()}
+ * @see {@link module:none none()}
+ * @param {function} predicate The predicate function
+ * @param {(array|iterable|any)} list The list of items to test
+ * @returns {boolean}
  */
-
-'use strict';
-
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
 
 module.exports = require('./curry2')(
 
