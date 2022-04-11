@@ -1,6 +1,6 @@
 A Node library of utility functions for functionish programming: the more better programming paradigm.
 
-## What is functionish programming?
+### What is functionish programming?
 
 Loosely based on functional programming, functionish programming combines a set of general best practices with a subset
 of functional programming core concepts aims for code that is more readable, more reliable and therefore more better.
@@ -11,7 +11,7 @@ to write responsible, readable, maintainable, high-quality code.
 
 Well, that and Javascript, of course.
 
-## Why Javascript?
+### Why Javascript?
 
 The 'function' in functionish refers to functional programming, while the '-ish' reflects the rather loose and pragmatic
 interpretation of functional programming that functionish programming is all about. But once you choose to go ishy,
@@ -25,15 +25,15 @@ Then there's all that boolishness with Javascript truthy and falsy values. And w
 arrays and act like arrays, but they're really not arrays - that's some unabashed *ish*iness right there, that is.
 
 And how about Javascript's standard for testing equality, a remarkably loose standard that demands hardly more than
-just a vague resemblance. It doesn't get much more ishy than that. And I haven't even mentioned Javascript classes yet
-- mostly because in general I prefer not to mention Javascript classes at all unless I really, really have to.
+just a vague resemblance. It doesn't get much more ishy than that. And I haven't even mentioned Javascript classes yet -
+mostly because in general I prefer not to mention Javascript classes at all unless I really, really have to.
 
 Anyway, add higher-order functions and closures to the mix and what you end up with is the ideal language for
 functionish programming. That doesn't mean that you can't do functionish programming with other programming
 languages. You certainly can. It's just that Javascript and functionish programming are a perfect fit. With Javascript
 you get ishiness right out of the box. No configuration required.
 
-## What about TypeScript?
+### What about TypeScript?
 
 No, no, no, no, and no. No TypeScript. If you're a TypeScript devotee, chances are you're actually a closet
 Java-lover and you just don't know it. Not that there's anything wrong with that per sé. Many functionish
@@ -51,7 +51,7 @@ Now, there's nothing wrong with types, and certainly types have their place in f
 So feel free to experiment with functionish programming in TypeScript, if that's your thing. Just be prepared for a lot
 of generics littered throughout your code. Not really my cup of tea, but there's no accounting for taste.
 
-## Is functionish programming difficult?
+### Is functionish programming difficult?
 
 Yes and no. Certainly, the level of abstraction inherent to many functional programming concepts such as functors and
 monads and combinators and what-not is so high that your average functionish programmer with a mere above-average IQ
@@ -73,7 +73,7 @@ will go a long way towards making your code more reliable, more readable and mor
 better. And these best practices certainly aren't hard, not at all, other than that they might you to unlearn some very
 stubborn habits that you may have acquired over the years.
 
-## What about performance?
+### What about performance?
 
 What about performance, you ask? Yawn. What about it?
 
@@ -97,12 +97,13 @@ And guess what: if you do run into performance issues in a hot code path and you
 source of your problems, by all means, feel free to revert to imperative code. I doubt it will really make much of a
 difference, but functionish programming is all about being pragmatic, not orthodox. 
 
-## So what exactly is functionish programming?
+### So what exactly is functionish programming?
 
-1. Be pure, but not a purist
-2. Immutable, but not inflexible
-3. Closures not classes
-4. The three C's of functionish programming: Curry, Compose and map-reduCe
+1. Functions are your friend
+1. Pure, but not purist
+2. Immutable, but flexible
+3. Closures over classes
+4. The three C's of functionish programming: Curry, Compose and Closures
 5. Size does make a difference
 6. A good one-liner really says it all
 7. Everything is in a name
