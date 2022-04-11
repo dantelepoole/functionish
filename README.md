@@ -9,14 +9,15 @@ to write responsible, readable, maintainable, high-quality code. Well, that and 
 
 The 'function' in functionish refers to functional programming while '-ish' reflects the rather loose and pragmatic
 interpretation of functional programming that functionish programming is all about. But once you choose to go ishy,
-there's no better programming language you chould adopt than Javascript.
+there really is no better programming language to choose than Javascript. Ishiness is to Javascript what the oxygen is
+to the air we breathe.
 
 For starters, the language somewhat looks like and certainly sounds like Java, but it's not. How *ish*y is that?
 Especially since Javascript's author originally intended it to be Scheme-*ish*. Then there's all that boolishness with
 Javascript truthy and falsy values. And how about Javascript arrays: they look like arrays and act like arrays, but
 they're not really arrays - that's some unabashed *ish*iness right there, that is. Then there's Javascript's standard
-for testing equality, a remarkably loose standard that really requires no more than a vague resemblance. And consider
-that I haven't even mentioned Javascript classes yet - mostly because in general I prefer not to mention Javascript
+for testing equality, a remarkably loose standard that really requires no more than a vague resemblance. And I haven't
+even mentioned Javascript classes yet - mostly because in general I prefer not to mention Javascript
 classes unless I really, really have to. If you add higher-order functions and closures to the mix, what you end up with
 is the ideal language for functionish programming.
 
@@ -32,13 +33,13 @@ programmers I know have one or two Java-lovers among their friends. Maybe not th
 Any many of us have our own personal history with Java, even if we don't often like to talk about it, including yours
 truly. So don't think that I don't understand the appeal of TypeScript.
 
-But here's the thing: there are no bugs that a type-safe compiler can catch at compile time that can't be protected
-against just as effectively by well-written code based on sound programming principles and combined with
+But here's the thing: there are no bugs in your code that a type-safe compiler can catch at compile time that can't be
+protected against just as effectively by well-written code based on sound programming principles and combined with
 a disciplined testing regime. None, zero, nada, niente, nichts. For all the extra effort that TypeScript requires and
 the added code complexity that TypeScript brings to the table, the opportunity cost of writing TypeScript code
 outweighs it's modest benefits many times over.
 
-Now, there's nothing wrong with types per sé, and certainly types have their place in functional programming as well.
+Now, there's nothing wrong with types, and certainly types have their place in functional programming as well.
 So feel free to experiment with functionish programming in TypeScript, if that's your thing. Just be prepared for a lot
 of generics littered throughout your code. Not really my cup of tea.
 
@@ -56,32 +57,36 @@ into that monoid there or are you just happy to see me?
 So in that sense, functionish programming is not especially difficult. Certainly not like functional programming and
 the John Nash mental predisposition it seems to favor. At the same time, though, functionish programming is about more
 than just `map()` and `curry()` and so on. It's about exploiting higher order functions and closures and what-not to
-their maximum potential, and that requires insight, which in turn requires practice.
+their maximum potential, and that requires insight, real insight, which in turn requires practice.
 
 But not to worry, you don't need to know all those things to start reaping the benefits of functionish programming.
 Functionish programming is more than just functional constructs. It also comprises a set of best practices that alone
 will go a long way towards making your code more reliable, more readable and more maintainable, so all in all more
-better. And these best practices certainly aren't hard, not at all, other than that they might go against some very
-stubborn habits you may have acquired over the years.
+better. And these best practices certainly aren't hard, not at all, other than that they might you to unlearn some very
+stubborn habits that you may have acquired over the years.
 
 ### What about performance?
 
 What about performance, you ask? Yawn. What about it?
 
 Look, for sure functionish programming's reliance on abundant functions and function composition and purity and
-immutability and so and results code that is less performant when compared to its imperative or even object-oriented
+immutability and so on results in code that is less performant than its imperative or even object-oriented
 counterparts. But it's not a question of which programming paradigm is more performant. The question is: what
 difference does it make?
 
-Have you ever read these performance measurements that folks will debate on Stack Overflow? They'll take an array with
-100,000 items and over loop it a million times only to conclude that a `while`-loop achieves 25,000 iterations per
-second while `Array.forEach()` bares reaches 20,000 iterations Are you kidding me?
+Have you ever read those performance tests that folks will debate about on Stack Overflow? They'll take an array with
+100,000 items and loop over it a million times only to conclude that a `while`-loop achieves 23,000 iterations per
+second while `Array.forEach()` bares reaches 20,000 iterations Are you f*ing kidding me?
 
 If you take issue with such measurement results, than maybe functionish programming isn't for you. But unless you're
-building a stock exchange application for some Wall Street financial institution or say some systems software for the
-CERN Large Hadron Collider, chances are any performance issues you encounter will not be at all related to your chosen
-programming paradigm. At least not in my personal experience, and I should know. I've underperformed all my life, and
-other than a latent inferiority complex I'm none the worse for it.
+designing the guidance system for SpaceX's new space rocket or a priority task scheduler for the CERN Large Hadron
+Collider, chances are any performance issues you encounter will not be related to your chosen programming
+paradigm. At least not in my personal experience, and I should know. I've underperformed all my life, and other than a
+latent inferiority complex I'm none the worse for it.
+
+And guess what: if you do run into performance issues in a hot code path and you believe the functionish code is the
+source of your problems, by all means, feel free to revert to imperative code. I doubt it will really make much of a
+difference, but functionish programming is all about being pragmatic, not orthodox. 
 
 ### So what exactly is functionish programming?
 
