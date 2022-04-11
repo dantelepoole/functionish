@@ -28,7 +28,9 @@
 
 'use strict';
 
+const head = require('./head');
 const isarray = require('./isarray');
+const isempty = require('./isempty');
 
 const functionchain_empty = (...args) => args[0];
 
@@ -36,7 +38,7 @@ module.exports = function pipe(...funcs) {
 
     if( arguments.length === 1 && isarray(funcs[0]) ) funcs = funcs[0];
 
-    if( funcs.length === 0 ) return functionchain_empty;
+    if( isempty(funcs) ) return functionchain_empty;
 
     function functionchain(...args) {
 
@@ -44,7 +46,7 @@ module.exports = function pipe(...funcs) {
 
         for( const func of funcs ) results = [ func(...results) ]; 
 
-        return results[0];
+        return head(args);
     }
 
     return functionchain;
