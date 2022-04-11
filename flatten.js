@@ -1,3 +1,6 @@
+/**
+ * @module flatten 
+ */
 'use strict';
 
 const isiterable = require('./isiterable');
@@ -13,7 +16,7 @@ const isflattenable = value => (typeof value?.flat === 'function');
  * 
  * `flatten()` is curried by default.
  * 
- * @module flatten
+ * @func flatten
  * @see {@link external:Array.prototype.flat Array.prototype.flat()}
  * @param {number} depth The number of dimensions to flatten *list*
  * @param {(array|iterable)} list The list to flatten

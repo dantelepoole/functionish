@@ -1,4 +1,8 @@
 /**
+ * @module filter
+ */
+
+/**
  * Function variant of `Array.prototype.filter()`. Apply the *func* function to each item in *list* and return
  * an array containing only the items for which *func* returns a truthy value.
  * 
@@ -15,11 +19,6 @@
  * 
  * `filter()` is curried by default.
  * 
- * @module filter
- * @see {@link external:Array.prototype.filter Array.prototype.filter()}
- * @param {function} func The predicate function
- * @param {(array|iterable|object)} list The items to filter
- * @returns {any[]}
  * @example
  * 
  * const filter = require('functionish/filter')
@@ -36,6 +35,11 @@
  * 
  * filter(iseven, object); // returns { 'a':42, 'c':44 }
  * 
+ * @func filter
+ * @see {@link external:Array.prototype.filter Array.prototype.filter()}
+ * @param {function} predicate The predicate function
+ * @param {(array|iterable|object)} list The items to filter
+ * @returns {any[]}
  */
 
 'use strict';

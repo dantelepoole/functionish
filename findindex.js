@@ -1,3 +1,7 @@
+/**
+ * @module findindex
+ */
+
 'use strict';
 
 const INDEX_NOT_FOUND = -1;
@@ -13,10 +17,6 @@ const isiterable = require('./isiterable');
  * 
  * `findindex()` is curried by default.
  * 
- * @module findindex
- * @param {function} predicate The predicate function that identifies the item being sought
- * @param {(array|iterable|any)} list The list of values to search for
- * @returns {number} The index of the found item or `-1` if the item was not found
  * @example
  *     
  * const findindex = require('functionish/findindex');
@@ -27,6 +27,10 @@ const isiterable = require('./isiterable');
  * findindex(iseven, [1,3,5]); // returns -1
  * findindex(iseven, 2); // returns -1
  * 
+ * @func findindex
+ * @param {function} predicate The predicate function that identifies the item being sought
+ * @param {(array|iterable|any)} list The list of values to search for
+ * @returns {number} The index of the found item or `-1` if the item was not found
  */
 module.exports = require('./curry2')(
 

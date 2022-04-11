@@ -1,3 +1,7 @@
+/**
+ * @module flip
+ */
+
 'use strict';
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
@@ -13,9 +17,6 @@ module.exports = NAMED_FUNCTIONS ? flip_named : flip;
  * Be aware that that the returned function is *not* curried by default. If *func* is curried and you want to maintain
  * the currying after flipping the parameters, you need to curry the returned function yourself.
  * 
- * @module flip
- * @param {function} func The function to flip the parameters for
- * @returns {function}
  * @example
  *     
  * const flip = require('functionish/flip');
@@ -26,6 +27,9 @@ module.exports = NAMED_FUNCTIONS ? flip_named : flip;
  * isgreaterthan(1,42); // returns `false`
  * islessthanorequal(1,42); // returns `true`
  * 
+ * @func flip
+ * @param {function} func The function to flip the parameters for
+ * @returns {function}
  */
 function flip(func) {
 

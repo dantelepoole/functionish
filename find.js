@@ -1,3 +1,7 @@
+/**
+ * @module find
+ */
+
 'use strict';
 
 const ITEM_NOT_FOUND = undefined;
@@ -14,10 +18,6 @@ const isiterable = require('./isiterable');
  * 
  * `find()` is curried by default.
  * 
- * @module find
- * @param {function} predicate The predicate function that identifies the item being sought
- * @param {(array|iterable|any)} list The list of values to search for
- * @returns {(any|undefined)}
  * @example
  *     
  * const find = require('functionish/find');
@@ -29,6 +29,10 @@ const isiterable = require('./isiterable');
  * find(iseven, 2); // returns 2
  * find(iseven, 1); // returns `undefined`
  * 
+ * @func find
+ * @param {function} predicate The predicate function that identifies the item being sought
+ * @param {(array|iterable|any)} list The list of values to search for
+ * @returns {(any|undefined)}
  */
 module.exports = require('./curry2')(
 

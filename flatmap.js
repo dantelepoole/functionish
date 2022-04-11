@@ -1,3 +1,7 @@
+/**
+ * @module flatmap
+ */
+
 'use strict';
 
 const flip = require('./flip');
@@ -15,7 +19,7 @@ const mapiterable = flip(Array.from);
  * 
  * `flatmap()` is curried by default.
  * 
- * @module flatmap
+ * @func flatmap
  * @see {@link external:Array.prototype.flatMap Array.prototype.flatMap()}
  * @param {function} func The function to map to *list*
  * @param {(array|iterable)} list The array or iterable object to flatmap
