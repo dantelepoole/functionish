@@ -13,7 +13,7 @@
 
 'use strict';
 
-const tagaspredicate = require('./lib/tagaspredicate');
+const tagaspredicate = require('./tagaspredicate');
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 

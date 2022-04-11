@@ -28,7 +28,7 @@
 
 'use strict';
 
-const isarray = require('./lib/isarray');
+const isarray = require('./isarray');
 
 const functionpipe_empty = (...args) => args[0];
 

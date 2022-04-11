@@ -1,7 +1,7 @@
 'use strict';
 
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
+const isarray = require('./isarray');
+const isiterable = require('./isiterable');
 const isequal = require('./isequal');
 
 const hasincludesmethod = value => (typeof value?.includes === 'function');

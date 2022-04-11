@@ -40,7 +40,7 @@
 
 'use strict';
 
-const isiterable = require('./lib/isiterable');
+const isiterable = require('./isiterable');
 
 const asobject = Object;
 const isfilterable = value => (typeof value?.filter === 'function');

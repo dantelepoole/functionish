@@ -1,5 +1,5 @@
 /**
- * @module lib/isvoid
+ * @module isvoid
  * @ignore
  */
 

@@ -4,7 +4,7 @@
 
 'use strict';
 
-const isarray = require('./lib/isarray');
+const isarray = require('./isarray');
 const pipe = require('./pipe');
 
 /**

@@ -6,7 +6,7 @@
 
 const ITEM_NONE = undefined;
 
-const isindexable = require('./lib/isindexable');
+const isindexable = require('./isindexable');
 
 /**
  * Retrieve the item from *list* at index *index* or `undefined` if the index does not exist.

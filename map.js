@@ -39,7 +39,7 @@
 'use strict';
 
 const flip = require('./flip');
-const isiterable = require('./lib/isiterable');
+const isiterable = require('./isiterable');
 
 const asobject = Object;
 const ismappable = value => (typeof value?.map === 'function');

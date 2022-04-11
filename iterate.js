@@ -1,7 +1,7 @@
 'use strict';
 
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
+const isarray = require('./isarray');
+const isiterable = require('./isiterable');
 
 const hasforeach = value => (typeof value?.forEach === 'function');
 const iterateiterable = (func, iterable) => { for( const item of iterable ) func(item) };

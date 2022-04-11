@@ -1,5 +1,5 @@
 /**
- * @module lib/ispredicate
+ * @module ispredicate
  * @ignore
  */
 

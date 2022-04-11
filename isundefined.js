@@ -1,5 +1,5 @@
 /**
-* @module lib/isdefined
+* @module isdefined
 * @ignore
 */
 

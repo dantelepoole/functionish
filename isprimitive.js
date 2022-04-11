@@ -1,5 +1,5 @@
 /**
- * @module lib/isprimitive
+ * @module isprimitive
  * @ignore
  */
 

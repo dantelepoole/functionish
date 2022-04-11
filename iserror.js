@@ -1,5 +1,5 @@
 /**
- * @module lib/iserror
+ * @module iserror
  * @ignore
  */
 

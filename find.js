@@ -2,8 +2,8 @@
 
 const ITEM_NOT_FOUND = undefined;
 
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
+const isarray = require('./isarray');
+const isiterable = require('./isiterable');
 
 /**
  * Function variant of {@link external:Array.prototype.find Array.prototype.find()}. Apply the *predicate* function to

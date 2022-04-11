@@ -2,7 +2,7 @@
 
 const KEY_STRICT = '_strict_';
 
-const isobject = require('./lib/isobject');
+const isobject = require('./isobject');
 
 const asobject = Object;
 const islenient = spec => ! spec?.[KEY_STRICT];

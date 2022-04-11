@@ -1,5 +1,5 @@
 /**
-* @module lib/hasitems
+* @module hasitems
 * @ignore
 */
 
@@ -7,10 +7,10 @@
 
 /**
  * Return `true` if *value* has `length` property that is greater than `0`. This function acts as counterpart to
- * {@link module:lib/isempty isempty()}.
+ * {@link module:isempty isempty()}.
  * 
  * @func hasitems
- * @see {@link module:lib/isempty isempty()}
+ * @see {@link module:isempty isempty()}
  * @param {any} value The value to test
  * @returns {boolean}
  */

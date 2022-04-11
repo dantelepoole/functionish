@@ -1,6 +1,6 @@
 'use strict';
 
-const isiterable = require('./lib/isiterable');
+const isiterable = require('./isiterable');
 
 const isslicable = value => (typeof value?.slice === 'function' );
 

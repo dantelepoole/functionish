@@ -4,8 +4,8 @@
 
 'use strict';
 
-const isarray = require('./lib/isarray');
-const isprimitive = require('./lib/isprimitive');
+const isarray = require('./isarray');
+const isprimitive = require('./isprimitive');
 
 /**
  * Create a shallow copy of *source*. If *source* has a primitive type (number, boolean, string, symbol, null, bigint

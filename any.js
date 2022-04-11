@@ -4,8 +4,8 @@
 
 'use strict';
 
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
+const isarray = require('./isarray');
+const isiterable = require('./isiterable');
 
 /**
  * Apply the *predicate* function to each item in *list* and return `true` when *predicate* returns a truthy value. If

@@ -1,5 +1,5 @@
 /**
- * @module lib/isnan
+ * @module isnan
  * @ignore
  */
 'use strict';

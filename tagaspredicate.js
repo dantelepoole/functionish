@@ -1,5 +1,5 @@
 /**
- * @module lib/tagaspredicate
+ * @module tagaspredicate
  * @ignore
  */
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const isiterable = require('./lib/isiterable');
+const isiterable = require('./isiterable');
 
 /**
  * Return an array containing only the unique items in *list*, i.e. without any duplicate items. If *list* is not

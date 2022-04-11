@@ -1,5 +1,5 @@
 /**
- * @module lib/isindexable
+ * @module isindexable
  * @ignore
  */
 

@@ -1,5 +1,5 @@
 /**
- * @module lib/isarray
+ * @module isarray
  * @ignore
  */
 'use strict';

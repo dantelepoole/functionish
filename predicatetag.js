@@ -1,12 +1,12 @@
 /**
- * @module lib/predicatetag
+ * @module predicatetag
  * @ignore
  */
 
 'use strict';
 
 /**
- * Holds a symbol that {@link module:lib/tagaspredicate tagaspredicate()} uses to recognize a predicate function. Used
+ * Holds a symbol that {@link module:tagaspredicate tagaspredicate()} uses to recognize a predicate function. Used
  * internally to allow {@link module:transform transform()} to discriminate between regular transformations and
  * filter transformations.
  * 

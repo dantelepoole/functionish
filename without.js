@@ -1,9 +1,9 @@
 'use strict';
 
 const filter = require('./filter');
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
-const isprimitive = require('./lib/isprimitive');
+const isarray = require('./isarray');
+const isiterable = require('./isiterable');
+const isprimitive = require('./isprimitive');
 
 const asobject = Object;
 

@@ -1,5 +1,5 @@
 /**
- * @module lib/isempty
+ * @module isempty
  * @ignore
  */
 
@@ -26,7 +26,7 @@
  * isempty( ' ' ); // returns false
  * 
  * @func isempty
- * @see {@link module:lib/hasitems hasitems()}
+ * @see {@link module:hasitems hasitems()}
  * @param {any} value The value to check
  * @returns {boolean}
  * 

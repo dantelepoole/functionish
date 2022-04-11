@@ -2,7 +2,7 @@
 
 const EMPTY_STRING = '';
 
-const isvoid = require('./lib/isvoid');
+const isvoid = require('./isvoid');
 
 /**
  * If *value* is a string, remove any leading and trailing whitespace before returning it. If *value* is `null`,

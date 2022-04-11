@@ -1,7 +1,7 @@
 'use strict';
 
-const isindexable = require('./lib/isindexable');
-const isiterable = require('./lib/isiterable');
+const isindexable = require('./isindexable');
+const isiterable = require('./isiterable');
 
 /**
  * Return the last item in *list* or `undefined` if *list* is empty. If *list* is neither an array nor an iterable

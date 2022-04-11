@@ -2,7 +2,7 @@
 
 const EMPTY_STRING = '';
 
-const isvoid = require('./lib/isvoid');
+const isvoid = require('./isvoid');
 
 /**
  * Return a string representation of *value*, converting `null`, `undefined` and `NaN` to empty strings instead of

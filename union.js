@@ -1,6 +1,6 @@
 'use strict';
 
-const isiterable = require('./lib/isiterable');
+const isiterable = require('./isiterable');
 
 /**
  * Return an array containing the items from *list1* and *list2* but without duplicates. If either list is neither

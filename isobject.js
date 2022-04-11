@@ -1,5 +1,5 @@
 /**
- * @module lib/isobject
+ * @module isobject
  * @ignore
  */
 'use strict';

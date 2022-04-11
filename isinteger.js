@@ -1,5 +1,5 @@
 /**
- * @module lib/isinteger
+ * @module isinteger
  * @ignore
  */
 

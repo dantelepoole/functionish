@@ -1,5 +1,5 @@
 /**
- * @module lib/isiterable
+ * @module isiterable
  * @ignore
  */
 

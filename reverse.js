@@ -1,8 +1,8 @@
 'use strict';
 
-const isarray = require('./lib/isarray');
-const isdefined = require('./lib/isdefined');
-const isiterable = require('./lib/isiterable');
+const isarray = require('./isarray');
+const isdefined = require('./isdefined');
+const isiterable = require('./isiterable');
 
 /**
  * Return a copy of *list* in reverse order. If *list* is neither an array nor an iterable object, a single-item array

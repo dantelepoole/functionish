@@ -1,6 +1,6 @@
 'use strict';
 
-const isiterable = require('./lib/isiterable');
+const isiterable = require('./isiterable');
 
 const isflattenable = value => (typeof value?.flat === 'function');
 

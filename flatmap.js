@@ -1,7 +1,7 @@
 'use strict';
 
 const flip = require('./flip');
-const isiterable = require('./lib/isiterable');
+const isiterable = require('./isiterable');
 
 const isflatmappable = value => (typeof value?.flatMap === 'function');
 const mapiterable = flip(Array.from);

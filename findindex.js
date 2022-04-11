@@ -2,8 +2,8 @@
 
 const INDEX_NOT_FOUND = -1;
 
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
+const isarray = require('./isarray');
+const isiterable = require('./isiterable');
 
 /**
  * Similar to {@link module:find find()}, except it returns the index of the found item instead of the found item

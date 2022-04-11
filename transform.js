@@ -68,8 +68,8 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 
 const compose = require('./compose');
 const curry2 = require('./curry2');
-const isfunction = require('./lib/isfunction');
-const ispredicate = require('./lib/ispredicate');
+const isfunction = require('./isfunction');
+const ispredicate = require('./ispredicate');
 const map = require('./map');
 const unary = require('./unary');
 

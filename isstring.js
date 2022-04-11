@@ -1,5 +1,5 @@
 /**
- * @module lib/isstring
+ * @module isstring
  * @ignore
  */
 

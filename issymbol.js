@@ -1,5 +1,5 @@
 /**
- * @module lib/issymbol
+ * @module issymbol
  * @ignore
  */
 

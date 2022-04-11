@@ -1,5 +1,5 @@
 /**
- * @module lib/isnull
+ * @module isnull
  * @ignore
  */
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const isvoid = require('./lib/isvoid');
+const isvoid = require('./isvoid');
 
 const defaultto = (defaultvalue, value) => isvoid(value) ? defaultvalue : value;
 

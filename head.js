@@ -2,8 +2,8 @@
 
 const ITEM_NONE = undefined;
 
-const isindexable = require('./lib/isindexable');
-const isiterable = require('./lib/isiterable');
+const isindexable = require('./isindexable');
+const isiterable = require('./isiterable');
 
 const iterablehead = iterable => { for(const item of iterable) return item }
 

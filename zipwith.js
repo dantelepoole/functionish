@@ -1,7 +1,7 @@
 'use strict';
 
-const isarray = require('./lib/isarray');
-const isiterable = require('./lib/isiterable');
+const isarray = require('./isarray');
+const isiterable = require('./isiterable');
 
 /**
  * Similar to  {@link module:zip zip()} except that *func* is applied to the elements of *list1* and *list2* and the

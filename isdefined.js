@@ -1,5 +1,5 @@
 /**
- * @module lib/isdefined
+ * @module isdefined
  * @ignore
  */
 
@@ -11,11 +11,11 @@ const notnan = value => ! Number.isNaN(value);
  * Return `true` if value is neither `null`, `undefined` nor `NaN`, otherwise return `false`.
  * 
  * Despite its name, this function checks for `null` and `NaN` as well as for `undefined`. So it is not the counterpart
- * to {@link module:lib/isundefined isundefined()} (which only checks for `undefined`) but in fact the counterpart for
- * {@link module:lib/isvoid isvoid()}.
+ * to {@link module:isundefined isundefined()} (which only checks for `undefined`) but in fact the counterpart for
+ * {@link module:isvoid isvoid()}.
  * 
  * @func isdefined
- * @see {@link module:lib/isvoid isvoid()}
+ * @see {@link module:isvoid isvoid()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

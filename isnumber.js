@@ -1,5 +1,5 @@
 /**
- * @module lib/isnumber
+ * @module isnumber
  * @ignore
  */
 
