@@ -3,11 +3,12 @@ A Node library of utility functions for functionish programming: the more better
 ### What is functionish programming?
 
 Loosely based on functional programming, functionish programming combines a set of general best practices with a subset
-of functional programming core concepts aims for code that is more readable, more reliable and therefore more better.
+of functional programming core concepts. It aims for code that is more readable, more reliable and therefore more
+better.
 
 Why just a subset? Partly because so much of functional programming is
 incomprehensible to those of us without a PhD in lambda calculus, but mostly just because a subset is all that you need
-to write responsible, readable, maintainable, high-quality code.
+to write responsible, more better code.
 
 Well, that and Javascript, of course.
 
@@ -62,7 +63,7 @@ But the thing with functionish programming is that you don't have to know all th
 state and...then we leave it at that. No need to get all highfalutin and academic about it. Is that a P-combinator
 you're lifting into that monoid there or are you just happy to see me?
 
-So in that sense, functionish programming is not particularly difficult. Certainly not like functional programming is, 
+So in that sense, functionish programming is not particularly difficult. Certainly not like functional programming, 
 with the John Nash mental predisposition it seems to favor. At the same time, though, functionish programming is about
 more than just using `map()` and `curry()` and so on. It's about exploiting higher order functions and closures and
 what-not to their maximum potential - that requires insight, real insight, which in turn requires effort.
@@ -79,8 +80,8 @@ What about performance, you ask? Yawn. What about it?
 
 Look, for sure functionish programming's reliance on abundant functions and function composition and purity and
 immutability and so on results in code that is less performant than its imperative or even object-oriented
-counterparts. But it's not a question of which programming paradigm is more performant. The question is: what
-difference does it make?
+counterparts. But it's not a question of which programming paradigm is more performant. The real question is: does it
+really matter?
 
 Have you ever read those performance tests that folks will debate about on Stack Overflow? They'll take an array with
 100,000 items and loop over it a million times only to conclude that a `while`-loop achieves 23,000 iterations per
@@ -95,7 +96,7 @@ latent inferiority complex I'm none the worse for it.
 
 And guess what: if you do run into performance issues in a hot code path and you believe the functionish code is the
 source of your problems, by all means, feel free to revert to imperative code. I doubt it will really make much of a
-difference, but functionish programming is all about being pragmatic, not orthodox. 
+difference, but functionish programming is all about being pragmatic, not orthodox, just in a responsible manner. 
 
 ### So what exactly is functionish programming?
 
