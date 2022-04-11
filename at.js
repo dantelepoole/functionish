@@ -7,11 +7,14 @@
 const ITEM_NONE = undefined;
 
 const isindexable = require('./isindexable');
+const not = require('./not');
+
+const notindexable = not(isindexable);
 
 /**
  * Retrieve the item from *list* at index *index* or `undefined` if the index does not exist.
  * 
- * The *list* may be an array or any indexable object (i.e. with a `length`-property and indexable by number).
+ * The *list* may be any indexable object (i.e. with a `length`-property and indexable by number).
  * 
  * `at()` is curried by default.
  * 
@@ -24,6 +27,7 @@ const isindexable = require('./isindexable');
  * console.log( item ); // prints `42`
  * 
  * @func at
+ * @see {@link module:isindexable isindexable()}
  * @param {number} index The index of the item to retrieve
  * @param {any[]} list An array or other indexable object to retrieve the item from
  * @returns {any}
@@ -33,11 +37,9 @@ module.exports = require('./curry2')(
 
     function at(index, list) {
 
-        if( ! isindexable(list) ) return ITEM_NONE;
+        return notindexable(list) ? ITEM_NONE
+             : (index < 0) ? list[index + list.length]
+             : list[index];
 
-        if( index < 0 ) index += list.length;
-
-        return list[index];
-        
     }
 )
