@@ -1,6 +1,5 @@
 /**
 * @module hasitems
-* @ignore
 */
 
 'use strict';

@@ -1,6 +1,5 @@
 /**
  * @module isprimitive
- * @ignore
  */
 
 'use strict';

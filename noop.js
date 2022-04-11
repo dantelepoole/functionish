@@ -1,8 +1,12 @@
+/**
+ * @module noop
+ */
+
 'use strict';
 
 /**
  * Do nothing, return undefined.
  * 
- * @module noop
+ * @func noop
  */
 module.exports = function noop() {}

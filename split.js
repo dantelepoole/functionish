@@ -1,3 +1,7 @@
+/**
+ * @module split
+ */
+
 'use strict';
 
 const tostring = require('./tostring');
@@ -10,7 +14,7 @@ const tostring = require('./tostring');
  * 
  * `split()` is curried by default.
  * 
- * @module split
+ * @func split
  * @param {string} separator The delimiter string
  * @param {string} source The string to split
  * @returns {string[]}

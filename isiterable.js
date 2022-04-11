@@ -1,6 +1,5 @@
 /**
  * @module isiterable
- * @ignore
  */
 
 'use strict';

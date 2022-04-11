@@ -1,3 +1,7 @@
+/**
+ * @module last
+ */
+
 'use strict';
 
 const isindexable = require('./isindexable');
@@ -7,7 +11,7 @@ const isiterable = require('./isiterable');
  * Return the last item in *list* or `undefined` if *list* is empty. If *list* is neither an array nor an iterable
  * object, *list* itself is returned.
  * 
- * @module last
+ * @func last
  * @param {(array|iterable|any)} list The list to get the last item from
  * @returns {any}
  * @example

@@ -1,6 +1,5 @@
 /**
  * @module isnumber
- * @ignore
  */
 
 'use strict';
@@ -8,7 +7,7 @@
 const notnan = x => ! Number.isNaN(x);
 
 /**
- * Return `true` if *value* has type `number` *and* it is not `NaN`.
+ * Return `true` if *value* has type `number` *AND* it is not `NaN`.
  * 
  * @func isnumber
  * @param {any} value The value to check

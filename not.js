@@ -1,3 +1,7 @@
+/**
+ * @module not
+ */
+
 'use strict';
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
@@ -6,7 +10,7 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * If *value* is a function, return a function that passes its arguments to *value* and returns the logical negation of
  * the result. Otherwise, return the logical negation of *value* itself.
  * 
- * @module not
+ * @func not
  * @see {@link module:and and()}
  * @see {@link module:or or()}
  * @see {@link module:xor xor()}

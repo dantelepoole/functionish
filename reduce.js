@@ -1,4 +1,15 @@
 /**
+ * @module reduce
+ */
+
+'use strict';
+
+const isiterable = require('./isiterable');
+
+const asobject = Object;
+const isreducable = value => (typeof value?.reduce === 'function');
+
+/**
  * Functional variant of {@link external:Array.prototype.reduce Array.prototype.reduce()}, except that `reduce()` can
  * also reduce objects.
  * 
@@ -14,12 +25,6 @@
  * 
  * `reduce()` is curried by default.
  * 
- * @module reduce
- * @see {@link module:binary binary()}
- * @param {function} reducer The reducer function
- * @param {any} initialvalue The initial value to pass to *reducer* as the accumulator
- * @param {(array|iterable|object)} list The list of items to reduce
- * @returns {any} The reduced value
  * @example
  * 
  * const reduce = require('functionish/reduce')
@@ -32,14 +37,13 @@
  * const obj = { a:42, b:24 };
  * reduce(objectreducer, 0, obj); // returns 66
  * 
+ * @func reduce
+ * @see {@link module:binary binary()}
+ * @param {function} reducer The reducer function
+ * @param {any} initialvalue The initial value to pass to *reducer* as the accumulator
+ * @param {(array|iterable|object)} list The list of items to reduce
+ * @returns {any} The reduced value
  */
-
-'use strict';
-
-const isiterable = require('./isiterable');
-
-const asobject = Object;
-const isreducable = value => (typeof value?.reduce === 'function');
 
 module.exports = require('./curry3')(
 

@@ -1,3 +1,7 @@
+/**
+ * @module isequal
+ */
+
 'use strict';
 
 const isequal = (a,b) => (a === b);
@@ -7,7 +11,7 @@ const isequal = (a,b) => (a === b);
  * 
  * `isequal()` is curried by default.
  * 
- * @module isequal
+ * @func isequal
  * @param {any} a The value to compare with
  * @param {any} b The value to compare to
  * @returns {boolean}

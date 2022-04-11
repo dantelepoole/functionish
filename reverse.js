@@ -1,3 +1,7 @@
+/**
+ * @module reverse
+ */
+
 'use strict';
 
 const isarray = require('./isarray');
@@ -9,7 +13,7 @@ const isiterable = require('./isiterable');
  * containing only *list* is returned, unless *list* is `null`, `undefined` or `NaN`, in which case an empty array
  * is returned.
  * 
- * @module reverse
+ * @func reverse
  * @param {(array|iterable|any)} list 
  * @returns {any[]}
  */

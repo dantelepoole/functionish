@@ -1,3 +1,7 @@
+/**
+ * @module indexof
+ */
+
 'use strict';
 
 const INDEX_NOT_FOUND = -1;
@@ -14,7 +18,7 @@ const isequal = require('./isequal');
  * 
  * `indexof()` is curried by default.
  * 
- * @module indexof
+ * @func indexof
  * @param {any} value The value of which to find the index
  * @param {(array|iterable)} list The list to search
  * @returns {number}

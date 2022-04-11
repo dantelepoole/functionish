@@ -1,3 +1,7 @@
+/**
+ * @module take
+ */
+
 'use strict';
 
 const isiterable = require('./isiterable');
@@ -13,7 +17,7 @@ const isslicable = value => (typeof value?.slice === 'function');
  * 
  * `take()` is curried by default.
  * 
- * @module take
+ * @func take
  * @param {number} count The number of items to take from *list*
  * @param {(array|string|iterable|any)} list The list to take the items from
  * @returns {(array|string)}

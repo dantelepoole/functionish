@@ -1,11 +1,10 @@
 /**
  * @module isobject
- * @ignore
  */
 'use strict';
 
 /**
- * Return `true` if *value* has type `object` *and* it is not `null`.
+ * Return `true` if *value* has type `object` *AND* it is not `null`.
  * 
  * @func isobject
  * @param {any} value The value to check

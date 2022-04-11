@@ -1,4 +1,17 @@
 /**
+ * @module map
+ */
+
+'use strict';
+
+const flip = require('./flip');
+const isiterable = require('./isiterable');
+
+const asobject = Object;
+const ismappable = value => (typeof value?.map === 'function');
+const mapiterable = flip(Array.from);
+
+/**
  * Functional variant of {@link external:Array.prototype.map Array.prototype.map()}, except that `map()` can
  * also map objects.
  * 
@@ -18,11 +31,6 @@
  * 
  * `map()` is curried by default.
  * 
- * @module map
- * @see {@link external:Array.prototype.map Array.prototype.map()}
- * @see {@link module:unary unary()}
- * @param {function} func The function to apply to each item in *list*
- * @param {(array|iterable|object)} list The list of items to apply *func* to
  * @example
  * 
  * const map = require('functionish/map');
@@ -34,16 +42,12 @@
  * const obj = { a:42, b:30 }
  * map(double, obj); // returns { a:84, b:60 }
  * 
+ * @func map
+ * @see {@link external:Array.prototype.map Array.prototype.map()}
+ * @see {@link module:unary unary()}
+ * @param {function} func The function to apply to each item in *list*
+ * @param {(array|iterable|object)} list The list of items to apply *func* to
  */
-
-'use strict';
-
-const flip = require('./flip');
-const isiterable = require('./isiterable');
-
-const asobject = Object;
-const ismappable = value => (typeof value?.map === 'function');
-const mapiterable = flip(Array.from);
 
 module.exports = require('./curry2')(
 
@@ -70,3 +74,4 @@ function mapobject(func, object) {
 
     return target;
 }
+

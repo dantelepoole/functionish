@@ -1,3 +1,7 @@
+/**
+ * @module once
+ */
+
 'use strict';
 
 /**
@@ -7,7 +11,7 @@
  * This is not the same as a memoize-function, because `once()` always returns the cached result on subsequent
  * invocations, even if passed different arguments.
  * 
- * @module once
+ * @func once
  * @param {function} func The function to run
  * @returns {function}
  */

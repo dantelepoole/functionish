@@ -1,6 +1,5 @@
 /**
  * @module issymbol
- * @ignore
  */
 
 'use strict';

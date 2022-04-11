@@ -1,6 +1,5 @@
 /**
  * @module isstring
- * @ignore
  */
 
 'use strict';

@@ -1,6 +1,5 @@
 /**
  * @module isarray
- * @ignore
  */
 'use strict';
 

@@ -1,3 +1,7 @@
+/**
+ * @module pluck
+ */
+
 'use strict';
 
 const EMPTY_STRING = '';
@@ -16,10 +20,6 @@ const notobject = value => (typeof value !== 'object' || value === null);
  * 
  * `pluck()` is curried by default.
  * 
- * @module pluck
- * @param {string} path The path of the property to retrieve
- * @param {object} source The object to resolve *path* against
- * @returns {any}
  * @example
  * 
  * const pluck = require('functionish/pluck');
@@ -42,6 +42,10 @@ const notobject = value => (typeof value !== 'object' || value === null);
  * pluck('book.pagecount', source); // returns `undefined`
  * pluck('name.length', source); // returns `undefined`
  * 
+ * @func pluck
+ * @param {string} path The path of the property to retrieve
+ * @param {object} source The object to resolve *path* against
+ * @returns {any}
  */
 module.exports = require('./curry2')(
 

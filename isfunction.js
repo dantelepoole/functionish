@@ -1,6 +1,5 @@
 /**
  * @module isfunction
- * @ignore
  */
 
 'use strict';

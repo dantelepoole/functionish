@@ -1,6 +1,8 @@
-'use strict';
+/**
+ * @module head
+ */
 
-const ITEM_NONE = undefined;
+'use strict';
 
 const isindexable = require('./isindexable');
 const isiterable = require('./isiterable');
@@ -11,9 +13,6 @@ const iterablehead = iterable => { for(const item of iterable) return item }
  * Return the first item in *list* or `undefined` if *list* is empty. If *list* is neither an array nor an iterable
  * object, *list* itself is returned.
  * 
- * @module head
- * @param {(array|iterable|any)} list The list to get the first item from
- * @returns {any}
  * @example
  *     
  * const head = require('functionish/head');
@@ -22,6 +21,9 @@ const iterablehead = iterable => { for(const item of iterable) return item }
  * head(1); // returns 1
  * head([]); // returns `undefined`
  * 
+ * @func head
+ * @param {(array|iterable|any)} list The list to get the first item from
+ * @returns {any}
  */
 module.exports = function head(list) {
 

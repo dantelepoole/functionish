@@ -1,3 +1,6 @@
+/**
+ * @module map
+ */
 'use strict';
 
 const assign = Object.assign;
@@ -7,7 +10,7 @@ const assign = Object.assign;
  * 
  * This function uses {@link external:Object.assign Object.assign()} to merge the source objects.
  * 
- * @module merge
+ * @func merge
  * @param  {...object} sources Two or more objects to merge
  * @returns {object}
  */

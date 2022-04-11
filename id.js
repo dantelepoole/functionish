@@ -1,9 +1,13 @@
+/**
+ * @module id
+ */
+
 'use strict';
 
 /**
  * Return *value*.
  * 
- * @module id
+ * @func id
  * @param {any} value The value to return
  * @returns *value*
  */

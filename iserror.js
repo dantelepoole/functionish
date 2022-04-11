@@ -1,6 +1,5 @@
 /**
  * @module iserror
- * @ignore
  */
 
 'use strict';

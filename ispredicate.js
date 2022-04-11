@@ -1,6 +1,5 @@
 /**
  * @module ispredicate
- * @ignore
  */
 
 'use strict';

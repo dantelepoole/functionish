@@ -1,3 +1,7 @@
+/**
+ * @module iterate
+ */
+
 'use strict';
 
 const isarray = require('./isarray');
@@ -24,10 +28,6 @@ const asobject = Object;
  * 
  * `iterate()` is curried by default.
  * 
- * @module iterate
- * @see {@link external:Array.prototype.forEach Array.prototype.forEach()}
- * @param {function} func The function to apply to each item in *list*
- * @param {(array|iterable|object)} list The list of items to apply *func* to
  * @example
  *     
  * const iterate = require('functionish/iterate');
@@ -41,6 +41,10 @@ const asobject = Object;
  * 
  * iterate(printdoubleproperty, obj); // prints `a:84` and `b:60`
  * 
+ * @func iterate
+ * @see {@link external:Array.prototype.forEach Array.prototype.forEach()}
+ * @param {function} func The function to apply to each item in *list*
+ * @param {(array|iterable|object)} list The list of items to apply *func* to
  */
 module.exports = require('./curry2')(
 

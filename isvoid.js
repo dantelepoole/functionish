@@ -1,6 +1,5 @@
 /**
  * @module isvoid
- * @ignore
  */
 
 'use strict';

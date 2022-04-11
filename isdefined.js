@@ -1,6 +1,5 @@
 /**
  * @module isdefined
- * @ignore
  */
 
 'use strict';

@@ -1,4 +1,8 @@
 /**
+ * @module or
+ */
+
+/**
  * Return a function that passes its arguments to each *clause* and returns `true` if any *clause*
  * returns a truthy false. Otherwise, it returns `false`. Each *clause* may be either a function (the result of which
  * is evaluated) or a value to evaluate itself. 
@@ -8,12 +12,6 @@
  * 
  * If the *clauses* array is empty, the function returns `false`.
  * 
- * @module or
- * @see {@link module:and and()}
- * @see {@link module:not not()}
- * @see {@link module:xor xor()}
- * @param {...any} clauses One or more clauses to test
- * @returns {boolean}
  * @example
  * 
  * const or = require('functionish/or');
@@ -27,6 +25,12 @@
  * console.log( isstringornumber('fortytwo') ) // prints 'true'
  * console.log( isstringornumber(null) ) // prints 'false'
  * 
+ * @func or
+ * @see {@link module:and and()}
+ * @see {@link module:not not()}
+ * @see {@link module:xor xor()}
+ * @param {...any} clauses One or more clauses to test
+ * @returns {boolean}
  */
 
 'use strict';

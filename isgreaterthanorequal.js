@@ -1,3 +1,7 @@
+/**
+ * @module isgreaterthanorequal
+ */
+
 'use strict';
 
 /**
@@ -5,7 +9,7 @@
  * 
  * `isgreaterthanorequal()` is curried by default.
  * 
- * @module isgreaterthanorequal
+ * @func isgreaterthanorequal
  * @param {number} a The number to compare with
  * @param {number} b The number to compare against
  * @returns {boolean}

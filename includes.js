@@ -1,3 +1,7 @@
+/**
+ * @module includes
+ */
+
 'use strict';
 
 const isarray = require('./isarray');
@@ -16,7 +20,7 @@ const hasincludesmethod = value => (typeof value?.includes === 'function');
  * 
  * `includes()` is curried by default.
  * 
- * @module includes
+ * @func includes
  * @see {@link external:Array.prototype.includes Array.prototype.includes()}
  * @param {any} value The value to look for
  * @param {(array|iterable|any)} list The list of items to search

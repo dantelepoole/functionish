@@ -1,3 +1,7 @@
+/**
+ * @module tail
+ */
+
 'use strict';
 
 const isiterable = require('./isiterable');
@@ -11,7 +15,7 @@ const isslicable = value => (typeof value?.slice === 'function');
  * 
  * This function complements the `head()` function, which returns the first item of its argument list.
  * 
- * @module tail
+ * @func tail
  * @see {@link module:head head()}
  * @param {(array|string|iterable)} list The list of items to return the tail of
  * @returns {(array|string)}

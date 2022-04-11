@@ -1,6 +1,5 @@
 /**
  * @module isindexable
- * @ignore
  */
 
 'use strict';

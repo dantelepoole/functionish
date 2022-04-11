@@ -1,3 +1,7 @@
+/**
+ * @module none
+ */
+
 'use strict';
 
 const any = require('./any');
@@ -22,7 +26,7 @@ const any = require('./any');
  * 
  * `none()` is curried by default.
  * 
- * @module none
+ * @func none
  * @see {@link module:any any()}
  * @see {@link module:all all()}
  * @param {function} predicate The function to test the items in *list* with

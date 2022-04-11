@@ -1,4 +1,16 @@
 /**
+ * @module pipe
+ */
+
+ 'use strict';
+
+ const head = require('./head');
+ const isarray = require('./isarray');
+ const isempty = require('./isempty');
+ 
+ const functionchain_empty = (...args) => args[0];
+ 
+/**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
  * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
  * function's result.
@@ -8,10 +20,6 @@
  * 
  * The returned function is not curried, so if you require currying of the returned function you must do so yourself.
  * 
- * @module pipe
- * @see {@link module:compose compose()}
- * @param  {...function} funcs One or more functions to chain together
- * @returns {function}
  * @example
  * 
  * const pipe = require('functionish/pipe');
@@ -24,15 +32,11 @@
  * 
  * allthree(42); // returns `-83`
  * 
+ * @func pipe
+ * @see {@link module:compose compose()}
+ * @param  {...function} funcs One or more functions to chain together
+ * @returns {function}
  */
-
-'use strict';
-
-const head = require('./head');
-const isarray = require('./isarray');
-const isempty = require('./isempty');
-
-const functionchain_empty = (...args) => args[0];
 
 module.exports = function pipe(...funcs) {
 

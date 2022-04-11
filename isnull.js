@@ -1,6 +1,5 @@
 /**
  * @module isnull
- * @ignore
  */
 
 'use strict';

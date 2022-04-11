@@ -1,6 +1,5 @@
 /**
  * @module isnan
- * @ignore
  */
 'use strict';
 
