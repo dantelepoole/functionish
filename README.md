@@ -1,11 +1,11 @@
-### What is functionish programming?
+## What is functionish programming?
 
 Loosely based on functional programming, functionish programming combines a set of general best practices with a subset
 of functional programming core concepts. Why just a subset? Partly because so much of functional programming is
 incomprehensible to those of us without a PhD in lambda calculus, but mostly just because a subset is all that you need
 to write responsible, readable, maintainable, high-quality code. Well, that and Javascript, of course.
 
-### Why Javascript?
+## Why Javascript?
 
 The 'function' in functionish refers to functional programming while '-ish' reflects the rather loose and pragmatic
 interpretation of functional programming that functionish programming is all about. But once you choose to go ishy,
@@ -25,7 +25,7 @@ That doesn't mean that you can't do functionish programming with other programmi
 just that Javascript and functionish programming are a perfect fit. With Javascript you get ishiness right out of
 the box. No configuration required.
 
-### What about TypeScript?
+## What about TypeScript?
 
 No, no, no, no, and no. No types, no TypeScript. If you're a TypeScript devotee, chances are you're actually a closet
 Java-lover and you just don't know it. Not that there's anything wrong with that per sé. Many functionish
@@ -43,7 +43,7 @@ Now, there's nothing wrong with types, and certainly types have their place in f
 So feel free to experiment with functionish programming in TypeScript, if that's your thing. Just be prepared for a lot
 of generics littered throughout your code. Not really my cup of tea.
 
-### Is functionish programming difficult?
+## Is functionish programming difficult?
 
 Yes and no. Certainly, the level of abstraction inherent to many functional programming concepts such as functors and
 monads and combinators and what-not is so high that your average functionish programmer with a mere above-average IQ
@@ -65,7 +65,7 @@ will go a long way towards making your code more reliable, more readable and mor
 better. And these best practices certainly aren't hard, not at all, other than that they might you to unlearn some very
 stubborn habits that you may have acquired over the years.
 
-### What about performance?
+## What about performance?
 
 What about performance, you ask? Yawn. What about it?
 
@@ -88,7 +88,7 @@ And guess what: if you do run into performance issues in a hot code path and you
 source of your problems, by all means, feel free to revert to imperative code. I doubt it will really make much of a
 difference, but functionish programming is all about being pragmatic, not orthodox. 
 
-### So what exactly is functionish programming?
+## So what exactly is functionish programming?
 
 1. Be pure, but not a purist
 2. Immutable, but not inflexible
