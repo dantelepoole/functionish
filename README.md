@@ -1,73 +1,87 @@
-# functionish
-A functional-ish programming library for Node
-
 ### What is functionish programming?
 
-Functionish programming is a programming paradigm inspired by the core concepts of functional programming, but not
-quite. Functionish programming is best summed up by the following quote:
-
-> <em>&ldquo;Best practices without orthodoxy and more functions than you can shake a stick at&rdquo;</em>
-
-Functionish programming seeks to combine a set of best programming practices with a subset of functional programming's
-core concepts. Why just a subset? Partly because a subset is all that we need to write high-quality, effortlessly
-readable and well maintainable code, and mostly because so much of functional programming is incomprehensible for 
-those of us without a PhD in lambda calculus.
-
-To get a proper feel for what functionish programming is, we should first take a look at the functionish programmer's
-primary tool: Javascript. Which begs the questions: why Javascript?
+Loosely based on functional programming, functionish programming combines a set of general best practices with a subset
+of functional programming core concepts. Why just a subset? Partly because so much of functional programming is
+incomprehensible to those of us without a PhD in lambda calculus, but mostly just because a subset is all that you need
+to write responsible, readable, maintainable, high-quality code. Well, that and Javascript, of course.
 
 ### Why Javascript?
 
-Javascript is remarkably well-suited for functionish programming. In fact, with Javascript you get functionish
-programming right out of the box - no configuration required. Originally intended by its author Brendan Eich a 
-Scheme-*ish* language when he first sat down to design it, the language he produced 10 days later on the surface looks
-a lot more Java-*ish*. 
+The 'function' in functionish refers to functional programming while '-ish' reflects the rather loose and pragmatic
+interpretation of functional programming that functionish programming is all about. But once you choose to go ishy,
+there's no better programming language you chould adopt than Javascript.
 
-*Ish*iness lies at the core of Javascript's design. More often than not ostensibly boolean values in Javascript are
-in fact bool*ish*. And under the hood that other fundamental type of any programming language (the Array) in
-Javascript is only Array-*like* - which of course is just fancy speak for Array-*ish*. Heck, even Javascript's standard
-for value equality is met by just a vague resemblance; that's some unabashed *ish*iness right there, that is. Not to
-mention Javascript classes (mostly because us functionish programmers indeed prefer not to mention classes unless we
-really, really have to). Add higher-order functions and closures to the mix and what you're left with is the perfect
-language for functionish programming.
+For starters, the language somewhat looks like and certainly sounds like Java, but it's not. How *ish*y is that?
+Especially since Javascript's author originally intended it to be Scheme-*ish*. Then there's all that boolishness with
+Javascript truthy and falsy values. And how about Javascript arrays: they look like arrays and act like arrays, but
+they're not really arrays - that's some unabashed *ish*iness right there, that is. Then there's Javascript's standard
+for testing equality, a remarkably loose standard that really requires no more than a vague resemblance. And consider
+that I haven't even mentioned Javascript classes yet - mostly because in general I prefer not to mention Javascript
+classes unless I really, really have to. If you add higher-order functions and closures to the mix, what you end up with
+is the ideal language for functionish programming.
 
-That's why Javascript.
+That doesn't mean that you can't do functionish programming with other programming languages. You certainly can. It's
+just that Javascript and functionish programming are a perfect fit. With Javascript you get ishiness right out of
+the box. No configuration required.
 
-### What about Typescript?
+### What about TypeScript?
 
-No, no, no, no, no. No types and no Typescript. Not that there's anything wrong per sé with type safety, nor that
-functionish programming is inherently incompatible with types. Not at all. It's just that type safety goes against the
-grain of what Javascript and functionish programming is all about.
+No, no, no, no, and no. No types, no TypeScript. If you're a TypeScript devotee, chances are you're actually a closet
+Java-lover and you just don't know it. Not that there's anything wrong with that per sé. Many functionish
+programmers I know have one or two Java-lovers among their friends. Maybe not their best friends, but still.
+Any many of us have our own personal history with Java, even if we don't often like to talk about it, including yours
+truly. So don't think that I don't understand the appeal of TypeScript.
 
-If you're a Typescript apologist, chances are you're a closet Java-lover. Not that there's anything wrong per sé with
-loving Java. Many functionish programmers count one or two Java-lovers among their own friends. Maybe not their best
-friends, but still. Any many of us even have a personal history with Java. We've been through that phase and we
-understand the appeal of the Typescript.
+But here's the thing: there are no bugs that a type-safe compiler can catch at compile time that can't be protected
+against just as effectively by well-written code based on sound programming principles and combined with
+a disciplined testing regime. None, zero, nada, niente, nichts. For all the extra effort that TypeScript requires and
+the added code complexity that TypeScript brings to the table, the opportunity cost of writing TypeScript code
+outweighs it's modest benefits many times over.
 
-There are no bugs that a type-safe compiler can catch at compile time that can't be protected against just a effectively
-by well-designed functionish code (characterized by a plethora of relatively small and mostly pure functions and
-predominantly immutable state) combined with a disciplined testing regime. For all the extra effort and code complexity
-that Typescript brings to the table, the cost of Typescript outweighs the benefit many times over.
-
-So if you're a Typescript devotee and you find the thought of reverting to vanilla Javascript disconcerting, feel free
-to try functionish programming with types if you so wish. But I invite you to lighten up and extract that stick
-from your ass, even if just for a short while, and take vanilla Javascript for a spin - functionish style. See
-if maybe, just maybe, functionish programming with vanilla Javascript can work for you.
+Now, there's nothing wrong with types per sé, and certainly types have their place in functional programming as well.
+So feel free to experiment with functionish programming in TypeScript, if that's your thing. Just be prepared for a lot
+of generics littered throughout your code. Not really my cup of tea.
 
 ### Is functionish programming difficult?
 
-Yes and no. The functional programming constructs that functionish programming co-opts can be a bit daunting to wrap
-your head around. The basics are not that difficult. In fact, just because we don't understand functors and monoids and
-and combinators and so on doesn't we mean we don't use them. We use them all the time. We just don't know that we're
-using them, primarily because we just call them things like `map()` and `flatten()` and `id()` and so on. So in that
-sense, functionish programming is pretty doable. 
+Yes and no. Certainly, the level of abstraction inherent to many functional programming concepts such as functors and
+monads and combinators and what-not is so high that your average functionish programmer with a mere above-average IQ
+stands little to no chance of really coming to terms with them.
 
-However, to truly reap the benefits of those constructs does require thought and effort. Simply knowing what function
-composition means, doesn't mean you fully grasp the power that it can provide. And at first sight currying seems like
-an ugly duckling, awkward and hardly worth your while, until one day you see the light and you understand how
-judicious currying can lift your code to an abstraction level that at once renders your code so much more reliable and
-so much more natural. But again, there's a learning curve that you have to go through to get there. So in that sense,
-functionish programming does require some effort, at least until you reach the point where it just comes naturally.
+But the thing with functionish programming is that you don't have to know all those things. We just `map()` and we
+`curry()` and we `compose()` and we `id()` and so on and we do so with pure-*ish* functions and immutable-*ish* state...
+and we leave it at that. No need to get all highfalutin or academic about it. Is that a P-combinator you're lifting
+into that monoid there or are you just happy to see me?
+
+So in that sense, functionish programming is not especially difficult. Certainly not like functional programming and
+the John Nash mental predisposition it seems to favor. At the same time, though, functionish programming is about more
+than just `map()` and `curry()` and so on. It's about exploiting higher order functions and closures and what-not to
+their maximum potential, and that requires insight, which in turn requires practice.
+
+But not to worry, you don't need to know all those things to start reaping the benefits of functionish programming.
+Functionish programming is more than just functional constructs. It also comprises a set of best practices that alone
+will go a long way towards making your code more reliable, more readable and more maintainable, so all in all more
+better. And these best practices certainly aren't hard, not at all, other than that they might go against some very
+stubborn habits you may have acquired over the years.
+
+### What about performance?
+
+What about performance, you ask? Yawn. What about it?
+
+Look, for sure functionish programming's reliance on abundant functions and function composition and purity and
+immutability and so and results code that is less performant when compared to its imperative or even object-oriented
+counterparts. But it's not a question of which programming paradigm is more performant. The question is: what
+difference does it make?
+
+Have you ever read these performance measurements that folks will debate on Stack Overflow? They'll take an array with
+100,000 items and over loop it a million times only to conclude that a `while`-loop achieves 25,000 iterations per
+second while `Array.forEach()` bares reaches 20,000 iterations Are you kidding me?
+
+If you take issue with such measurement results, than maybe functionish programming isn't for you. But unless you're
+building a stock exchange application for some Wall Street financial institution or say some systems software for the
+CERN Large Hadron Collider, chances are any performance issues you encounter will not be at all related to your chosen
+programming paradigm. At least not in my personal experience, and I should know. I've underperformed all my life, and
+other than a latent inferiority complex I'm none the worse for it.
 
 ### So what exactly is functionish programming?
 
@@ -84,12 +98,3 @@ functionish programming does require some effort, at least until you reach the p
 11. The maintainer always comes first
 12. Imperative is not a dirty word
 
-### What about performance?
-
-Yawn. What about it? No doubt, functionish programming's reliance on abundant functions, composition, purity and
-state immutability results in code that is less performant than imperative code (and perhaps even an object oriented
-code design). But I've underperformed pretty much all my life, and other than an acute inferiority complex, I'm none
-the worse off for it.
-
-It's not a question of which programming paradigm is more performant, the question is whether it really makes a
-difference.
