@@ -30,15 +30,15 @@
 
 const isarray = require('./isarray');
 
-const functionpipe_empty = (...args) => args[0];
+const functionchain_empty = (...args) => args[0];
 
 module.exports = function pipe(...funcs) {
 
     if( arguments.length === 1 && isarray(funcs[0]) ) funcs = funcs[0];
 
-    if( funcs.length === 0 ) return functionpipe_empty;
+    if( funcs.length === 0 ) return functionchain_empty;
 
-    function functionpipe(...args) {
+    function functionchain(...args) {
 
         let results = args;
 
@@ -47,5 +47,5 @@ module.exports = function pipe(...funcs) {
         return results[0];
     }
 
-    return functionpipe;
+    return functionchain;
 }
