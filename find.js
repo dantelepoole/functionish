@@ -7,14 +7,19 @@
 const ITEM_NOT_FOUND = undefined;
 
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
+const unary = require('./unary');
 
 /**
  * Function variant of {@link external:Array.prototype.find Array.prototype.find()}. Apply the *predicate* function to
  * each item in *list* and return the first item for which *predicate* returns a truthy value. If no item matches
  * *predicate*, return `undefined`.
  * 
- * If *list* is neither an array nor an iterable object, *predicate* is applied *list* directly.
+ * If *list* has a `find()` method, this function passes *predicate* to it. Otherwise, *list*
+ * is passed directly to *predicate* and the result is returned.
+ * 
+ * *Important:* the *predicate* function is coerced to unary arity before it is passed to *list*'s `find()` method
+ * (if it exists). This means that *predicate* will only ever receive a single argument (the item being searched),
+ * regardless of how many arguments *list*'s `find()` method actually passes.
  * 
  * `find()` is curried by default.
  * 
@@ -31,22 +36,15 @@ const isiterable = require('./isiterable');
  * 
  * @func find
  * @param {function} predicate The predicate function that identifies the item being sought
- * @param {(array|iterable|any)} list The list of values to search for
- * @returns {(any|undefined)}
+ * @param {(any[]|any)} list The list of values to search
+ * @returns {any}
  */
 module.exports = require('./curry2')(
 
     function find(predicate, list) {
 
-        return isarray(list) ? list.find(predicate)
-            : isiterable(list) ? iterablefind(predicate, list)
-            : !! predicate(list) ? list : ITEM_NOT_FOUND;
+        return isarray(list) ? list.find( unary(predicate) )
+            : predicate(list) ? list
+            : ITEM_NOT_FOUND;
     }
 )
-
-function iterablefind(predicate, iterable) {
-
-    for( const item of iterable ) if( !! predicate(item) ) return item;
-
-    return ITEM_NOT_FOUND;
-}

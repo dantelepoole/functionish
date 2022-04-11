@@ -5,6 +5,7 @@
 'use strict';
 
 const evaluate = require('./evaluate');
+const isarray = require('./isarray');
 const partial = require('./partial');
 
 /**
@@ -38,13 +39,15 @@ const partial = require('./partial');
  */
 module.exports = function and(...clauses) {
 
-    function _and(index, clauses, ...args) {
-        
-        if( index >= clauses.length ) return true;
+    if( clauses.length === 1 && isarray(clauses[0]) ) clauses = clauses[0];
 
-        const clauseresult = !! evaluate(clauses[index], ...args);
-        
-        return clauseresult && _and(index+1, clauses, ...args);
+    function _and(index, clauses, ...args) {
+
+        return (index >= clauses.length)
+                ||
+               evaluate( clauses[index], ...args ) 
+                ||
+               _and( index+1, clauses, ...args );
     }
 
     return partial(_and, 0, clauses);

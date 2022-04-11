@@ -2,20 +2,22 @@
  * @module filter
  */
 
+ 'use strict';
+ 
+ const unary = requier('./unary');
+
+ const isfilterable = value => (typeof value?.filter === 'function');
+
 /**
- * Function variant of `Array.prototype.filter()`. Apply the *func* function to each item in *list* and return
- * an array containing only the items for which *func* returns a truthy value.
+ * Function variant of `Array.prototype.filter()`. Apply the *predicate* function to each item in *list* and return
+ * an array containing only the items for which *predicate* returns a truthy value.
  * 
- * If *list* has a `filter()` method, this function passes *func* to it. Otherwise, if *list* is iterable, *func*
- * is applied to each item produced by the iterable and the results are returned as an array. If it is neither, *list*
- * is treated as an object and its properties are filtered, meaning that `filter()` will return a copy of *list* with
- * only the properties for which *func* returns a truthy value.
+ * If *list* has a `filter()` method, this function passes *predicate* to it. Otherwise, *list*
+ * is converted to a single-item array and *predicate* is passed to its `filter()`-method.
  * 
- * *Important:* as per the ECMA specification {@link external:Array.prototype.filter Array.prototype.filter()} passes
- * additional arguments to the filter function further to the item being filtered. This can lead to
- * unexpected behaviour in certain cases, especially if the filter function is curried or accepts spread
- * and/or default parameters. In such cases you can apply the {@link module:unary unary()} function to ensure
- * the filter function is always passed exactly one argument and no more.
+ * *Important:* the *predicate* function is coerced to unary arity before it is passed to *list*'s `filter()` method
+ * (if it exists). This means that *predicate* will only ever receive a single argument (the item being filtered),
+ * regardless of how many arguments *list*'s `filter()` method actually passes.
  * 
  * `filter()` is curried by default.
  * 
@@ -38,50 +40,17 @@
  * @func filter
  * @see {@link external:Array.prototype.filter Array.prototype.filter()}
  * @param {function} predicate The predicate function
- * @param {(array|iterable|object)} list The items to filter
+ * @param {(any[]|any)} list The items to filter
  * @returns {any[]}
  */
-
-'use strict';
-
-const isiterable = require('./isiterable');
-
-const asobject = Object;
-const isfilterable = value => (typeof value?.filter === 'function');
 
 module.exports = require('./curry2')(
 
     function filter(predicate, list) {
 
-        return isfilterable(list) ? list.filter(predicate)
-             : isiterable(list) ? filteriterable(predicate, list)
-             : filterobject(predicate, asobject(list) );
+        predicate = unary(predicate);
+
+        return isfilterable(list) ? list.filter(predicate) : [ list ].filter(predicate);
     }
 )
 
-function filteriterable(predicate, iterable) {
-
-    const buffer = [];
-
-    for( const item of iterable ) if( predicate(item) ) buffer.push(item);
-
-    return buffer;
-}
-
-function filterobject(predicate, object) {
-
-    const target = {}
-
-    Object.entries(object).forEach(
-        
-        function(entry) {
-
-            const [key, value] = entry;
-
-            if( predicate(value) ) target[key] = value;
-
-        }
-    )
-
-    return target;
-}

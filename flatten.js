@@ -3,31 +3,25 @@
  */
 'use strict';
 
-const isiterable = require('./isiterable');
-
 const isflattenable = value => (typeof value?.flat === 'function');
 
 /**
  * Function variant of {@link external:Array.prototype.flat Array.prototype.flat()}. Flatten *list* by the specified
  * number of dimensions.
  * 
- * If *list* is neither an array, an iterable object nor an object with a `flat()` method, an empty array is
- * returned.
+ * If *list* does not have a `flat()`-method, *list* itself is returned, regardless of *depth*.
  * 
  * `flatten()` is curried by default.
  * 
  * @func flatten
  * @see {@link external:Array.prototype.flat Array.prototype.flat()}
  * @param {number} depth The number of dimensions to flatten *list*
- * @param {(array|iterable)} list The list to flatten
+ * @param {(any[]|any)} list The list to flatten
  * @returns {any[]}
  */
 module.exports = require('./curry2')(
 
     function flatten(depth, list) {
-
-        return isflattenable(list) ? list.flat(depth)
-            : isiterable(list) ? [...list].flat(depth)
-            : [];
+        return isflattenable(list) ? list.flat(depth) : list;
     }
 )

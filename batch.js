@@ -5,17 +5,14 @@
 'use strict';
 
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
 
 const maximumvalue = Math.max;
-const toarray = item => [item];
 
 /**
  * Return an array of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
  * a batch size of `1` will be used.
  * 
- * If *list* is neither an array nor an iterable, it is assumed to be the only item and will be returned as the only
- * item in a single-batch array.
+ * If *list* is not an array, it's value will be returned as the only item in a single-batch array.
  * 
  * `batch()` is curried by default.
  * 
@@ -29,7 +26,7 @@ const toarray = item => [item];
  * 
  * @func batch
  * @param {number} batchsize The maximum number of items in each batch
- * @param {(any[]|iterable|any)} list The list of items to batch
+ * @param {(any[]|any)} list The list of items to batch
  * @returns {any[]}
  */
 
@@ -39,9 +36,7 @@ module.exports = require('./curry2')(
 
         batchsize = maximumvalue(batchsize, 1);
 
-        return isarray(list) ? arraybatch(batchsize, list)
-            : isiterable(list) ? iterablebatch(batchsize, iterable)
-            : [ [list] ];
+        return isarray(list) ? arraybatch(batchsize, list) : [ [list] ];
     }
 )
 
@@ -52,7 +47,7 @@ function arraybatch(batchsize, list) {
     const batches = [];
     let index = 0;
 
-    // Oh yeah, I'm looping baby.....and it feels goooooooooooooooooooooo
+    // Oh yeah, I'm looping baby.....and it feels gooooooooooooooooooooood
     while( index < list.length ) {
         
         const nextbatch = list.slice(index, index + batchsize);
@@ -61,26 +56,6 @@ function arraybatch(batchsize, list) {
 
         index += batchsize;
     }
-
-    return batches;
-}
-
-function iterablebatch(batchsize, iterable) {
-
-    const batches = [];
-    const nextbatch = [];
-
-    for( const item in iterable ) {
-
-        nextbatch.push(item);
-
-        if( nextbatch.length === batchsize ) {
-            batches.push(nextbatch);
-            nextbatch.length === 0
-        }
-    }
-
-    if( nextbatch.length > 0 ) batches.push(nextbatch);
 
     return batches;
 }

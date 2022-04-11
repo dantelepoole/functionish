@@ -5,24 +5,16 @@
 'use strict';
 
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
+const unary = require('./unary');
 
 /**
  * Apply the *predicate* function to each item in *list* and return `true` when *predicate* returns a truthy value. If
  * *predicate* returns a falsy value for each item, return `false`.
  * 
- * The *list* argument may be either an array or an iterable object. If *list* is neither, it is passed directly to
- * *predicate* and the result is returned as the result of `any()`.
+ * If *list* is not an array, it is passed directly to *predicate* and the result is returned as the result of `any()`.
  * 
  * The function is short-circuited, so it returns `true` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
- * 
- * *Important:* as per the ECMA specification {@link external:Array.prototype.some Array.prototype.some()} (which
- * `any()` relies on for Array *list* arguments) passes
- * additional arguments to the *predicate* function further to the list item being evaluated. This can lead to
- * unexpected behaviour in certain cases, especially if the *predicate* function is curried or accepts spread
- * and/or default parameters. In such cases you can apply the {@link module:unary unary()} function to ensure
- * the *predicate* function is always passed exactly one argument and no more.
  * 
  * `any()` is curried by default.
  * 
@@ -45,17 +37,7 @@ const isiterable = require('./isiterable');
 module.exports = require('./curry2')(
 
     function any(predicate, list) {
-
-        return isarray(list) ? list.some(predicate)
-            : isiterable(list) ? iterablesome(predicate, list)
-            : !! predicate(list);
+        return isarray(list) ? list.some( unary(predicate) ) : !! predicate(list);
     }
     
 )
-
-function iterablesome(func, iterable) {
-
-    for( const value of iterable ) if( !! func(value) ) return true;
-
-    return false;
-}

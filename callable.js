@@ -6,6 +6,8 @@
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 
+const always = require('./always');
+
 /**
  * If *value* is a function, return it. Otherwise, return a function that always returns *value* regardless of its
  * arguments.
@@ -32,17 +34,15 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 module.exports = NAMED_FUNCTIONS ? callable_named : callable;
 
 function callable(value) {
-    return (typeof value === 'function') ? value : () => value;
+    return (typeof value === 'function') ? value : always(value);
 }
 
 function callable_named(value) {
 
-    if( typeof value === 'function' ) return value;
-
     const callablename = `callable[${typeof value}]`;
 
     const container = {
-        [callablename] : () => value
+        [callablename] : (typeof value === 'function') ? value : () => value
     }
 
     return container[callablename];

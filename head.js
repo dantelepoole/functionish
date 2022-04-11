@@ -5,13 +5,10 @@
 'use strict';
 
 const isindexable = require('./isindexable');
-const isiterable = require('./isiterable');
-
-const iterablehead = iterable => { for(const item of iterable) return item }
 
 /**
- * Return the first item in *list* or `undefined` if *list* is empty. If *list* is neither an array nor an iterable
- * object, *list* itself is returned.
+ * Return the first item in *list* or `undefined` if *list* is empty. If *list* is not indexable, *list* itself is
+ * returned.
  * 
  * @example
  *     
@@ -26,8 +23,5 @@ const iterablehead = iterable => { for(const item of iterable) return item }
  * @returns {any}
  */
 module.exports = function head(list) {
-
-    return isindexable(list) ? list[0]
-         : isiterable(list) ? iterablehead(list)
-         : list;
+    return isindexable(list) ? list[0] : list;
 }

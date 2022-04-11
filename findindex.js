@@ -7,13 +7,17 @@
 const INDEX_NOT_FOUND = -1;
 
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
+const unary = require('./unary');
 
 /**
  * Similar to {@link module:find find()}, except it returns the index of the found item instead of the found item
  * itself. Also, whereas `find()` will attempt to match *list* directly if *list* is not iterable, `findindex()` will
- * always return `-1` if *list* is not an array or an iterable object. This is because it makes no sense to return an
- * index if *list* cannot be indexed.
+ * always return `-1` if *list* is not an array. This is because it makes no sense to return an
+ * index if *list* is not indexable.
+ * 
+ * *Important:* the *predicate* function is coerced to unary arity before it is passed to *list*'s `findIndex()` method
+ * (if it exists). This means that *predicate* will only ever receive a single argument (the item being searched),
+ * regardless of how many arguments *list*'s `findeIndex()` method actually passes.
  * 
  * `findindex()` is curried by default.
  * 
@@ -35,23 +39,6 @@ const isiterable = require('./isiterable');
 module.exports = require('./curry2')(
 
     function findindex(predicate, list) {
-
-        return isarray(list) ? list.findIndex(predicate)
-            : isiterable(list) ? iterablefindindex(predicate, list)
-            : INDEX_NOT_FOUND;
+        return isarray(list) ? list.findIndex(unary(predicate)) : INDEX_NOT_FOUND;
     }
 )
-
-function iterablefindindex(predicate, iterable) {
-
-    let index = 0;
-
-    for( const item of iterable ) {
-       
-        if( predicate(item) ) return index;
-
-        index += 1;
-    }
-
-    return INDEX_NOT_FOUND;
-}

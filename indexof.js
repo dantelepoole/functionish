@@ -6,9 +6,9 @@
 
 const INDEX_NOT_FOUND = -1;
 
-const isarray = require('./isarray');
-const isiterable = require('./isiterable');
 const isequal = require('./isequal');
+
+const hasincludesmethod = value => (typeof value?.includes === 'function');
 
 /**
  * Function variant of {@link external:Array.prototype.indexOf Array.prototype.indexOf()}. Return the index *value*
@@ -26,23 +26,6 @@ const isequal = require('./isequal');
 module.exports = require('./curry2')(
 
     function indexof(value, list) {
-
-        return isarray(list) ? list.indexOf(value)
-            : isiterable(list) ? iterableindexof(value, list)
-            : INDEX_NOT_FOUND;
+        return hasincludesmethod(list) ? list.indexOf(value) : INDEX_NOT_FOUND;
     }
 )
-
-function iterableindexof(value, iterable) {
-
-    let index = 0;
-
-    const equalsvalue = isequal(value);
-
-    for( const item of iterable ) {
-        if( equalsvalue(item) ) return index;
-        index += 1;
-    }
-
-    return INDEX_NOT_FOUND;
-}
