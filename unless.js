@@ -1,3 +1,7 @@
+/**
+ * @module unless
+ */
+
 'use strict';
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
@@ -20,12 +24,6 @@ module.exports = require('./curry2')(NAMED_FUNCTIONS ? unless_named : unless);
  * 
  * `unless()` is curried by default.
  * 
- * @module unless
- * @see {@link module:when when()}
- * @param {(function|any)} predicate The predicate expression
- * @param {(function|any)} mainbranch The expression to evaluate if *predicate* is falsy
- * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is truthy
- * @returns {any}
  * @example
  *     
  * const unless = require('functionish/unless');
@@ -38,6 +36,12 @@ module.exports = require('./curry2')(NAMED_FUNCTIONS ? unless_named : unless);
  * coercetoeven(42); // returns 42
  * coercetoeven(41); // returns 42
  * 
+ * @func unless
+ * @see {@link module:when when()}
+ * @param {(function|any)} predicate The predicate expression
+ * @param {(function|any)} mainbranch The expression to evaluate if *predicate* is falsy
+ * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is truthy
+ * @returns {any}
  */
 function unless(predicate, mainbranch, alternativebranch=id) {
     return when(predicate, alternativebranch, mainbranch);

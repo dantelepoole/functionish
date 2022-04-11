@@ -1,4 +1,13 @@
 /**
+ * @module transduce
+ */
+
+ 'use strict';
+
+ const reduce = require('./reduce');
+ const transform = require('./transform');
+ 
+/**
  * Works the same as {@link module:reduce reduce()} except that applies the list of *transformations* to each value
  * being reduced before passing it the *reducer*. This function is simply shorthand for first invoking
  * {@link module:transform transform()} with *transformations* and *reducer* before passing the result to
@@ -9,14 +18,6 @@
  * 
  * `transduce()` is curried by default.
  * 
- * @module transduce
- * @see {@link module:reduce reduce()}
- * @see {@link module:transform transform()}
- * @param {function[]} transformations The transformations to apply in the reduction
- * @param {function} reducer The reducer function
- * @param {any} initialvalue The initial value to pass to *reducer*
- * @param {any[]} list The list of items to transduce
- * @returns {any} The result of the transduction
  * @example
  * 
  * const predicate = require('functionish/predicate');
@@ -38,11 +39,15 @@
  *  
  * transduce(transformations, sum, 0, numberlist); // sum() requires an initial value of `0`
  * 
+ * @func transduce
+ * @see {@link module:reduce reduce()}
+ * @see {@link module:transform transform()}
+ * @param {function[]} transformations The transformations to apply in the reduction
+ * @param {function} reducer The reducer function
+ * @param {any} initialvalue The initial value to pass to *reducer*
+ * @param {any[]} list The list of items to transduce
+ * @returns {any} The result of the transduction
  */
-'use strict';
-
-const reduce = require('./reduce');
-const transform = require('./transform');
 
 module.exports = require('./curry')(4,
 

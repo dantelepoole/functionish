@@ -1,3 +1,6 @@
+/**
+ * @module zipwith
+ */
 'use strict';
 
 const isarray = require('./isarray');
@@ -9,12 +12,6 @@ const isiterable = require('./isiterable');
  * 
  * `zipwith()` is curried by default.
  * 
- * @module zip
- * @see {@link module:zip zip()}
- * @param {function} func The function to apply to each item in *list1* and *list2*
- * @param {(array|iterable|any)} list1 The first list of items
- * @param {(array|iterable|any)} list2 The second list of items
- * @returns {array[]}
  * @example
  *     
  * const zipwith = require('functionish/zipwith');
@@ -26,6 +23,12 @@ const isiterable = require('./isiterable');
  * 
  * zipwith(multiply, list1, list2); // returns [ 2, 12, 30 ]
  * 
+ * @func zipwith
+ * @see {@link module:zip zip()}
+ * @param {function} func The function to apply to each item in *list1* and *list2*
+ * @param {(array|iterable|any)} list1 The first list of items
+ * @param {(array|iterable|any)} list2 The second list of items
+ * @returns {array[]}
  */
 module.exports = require('./curry3')(
 

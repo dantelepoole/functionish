@@ -1,3 +1,7 @@
+/**
+ * @module union
+ */
+
 'use strict';
 
 const isiterable = require('./isiterable');
@@ -9,7 +13,7 @@ const isiterable = require('./isiterable');
  * 
  * `union()` is curried by default.
  * 
- * @module union
+ * @func union
  * @param {(array|iterable|any)} list1 The first list of items to combine
  * @param {(array|iterable|any)} list2 The second list of items to combine
  * @returns {any[]}

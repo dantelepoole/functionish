@@ -1,3 +1,7 @@
+/**
+ * @module uniq
+ */
+
 'use strict';
 
 const isiterable = require('./isiterable');
@@ -7,7 +11,7 @@ const isiterable = require('./isiterable');
  * iterable, a single item array containing *list* as its only item is returned, unless *list* is `undefined`, in which
  * case an empty array is returned.
  * 
- * @module uniq
+ * @func uniq
  * @param {(array|iterable|any)} list The list of items to remove duplicates from
  * @returns {any[]}
  */

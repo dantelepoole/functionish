@@ -1,3 +1,7 @@
+/**
+ * @module when
+ */
+
 'use strict';
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
@@ -15,14 +19,8 @@ const id = require('./id');
  * If *predicate* or either branch are not functions, their value is evaluated directly and any arguments passed to
  * the returned function are ignored.
  * 
- * `whem()` is curried by default.
+ * `when()` is curried by default.
  * 
- * @module when
- * @see {@link module:unless unless()}
- * @param {(function|any)} predicate The predicate expression
- * @param {(function|any)} mainbranch The expression to evaluate if *predicate* is truthy
- * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is falsy
- * @returns {any}
  * @example
  *     
  * const when = require('functionish/when');
@@ -35,6 +33,12 @@ const id = require('./id');
  * coercetoeven(42); // returns 42
  * coercetoeven(41); // returns 42
  * 
+ * @func when
+ * @see {@link module:unless unless()}
+ * @param {(function|any)} predicate The predicate expression
+ * @param {(function|any)} mainbranch The expression to evaluate if *predicate* is truthy
+ * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is falsy
+ * @returns {any}
  */
 module.exports = require('./curry2')(NAMED_FUNCTIONS ? when_named : when )
 

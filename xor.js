@@ -1,3 +1,7 @@
+/**
+ * @module xor
+ */
+
 'use strict';
 
 const callable = require('./callable');
@@ -11,13 +15,6 @@ const callable = require('./callable');
  * 
  * `xor()` is curried by default.
  * 
- * @module xor
- * @see {@link module:and and()}
- * @see {@link module:not not()}
- * @see {@link module:or or()}
- * @param {(function|any)} clause The first clause to evaluate
- * @param {(function|any)} otherclause The second clause to evaluate
- * @returns {boolean}
  * @example
  * 
  * // a rather contrived example, but it's the best I could come up with
@@ -32,6 +29,14 @@ const callable = require('./callable');
  * function analyze(particle) {
  *     return ischarged(particle) ? 'charged' : 'not charged';
  * }
+ * 
+ * @func xor
+ * @see {@link module:and and()}
+ * @see {@link module:not not()}
+ * @see {@link module:or or()}
+ * @param {(function|any)} clause The first clause to evaluate
+ * @param {(function|any)} otherclause The second clause to evaluate
+ * @returns {boolean}
  */
 module.exports = require('./curry2')(
 

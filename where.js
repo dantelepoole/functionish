@@ -1,3 +1,7 @@
+/**
+ * @module where
+ */
+
 'use strict';
 
 const KEY_STRICT = '_strict_';
@@ -22,10 +26,6 @@ const islenient = spec => ! spec?.[KEY_STRICT];
  * 
  * `where()` is curried by default.
  * 
- * @module where
- * @param {object} specification The object providing the rules to match
- * @param {object} subject The object to match against *specification*'s rules
- * @returns {boolean}
  * @example
  *     
  * const where = require('functionish/where');
@@ -43,6 +43,10 @@ const islenient = spec => ! spec?.[KEY_STRICT];
  * 
  * where(spec, test); // returns false
  * 
+ * @func where
+ * @param {object} specification The object providing the rules to match
+ * @param {object} subject The object to match against *specification*'s rules
+ * @returns {boolean}
  */
 module.exports = require('./curry2')(
 

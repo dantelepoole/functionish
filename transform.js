@@ -1,4 +1,28 @@
 /**
+ * @module transform
+ */
+
+'use strict';
+
+const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
+
+const compose = require('./compose');
+const curry2 = require('./curry2');
+const isfunction = require('./isfunction');
+const ispredicate = require('./ispredicate');
+const map = require('./map');
+const unary = require('./unary');
+
+const filtertransformerfactory = NAMED_FUNCTIONS ? _filtertransformerfactory_named : _filtertransformerfactory;
+const transformerfactory = NAMED_FUNCTIONS ? _transformerfactory_named : _transformerfactory;
+
+// We have to apply unary() because we are mapping a curried simpletransform to each transformation, which will
+// fail because Javascript's Array.prototype.map() passes multiple arguments to the mapping function, not just the
+// item being mapped
+const simpletransform_curried = curry2(simpletransform);
+const mapsimpletransform = map( unary(simpletransform_curried) );
+
+/**
  * Return a reducer function that passes its second argument (nextvalue) through *transformations* functions before 
  * passing the result to the *reducer* function (along with its first argument, the accumulator). This allows you apply
  * one or more mapping or filtering functions as a reduction, thus avoiding the need to loop over an array multiple
@@ -26,13 +50,6 @@
  * transformers into a single reducer, as is shown in the example code. The *initialvalue* argument passed to
  * `reduce()` should be the initial value that the *reducer* argument expects to receive.
  * 
- * @module transform
- * @see {@link module:predicate predicate()}
- * @see {@link module:transduce transduce()}
- * @see {@link module:transmap transmap()}
- * @param {function[]} transformations The transformations to perform in the reduction
- * @param {function} reducer The reducer
- * @returns {function} A new reducer function
  * @example
  * 
  * const compose = require('functionish/compose');
@@ -61,26 +78,14 @@
  *     numberlist
  * ) 
  * 
+ * @func transform
+ * @see {@link module:predicate predicate()}
+ * @see {@link module:transduce transduce()}
+ * @see {@link module:transmap transmap()}
+ * @param {function[]} transformations The transformations to perform in the reduction
+ * @param {function} reducer The reducer
+ * @returns {function} A new reducer function
  */
-'use strict';
-
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
-const compose = require('./compose');
-const curry2 = require('./curry2');
-const isfunction = require('./isfunction');
-const ispredicate = require('./ispredicate');
-const map = require('./map');
-const unary = require('./unary');
-
-const filtertransformerfactory = NAMED_FUNCTIONS ? _filtertransformerfactory_named : _filtertransformerfactory;
-const transformerfactory = NAMED_FUNCTIONS ? _transformerfactory_named : _transformerfactory;
-
-// We have to apply unary() because we are mapping a curried simpletransform to each transformation, which will
-// fail because Javascript's Array.prototype.map() passes multiple arguments to the mapping function, not just the
-// item being mapped
-const simpletransform_curried = curry2(simpletransform);
-const mapsimpletransform = map( unary(simpletransform_curried) );
 
 module.exports = curry2(
 

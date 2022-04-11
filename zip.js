@@ -1,3 +1,7 @@
+/**
+ * @module zip
+ */
+
 'use strict';
 
 const isarray = require('./isarray');
@@ -15,11 +19,6 @@ const minimumvalue = Math.min;
  * 
  * `zip()` is curried by default.
  * 
- * @module zip
- * @see {@link module:zipwith zipwith()}
- * @param {(array|iterable|any)} list1 The first list of items
- * @param {(array|iterable|any)} list2 The second list of items
- * @returns {array[]}
  * @example
  * 
  * const zip = require('functionish/zip');
@@ -29,6 +28,11 @@ const minimumvalue = Math.min;
  * 
  * zip(list1, list2); // returns [ [1,2], [3,4], [5,6] ]
  * 
+ * @func zip
+ * @see {@link module:zipwith zipwith()}
+ * @param {(array|iterable|any)} list1 The first list of items
+ * @param {(array|iterable|any)} list2 The second list of items
+ * @returns {array[]}
  */
 module.exports = require('./curry2')(
 

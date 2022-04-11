@@ -1,3 +1,6 @@
+/**
+ * @module without
+ */
 'use strict';
 
 const filter = require('./filter');
@@ -19,10 +22,6 @@ const asobject = Object;
  * 
  * `without()` is curried by default.
  * 
- * @module without
- * @param {(array|iterable|any)} values The values to remove from *list*
- * @param {(array|iterable|any)} list The source to remove *values* from
- * @returns {(array|object)}
  * @example
  *     
  * const without = require('functionish/without');
@@ -40,6 +39,10 @@ const asobject = Object;
  * without( [1,2], null ); // returns `null`
  * without( null, null ); // returns `undefined`
  * 
+ * @func without
+ * @param {(array|iterable|any)} values The values to remove from *list*
+ * @param {(array|iterable|any)} list The source to remove *values* from
+ * @returns {(array|object)}
  */
 module.exports = require('./curry2')(
 

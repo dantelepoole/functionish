@@ -1,3 +1,7 @@
+/**
+ * @module tostring
+ */
+
 'use strict';
 
 const EMPTY_STRING = '';
@@ -9,7 +13,7 @@ const isvoid = require('./isvoid');
  * 'null', 'undefined' and 'NaN' like the Javascript {@link external:String String()} function does. Otherwise, this
  * function behaves identically to {@link external:String String()}.
  * 
- * @module tostring
+ * @func tostring
  * @param {any} value The value to convert to a string
  * @returns {string}
  */

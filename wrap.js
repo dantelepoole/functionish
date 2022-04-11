@@ -1,8 +1,10 @@
+/**
+ * @module wrap
+ */
+
 'use strict';
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
-module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap )
 
 /**
  * Return a function that passes *func* and its arguments to *wrapperfunc* and returns the result, allowing
@@ -13,10 +15,6 @@ module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap )
  * 
  * `wrap()` is curried by default.
  * 
- * @module wrap
- * @param {function} func The function to wrap
- * @param {function} wrapperfunc 
- * @returns {function}
  * @example
  *     
  * const wrap = require('functionish/wrap');
@@ -47,6 +45,10 @@ module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap )
  * 
  * dosomething_logged(42, 'foobar'); // runs logs the arguments, runs dosomething() and logs the result
  * 
+ * @func wrap
+ * @param {function} func The function to wrap
+ * @param {function} wrapperfunc 
+ * @returns {function}
  */
 module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap );
 

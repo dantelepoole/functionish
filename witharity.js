@@ -1,4 +1,12 @@
 /**
+ * @module witharity
+ */
+
+'use strict';
+
+const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
+
+/**
  * Return a function that always passes *arity* number of its arguments to *func*, no more and no less.
  * Use `witharity()` to ensure that a function is always passed the specified
  * number of arguments. 
@@ -11,17 +19,13 @@
  * 
  * `witharity()` itself is curried by default.
  * 
- * @module witharity
+ * @func witharity
  * @see {@link module:unary unary()}
  * @see {@link module:binary binary()}
  * @param {number} arity The arity to apply
  * @param {function} func The function to apply the arity to
  * @returns {function}
  */
-
-'use strict';
-
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 
 module.exports = require('./curry2')(NAMED_FUNCTIONS ? witharity_named : witharity)
 

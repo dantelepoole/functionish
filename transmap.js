@@ -1,4 +1,14 @@
 /**
+ * @module transmap
+ */
+
+'use strict';
+
+const transduce = require('./transduce');
+
+const arrayreducer = (array, nextitem) => ( array.push(nextitem), array );
+
+/**
  * Apply a list of *transformations* to *list* and return the result as an array. 
  * 
  * Essentially, `transmap()` is to {@link module:map map()} (and {@link module:filter filter()}) what 
@@ -6,7 +16,7 @@
  * 
  * `transmap()` is curried by default.
  * 
- * @module transmap
+ * @func transmap
  * @see {@link module:transduce transduce()}
  * @see {@link module:transform transform()}
  * @param {function[]} transformations The transformation functions to apply
@@ -14,12 +24,6 @@
  * @returns {any[]}
  * 
  */
-'use strict';
-
-const transduce = require('./transduce');
-
-const arrayreducer = (array, nextitem) => ( array.push(nextitem), array );
-
 module.exports = require('./curry2')(
 
     function transmap(transformations, list) {
