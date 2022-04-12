@@ -30,7 +30,7 @@ const unary = require('./unary');
  * @see {@link module:all all()}
  * @see {@link module:none none()}
  * @param {function} predicate The predicate function
- * @param {(array|iterable|any)} list The list of items to test
+ * @param {(any[]|any)} list The list of items to test
  * @returns {boolean}
  */
 

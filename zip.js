@@ -5,7 +5,6 @@
 'use strict';
 
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
 
 const minimumvalue = Math.min;
 
@@ -14,8 +13,7 @@ const minimumvalue = Math.min;
  * holding the element at the corresponding index in *list1* and the second the corresponding element in *list2*. The
  * returned array's length will equal that of the shorter list.
  * 
- * Both lists may be either an array or an iterable object. If it is neither, it is converted to a single-item array
- * first.
+ * If either list is not an array, it is converted to a single-item array first.
  * 
  * `zip()` is curried by default.
  * 
@@ -30,9 +28,9 @@ const minimumvalue = Math.min;
  * 
  * @func zip
  * @see {@link module:zipwith zipwith()}
- * @param {(array|iterable|any)} list1 The first list of items
- * @param {(array|iterable|any)} list2 The second list of items
- * @returns {array[]}
+ * @param {(any[]|any)} list1 The first list of items
+ * @param {(any[]|any)} list2 The second list of items
+ * @returns {any[]}
  */
 module.exports = require('./curry2')(
 
@@ -42,10 +40,7 @@ module.exports = require('./curry2')(
 )
 
 function toarray(value) {
-
-    return isarray? value
-         : isiterable(value) ? [...value]
-         : [value];
+    return isarray? value : [value];
 }
 
 function ziparrays(array1, array2) {

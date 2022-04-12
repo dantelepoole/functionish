@@ -11,18 +11,10 @@ const any = require('./any');
  * value for each item. This function is the counterpart to {@link module:any any()} (in fact, it simply calls `any()`
  * and negates the result).
  * 
- * The *list* argument may be either an array or an iterable object. If *list* is neither, it is passed directly to
- * *predicate* and `true` is returned if *predicate* returns a falsy value.
+ * If *list* is not an array, it is passed directly to *predicate* and the result is returned as the result of `none()`.
  * 
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
- * 
- * *Important:* as per the ECMA specification {@link external:Array.prototype.some Array.prototype.some()} (which
- * `none()` relies on for Array *list* arguments) passes
- * additional arguments to the *predicate* function further to the list item being evaluated. This can lead to
- * unexpected behaviour in certain cases, especially if the *predicate* function is curried or accepts spread
- * and/or default parameters. In such cases you can apply the {@link module:unary unary()} function to ensure
- * the *predicate* function is always passed exactly one argument and no more.
  * 
  * `none()` is curried by default.
  * 
@@ -30,7 +22,7 @@ const any = require('./any');
  * @see {@link module:any any()}
  * @see {@link module:all all()}
  * @param {function} predicate The function to test the items in *list* with
- * @param {(array|iterable|any)} list The list of items to test
+ * @param {(any[]|any)} list The list of items to test
  * @returns {boolean}
  * @example
  * 

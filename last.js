@@ -5,14 +5,13 @@
 'use strict';
 
 const isindexable = require('./isindexable');
-const isiterable = require('./isiterable');
 
 /**
- * Return the last item in *list* or `undefined` if *list* is empty. If *list* is neither an array nor an iterable
- * object, *list* itself is returned.
+ * Return the last item in *list* or `undefined` if *list* is empty. If *list* is not an array, *list* itself is
+ * returned.
  * 
  * @func last
- * @param {(array|iterable|any)} list The list to get the last item from
+ * @param {(any[]|any)} list The list to get the last item from
  * @returns {any}
  * @example
  *     
@@ -24,8 +23,5 @@ const isiterable = require('./isiterable');
  * 
  */
 module.exports = function last(list) {
-
-    return isindexable(list) ? list[ list.length - 1 ]
-         : isiterable(list) ? [...list][ list.length - 1 ]
-         : list;
+    return isindexable(list) ? list[ list.length - 1 ] : list;
 }

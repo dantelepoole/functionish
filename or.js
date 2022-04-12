@@ -2,6 +2,11 @@
  * @module or
  */
 
+ 'use strict';
+
+ const evaluate = require('./evaluate');
+ const partial = require('./partial');
+
 /**
  * Return a function that passes its arguments to each *clause* and returns `true` if any *clause*
  * returns a truthy false. Otherwise, it returns `false`. Each *clause* may be either a function (the result of which
@@ -33,20 +38,13 @@
  * @returns {boolean}
  */
 
-'use strict';
-
-const evaluate = require('./evaluate');
-const partial = require('./partial');
-
 module.exports = function or(...clauses) {
 
     function _or(index, clauses, ...args) {
 
-        if( index >= clauses.length ) return false;
+        return (index >= clauses.length) ? false
+             : evaluate(clauses[index], ...args) || _or( index+1, clauses, ...args );
 
-        const clauseresult = !! evaluate(clauses[index], ...args);
-
-        return clauseresult || _or(index+1, clauses, ...args);
     }
 
     return partial(_or, 0, clauses);

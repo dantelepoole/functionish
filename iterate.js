@@ -5,7 +5,7 @@
 'use strict';
 
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
+const unary = require('./unary');
 
 const hasforeach = value => (typeof value?.forEach === 'function');
 const iterateiterable = (func, iterable) => { for( const item of iterable ) func(item) };
@@ -19,12 +19,9 @@ const asobject = Object;
  * *func* is passed to that method. Otherwise, if *list* is an object, each property of the object is passed to *func*
  * as an array containing the property's key as its first element and the property's value as its second element.
  * 
- * *Important:* as per the ECMA specification {@link external:Array.prototype.forEach Array.prototype.forEach()} (which
- * `iterate()` relies on for Array *list* arguments) passes
- * additional arguments to the *func* function further to the list item being evaluated. This can lead to
- * unexpected behaviour in certain cases, especially if the *func* function is curried or accepts spread
- * and/or default parameters. In such cases you can apply the {@link module:unary unary()} function to ensure
- * the *predicate* function is always passed exactly one argument and no more.
+ * *Important:* the *func* function is coerced to unary arity before it is passed to *list*'s `forEach()` method
+ * (if it exists). This means that *func* will only ever receive a single argument (the item being iterated),
+ * regardless of how many arguments *list*'s `forEach()` method actually passes.
  * 
  * `iterate()` is curried by default.
  * 
@@ -51,7 +48,7 @@ module.exports = require('./curry2')(
     function iterate(func, list) {
 
         isarray(list) ? iteratearray(func, list)
-        : hasforeach(list) ? list.forEach(func)
+        : hasforeach(list) ? list.forEach( unary(func) )
         : isiterable(list) ? iterateiterable(func, list)
         : iterateobject(func, asobject(list));
 

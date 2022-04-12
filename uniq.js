@@ -12,7 +12,7 @@ const isiterable = require('./isiterable');
  * case an empty array is returned.
  * 
  * @func uniq
- * @param {(array|iterable|any)} list The list of items to remove duplicates from
+ * @param {(any[]|iterable|any)} list The list of items to remove duplicates from
  * @returns {any[]}
  */
 module.exports = function uniq(list) {

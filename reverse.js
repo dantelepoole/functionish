@@ -6,10 +6,9 @@
 
 const isarray = require('./isarray');
 const isdefined = require('./isdefined');
-const isiterable = require('./isiterable');
 
 /**
- * Return a copy of *list* in reverse order. If *list* is neither an array nor an iterable object, a single-item array
+ * Return a copy of *list* in reverse order. If *list* is not an array, a single-item array
  * containing only *list* is returned, unless *list* is `null`, `undefined` or `NaN`, in which case an empty array
  * is returned.
  * 
@@ -20,7 +19,6 @@ const isiterable = require('./isiterable');
 module.exports = function reverse(list) {
 
     return isarray(list) ? list.slice().reverse()
-         : isiterable(list) ? [...list].reverse()
          : isdefined(list) ? [list]
          : [];
 }

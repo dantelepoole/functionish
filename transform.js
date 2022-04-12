@@ -11,16 +11,12 @@ const curry2 = require('./curry2');
 const isfunction = require('./isfunction');
 const ispredicate = require('./ispredicate');
 const map = require('./map');
-const unary = require('./unary');
 
 const filtertransformerfactory = NAMED_FUNCTIONS ? _filtertransformerfactory_named : _filtertransformerfactory;
 const transformerfactory = NAMED_FUNCTIONS ? _transformerfactory_named : _transformerfactory;
 
-// We have to apply unary() because we are mapping a curried simpletransform to each transformation, which will
-// fail because Javascript's Array.prototype.map() passes multiple arguments to the mapping function, not just the
-// item being mapped
 const simpletransform_curried = curry2(simpletransform);
-const mapsimpletransform = map( unary(simpletransform_curried) );
+const mapsimpletransform = map(simpletransform_curried);
 
 /**
  * Return a reducer function that passes its second argument (nextvalue) through *transformations* functions before 

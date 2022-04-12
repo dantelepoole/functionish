@@ -5,7 +5,6 @@
 
 const filter = require('./filter');
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
 const isprimitive = require('./isprimitive');
 
 const asobject = Object;
@@ -13,12 +12,12 @@ const asobject = Object;
 /**
  * Return a copy of *list* with *values* removed. Comparison is performed using strict equality.
  * 
- * If *list* is an array or an iterable object, a new array is returned containing all original items except those
+ * If *list* is an array, a new array is returned containing all original items except those
  * contained in *values*. If *list* is `null` or a primitive, *list* itself is returned unless it matches any item
  * in *values*, in which case `undefined` is returned. If *list* is an object, a copy of *list* is returned without
  * the properties whose names are contained *values*. 
  * 
- * If *values* is not an array or an iterable, it is assumed to be the only value intended to be removed from *list*.
+ * If *values* is not an array, it is assumed to be the only value intended to be removed from *list*.
  * 
  * `without()` is curried by default.
  * 
@@ -40,9 +39,9 @@ const asobject = Object;
  * without( null, null ); // returns `undefined`
  * 
  * @func without
- * @param {(array|iterable|any)} values The values to remove from *list*
- * @param {(array|iterable|any)} list The source to remove *values* from
- * @returns {(array|object)}
+ * @param {(any[]|any)} values The values to remove from *list*
+ * @param {(any[]|any)} list The source to remove *values* from
+ * @returns {(any[]|object)}
  */
 module.exports = require('./curry2')(
 
@@ -50,7 +49,7 @@ module.exports = require('./curry2')(
 
         values = toarray(values);
         
-        return isarray(list) || isiterable(list) ? filter( notincludes(values), list )
+        return isarray(list) ? filter( notincludes(values), list )
              : isprimitive(list) ? (values.includes(list) ? undefined : list)
              : objectwithout( values, asobject(list) );
     }
@@ -64,11 +63,7 @@ function notincludes(list) {
 }
 
 function toarray(value) {
-
-    return isarray(value) ? value
-         : isiterable(value) ? [...value]
-         : [value];
-
+    return isarray(value) ? value : [value];
 }
 
 function objectwithout(keys, object) {
