@@ -20,7 +20,7 @@ const hasincludesmethod = value => (typeof value?.includes === 'function');
  * @func includes
  * @see {@link external:Array.prototype.includes Array.prototype.includes()}
  * @param {any} value The value to look for
- * @param {(any[]||any)} list The list of items to search
+ * @param {(any[]|any)} list The list of items to search
  * @returns {boolean}
  */
 module.exports = require('./curry2')(
