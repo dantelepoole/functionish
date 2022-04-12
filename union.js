@@ -4,7 +4,7 @@
 
 'use strict';
 
-const isiterable = require('./isiterable');
+const isarray = require('./isarray');
 
 /**
  * Return an array containing the items from *list1* and *list2* but without duplicates. If either list is neither
@@ -14,8 +14,8 @@ const isiterable = require('./isiterable');
  * `union()` is curried by default.
  * 
  * @func union
- * @param {(any[]|iterable|any)} list1 The first list of items to combine
- * @param {(any[]|iterable|any)} list2 The second list of items to combine
+ * @param {(any[]|any)} list1 The first list of items to combine
+ * @param {(any[]|any)} list2 The second list of items to combine
  * @returns {any[]}
  */
 module.exports = require('./curry2')(
@@ -23,14 +23,11 @@ module.exports = require('./curry2')(
     function union(list1, list2) {
 
         return [ 
-            ...new Set( [...toiterable(list1), ...toiterable(list2)] )  
+            ...new Set( [...toarray(list1), ...toarray(list2)] )  
             ];
     }
 )
 
-function toiterable(value) {
-
-    return isiterable(value) ? value
-         : (value !== undefined) ? [value]
-         : [];
+function toarray(value) {
+    return isarray(value) ? value : [value];
 }
