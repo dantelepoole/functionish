@@ -60,6 +60,7 @@ module.exports.predicate = require('./predicate');
 module.exports.reduce = require('./reduce');
 module.exports.repeat = require('./repeat');
 module.exports.reverse = require('./reverse');
+module.exports.separate = require('./separate');
 module.exports.slice = require('./slice');
 module.exports.split = require('./split');
 module.exports.symmetricdifference = require('./symmetricdifference');
