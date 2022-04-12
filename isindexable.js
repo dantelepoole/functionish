@@ -4,7 +4,7 @@
 
 'use strict';
 
-const hasownproperty = require('../hasownproperty');
+const hasownproperty = require('./hasownproperty');
 const isarray = require('./isarray');
 const isobject = require('./isobject');
 const isstring = require('./isstring');
