@@ -29,6 +29,7 @@ module.exports.flip = require('./flip');
 module.exports.format = require('./format');
 module.exports.freeze = require('./freeze');
 module.exports.haskey = require('./haskey');
+module.exports.hasownproperty = require('./hasownproperty');
 module.exports.head = require('./head');
 module.exports.id = require('./id');
 module.exports.includes = require('./includes');
