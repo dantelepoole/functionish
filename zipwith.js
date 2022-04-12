@@ -4,7 +4,6 @@
 'use strict';
 
 const isarray = require('./isarray');
-const isiterable = require('./isiterable');
 
 /**
  * Similar to  {@link module:zip zip()} except that *func* is applied to the elements of *list1* and *list2* and the
@@ -26,9 +25,9 @@ const isiterable = require('./isiterable');
  * @func zipwith
  * @see {@link module:zip zip()}
  * @param {function} func The function to apply to each item in *list1* and *list2*
- * @param {(array|iterable|any)} list1 The first list of items
- * @param {(array|iterable|any)} list2 The second list of items
- * @returns {array[]}
+ * @param {(any[]|any)} list1 The first list of items
+ * @param {(any[]|any)} list2 The second list of items
+ * @returns {any[]}
  */
 module.exports = require('./curry3')(
 
@@ -39,10 +38,7 @@ module.exports = require('./curry3')(
 )
 
 function toarray(value) {
-
-    return isarray? value
-         : isiterable(value) ? [...value]
-         : [value];
+    return isarray? value : [value];
 }
 
 function ziparrayswith(func, array1, array2) {
