@@ -4,15 +4,13 @@
 
 'use strict';
 
-const isarray = require('./isarray');
+const lift = require('./lift');
 
 const maximumvalue = Math.max;
 
 /**
  * Return an array of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
  * a batch size of `1` will be used.
- * 
- * If *list* is not an array, it's value will be returned as the only item in a single-batch array.
  * 
  * `batch()` is curried by default.
  * 
@@ -26,8 +24,8 @@ const maximumvalue = Math.max;
  * 
  * @func batch
  * @param {number} batchsize The maximum number of items in each batch
- * @param {(any[]|any)} list The list of items to batch
- * @returns {any[]}
+ * @param {any[]} list The list of items to batch
+ * @returns {any[][]}
  */
 
 module.exports = require('./curry2')(
@@ -36,18 +34,17 @@ module.exports = require('./curry2')(
 
         batchsize = maximumvalue(batchsize, 1);
 
-        return isarray(list) ? arraybatch(batchsize, list) : [ [list] ];
+        return arraybatch(batchsize, list);
     }
 )
 
 function arraybatch(batchsize, list) {
 
-    if( batchsize === 1 ) return list.map(toarray);
+    if( batchsize === 1 ) return list.map(lift);
 
     const batches = [];
     let index = 0;
 
-    // Oh yeah, I'm looping baby.....and it feels gooooooooooooooooooooood
     while( index < list.length ) {
         
         const nextbatch = list.slice(index, index + batchsize);

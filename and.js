@@ -13,6 +13,8 @@ const partial = require('./partial');
  * returns a truthy false. Otherwise, it returns `false`. Each *clause* may be either a function (the result of which
  * is evaluated) or a value to evaluate itself. 
  * 
+ * If an array is passed as the only argument, that array is used as the list of clauses to evaluate.
+ * 
  * The function is short-circuited, so it returns as soon as a *clause* returns a falsy value, without evaluating any
  * remaining *clauses*.
  * 
@@ -34,7 +36,7 @@ const partial = require('./partial');
  * @see {@link module:or or()}
  * @see {@link module:not not()}
  * @see {@link module:xor xor()}
- * @param {...any} clauses One or more clauses to test
+ * @param {...clause} clauses One or more clauses to test
  * @returns {boolean}
  */
 module.exports = function and(...clauses) {
@@ -43,11 +45,11 @@ module.exports = function and(...clauses) {
 
     function _and(index, clauses, ...args) {
 
-        return (index >= clauses.length)
-                ||
-               evaluate( clauses[index], ...args ) 
-                ||
-               _and( index+1, clauses, ...args );
+        if( index >= clauses.length ) return true;
+
+        return evaluate( clauses[index], ...args ) 
+                &&
+               _and( index+1, clauses, ...args )
     }
 
     return partial(_and, 0, clauses);

@@ -4,20 +4,15 @@
 
  'use strict';
  
- const unary = requier('./unary');
-
- const isfilterable = value => (typeof value?.filter === 'function');
+ const unary = require('./unary');
 
 /**
- * Function variant of `Array.prototype.filter()`. Apply the *predicate* function to each item in *list* and return
- * an array containing only the items for which *predicate* returns a truthy value.
+ * Function variant of `Array.prototype.filter()`. Apply the *predicate* function to *filterable*'s `filter()`-method
+ * and return the result.
  * 
- * If *list* has a `filter()` method, this function passes *predicate* to it. Otherwise, *list*
- * is converted to a single-item array and *predicate* is passed to its `filter()`-method.
- * 
- * *Important:* the *predicate* function is coerced to unary arity before it is passed to *list*'s `filter()` method
- * (if it exists). This means that *predicate* will only ever receive a single argument (the item being filtered),
- * regardless of how many arguments *list*'s `filter()` method actually passes.
+ * *Important:* the *predicate* function is coerced to unary arity before it is passed to *filterable*'s `filter()`
+ * method (if it exists). This means that *predicate* will only ever receive a single argument (the item being
+ * filtered), regardless of how many arguments *filterable*'s `filter()` method actually passes.
  * 
  * `filter()` is curried by default.
  * 
@@ -40,17 +35,14 @@
  * @func filter
  * @see {@link external:Array.prototype.filter Array.prototype.filter()}
  * @param {function} predicate The predicate function
- * @param {(any[]|any)} list The items to filter
- * @returns {any[]}
+ * @param {object} filterable An object that has a `filter()`-method
+ * @returns {object} The result of *filterable*.filter()
  */
 
 module.exports = require('./curry2')(
 
-    function filter(predicate, list) {
-
-        predicate = unary(predicate);
-
-        return isfilterable(list) ? list.filter(predicate) : [ list ].filter(predicate);
+    function filter(predicate, filterable) {
+        return filterable.filter( unary(predicate) );
     }
 )
 
