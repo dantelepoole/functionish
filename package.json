@@ -21,9 +21,5 @@
   "bugs": {
     "url": "https://github.com/dantelepoole/functionish/issues"
   },
-  "homepage": "https://github.com/dantelepoole/functionish#readme",
-  "devDependencies": {
-    "chai": "*",
-    "ink-docstrap": "*"
-  }
+  "homepage": "https://github.com/dantelepoole/functionish#readme"
 }
