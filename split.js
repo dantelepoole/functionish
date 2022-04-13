@@ -15,6 +15,7 @@ const tostring = require('./tostring');
  * `split()` is curried by default.
  * 
  * @func split
+ * @see {@link external:String.prototype.split String.prototype.split()}
  * @param {string} separator The delimiter string
  * @param {string} source The string to split
  * @returns {string[]}

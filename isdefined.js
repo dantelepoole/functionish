@@ -4,7 +4,7 @@
 
 'use strict';
 
-const notnan = value => ! Number.isNaN(value);
+const isvoid = require('./isvoid');
 
 /**
  * Return `true` if value is neither `null`, `undefined` nor `NaN`, otherwise return `false`.
@@ -19,8 +19,5 @@ const notnan = value => ! Number.isNaN(value);
  * @returns {boolean}
  */
 module.exports = function isdefined(value) {
-
-    return (value !== undefined)
-            && (value !== null)
-            && (typeof value !== 'number' || notnan(value));
+    return ! isvoid(value);
 }

@@ -47,9 +47,9 @@ module.exports = function and(...clauses) {
 
         if( index >= clauses.length ) return true;
 
-        return evaluate( clauses[index], ...args ) 
-                &&
-               _and( index+1, clauses, ...args )
+        return (index >= clauses.length)
+                ||
+               ( evaluate( clauses[index], ...args ) && _and( index+1, clauses, ...args ) );
     }
 
     return partial(_and, 0, clauses);

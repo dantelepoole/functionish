@@ -4,19 +4,16 @@
 
 'use strict';
 
-const isslicable = value => (typeof value?.slice === 'function');
-
 /**
- * If *list* has a `slice()` method, call it with *count* and return the result. Otherwise, return an array containing
- * *list* as its only item.
+ * Return the *count* number or items or characters from the the *list* array or string.
  * 
- * If *count* is negative, an empty array is returned.
+ * If *count* is negative, an empty array or string is returned.
  * 
  * `take()` is curried by default.
  * 
  * @func take
  * @param {number} count The number of items to take from *list*
- * @param {(any[]|string|any)} list The list to take the items from
+ * @param {(any[]|string)} list The string or array to take the items from
  * @returns {(any[]|string)}
  */
 module.exports = require('./curry2')(
@@ -25,7 +22,7 @@ module.exports = require('./curry2')(
 
         count = Math.max(0, count);
 
-        return isslicable(list) ? list.slice(0, count) : [list];
+        return list.slice(0, count);
 
     }
 )

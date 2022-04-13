@@ -11,8 +11,6 @@ const any = require('./any');
  * value for each item. This function is the counterpart to {@link module:any any()} (in fact, it simply calls `any()`
  * and negates the result).
  * 
- * If *list* is not an array, it is passed directly to *predicate* and the result is returned as the result of `none()`.
- * 
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
  * 
@@ -22,7 +20,7 @@ const any = require('./any');
  * @see {@link module:any any()}
  * @see {@link module:all all()}
  * @param {function} predicate The function to test the items in *list* with
- * @param {(any[]|any)} list The list of items to test
+ * @param {any[]} list An array of items to test
  * @returns {boolean}
  * @example
  * 

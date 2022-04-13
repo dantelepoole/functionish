@@ -17,8 +17,6 @@ const asobject = Object;
  * in *values*, in which case `undefined` is returned. If *list* is an object, a copy of *list* is returned without
  * the properties whose names are contained *values*. 
  * 
- * If *values* is not an array, it is assumed to be the only value intended to be removed from *list*.
- * 
  * `without()` is curried by default.
  * 
  * @example
@@ -39,16 +37,14 @@ const asobject = Object;
  * without( null, null ); // returns `undefined`
  * 
  * @func without
- * @param {(any[]|any)} values The values to remove from *list*
- * @param {(any[]|any)} list The source to remove *values* from
+ * @param {any[]} values The array of values to remove from *list*
+ * @param {(any[]|object)} list The source to remove *values* from
  * @returns {(any[]|object)}
  */
 module.exports = require('./curry2')(
 
     function without(values, list) {
 
-        values = toarray(values);
-        
         return isarray(list) ? filter( notincludes(values), list )
              : isprimitive(list) ? (values.includes(list) ? undefined : list)
              : objectwithout( values, asobject(list) );
@@ -60,10 +56,6 @@ function notincludes(list) {
     return function _notincludes(value) {
         return ! list.includes(value);
     }
-}
-
-function toarray(value) {
-    return isarray(value) ? value : [value];
 }
 
 function objectwithout(keys, object) {
