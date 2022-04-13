@@ -23,7 +23,7 @@ const freeze = require('./freeze');
  *
  * @example
  * 
- * const stack = require('stdlib/stack');
+ * const stack = require('functionish/stack');
  * 
  * const foundation = stack( ['Hari Seldon', 'Salvor Hardin', 'Hober Mallow'] );
  * 
