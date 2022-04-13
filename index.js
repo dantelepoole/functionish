@@ -63,6 +63,7 @@ module.exports.reverse = require('./reverse');
 module.exports.separate = require('./separate');
 module.exports.slice = require('./slice');
 module.exports.split = require('./split');
+module.exports.stack = require('./stack');
 module.exports.symmetricdifference = require('./symmetricdifference');
 module.exports.tail = require('./tail');
 module.exports.take = require('./take');
