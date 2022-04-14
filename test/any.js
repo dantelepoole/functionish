@@ -6,7 +6,6 @@ const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);
 let callcount = 0;
 function isnumber(x) { callcount += 1; return typeof x ==='number'; };
 function isstring(x) { callcount += 1; return typeof x === 'string' };
-function islessthan(num, x) { callcount += 1; return (x < num); };
 function isgreaterthan(num, x) { callcount += 1; return (x > num) };
 
 describe('any()', function() {
