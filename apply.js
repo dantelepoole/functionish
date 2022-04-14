@@ -5,6 +5,7 @@
 'use strict';
 
 /**
+ * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()}.
  * Pass *args* to *func* and return the result.
  * 
  * `apply()` is curried by default.
