@@ -43,7 +43,7 @@ describe('all()', function() {
         }
     )
 
-    it('should not test remaining list items after the predicate first returns false',
+    it('should be short-circuited',
         function() {
             const islessthan5 = islessthan.bind(null, 5);
             const result = all(islessthan5, numbers1to10);

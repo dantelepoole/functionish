@@ -13,13 +13,13 @@ describe(
             }
         )
 
-        it('should return a function that returns the argument to always()',
+        it('should return its first argument',
             function() {
                 expect( always(marker)() ).to.equal(marker);
             }
         )
 
-        it('should return a function that only returns the first argument to always()',
+        it('should only return its first argument',
             function() {
                 expect( always(marker, 42)() ).to.equal(marker);
             }
@@ -31,7 +31,7 @@ describe(
             }
         )
 
-        it('should return a function that returns undefined if always() is called without arguments',
+        it('should return undefined if it is called without arguments',
             function() {
                 expect( always()() ).to.be.undefined;
             }
