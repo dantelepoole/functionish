@@ -4,7 +4,7 @@
   "description": "A Node library of utility functions for functionish programming: the more better programming paradigm.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "mocha",
     "doc": "jsdoc -c ./jsdoc.conf.json -R README.md *.js"
   },
   "repository": {
