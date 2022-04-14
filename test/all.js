@@ -51,4 +51,25 @@ describe('all()', function() {
             expect( callcount ).to.be.equal(5);
         }
     )
+
+    it('should be curried with arity 2',
+        function () {
+            let result = all(isnumber);
+            expect(result).to.be.a('function');
+            result = result(numbers1to10)
+            expect(result).to.be.true;
+        }
+    )
+
+    it('should throw if its first argument is not a function',
+        function () {
+            expect( () => all(42, [1,2,3]) ).to.throw();
+        }
+    )
+
+    it('should throw if its second argument is not an array',
+        function () {
+            expect( () => all(isnumber, 42) ).to.throw();
+        }
+    )
 })

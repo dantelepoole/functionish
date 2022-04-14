@@ -12,7 +12,7 @@ const isnegative = x => (callcount +=1, (x < 0));
 
 const isevenpositivenumber = and(isnumber, iseven, ispositive);
 
-describe('all()', function() {
+describe('and()', function() {
 
     beforeEach(
         function() {

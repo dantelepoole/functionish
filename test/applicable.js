@@ -36,7 +36,7 @@ describe('applicable()', function() {
 
     it('should throw if the first argument to its returned function is not a function',
         function() {
-            expect( ()=>applicable(1)(2) ).to.throw;
+            expect( ()=>applicable(1)(2) ).to.throw();
         }
     )
 
