@@ -7,8 +7,9 @@
 const unary = require('./unary');
 
 /**
- * Apply the *predicate* function to each item in *list* and return `true` if and only if *predicate* returns `true`
- * each time. Otherwise, return `false`.
+ * Functional variant of {@link external:Array.prototype.every() Array.prototype.every()}. Apply the *predicate*
+ * function to each item in *list* and return `true` if and only if *predicate* returns `true` each time. Otherwise,
+ * return `false`.
  * 
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a falsy value, without
  * evaluating any remaining items in *list*.
