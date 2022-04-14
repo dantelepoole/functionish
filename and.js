@@ -49,7 +49,7 @@ module.exports = function and(...clauses) {
 
         return (index >= clauses.length)
                 ||
-               ( evaluate( clauses[index], ...args ) && _and( index+1, clauses, ...args ) );
+               ( !! evaluate( clauses[index], ...args ) && _and( index+1, clauses, ...args ) );
     }
 
     return partial(_and, 0, clauses);

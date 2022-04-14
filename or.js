@@ -46,7 +46,7 @@ module.exports = function or(...clauses) {
 
         return index < clauses.length
                 &&
-               ( evaluate(clauses[index], ...args) || _or( index+1, clauses, ...args ) );
+               ( !! evaluate(clauses[index], ...args) || _or( index+1, clauses, ...args ) );
 
     }
 

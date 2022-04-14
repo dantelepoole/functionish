@@ -50,7 +50,7 @@ module.exports = require('./curry2')(
             const result = !! clause(...args);
             const otherresult = !! otherclause(...args);
 
-            return result && (! otherresult);
+            return !! (result && (! otherresult));
         }
 
         return _xor;
