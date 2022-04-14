@@ -108,4 +108,11 @@ describe('all()', function() {
             expect( and(NaN)() ).to.be.false;
         }
     )
+
+    it('can be called as a unary function or a variadic function',
+        function() {
+            expect( and( [isnumber, iseven, ispositive] )(2) ).to.be.true;
+            expect( and( isnumber, iseven, ispositive )(2) ).to.be.true;
+        }
+    )
 })
