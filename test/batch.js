@@ -88,6 +88,27 @@ describe('batch()', function() {
         }
     )
 
+    it('should return a single batch if its batchsize argument is larger than the length of the second argument',
+        function () {
+            let result = batch(20, numbers1to10);
+            expect(result).to.be.an('array').with.lengthOf(1);
+            expect(result[0]).to.be.an('array').with.lengthOf(10);
+        }
+    )
+
+    it('should floor the batchsize argument if it is a float',
+        function () {
+            let result = batch(5, numbers1to10);
+            expect(result).to.be.an('array').with.lengthOf(2);
+
+            result = batch(5.4, numbers1to10);
+            expect(result).to.be.an('array').with.lengthOf(2);
+
+            result = batch(5.9, numbers1to10);
+            expect(result).to.be.an('array').with.lengthOf(2);
+        }
+    )
+
     it('should be curried with arity 2',
         function () {
             let result = batch(5);
