@@ -6,16 +6,12 @@
 
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 
-const curry2 = require('./curry2');
-
 /**
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
  * and passes them both *func*. Any other arguments passed to the returned function are ignored.
  * 
  * Be aware that that the returned function is *not* curried by default. If *func* is curried and you want to maintain
  * the currying, you need to curry the returned function yourself.
- * 
- * `binary()` itself is curried by default.
  * 
  * @example
  * 
@@ -37,11 +33,9 @@ module.exports = NAMED_FUNCTIONS ? binary_named : binary;
 
 function binary(func) {
 
-    function _binary(a, b) {
+    return function _binary(a, b) {
         return func(a, b);
     }
-
-    return curry2(_binary);
 }
 
 function binary_named(func) {
@@ -54,5 +48,5 @@ function binary_named(func) {
         }
     }
 
-    return curry2( container[binaryname] );
+    return container[binaryname];
 }
