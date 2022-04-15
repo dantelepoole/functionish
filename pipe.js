@@ -49,8 +49,8 @@ module.exports = function pipe(...funcs) {
         let results = args;
 
         for( const func of funcs ) results = [ func(...results) ]; 
-
-        return head(args);
+        
+        return head(results);
     }
 
     return functionchain;
