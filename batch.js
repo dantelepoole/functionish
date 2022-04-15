@@ -32,7 +32,7 @@ module.exports = require('./curry2')(
     
     function batch(batchsize, list) {
 
-        batchsize = maximumvalue(batchsize, 1);
+        batchsize = maximumvalue( parseInt(batchsize), 1);
 
         return arraybatch(batchsize, list);
     }
@@ -43,9 +43,13 @@ function arraybatch(batchsize, list) {
     if( batchsize === 1 ) return list.map(lift);
 
     const batches = [];
+    const listlength = (list.length ?? 0);
+
+    if( listlength === 0 ) return [ [] ];
+    
     let index = 0;
 
-    while( index < list.length ) {
+    while( index < listlength ) {
         
         const nextbatch = list.slice(index, index + batchsize);
 
