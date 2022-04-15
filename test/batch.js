@@ -73,6 +73,13 @@ describe('batch()', function() {
         }
     )
 
+    it('should accept any indexable object for its second parameter (e.g. a string)',
+        function () {
+            let result = batch(2, 'abcdefghijklmnopqrstuvwxyz');
+            expect(result).to.be.an('array').with.lengthOf(13);
+        }
+    )
+
     it('should return a single batch if its batchsize argument is larger than the length of the second argument',
         function () {
             let result = batch(20, numbers1to10);
