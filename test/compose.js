@@ -9,7 +9,7 @@ function increment(x) { callcount += 1; invocations.push(increment); return (x+1
 function double(x) { callcount += 1; invocations.push(double); return (x*2) };
 function countargs(...args) { callcount += 1; invocations.push(countargs); return args.length }
 
-describe('callable()', function() {
+describe('compose()', function() {
 
     beforeEach(
         function() {
@@ -20,7 +20,7 @@ describe('callable()', function() {
 
     it('should return a function',
         function () {
-            const func = compose(sum, increment, double);
+            const func = compose(double, increment, sum);
             expect(func).to.be.a('function');
         }
     )
