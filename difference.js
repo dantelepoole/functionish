@@ -13,8 +13,8 @@ const uniq = require('./uniq');
  * `difference()` is curried by default.
  * 
  * @func difference
- * @param {(any[]|any)} list1 The first list
- * @param {(any[]|any)} list2 The second list
+ * @param {(any[]|iterable)} list1 The first list
+ * @param {(any[]|iterable)} list2 The second list
  * @returns {any[]}
  */
 
@@ -23,14 +23,12 @@ module.exports = require('./curry2') (
     function difference(list1, list2) {
 
         const list2set = new Set(list2);
-        const differentitems = [];
+        const result = [];
 
-        function addifdistinct(item) {
-            if( ! list2set.has(item) ) differentitems.push(item)
+        for( const item of list1 ) {
+            if( ! list2set.has(item) ) result.push(item)
         }
 
-        list1.forEach(addifdistinct);
-
-        return uniq(differentitems);
+        return uniq(result);
     }
 )
