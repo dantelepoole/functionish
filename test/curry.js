@@ -57,6 +57,15 @@ describe(`curry()`, function() {
         }
     )
 
+    it(`should collect arguments in successive invocations or combined`,
+        function () {
+            curried = curry(5, returnargs);
+            curried = curried('foobar');
+            curried = curried(null, undefined, NaN, 42);
+            expect(curried).to.be.deep.equal(['foobar',null,undefined,NaN,42]);
+        }
+    )
+
     it(`should read the arity from the function's length-property if passed only a single argument`,
         function () {
 
