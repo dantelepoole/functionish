@@ -55,7 +55,7 @@ module.exports = NAMED_FUNCTIONS ? curry_named : curry;
 
 function curry(arity, func) {
 
-    if( typeof arity === 'function' ) [arity, func] = [arity.length, arity]
+    if( arguments.length === 1 && typeof arity === 'function' ) [arity, func] = [arity.length, arity]
 
     function curried(...args) {
         return (args.length < arity) ? curried.bind(null, ...args) : func(...args);
@@ -66,7 +66,7 @@ function curry(arity, func) {
 
 function curry_named(arity, func) {
    
-    if( typeof arity === 'function' ) [arity, func] = [arity.length, arity]
+    if( arguments.length === 1 && typeof arity === 'function' ) [arity, func] = [arity.length, arity]
     
     const curriedname = `curried(${arity}) ${func.name}`;
 
