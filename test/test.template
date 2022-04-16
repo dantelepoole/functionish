@@ -51,7 +51,7 @@ function expectnotdeepequal(value1, value2) {
     expect(value1).to.be.not.deep.equal(value2);
 }
 
-function expectdeepequalbutnotequal(value1, value2) {
+function expectclone(value1, value2) {
     expect(value1).to.be.deep.equal(value2);
     expect(value1).to.be.not.equal(value2);
 }
