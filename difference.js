@@ -25,7 +25,10 @@ module.exports = require('./curry2') (
         const list2set = new Set(list2);
         const differentitems = [];
 
-        const addifdistinct = item => { if( ! list2set.has(item) ) differentitems.push(item) }
+        function addifdistinct(item) {
+            if( ! list2set.has(item) ) differentitems.push(item)
+        }
+
         list1.forEach(addifdistinct);
 
         return uniq(differentitems);
