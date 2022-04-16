@@ -10,10 +10,8 @@ const isprimitive = require('./isprimitive');
 /**
  * Create a shallow copy of *source*. If *source* has a primitive type (number, boolean, string, symbol, null, bigint
  * and undefined), *source* itself is returned. If *source* is an array, its `slice()`-method is called. Otherwise,
- * the copy is made by creating a new object with *source*'s prototype and its property descriptors. 
- * 
- * Since an object's copy is created by copying the *source*'s property descriptors, this also means that the copy will
- * get *source*'s Getter and Setter methods, as well, not just the values they produce.
+ * the copy is made by creating a new object with *source*'s prototype and then copying *source*'s own enumerable
+ * properties to the copy using {@link external:Object.assign Object.assign()}. 
  * 
  * @example
  * 
@@ -35,6 +33,15 @@ module.exports = function copy(source) {
 
     return isarray(source) ? source.slice()
          : isprimitive(source) ? source
-         : Object.create( Object.getPrototypeOf(source), Object.getOwnPropertyDescriptors(source) );
+         : copyobject(source);
     
+}
+
+function copyobject(source) {
+
+    const prototype = Object.getPrototypeOf(source);
+    const clone = Object.create(prototype);
+    Object.assign(clone, source);
+
+    return clone;
 }
