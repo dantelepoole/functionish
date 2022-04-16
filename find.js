@@ -24,8 +24,6 @@ const unary = require('./unary');
  * 
  * find(iseven, [1,2,3,4]); // returns 2
  * find(iseven, [1,3,5]); // returns `undefined`
- * find(iseven, 2); // returns 2
- * find(iseven, 1); // returns `undefined`
  * 
  * @func find
  * @param {function} predicate The predicate function that identifies the item being sought
