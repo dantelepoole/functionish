@@ -86,7 +86,7 @@ describe(`find()`, function() {
         }
     )
 
-    it(`if passed an array, it should stop further items to the predicate once the predicate returns true`,
+    it(`if passed an array, it should stop oassing further items to the predicate once the predicate returns true`,
         function () {
             const predicate = countingpredicate.bind(null, iseven);
             const result = find( predicate, [1,3,5,8,9] );
