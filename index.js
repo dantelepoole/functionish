@@ -1,4 +1,6 @@
 
+module.exports.AbortController = require('./AbortController');
+module.exports.AbortSignal = require('./AbortSignal');
 module.exports.always = require('./always');
 module.exports.and = require('./and');
 module.exports.any = require('./any');
