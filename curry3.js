@@ -11,7 +11,6 @@ const curry = require('./curry');
  * 
  * @func curry3
  * @see {@link module:curry curry()}
- * @see {@link module:curry1 curry1()}
  * @see {@link module:curry2 curry2()}
  * @param {function} func The function to curry
  * @returns {function}

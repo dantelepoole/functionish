@@ -43,7 +43,6 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * increment(42); // returns '43'
  *  
  * @func curry
- * @see {@link module:curry1 curry1()}
  * @see {@link module:curry2 curry2()}
  * @see {@link module:curry3 curry3()}
  * @param {number} arity The number of arguments to curry

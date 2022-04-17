@@ -13,7 +13,6 @@ module.exports.compose = require('./compose');
 module.exports.concat = require('./concat');
 module.exports.copy = require('./copy');
 module.exports.curry = require('./curry');
-module.exports.curry1 = require('./curry1');
 module.exports.curry2 = require('./curry2');
 module.exports.curry3 = require('./curry3');
 module.exports.defaultto = require('./defaultto');
