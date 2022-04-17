@@ -79,6 +79,7 @@ module.exports.tail = require('./tail');
 module.exports.take = require('./take');
 module.exports.tap = require('./tap');
 module.exports.timeout = require('./timeout'); // JSDOC
+module.exports.timeoutabort = require('./timeoutabort'); // JSDOC
 module.exports.tojson = require('./tojson');
 module.exports.tostring = require('./tostring');
 module.exports.transduce = require('./transduce');
