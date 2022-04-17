@@ -10,8 +10,8 @@ const unary = require('./unary');
  * Functional variant of {@link external:Array.prototype.flatMap Array.prototype.flatMap()}. Map *func* to each item in
  * *list* and flatten the result.
  *  
- * *Important:* the *funcs* function is coerced to unary arity before it is passed to *list*'s `flatMap()` method
- * (if it exists). This means that *func* will only ever receive a single argument (the item being filtered),
+ * *Important:* the *funcs* function is coerced to unary arity before it is passed to *list*'s `flatMap()` method.
+ * This means that *func* will only ever receive a single argument (the item being filtered),
  * regardless of how many arguments *list*'s `flatMap()` method actually passes.
  * 
  * `flatmap()` is curried by default.
