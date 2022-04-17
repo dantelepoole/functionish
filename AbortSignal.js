@@ -1,5 +1,10 @@
 /**
- * @module AbortSignal
+ * Polyfill for the Web API AbortSignal interface. If an AbortSignal class already exists in the global 
+ * namespace, it is used instead of the polyfill.
+ * 
+ * @class AbortSignal
+ * @see {@link external:AbortSignal AbortSignal}
+ * @see {@link module:AbortController AbortController}
  */
 
 'use strict';
@@ -11,14 +16,6 @@ const isfunction = require('./isfunction');
 
 const defineproperties = Object.defineProperties;
 
-/**
- * Polyfill for the Web API AbortSignal interface. If an AbortSignal class already exists in the global 
- * namespace, it is used instead of the polyfill.
- * 
- * @class AbortSignal
- * @see {@link external:AbortSignal AbortSignal}
- * @see {@link module:AbortController AbortController}
- */
 module.exports = (global.AbortSignal ?? AbortSignal);
 
 class AbortSignal {
