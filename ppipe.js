@@ -12,7 +12,7 @@ const promisereducer = (promise, thenhandler) => promise.then(thenhandler);
 
 module.exports = function ppipe(...funcs) {
 
-    if( arguments.length === 1 && isarray(funcs[0]) ) funcs = funcs[0];
+    if( funcs.length === 1 && isarray(funcs[0]) ) funcs = funcs[0];
 
     const initialfunc = funcs.pop();
 
