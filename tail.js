@@ -12,7 +12,7 @@
  * @func tail
  * @see {@link module:head head()}
  * @param {(any[]|string)} list The string or array of items to return the tail of
- * @returns {(any[]string)}
+ * @returns {(any[]|string)}
  */
 module.exports = function tail(list) {
     return list.slice(1);
