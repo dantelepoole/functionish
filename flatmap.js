@@ -6,8 +6,6 @@
 
 const unary = require('./unary');
 
-const isflatmappable = value => (typeof value?.flatMap === 'function');
-
 /**
  * Functional variant of {@link external:Array.prototype.flatMap Array.prototype.flatMap()}. Map *func* to each item in
  * *list* and flatten the result.
