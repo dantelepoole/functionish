@@ -62,22 +62,21 @@ function timerfactory(delayms) {
 
     let timeoutid = undefined;
 
-    const timer = {
-
-        start(handler) {
-            checktimeoutid(timeoutid);
-            timeoutid = setTimeout(handler, delayms);
-        },
-        
-        stop() {
-            clearTimeout(timeoutid);
-            timeoutid = undefined;
-        },
-        
-        isstopped() {
-            return isundefined(timeoutid);
-        }
+    function start(timeouthandler) {
+        checktimeoutid(timeoutid);
+        timeoutid = setTimeout(timeouthandler, delayms);
     }
+
+    function stop() {
+        clearTimeout(timeoutid);
+        timeoutid = undefined;
+    }
+
+    function isstopped() {
+        return isundefined(timeoutid);
+    }
+
+    const timer = { start, stop, isstopped }
 
     return timer;
 }
