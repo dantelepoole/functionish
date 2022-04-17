@@ -48,4 +48,17 @@ describe('bind()', function() {
             expect( result.length ).be.equal( 0 );
         }
     )
+
+    it('should lookup the target function on its context argument if its func argument is not a function',
+        function() {
+            let result = bind('log', console);
+            expect(result).to.be.a('function');
+        }
+    )
+
+    it('should throw if its func argument is not a function and its context argument has no method by that name',
+        function() {
+            expect( () => bind('foobar', {}) ).to.throw();
+        }
+    )
 })
