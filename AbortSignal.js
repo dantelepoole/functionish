@@ -16,8 +16,6 @@ const isfunction = require('./isfunction');
 
 const defineproperties = Object.defineProperties;
 
-module.exports = (global.AbortSignal ?? AbortSignal);
-
 class AbortSignal {
 
     static abort() {
@@ -74,3 +72,6 @@ function eventfactory(eventname, target) {
         target
     }
 }
+
+
+module.exports = (global.AbortSignal ?? AbortSignal);

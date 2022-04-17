@@ -13,8 +13,6 @@ const EVENT_ABORT = 'abort';
 
 const AbortSignal = require('./AbortSignal');
 
-module.exports = (global.AbortController ?? AbortController);
-
 class AbortController {
 
     #signal = new AbortSignal();
@@ -33,3 +31,6 @@ class AbortController {
     }
 
 }
+
+
+module.exports = (global.AbortController ?? AbortController);
