@@ -34,7 +34,7 @@ module.exports = NAMED_FUNCTIONS ? flip_named : flip;
 function flip(func) {
 
     function flippedfunction(a, b, ...args) {
-        return func(b, a, ...args);
+        return (arguments.length === 0) ? func() : func(b,a, ...args);
     }
 
     return flippedfunction;
@@ -46,7 +46,7 @@ function flip_named(func) {
 
     const container = {
         [flippedname] : function(a,b, ...args) {
-            return func(b, a, ...args);
+            return (arguments.length === 0) ? func() : func(b,a, ...args);
         }
     }
 
