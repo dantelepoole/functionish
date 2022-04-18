@@ -4,7 +4,7 @@
  * 
  * @class AbortController
  * @see {@link external:AbortController AbortController}
- * @see {@link module:AbortSignal AbortSignal}
+ * @see {@link AbortSignal AbortSignal}
  */
 
 'use strict';
