@@ -17,8 +17,8 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * difficult to debug behaviour, especially when composing curried functions with other functions.
  * 
  * Providing an explicit arity can help avoid these difficulties. For this reason, functionish provides the convenience
- * functions `curry1()`, `curry2()` and `curry3()` which ensure that the appropriate arity is set. In general, you
- * should use these convenience functions instead of `curry()` itself.
+ * functions `curry2()` and `curry3()` which ensure that the appropriate arity is set. In general, you
+ * should use these convenience functions instead of `curry()` itself, unless you need to set an even higher arity.
  * 
  * Many of functionish's functions with a fixed arity are curried by default, including `map()`, `filter()`,
  * `iterate()`, `reduce()` and others. See the documentation for a specific function to see whether or not it is
