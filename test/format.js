@@ -6,7 +6,7 @@ const markerobject = Object.freeze({});
 const markerarray = Object.freeze([]);
 const markersymbol = Symbol();
 
-describe(`description is missing`, function() {
+describe(`format()`, function() {
 
     beforeEach(
         function() {
@@ -14,12 +14,9 @@ describe(`description is missing`, function() {
         }
     )
 
-    it(`should return the same result as Node's util.format() method`,
+    it(`should be a reference to Node's util.format() method`,
         function () {
-            const formatstring = '%s is a string, %d is a number, %i is an integer and %% is a percent sign';
-            const result = format(formatstring, 'foobar', 1.33, 1.33);
-            const resultutil = utilformat(formatstring, 'foobar', 1.33, 1.33);
-            expectequal( result, resultutil );
+            expectequal( format, utilformat );
         }
     )
 
