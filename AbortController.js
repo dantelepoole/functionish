@@ -1,6 +1,6 @@
 /**
  * Polyfill for the Web API AbortController interface. If an AbortController class already exists in the global 
- * namespace, it is used instead of the polyfill.
+ * namespace, it is exported instead of the polyfill.
  * 
  * @class AbortController
  * @see {@link external:AbortController AbortController}

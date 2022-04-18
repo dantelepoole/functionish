@@ -1,6 +1,6 @@
 /**
  * Polyfill for the Web API AbortSignal interface. If an AbortSignal class already exists in the global 
- * namespace, it is used instead of the polyfill.
+ * namespace, it is exported instead of the polyfill.
  * 
  * @class AbortSignal
  * @see {@link external:AbortSignal AbortSignal}
