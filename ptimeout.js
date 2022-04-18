@@ -22,7 +22,6 @@ const papply = require('./papply');
  * Important: when the timeout expires the timeout promise will reject with an error named 'TimeoutError'. This does
  * not mean that *func* itself will be interrupted or otherwise aborted, only that if *func* does eventually return
  * or throw after the timeout has expired, its result (return value or thrown error) will be silently discarded.
- * 
  * See {@link module:timeoutabort timeoutabort()} for a timeout variant that triggers an AbortController when the
  * timeout expires, allowing you to interrupt functions that are AbortController-aware.
  * 
