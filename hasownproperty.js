@@ -14,7 +14,7 @@
  */
 module.exports = require('./curry2') (
 
-    function hasownproperty(object, key) {
+    function hasownproperty(key, object) {
         return Object.prototype.hasOwnProperty.call(object, key);
     }
 
