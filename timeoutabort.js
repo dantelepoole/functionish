@@ -4,10 +4,11 @@
 
 'use strict';
 
-const ABORT_EVENT = 'abort';
+const ABORTEVENT_TYPE = 'abort';
 const OPTIONS_ONCE = Object.freeze( { once:true } );
 
 const bind = require('./bind');
+const noop = require('./noop');
 const not = require('./not');
 const timeout = require('./timeout');
 
@@ -42,16 +43,14 @@ const timeout = require('./timeout');
  */
 module.exports = require('./curry2') (timeoutabort)
 
-function timeoutabort(delayms, abortcontroller) {
+function timeoutabort(delayms, abortsignal) {
 
-    const abort = bind('abort', abortcontroller);
-    const canceltimeout = timeout(delayms, abort);
+    if( abortsignal.aborted ) return noop;
 
-    addaborteventlistener(canceltimeout, abortcontroller.signal);
+    const abort = bind('dispatchEvent', abortsignal, ABORTEVENT_TYPE);
+    const cleartimeout = timeout(delayms, abort);
 
-    return canceltimeout;
-}
-
-function addaborteventlistener(eventlistener, abortsignal) {
-    if( not(abortsignal.aborted) ) abortsignal.addEventListener(ABORT_EVENT, eventlistener, OPTIONS_ONCE)
+    abortsignal.addEventListener(ABORTEVENT_TYPE, cleartimeout, OPTIONS_ONCE);
+    
+    return cleartimeout;
 }
