@@ -17,13 +17,13 @@ module.exports = require('./curry2') (timeout);
  * @param {integer} delayms The number of milliseconds to delay the invocation of *func*
  * @param {function} func The function to invoke
  * @param  {...any} args The arguments to pass to *func*
- * @returns {function} A function to cancel the pending timeout
+ * @returns {function} A function to clear the pending timeout
  */
 function timeout(delayms, func, ...args) {
 
     const timeoutid = setTimeout(func, delayms, ...args);
 
-    return function canceltimeout() {
+    return function cleartimeout() {
         clearTimeout(timeoutid);
     }
 }
