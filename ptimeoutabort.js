@@ -96,21 +96,22 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
         // single token will be granted, ensuring that the timeoutpromise will resolve/reject only once, even if
         // called multiple times.
         const withtoken = singlecalltokendispenser();
-        
+
+        const rejectwithaborterror = partial(applywithaborterror, reject);
+        const rejectwithtimeouterror = partial(applywithtimeouterror, reject);
+        const triggerabortevent = bind('dispatchEvent', abortsignal, ABORTEVENT);
+
         // The timeouthandler will trigger an abort event on the abortsignal, but it will not cause any error that the
         // targetfunction may throw to propagate, since timeouthandler first claims the token for itself. After
         // triggering the abort event, the timeouthandler rejects the timeoutpromise with its own timeout error.
-        const triggerabortevent = bind('dispatchEvent', abortsignal, ABORTEVENT);
-        const rejectwithtimeouterror = partial(applywithtimeouterror, reject);
         const timeouthandler = withtoken( compose(rejectwithtimeouterror, triggerabortevent) )
         const cleartimeout = timeout(delayms, timeouthandler);
         
         // If an abort event is triggered by user code, we first clear the pending timeout and then reject with our own
         // abort error. We also claim the token to prevent any subsequent calls to resolve or reject by the
         // targetfunction (e.g. if the targetfunction is not AbortSignal-aware) from propagating.
-        const rejectwithaborterror = partial(applywithaborterror, reject);
-        const aborttimeoutpromise = withtoken( compose(rejectwithaborterror, cleartimeout) )
-        abortsignal.addEventListener(ABORTEVENT, aborttimeoutpromise, OPTIONS_ONCE);
+        const aborteventhandler = withtoken( compose(rejectwithaborterror, cleartimeout) )
+        abortsignal.addEventListener(ABORTEVENT, aborteventhandler, OPTIONS_ONCE);
 
         // When the targetfunction completes we resolve/reject the timeoutpromise with the targetfunction's result,
         // after first clearing the pending timeout. Again, we first claim the token so that any subsequent calls
