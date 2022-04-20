@@ -9,6 +9,7 @@
 
 'use strict';
 
+const ABORTEVENT = 'abort';
 const ABORTSIGNAL_NAME = 'AbortSignal';
 
 const { EventEmitter } = require('events');
@@ -45,6 +46,8 @@ function setsignaleventproperties(signal) {
 
         const signal = this;
         const event  = eventfactory(eventname, signal);
+
+        if( eventname === ABORTEVENT ) signal.aborted = true;
 
         const handlername = buildeventhandlername(eventname);
         const handler     = signal[handlername];
