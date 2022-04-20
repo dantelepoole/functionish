@@ -4,12 +4,14 @@
 
  'use strict';
 
-const ABORTEVENT_TYPE = 'abort';
+const ABORTEVENT = 'abort';
 const ABORTERROR_NAME = 'AbortError';
 const OPTIONS_ONCE = Object.freeze( { once:true } );
- 
+
+const compose = require('./compose');
 const papply = require('./papply');
 const partial = require('./partial');
+const tap = require('./tap');
 const timeout = require('./timeout');
 
 /**
@@ -85,70 +87,56 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
 
     return function executor(resolve, reject) {
 
-        const [resolveonce, rejectonce] = resolverejectonce(resolve, reject);
+        const requesttoken = singleusetokendispenser();
+        const tokenize = withtoken(requesttoken);
 
-        const canceltimeout = () => cleartimeout();
-        const aborttimeoutpromise = timeoutabortfactory(rejectonce, canceltimeout);
-        const resolvetimeoutpromise = timeoutfulfillfactory(resolveonce, canceltimeout);
-        const rejecttimeoutpromise = timeoutfulfillfactory(rejectonce, canceltimeout);
+        function ontimeout() {
+            abortsignal.dispatchEvent(ABORTEVENT);
+            rejectwithaborterror(reject);
+        }
 
-        abortsignal.addEventListener(ABORTEVENT_TYPE, aborttimeoutpromise, OPTIONS_ONCE);
+        const cleartimeout = timeout(delayms, tokenize(ontimeout));
+                
+        const resolvetimeoutpromise = compose(resolve, tap(cleartimeout));
+        const rejecttimeoutpromise = compose(reject, tap(cleartimeout));
 
-        const cleartimeout = timeout(
-            delayms, 
-            function timeouthandler() {
-                aborttimeoutpromise();
-                abortsignal.dispatchEvent(ABORTEVENT_TYPE);
-            }
-        )
-        
         papply(targetfunction)
-            .then(resolvetimeoutpromise)
-            .catch(rejecttimeoutpromise);
+            .then( tokenize(resolvetimeoutpromise) )
+            .catch( tokenize(rejecttimeoutpromise) );
+
+        const aborttimeoutpromise = partial(rejectwithaborterror, reject);
+        abortsignal.addEventListener(ABORTEVENT, tokenize(aborttimeoutpromise), OPTIONS_ONCE);
     }
 }
 
-function timeoutfulfillfactory(fulfillmenthandler, canceltimeout) {
+const withtoken = require('./curry2') (
+
+    function withtoken(requesttoken, func) {
     
-    return function fulfilltimeoutpromise(data) {
-        
-        canceltimeout();
-        fulfillmenthandler(data);
+        return function tokenized(...args) {
+            const istokengranted = requesttoken();
+            if( istokengranted ) return func(...args);
+        }
     }
+)
+
+function rejectwithaborterror(reject) {
+
+    const error = new Error(ABORTEVENT);
+    error.name = ABORTERROR_NAME;
+
+    reject(error);
 }
 
-function resolverejectonce(resolve, reject) {
+function singleusetokendispenser() {
 
-    let isfulfilled = false;
+    let istokengranted = false;
 
-    function resolveonce(data) {
+    return function requesttoken() {
+
+        if( istokengranted ) return false;
+        istokengranted = true;
         
-        if( isfulfilled ) return;
-
-        isfulfilled = true;
-        resolve(data);
-    }
-
-    function rejectonce(reason) {
-
-        if( isfulfilled ) return;
-
-        isfulfilled = true;
-        reject(reason);
-    }
-
-    return [resolveonce, rejectonce];
-}
-
-function timeoutabortfactory(reject, canceltimeout) {
-
-    return function aborttimeoutpromise() {
-
-        canceltimeout();
-
-        const error = new Error(ABORTEVENT_TYPE);
-        error.name = ABORTERROR_NAME;
-    
-        reject(error);
+        return true;
     }
 }
