@@ -88,16 +88,16 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
         const [resolveonce, rejectonce] = resolverejectonce(resolve, reject);
 
         const canceltimeout = () => cleartimeout();
-        const ontimeoutexpire = timeoutexpirefactory(rejectonce, canceltimeout);
+        const aborttimeoutpromise = timeoutabortfactory(rejectonce, canceltimeout);
         const resolvetimeoutpromise = timeoutfulfillfactory(resolveonce, canceltimeout);
         const rejecttimeoutpromise = timeoutfulfillfactory(rejectonce, canceltimeout);
 
-        abortsignal.addEventListener(ABORTEVENT_TYPE, ontimeoutexpire, OPTIONS_ONCE);
+        abortsignal.addEventListener(ABORTEVENT_TYPE, aborttimeoutpromise, OPTIONS_ONCE);
 
         const cleartimeout = timeout(
             delayms, 
             function timeouthandler() {
-                ontimeoutexpire();
+                aborttimeoutpromise();
                 abortsignal.dispatchEvent(ABORTEVENT_TYPE);
             }
         )
@@ -140,7 +140,7 @@ function resolverejectonce(resolve, reject) {
     return [resolveonce, rejectonce];
 }
 
-function timeoutexpirefactory(reject, canceltimeout) {
+function timeoutabortfactory(reject, canceltimeout) {
 
     return function aborttimeoutpromise() {
 
