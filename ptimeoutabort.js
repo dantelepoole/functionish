@@ -4,10 +4,11 @@
 
  'use strict';
 
+const ABORTERROR = 'abort';
 const ABORTEVENT = 'abort';
 const ABORTERROR_NAME = 'AbortError';
 const OPTIONS_ONCE = Object.freeze( { once:true } );
-const TIMEOUTEVENT = 'timeout';
+const TIMEOUTERROR = 'timeout';
 
 const bind = require('./bind');
 const compose = require('./compose');
@@ -97,8 +98,8 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
         // called multiple times.
         const withtoken = singlecalltokendispenser();
 
-        const rejectwithaborterror = partial(applywithaborterror, reject);
-        const rejectwithtimeouterror = partial(applywithtimeouterror, reject);
+        const rejectwithaborterror = partial(rejectwitherror, reject, ABORTERROR);
+        const rejectwithtimeouterror = partial(rejectwitherror, reject, TIMEOUTERROR);
         const triggerabortevent = bind('dispatchEvent', abortsignal, ABORTEVENT);
 
         // The timeouthandler will trigger an abort event on the abortsignal, but it will not cause any error that the
@@ -126,17 +127,9 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
     }
 }
 
-function applywithaborterror(reject) {
+function rejectwitherror(reject, errormessage) {
 
-    const error = new Error(ABORTEVENT);
-    error.name = ABORTERROR_NAME;
-
-    reject(error);
-}
-
-function applywithtimeouterror(reject) {
-
-    const error = new Error(TIMEOUTEVENT);
+    const error = new Error(errormessage);
     error.name = ABORTERROR_NAME;
 
     reject(error);
