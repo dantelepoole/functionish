@@ -44,8 +44,7 @@ const timeout = require('./timeout');
  * 
  * function geturl(url, abortsignal) {
  *   ...
- *   // aborts when abortsignal is triggered
- *   // returns a Promise
+ *   // Returns a Promise. Rejects when abortsignal is triggered.
  * }
  * 
  * const abortcontroller = new AbortController();
@@ -56,7 +55,7 @@ const timeout = require('./timeout');
  *    .then(console.log)
  *    .catch(console.error);
  * 
- * // Print the contents of 'http://www.example.com/' to stdout if geturl() completes within 1 seconds, otherwise it
+ * // Print the contents of 'http://www.example.com/' to stdout if geturl() completes within 1 second, otherwise it
  * // prints an AbortError to stderr. If the abortcontroller is aborted by user code, the timegeturl()-promise will
  * // also reject with an AbortError.
  * 
