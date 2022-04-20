@@ -25,7 +25,7 @@ const papply = require('./papply');
  * See {@link module:timeoutabort timeoutabort()} for a timeout variant that triggers an AbortController when the
  * timeout expires, allowing you to interrupt functions that are AbortController-aware.
  * 
- * `ptimeout()` is curried by default.
+ * `ptimeout()` is with an arity of 2 curried by default.
  * 
  * @example
  * 

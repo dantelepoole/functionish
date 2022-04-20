@@ -10,7 +10,7 @@ module.exports = require('./curry2') (timeout);
  * Similar to {@link external:setTimeout setTimeout()} except that this function flips the first two parameters and
  * it returns a function instead of a `timeoutid`. Call the returned function to cancel the pending the timeout.
  * 
- * `timeout()` is curried by default.
+ * `timeout()` is curried with an arity of 2 by default.
  * 
  * @func timeout
  * @see {@link external:setTimeout setTimeout()}

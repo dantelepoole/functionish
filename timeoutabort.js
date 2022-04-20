@@ -23,7 +23,7 @@ const timeout = require('./timeout');
  * If an `'abort'` event is triggered on *abortcontroller*'s `signal` by external code, it will cancel the pending
  * timeout.
  * 
- * `timeoutabort()` is curried by default.
+ * `timeoutabort()` is curried with an arity of 2 by default.
  * 
  * @example
  * 
