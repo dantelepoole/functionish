@@ -5,3 +5,4 @@ out/
 doc/
 jsdoc.conf.json
 script.js
+*.bck
