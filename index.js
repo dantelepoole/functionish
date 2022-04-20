@@ -68,6 +68,7 @@ module.exports.predicate = require('./predicate');
 module.exports.preject = require('./preject');
 module.exports.presolve = require('./presolve');
 module.exports.ptimeout = require('./ptimeout');
+module.exports.ptimeoutabort = require('./ptimeoutabort');
 module.exports.queuemicrotask = require('./queuemicrotask');
 module.exports.reduce = require('./reduce');
 module.exports.repeat = require('./repeat');
