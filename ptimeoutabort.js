@@ -115,7 +115,7 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
         abortsignal.addEventListener(ABORTEVENT, aborteventhandler, OPTIONS_ONCE);
 
         // When the targetfunction completes we resolve/reject the timeoutpromise with the targetfunction's result,
-        // after first clearing the pending timeout. Again, we first claim the token so that any subsequent calls
+        // after clearing the pending timeout. Again, we first claim the token so that any subsequent calls
         // to resolve/reject are effectively blocked.
         const resolvetimeoutpromise = withtoken( compose(resolve, tap(cleartimeout)) );
         const rejecttimeoutpromise = withtoken( compose(reject, tap(cleartimeout)) );
