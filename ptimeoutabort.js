@@ -7,7 +7,9 @@
 const ABORTEVENT = 'abort';
 const ABORTERROR_NAME = 'AbortError';
 const OPTIONS_ONCE = Object.freeze( { once:true } );
+const TIMEOUTEVENT = 'timeout';
 
+const bind = require('./bind');
 const compose = require('./compose');
 const papply = require('./papply');
 const partial = require('./partial');
@@ -25,12 +27,15 @@ const timeout = require('./timeout');
  * synchronous function `ptimeoutabort()` will still work, but it is not guaranteed to work correctly, because as long
  * as the synchronous function is executing the internal timeout-handler will not be invoked.
  * 
- * Important: when the timeout expires the timeout promise will reject with an error named 'AbortError'. Any error
- * thrown by *func* in response to the abort event will be silently ignored, as will *func*'s result (return value or
- * thrown error) in the case it is not AbortSignal-aware. Although `ptimeoutabort()` could in theory rely on *func*'s
- * promise to reject in case of an 'abort' event, not doing so makes `ptimeoutabort()` more flexible because it can be
- * used with functions that are or are not AbortSignal-aware and, more importantly, functions that produce promise
- * chains which combine functions that are and are not AbortSignal-aware.
+ * If the promise times out, the timeoutpromise is reject with an AbortError with the message 'timeout'. If an abort
+ * event is triggered by external code, the timeoutpromise will reject with an AbortError with the message 'abort'.
+ * 
+ * Important: although an abort event may cause *func* to throw an error, the timeoutpromise will always reject with
+ * its own AbortError. Any error thrown by *func* in response to the abort event will be silently ignored, as will
+ * *func*'s result (return value or thrown error) in the case it is not AbortSignal-aware. Although `ptimeoutabort()`
+ * could in theory rely on *func*'s promise to reject in case of an 'abort' event, not doing so makes `ptimeoutabort()`
+ * more flexible because it can be used with functions that are or are not AbortSignal-aware and, more importantly,
+ * functions that produce promise chains which combine functions that are and are not AbortSignal-aware.
  * 
  * If an abort event is triggered by external code the behaviour is unpredictable, as the rejection value will depend
  * on the order in which the AbortSignal invokes its event listeners.
@@ -87,40 +92,40 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
 
     return function executor(resolve, reject) {
 
-        const requesttoken = singleusetokendispenser();
-        const tokenize = withtoken(requesttoken);
+        // We use a token-mechanism to coordinate calls to resolve/reject from different parts of the code. Only a
+        // single token will be granted, ensuring that the timeoutpromise will resolve/reject only once, even if
+        // called multiple times.
+        const withtoken = singlecalltokendispenser();
+        
+        // The timeouthandler will trigger an abort event on the abortsignal, but it will not cause any error that the
+        // targetfunction may throw to propagate, since timeouthandler first claims the token for itself. After
+        // triggering the abort event, the timeouthandler rejects the timeoutpromise with its own timeout error.
+        const triggerabortevent = bind('dispatchEvent', abortsignal, ABORTEVENT);
+        const rejectwithtimeouterror = partial(applywithtimeouterror, reject);
+        const timeouthandler = withtoken( compose(rejectwithtimeouterror, triggerabortevent) )
+        const cleartimeout = timeout(delayms, timeouthandler);
+        
+        // If an abort event is triggered by user code, we first clear the pending timeout and then reject with our own
+        // abort error. We also claim the token to prevent any subsequent calls to resolve or reject by the
+        // targetfunction (e.g. if the targetfunction is not AbortSignal-aware) from propagating.
+        const rejectwithaborterror = partial(applywithaborterror, reject);
+        const aborttimeoutpromise = withtoken( compose(rejectwithaborterror, cleartimeout) )
+        abortsignal.addEventListener(ABORTEVENT, aborttimeoutpromise, OPTIONS_ONCE);
 
-        function ontimeout() {
-            abortsignal.dispatchEvent(ABORTEVENT);
-            rejectwithaborterror(reject);
-        }
-
-        const cleartimeout = timeout(delayms, tokenize(ontimeout));
-                
-        const resolvetimeoutpromise = compose(resolve, tap(cleartimeout));
-        const rejecttimeoutpromise = compose(reject, tap(cleartimeout));
+        // When the targetfunction completes we resolve/reject the timeoutpromise with the targetfunction's result,
+        // after first clearing the pending timeout. Again, we first claim the token so that any subsequent calls
+        // to resolve/reject are effectively blocked.
+        const resolvetimeoutpromise = withtoken( compose(resolve, tap(cleartimeout)) );
+        const rejecttimeoutpromise = withtoken( compose(reject, tap(cleartimeout)) );
 
         papply(targetfunction)
-            .then( tokenize(resolvetimeoutpromise) )
-            .catch( tokenize(rejecttimeoutpromise) );
+            .then( resolvetimeoutpromise )
+            .catch( rejecttimeoutpromise );
 
-        const aborttimeoutpromise = partial(rejectwithaborterror, reject);
-        abortsignal.addEventListener(ABORTEVENT, tokenize(aborttimeoutpromise), OPTIONS_ONCE);
     }
 }
 
-const withtoken = require('./curry2') (
-
-    function withtoken(requesttoken, func) {
-    
-        return function tokenized(...args) {
-            const istokengranted = requesttoken();
-            if( istokengranted ) return func(...args);
-        }
-    }
-)
-
-function rejectwithaborterror(reject) {
+function applywithaborterror(reject) {
 
     const error = new Error(ABORTEVENT);
     error.name = ABORTERROR_NAME;
@@ -128,15 +133,27 @@ function rejectwithaborterror(reject) {
     reject(error);
 }
 
-function singleusetokendispenser() {
+function applywithtimeouterror(reject) {
+
+    const error = new Error(TIMEOUTEVENT);
+    error.name = ABORTERROR_NAME;
+
+    reject(error);
+}
+
+function singlecalltokendispenser() {
 
     let istokengranted = false;
 
-    return function requesttoken() {
+    return function withtoken(func) {
 
-        if( istokengranted ) return false;
-        istokengranted = true;
+        return function tokenized(...args) {
+            
+            if( istokengranted ) return;
+
+            istokengranted = true;
         
-        return true;
+            return func(...args);
+        }
     }
 }
