@@ -4,6 +4,7 @@
 
 'use strict';
 
+const unary = require('./unary');
 const uniq = require('./uniq');
 
 /**
@@ -23,7 +24,7 @@ module.exports = require('./curry2') (
 
         if( list2.length < list1.length ) [list1, list2] = [list2, list1];
 
-        const iscommon = list1.includes.bind(list1);
+        const iscommon = unary(list1.includes.bind(list1));
         const commonitems = list2.filter(iscommon);
 
         return uniq(commonitems);
