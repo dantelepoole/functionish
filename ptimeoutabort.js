@@ -87,30 +87,28 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
 
         const [resolveonce, rejectonce] = resolverejectonce(resolve, reject);
 
-        const aborttimeoutpromise = timeoutabortfactory(rejectonce, canceltimeout);
-        abortsignal.addEventListener(ABORTEVENT_TYPE, aborttimeoutpromise, OPTIONS_ONCE);
-        
-        const resolvetimeoutpromise = timeoutfulfillmentfactory(resolveonce, canceltimeout);
-        const rejecttimeoutpromise = timeoutfulfillmentfactory(rejectonce, canceltimeout);
-        
-        const cleartimeout = timeout(delayms, timeouthandler);
+        const canceltimeout = () => cleartimeout();
+        const ontimeoutexpire = timeoutexpirefactory(rejectonce, canceltimeout);
+        const resolvetimeoutpromise = timeoutfulfillfactory(resolveonce, canceltimeout);
+        const rejecttimeoutpromise = timeoutfulfillfactory(rejectonce, canceltimeout);
+
+        abortsignal.addEventListener(ABORTEVENT_TYPE, ontimeoutexpire, OPTIONS_ONCE);
+
+        const cleartimeout = timeout(
+            delayms, 
+            function timeouthandler() {
+                ontimeoutexpire();
+                abortsignal.dispatchEvent(ABORTEVENT_TYPE);
+            }
+        )
         
         papply(targetfunction)
             .then(resolvetimeoutpromise)
             .catch(rejecttimeoutpromise);
-
-        function canceltimeout() {
-            cleartimeout();
-        }
-
-        function timeouthandler() {
-            aborttimeoutpromise();
-            abortsignal.dispatchEvent(ABORTEVENT_TYPE);
-        }
     }
 }
 
-function timeoutfulfillmentfactory(fulfillmenthandler, canceltimeout) {
+function timeoutfulfillfactory(fulfillmenthandler, canceltimeout) {
     
     return function fulfilltimeoutpromise(data) {
         
@@ -128,7 +126,6 @@ function resolverejectonce(resolve, reject) {
         if( isfulfilled ) return;
 
         isfulfilled = true;
-
         resolve(data);
     }
 
@@ -137,18 +134,17 @@ function resolverejectonce(resolve, reject) {
         if( isfulfilled ) return;
 
         isfulfilled = true;
-
         reject(reason);
     }
 
     return [resolveonce, rejectonce];
 }
 
-function timeoutabortfactory(reject, cleartimeout) {
+function timeoutexpirefactory(reject, canceltimeout) {
 
     return function aborttimeoutpromise() {
 
-        cleartimeout();
+        canceltimeout();
 
         const error = new Error(ABORTEVENT_TYPE);
         error.name = ABORTERROR_NAME;
