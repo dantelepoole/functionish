@@ -14,6 +14,7 @@ const bind = require('./bind');
 const compose = require('./compose');
 const papply = require('./papply');
 const partial = require('./partial');
+const queuemicrotask = require('./queuemicrotask');
 const tap = require('./tap');
 const timeout = require('./timeout');
 
@@ -95,38 +96,57 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
 
         if( abortsignal.aborted ) return rejectwitherror(reject, ABORTERROR);
 
-        // We use a token-mechanism to coordinate calls to resolve/reject from different parts of the code. Only a
-        // single token will ever be granted, ensuring that the timeoutpromise will resolve/reject only once, even if
-        // resolve/reject is called multiple times.
-        const withtoken = singlecalltokendispenser();
-
-        const rejectwithaborterror = partial(rejectwitherror, reject, ABORTERROR);
-        const rejectwithtimeouterror = partial(rejectwitherror, reject, TIMEOUTERROR);
-        const triggerabortevent = bind('dispatchEvent', abortsignal, ABORTEVENT);
-
-        // The timeouthandler will trigger an abort event on the abortsignal, but it will not cause any error that the
-        // targetfunction may throw to propagate, since timeouthandler first claims the token for itself. After
-        // triggering the abort event, the timeouthandler rejects the timeoutpromise with its own timeout error.
-        const timeouthandler = withtoken( compose(rejectwithtimeouterror, triggerabortevent) )
-        const cleartimeout = timeout(delayms, timeouthandler);
+        const [resolvetimeoutpromise, rejecttimeoutpromise] = resolverejectonce(resolve, reject);
         
-        // If an abort event is triggered by user code, we first clear the pending timeout and then reject with our own
-        // abort error. We also claim the token to prevent any subsequent calls to resolve or reject by the
-        // targetfunction (e.g. if the targetfunction is not AbortSignal-aware) from propagating.
-        const aborteventhandler = withtoken( compose(rejectwithaborterror, cleartimeout) )
-        abortsignal.addEventListener(ABORTEVENT, aborteventhandler, OPTIONS_ONCE);
+        let abortmessage = ABORTERROR;
 
-        // When the targetfunction completes we resolve/reject the timeoutpromise with the targetfunction's result,
-        // after clearing the pending timeout. Again, we first claim the token so that any subsequent calls
-        // to resolve/reject are effectively blocked.
-        const resolvetimeoutpromise = withtoken( compose(resolve, tap(cleartimeout)) );
-        const rejecttimeoutpromise = withtoken( compose(reject, tap(cleartimeout)) );
+        const cleartimeout = timeout(
+            delayms, 
+            function ontimeout() {
+                abortmessage = TIMEOUTERROR;
+                abortsignal.dispatchEvent(ABORTEVENT);
+            }
+        );
 
         papply(targetfunction)
-            .then( resolvetimeoutpromise )
-            .catch( rejecttimeoutpromise );
+            .then(resolvetimeoutpromise)
+            .catch(rejecttimeoutpromise)
+            .finally(cleartimeout);
 
+        function aborttimeoutpromise() {
+            cleartimeout();
+            rejectwitherror(rejecttimeoutpromise, abortmessage);
+        }
+
+        if( abortsignal.aborted ) return aborttimeoutpromise();
+
+        abortsignal.addEventListener(ABORTEVENT, aborttimeoutpromise, OPTIONS_ONCE);
     }
+}
+
+function resolverejectonce(resolve, reject) {
+
+    let isfulfilled = false;
+
+    function resolveonce(data) {
+
+        if( isfulfilled ) return;
+
+        isfulfilled = true;
+
+        resolve(data);
+    }
+
+    function rejectonce(reason) {
+
+        if( isfulfilled ) return;
+
+        isfulfilled = true;
+
+        reject(reason);
+    }
+
+    return [resolveonce, rejectonce];
 }
 
 function rejectwitherror(reject, errormessage) {
@@ -135,21 +155,4 @@ function rejectwitherror(reject, errormessage) {
     error.name = ABORTERROR_NAME;
 
     reject(error);
-}
-
-function singlecalltokendispenser() {
-
-    let istokengranted = false;
-
-    return function withtoken(func) {
-
-        return function runwithtoken(...args) {
-            
-            if( istokengranted ) return;
-
-            istokengranted = true;
-        
-            return func(...args);
-        }
-    }
 }
