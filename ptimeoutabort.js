@@ -93,9 +93,11 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
 
     return function executor(resolve, reject) {
 
+        if( abortsignal.aborted ) return rejectwitherror(reject, ABORTERROR);
+
         // We use a token-mechanism to coordinate calls to resolve/reject from different parts of the code. Only a
-        // single token will be granted, ensuring that the timeoutpromise will resolve/reject only once, even if
-        // called multiple times.
+        // single token will ever be granted, ensuring that the timeoutpromise will resolve/reject only once, even if
+        // resolve/reject is called multiple times.
         const withtoken = singlecalltokendispenser();
 
         const rejectwithaborterror = partial(rejectwitherror, reject, ABORTERROR);
