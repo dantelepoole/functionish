@@ -91,29 +91,28 @@ function timeoutexecutorfactory(delayms, abortsignal, targetfunction) {
 
     return function executor(resolve, reject) {
 
-        if( abortsignal.aborted ) return rejectwitherror(reject, ABORTERROR);
+        if( abortsignal.aborted ) return rejectwithaborterror(reject, ABORTERROR);
 
         const [resolvetimeoutpromise, rejecttimeoutpromise] = resolverejectonce(resolve, reject);
         
         let abortmessage = ABORTERROR;
 
-        const cleartimeout = timeout(
-            delayms, 
-            function ontimeout() {
-                abortmessage = TIMEOUTERROR;
-                abortsignal.dispatchEvent(ABORTEVENT);
-            }
-        );
+        function ontimeout() {
+            abortmessage = TIMEOUTERROR;
+            abortsignal.dispatchEvent(ABORTEVENT);
+        }
+
+        function aborttimeoutpromise() {
+            cleartimeout();
+            rejectwithaborterror(rejecttimeoutpromise, abortmessage);
+        }
+
+        const cleartimeout = timeout(delayms, ontimeout);
 
         papply(targetfunction)
             .then(resolvetimeoutpromise)
             .catch(rejecttimeoutpromise)
             .finally(cleartimeout);
-
-        function aborttimeoutpromise() {
-            cleartimeout();
-            rejectwitherror(rejecttimeoutpromise, abortmessage);
-        }
 
         if( abortsignal.aborted ) return aborttimeoutpromise();
 
@@ -146,7 +145,7 @@ function resolverejectonce(resolve, reject) {
     return [resolveonce, rejectonce];
 }
 
-function rejectwitherror(reject, errormessage) {
+function rejectwithaborterror(reject, errormessage) {
 
     const error = new Error(errormessage);
     error.name = ABORTERROR_NAME;
