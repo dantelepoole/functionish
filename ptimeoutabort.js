@@ -143,7 +143,7 @@ function singlecalltokendispenser() {
 
     return function withtoken(func) {
 
-        return function tokenized(...args) {
+        return function runwithtoken(...args) {
             
             if( istokengranted ) return;
 
