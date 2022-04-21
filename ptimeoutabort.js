@@ -10,12 +10,8 @@ const ABORTERROR_NAME = 'AbortError';
 const OPTIONS_ONCE = Object.freeze( { once:true } );
 const TIMEOUTERROR = 'timeout';
 
-const bind = require('./bind');
-const compose = require('./compose');
 const papply = require('./papply');
 const partial = require('./partial');
-const queuemicrotask = require('./queuemicrotask');
-const tap = require('./tap');
 const timeout = require('./timeout');
 
 /**
