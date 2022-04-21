@@ -52,7 +52,7 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  */
 module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap );
 
-function wrap(func, wrapperfunc) {
+function wrap(wrapperfunc, func) {
 
     function _wrappedfunction(...args) {
         return wrapperfunc(func, ...args);
@@ -61,7 +61,7 @@ function wrap(func, wrapperfunc) {
     return _wrappedfunction;
 }
 
-function wrap_named(func, wrapperfunc) {
+function wrap_named(wrapperfunc, func) {
 
     const wrappedname = `wrapped[${wrapperfunc.name}] ${func.name}`;
 
