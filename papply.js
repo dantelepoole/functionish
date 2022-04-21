@@ -4,6 +4,8 @@
 
 'use strict';
 
+const ispromise = require('util').types.isPromise;
+
 /**
  * Pass *args* to the *func* function and return a Promise that resolves (or rejects) with the result.
  * This function returns a Promise that resolves or rejects with the result of calling *func*, regardless of whether
@@ -42,7 +44,7 @@ module.exports = function papply(func, ...args) {
     try {
         
         const result = func(...args);
-        return Promise.resolve(result);
+        return ispromise(result) ? result : Promise.resolve(result);
 
     } catch (error) {
         return Promise.reject(error);
