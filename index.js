@@ -42,6 +42,7 @@ module.exports.isgreaterthan = require('./isgreaterthan');
 module.exports.isgreaterthanorequal = require('./isgreaterthanorequal');
 module.exports.islessthan = require('./islessthan');
 module.exports.islessthanorequal = require('./islessthanorequal');
+module.exports.ispromise = require('./ispromise');
 module.exports.iterate = require('./iterate');
 module.exports.last = require('./last');
 module.exports.length = require('./length');
