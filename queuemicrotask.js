@@ -4,6 +4,8 @@
 
 'use strict';
 
+const partial = require('./partial');
+
 /**
  * Invoke *func* from the microtask queue, similar to {@link external:queueMicrotask queueMicrotask()} except that this
  * function also allows you to provide arguments to pass to *func* when it is invoked.
@@ -14,10 +16,6 @@
  */
 module.exports = function queuemicrotask(func, ...args) {
 
-    queueMicrotask(
-        
-        function microtask() {
-            func(...args);
-        }
-    )
+    const deferred = partial(func, ...args);
+    queueMicrotask( deferred );
 }
