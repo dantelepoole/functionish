@@ -4,10 +4,13 @@
 
 'use strict';
 
-const TIMEOUTERROR_NAME = 'TimeoutError';
+const ABORTERROR_NAME = 'AbortError';
+const TIMEOUTERROR = 'timeout';
 
-const isundefined = require('./isundefined');
 const papply = require('./papply');
+const partial = require('./partial');
+const timeout = require('./timeout');
+const wrap = require('./wrap');
 
 /**
  * Return a function that passes its arguments (prepended by any *preboundargs* provided to `ptimeout()`) to *func*
@@ -19,11 +22,11 @@ const papply = require('./papply');
  * synchronous function `ptimeout()` will still work, but it is not guaranteed to work correctly, because as long
  * as the synchronous function is running the pending timer will not run, even if the timeout expires.
  * 
- * Important: when the timeout expires the timeout promise will reject with an error named 'TimeoutError'. This does
- * not mean that *func* itself will be interrupted or otherwise aborted, only that if *func* does eventually return
- * or throw after the timeout has expired, its result (return value or thrown error) will be silently discarded.
- * See {@link module:timeoutabort timeoutabort()} for a timeout variant that triggers an AbortController when the
- * timeout expires, allowing you to interrupt functions that are AbortController-aware.
+ * Important: when the timeout expires the timeout promise will reject with an error named 'AbortError' and the
+ * message 'timeout'. This does not mean that *func* itself will be interrupted or otherwise aborted, only that if
+ * *func* does eventually return or throw after the timeout has expired, its result (return value or thrown error) will
+ * be silently discarded. See {@link module:ptimeoutabort ptimeoutabort()} for a timeout variant that triggers an
+ * AbortController when the timeout expires, allowing you to interrupt functions that are AbortController-aware.
  * 
  * `ptimeout()` is with an arity of 2 curried by default.
  * 
@@ -42,7 +45,7 @@ const papply = require('./papply');
  * // prints a TimeoutError to stderr
  * 
  * @func ptimeout
- * @see {@link module:timeoutabort timeoutabort()}
+ * @see {@link module:ptimeoutabort ptimeoutabort()}
  * @param {integer} delayms The number of milliseconds to wait before timing out
  * @param {function} func The function that should complete before the timeout expires
  * @param {...any} preboundargs The arguments to pre-bind to *func*
@@ -54,90 +57,50 @@ function ptimeout(delayms, func, ...preboundargs) {
 
     return function timeoutpromise(...args) {
         
-        if( preboundargs.length > 0 ) args = [...preboundargs, ...args];
+        const timedfunction = partial(func, ...preboundargs, ...args);
 
-        const timeoutexecutor = timeoutexecutorfactory(delayms, func, args);
+        const timeoutexecutor = timeoutexecutorfactory(delayms, timedfunction);
 
         return new Promise(timeoutexecutor);
     }
 }
 
-function timeoutexecutorfactory(delayms, func, args) {
+function timeoutexecutorfactory(delayms, timedfunction) {
 
     return function executor(resolve, reject) {
 
-        const timer = timerfactory(delayms);
+        let istimerrunning = false;
 
-        const resolvetimeoutpromise = promisefulfillmentfactory(timer, resolve);
-        const rejecttimeoutpromise = promisefulfillmentfactory(timer, reject);
+        function timerwrapper(func, ...args) {
 
-        timer.start(
+            if( ! istimerrunning ) return;
 
-            function onpromisetimeout() {
+            istimerrunning = false;
 
-                timer.stop();
-                rejectwithtimeouterror(reject);
-            }
-        )
+            cleartimeout();
 
-        const timedpromise = papply(func, ...args);
+            func(...args);
+        }
 
-        timedpromise
+        const resolvetimeoutpromise = wrap(timerwrapper, resolve);
+        const rejecttimeoutpromise = wrap(timerwrapper, reject);
+
+        const ontimeout = partial(rejectwithaborterror, rejecttimeoutpromise);
+        const cleartimeout = timeout(delayms, ontimeout);
+        
+        istimerrunning = true;
+
+        papply(timedfunction)
             .then(resolvetimeoutpromise)
-            .catch(rejecttimeoutpromise);
+            .catch(rejecttimeoutpromise)
+            .finally(cleartimeout);
     }
 }
 
-function promisefulfillmentfactory(timer, fulfillmenthandler) {
+function rejectwithaborterror(reject) {
 
-    return function promisefulfill(data) {
-
-        if( timer.isstopped() ) return;
-
-        timer.stop();
-
-        fulfillmenthandler(data);
-    }
-}
-
-function timerfactory(delayms) {
-
-    let timeoutid = undefined;
-
-    function start(timeouthandler) {
-        checktimeoutid(timeoutid);
-        timeoutid = setTimeout(timeouthandler, delayms);
-    }
-
-    function stop() {
-        clearTimeout(timeoutid);
-        timeoutid = undefined;
-    }
-
-    function isstopped() {
-        return isundefined(timeoutid);
-    }
-
-    const timer = { start, stop, isstopped }
-
-    return timer;
-}
-
-function rejectwithtimeouterror(reject) {
-
-    const error = new Error('timeout');
-    error.name = TIMEOUTERROR_NAME;
+    const error = new Error(TIMEOUTERROR);
+    error.name = ABORTERROR_NAME;
 
     reject(error);
-}
-
-function checktimeoutid(timeoutid) {
-
-    if( isundefined(timeoutid) ) return;
-
-    const errormessage = `ptimeout(): the timer cannot be started because it is already running`;
-    const error = new Error(errormessage);
-    error.name = TIMEOUTERROR_NAME;
-
-    throw error;
 }
