@@ -39,9 +39,6 @@ const timeout = require('./timeout');
  * more flexible because it can be used with functions that are or are not AbortSignal-aware and, more importantly,
  * functions that produce promise chains which combine functions that are and are not AbortSignal-aware.
  * 
- * If an abort event is triggered by external code the behaviour is unpredictable, as the rejection value will depend
- * on the order in which the AbortSignal invokes its event listeners.
- * 
  * See {@link module:ptimoue ptimeout()} for a Promise-based timeout that does not rely on an AbortSignal.
  * 
  * `ptimeoutabort)` is curried with an arity of 3 by default.
