@@ -62,14 +62,24 @@ describe(`isgreaterthan()`, function() {
         }
     )
 
-    it(`should return false if the arguments are not both either strings or numeric types`,
+    it(`should return convert strings to numbers if possible`,
         function () {
-            expectfalse( isgreaterthan('b', 1) );
             expectfalse( isgreaterthan(1, '8') );
-            expectfalse( isgreaterthan([], '1') );
-            expectfalse( isgreaterthan(null, 0) );
-            expectfalse( isgreaterthan(NaN, NaN) );
-            expectfalse( isgreaterthan(undefined, null) );
+            expecttrue( isgreaterthan('8', 1) );
+        }
+    )
+
+    it(`should return the same result as the Javascript >-operator`,
+        function () {
+            expectequal( isgreaterthan('b', 1), ('b' > 1) );
+            expectequal( isgreaterthan(1, 'b'), (1 > 'b') );
+            expectequal( isgreaterthan([], '1'), ([] > '1') );
+            expectequal( isgreaterthan('1', []), ('1' > []) );
+            expectequal( isgreaterthan(null, 0), (null > 0) );
+            expectequal( isgreaterthan(0, null), (0 > null) );
+            expectequal( isgreaterthan(NaN, NaN), (NaN > NaN) );
+            expectequal( isgreaterthan(undefined, null), (undefined > null) );
+            expectequal( isgreaterthan(null, undefined), (null > undefined) );
         }
     )
 })
