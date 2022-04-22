@@ -69,8 +69,6 @@ function timeoutexecutorfactory(delayms, timedfunction) {
 
     return function executor(resolve, reject) {
 
-        let istimerrunning = false;
-
         function timerwrapper(func, ...args) {
 
             if( ! istimerrunning ) return;
@@ -88,7 +86,7 @@ function timeoutexecutorfactory(delayms, timedfunction) {
         const ontimeout = partial(rejectwithaborterror, rejecttimeoutpromise);
         const cleartimeout = timeout(delayms, ontimeout);
         
-        istimerrunning = true;
+        let istimerrunning = true;
 
         papply(timedfunction)
             .then(resolvetimeoutpromise)
