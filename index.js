@@ -11,6 +11,7 @@ module.exports.batch = require('./batch');
 module.exports.binary = require('./binary');
 module.exports.bind = require('./bind');
 module.exports.callable = require('./callable');
+module.exports.classname = require('./classname');
 module.exports.compose = require('./compose');
 module.exports.concat = require('./concat');
 module.exports.copy = require('./copy');
