@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const pmap = require('../pmap');
+const pthen = require('../pthen');
 
 function double(x) {
     return (x*2);
@@ -9,7 +9,7 @@ const markerobject = Object.freeze({});
 const markerarray = Object.freeze([]);
 const markersymbol = Symbol();
 
-describe(`pmap()`, function() {
+describe(`pthen()`, function() {
 
     beforeEach(
         function() {
@@ -19,7 +19,7 @@ describe(`pmap()`, function() {
 
     it(`should be curried`,
         function () {
-            const curried = pmap(double);
+            const curried = pthen(double);
             expectfunction(curried);
 
             expecttype( 'Promise', curried(Promise.resolve(42)) );
@@ -28,21 +28,21 @@ describe(`pmap()`, function() {
 
     it(`should return a promise`,
         function () {
-            expect( pmap(double, Promise.resolve(42)) ).to.be.a('Promise');
+            expect( pthen(double, Promise.resolve(42)) ).to.be.a('Promise');
         }
     )
 
     it(`should resolve to the result of applying its first argument to the resolve value of its second argument`,
         function () {
             const p = Promise.resolve(42);
-            const mapped = pmap(double, p);
+            const mapped = pthen(double, p);
             return pexpectequal(84, mapped);
         }
     )
 
     it(`should throw if its second argument is not thennable`,
         function () {
-            expecttothrow( pmap, double, {});
+            expecttothrow( pthen, double, {});
         }
     )
 })

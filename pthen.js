@@ -1,5 +1,5 @@
 /**
- * @module pmap
+ * @module pthen
  */
 
 'use strict';
@@ -10,7 +10,7 @@
  * 
  * `pmap()` is curried by default.
  * 
- * @func pmap
+ * @func pthen
  * @see {@link external:Promise.prototype.then Promise.prototype.then()}
  * @see {@link module:pcatch pcatch()}
  * @see {@link module:pfinally pfinally()}
@@ -20,7 +20,7 @@
  */
 module.exports = require('./curry2')(
 
-    function pmap(func, promise) {
+    function pthen(func, promise) {
         return promise.then(func);
     }
 )
