@@ -2,26 +2,15 @@ const expect = require('chai').expect;
 const ispredicate = require('../ispredicate');
 const tagaspredicate = require('../tagaspredicate');
 
-const PREDICATE_TAG = require('../predicatetag');
-
 const markerobject = Object.freeze({});
 const markerarray = Object.freeze([]);
 const markersymbol = Symbol();
-
-const predicateobject = Object.freeze( { [PREDICATE_TAG] : PREDICATE_TAG } );
 
 describe(`ispredicate()`, function() {
 
     beforeEach(
         function() {
 
-        }
-    )
-
-    it(`should return true if its argument has a property with PREDICATE_TAG as both its key and its value`,
-        function () {
-            expecttrue( ispredicate(predicateobject) );
-            expectfalse( ispredicate(markerobject) );
         }
     )
 
