@@ -4,7 +4,7 @@
 
 'use strict';
 
-const PREDICATE_TAG = require('./predicatetag');
+const PREDICATE_TAG = Symbol.for('functionish/predicate/tag');
 
 /**
  * Return `true` if *func* is a predicate function, meaning that it has earlier been passed to the 
