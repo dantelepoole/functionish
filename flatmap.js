@@ -8,7 +8,8 @@ const unary = require('./unary');
 
 /**
  * Functional variant of {@link external:Array.prototype.flatMap Array.prototype.flatMap()}. Map *func* to each item in
- * *list* and flatten the result.
+ * *list* and flatten the result. This function calls *list*'s `flatMap()` method or, if no such method exists, *list*'s
+ * `flatmap()` method.
  *  
  * *Important:* the *funcs* function is coerced to unary arity before it is passed to *list*'s `flatMap()` method.
  * This means that *func* will only ever receive a single argument (the item being filtered),
@@ -25,6 +26,8 @@ const unary = require('./unary');
 module.exports = require('./curry2')(
     
     function flatmap(func, list) {
-        return list.flatMap( unary(func) );
+
+        const flatmapfunc = (list.flatMap ?? list.flatmap).bind(list);
+        return flatmapfunc( unary(func) );
     }
 )

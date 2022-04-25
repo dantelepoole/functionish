@@ -39,6 +39,21 @@ describe(`flatmap()`, function() {
         }
     )
 
+    it(`should invoke its second argument's flatMap() method or else its flatpmap() method`,
+        function () {
+            let wasinvoked = false
+
+            const flatMappable = { flatMap() { wasinvoked = true; } }
+            flatmap(double, flatMappable);
+            expecttrue( wasinvoked );
+
+            wasinvoked = false;
+            const flatmappable = { flatmap() { wasinvoked = true; } }
+            flatmap(double, flatmappable);
+            expecttrue( wasinvoked );
+        }
+    )
+
     it(`should invoke pass its first argument to the flatMap() method of its second argument`,
         function () {
             const result = flatmap(double, flatmappable);
