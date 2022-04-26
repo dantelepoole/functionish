@@ -69,6 +69,7 @@ module.exports.ppipe = require('./ppipe');
 module.exports.predicate = require('./predicate');
 module.exports.preject = require('./preject');
 module.exports.presolve = require('./presolve');
+module.exports.promisify = require('./promisify');
 module.exports.ptimeout = require('./ptimeout');
 module.exports.ptimeoutabort = require('./ptimeoutabort');
 module.exports.queuemicrotask = require('./queuemicrotask');
