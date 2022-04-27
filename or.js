@@ -2,10 +2,11 @@
  * @module or
  */
 
- 'use strict';
+'use strict';
 
- const evaluate = require('./evaluate');
- const partial = require('./partial');
+const evaluate = require('./evaluate');
+const isarray = require('./isarray');
+const partial = require('./partial');
 
 /**
  * Return a function that passes its arguments to each *clause* and returns `true` if any *clause*
@@ -39,6 +40,8 @@
  */
 
 module.exports = function or(...clauses) {
+
+    if( clauses.length === 1 && isarray(clauses[0]) ) clauses = clauses[0];
 
     function _or(index, clauses, ...args) {
 
