@@ -44,7 +44,7 @@ const promisereducer = (promise, thenhandler) => promise.then(thenhandler);
  *    axios.get // fetch json from the input url
  * )
  * 
- * const totalvisits = gettotalvisits('/getaccountjson');
+ * gettotalvisits('/getaccountjson').then(console.log); // prints the total number of visits by active accounts
  * 
  * @func pcompose
  * @see {@link module:ppipe ppipe()}
@@ -60,7 +60,7 @@ module.exports = function pcompose(...funcs) {
 
     return function composedpromise(...args) {
 
-        if( isundefined(initialfunc) ) return args[0];
+        if( isundefined(initialfunc) ) return Promise.resolve( args[0] );
 
         const promise = papply(initialfunc, ...args);
 
