@@ -2,13 +2,12 @@
  * @module pipe
  */
 
- 'use strict';
+'use strict';
 
- const head = require('./head');
- const isarray = require('./isarray');
- const isempty = require('./isempty');
- 
- const functionchain_empty = (...args) => args[0];
+const head = require('./head');
+const id = require('./id');
+const isarray = require('./isarray');
+const isempty = require('./isempty');
  
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
@@ -42,7 +41,7 @@ module.exports = function pipe(...funcs) {
 
     if( arguments.length === 1 && isarray(funcs[0]) ) funcs = funcs[0];
 
-    if( isempty(funcs) ) return functionchain_empty;
+    if( isempty(funcs) ) return id;
 
     function functionchain(...args) {
 
