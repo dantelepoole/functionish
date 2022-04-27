@@ -40,6 +40,20 @@ describe(`papply()`, function() {
         }
     )
 
+    it(`should reject with the thrown error if its first argument throws`,
+        function () {
+
+            return papply(raiseerror, 'SomeError', 'foobar').catch(
+                error => {
+                    expect(error).to.be.an('Error');
+                    expect(error.name).to.be.equal('SomeError');
+                    expect(error.message).to.be.equal('foobar');
+                }
+            )
+        }
+    )
+
+
     it(`if its first argument returns a promise, it should return that same promise`,
         function () {
 
