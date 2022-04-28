@@ -7,7 +7,6 @@ describe(`preject()`, function() {
 
     beforeEach(
         function() {
-            expecterrorcalled = false;
         }
     )
 
