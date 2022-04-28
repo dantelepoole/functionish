@@ -56,11 +56,11 @@ module.exports = function ppipe(...funcs) {
 
     if( funcs.length === 1 && isarray(funcs[0]) ) funcs = funcs[0];
 
-    const initialfunc = funcs.pop();
+    const initialfunc = funcs.shift();
 
     return function pipedpromise(...args) {
 
-        if( isundefined(initialfunc) ) return args[0];
+        if( isundefined(initialfunc) ) return Promise.resolve( args[0] );
 
         const promise = papply(initialfunc, ...args);
 
