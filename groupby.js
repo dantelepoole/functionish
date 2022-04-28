@@ -61,22 +61,21 @@ module.exports = require('./curry2') (
 
         const target = {};
 
-        const group = groupfactory(selectgroup, target);
-
-        iterate(group, list);
+        const additemtogroup = addtogroup(selectgroup, target);
+        iterate(additemtogroup, list);
 
         return target;
     }
 )
 
-function groupfactory(selectgroup, target) {
+const addtogroup = require('./curry3') ( 
 
-    return function group(item) {
+    function addtogroup(selectgroup, target, item) {
 
         const key = selectgroup(item);
 
         if( isvoid(key) ) return;
 
-        isvoid( target[key] ) ? target[key] = [item] : target[key].push(item);
+        isvoid( target[key] ) ? (target[key] = [item]) : target[key].push(item);
     }
-}
+)
