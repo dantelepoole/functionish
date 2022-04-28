@@ -30,6 +30,7 @@ module.exports.flatmap = require('./flatmap');
 module.exports.flip = require('./flip');
 module.exports.format = require('./format');
 module.exports.freeze = require('./freeze');
+module.exports.groupby = require('./groupby');
 module.exports.haskey = require('./haskey');
 module.exports.hasownproperty = require('./hasownproperty');
 module.exports.head = require('./head');
