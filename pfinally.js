@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * Functional variant of {@link external:Promise.prototype.finallly Promise.prototype.finally()}. Pass *finallyhandler*
+ * Functional variant of {@link external:Promise.prototype.finallly Promise.prototype.finally()}. Pass *onfulfill*
  * to *promise*'s `finally()` method and return the resulting Promise.
  * 
  * `pcatch()` is curried by default.
@@ -14,13 +14,13 @@
  * @see {@link external:Promise.prototype.finally Promise.prototype.finally()}
  * @see {@link module:pmap pmap()}
  * @see {@link module:pcatch pcatch()}
- * @param {function} finallyhandler The function to pass to *promise*'s `finally()` method
- * @param {Promise} promise The promise the attach *finallyhandler* to
+ * @param {function} onfulfill The function to pass to *promise*'s `finally()` method
+ * @param {Promise} promise The promise the attach *onfulfill* to
  * @returns {Promise}
  */
 module.exports = require('./curry2')(
 
-    function pfinally(finallyhandler, promise) {
-        return promise.finally(finallyhandler);
+    function pfinally(onfulfill, promise) {
+        return promise.finally(onfulfill);
     }
 )
