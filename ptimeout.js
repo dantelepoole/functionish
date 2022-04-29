@@ -13,10 +13,9 @@ const timeout = require('./timeout');
 const wrap = require('./wrap');
 
 /**
- * Return a function that passes its arguments (prepended by any *preboundargs* provided to `ptimeout()`) to *func*
- * and returns a Promise that either resolves/rejects with *func*'s result (return value or thrown error) if *func*
- * completes within *delayms* milliseconds, or rejects with a TimeoutError after *delayms* have passes and *func*
- * has not completed.
+ * Return a function that passes its arguments to *func* and returns a Promise that either resolves/rejects with
+ * *func*'s result (return value or thrown error) if *func* completes within *delayms* milliseconds, or rejects with a
+ * TimeoutError after *delayms* have passes and *func* has not completed.
  * 
  * The *func* argument **must** be a function that runs asynchronously and returns a Promise. If it is a regular
  * synchronous function `ptimeout()` will still work, but it is not guaranteed to work correctly, because as long
@@ -48,16 +47,15 @@ const wrap = require('./wrap');
  * @see {@link module:ptimeoutabort ptimeoutabort()}
  * @param {integer} delayms The number of milliseconds to wait before timing out
  * @param {function} func The function that should complete before the timeout expires
- * @param {...any} preboundargs The arguments to pre-bind to *func*
  * @returns {Promise}
  */
 module.exports = require('./curry2') (ptimeout);
 
-function ptimeout(delayms, func, ...preboundargs) {
+function ptimeout(delayms, func) {
 
     return function timeoutpromise(...args) {
         
-        const timedfunction = partial(func, ...preboundargs, ...args);
+        const timedfunction = partial(func, ...args);
 
         const timeoutexecutor = timeoutexecutorfactory(delayms, timedfunction);
 
