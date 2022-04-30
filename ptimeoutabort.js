@@ -15,11 +15,10 @@ const partial = require('./partial');
 const timeout = require('./timeout');
 
 /**
- * Return a function that passes its arguments (prepended by any *preboundargs* provided to `ptimeoutabort()`) to *func*
- * and returns a Promise that either resolves/rejects with *func*'s result (return value or thrown error) if *func*
- * completes within *delayms* milliseconds, or rejects with an AbortError and triggers an 'abort' event on
- * *abortsignal*. If an 'abort' event is triggered by external code, the timeoutpromise rejects immediately with an
- * AbortError.
+ * Return a function that passes its arguments to *func* and returns a Promise that either resolves/rejects with
+ * *func*'s result (return value or thrown error) if *func* completes within *delayms* milliseconds, or rejects
+ * with an AbortError and triggers an 'abort' event on *abortsignal*. If an 'abort' event is triggered by external
+ * code, the timeoutpromise rejects immediately with an AbortError.
  * 
  * The *func* argument **must** be a function that runs asynchronously and returns a Promise. If it is a regular
  * synchronous function `ptimeoutabort()` will still work, but it is not guaranteed to work correctly, because as long
@@ -66,16 +65,15 @@ const timeout = require('./timeout');
  * @param {integer} delayms The number of milliseconds to wait before timing out
  * @param {AbortSignal} abortsignal The AbortSignal to trigger when the timeout expires
  * @param {function} func The function that should complete before the timeout expires
- * @param {...any} preboundargs The arguments to pre-bind to *func*
  * @returns {Promise}
  */
 module.exports = require('./curry3') (ptimeoutabort);
 
-function ptimeoutabort(delayms, abortsignal, func, ...preboundargs) {
+function ptimeoutabort(delayms, abortsignal, func) {
 
     return function timeoutpromise(...args) {
         
-        const targetfunction = partial(func, ...preboundargs, ...args);
+        const targetfunction = partial(func, ...args);
 
         const timeoutexecutor = timeoutexecutorfactory(delayms, abortsignal, targetfunction);
 
