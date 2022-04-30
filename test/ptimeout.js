@@ -13,7 +13,8 @@ function pdelay(delayms, func, ...args) {
         setTimeout(
             (...args) => {
                 try {
-                    resolve( func(...args) );
+                    const result = func(...args);
+                    resolve( result );
                 } catch (error) {
                     reject(error);
                 }
@@ -93,18 +94,6 @@ describe(`ptimeout()`, function() {
         }
     )
 
-    it(`should return a function that returns a promise`,
-        function () {
-            
-            const func = ptimeout( 1000, id );
-            const promise = func(42);
-
-            expect(promise).to.be.a('promise');
-
-            return promise.catch(noop);
-        }
-    )
-
     it(`should return a promise that resolves to the function's result if it returns before the timeout expires`,
         function () {
 
@@ -142,7 +131,7 @@ describe(`ptimeout()`, function() {
         function () {
 
             const func = ptimeout(100, pdelay);
-            const promise = func(500, iderror, 'iderror() threw');
+            const promise = func(500, id, 42);
 
             expect(promise).to.be.a('promise');
 
@@ -160,7 +149,7 @@ describe(`ptimeout()`, function() {
             promise.then(unexpectedresolve).catch(errorhandler('AbortError', 'timeout'));
 
             return pdelay(
-                500,
+                750,
                 () => {
                     assert( wasinvoked(), `The function was not invoked within 500ms of it timing out`);
                     if( perror !== undefined ) throw perror;
