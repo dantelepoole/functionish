@@ -7,8 +7,8 @@
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 
 /**
- * If *value* is a function, return a function that passes its arguments to *value* and returns the logical negation of
- * the result. Otherwise, return the logical negation of *value* itself.
+ * If *value* is a function, return a function that passes its arguments to *value* and returns the logical complement
+ * of the result. Otherwise, return the logical complement of *value* itself.
  * 
  * @func not
  * @see {@link module:and and()}

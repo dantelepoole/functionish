@@ -13,7 +13,7 @@ describe(`not()`, function() {
         }
     )
 
-    it(`should return the logical negation of its argument if its argument is not a function`,
+    it(`should return the logical complement of its argument if its argument is not a function`,
         function () {
 
             expectfalse( not(true) );
@@ -33,7 +33,7 @@ describe(`not()`, function() {
         }
     )
 
-    it(`if its argument is a function, it should return a function that returns the logical negation of passing its arguments to the argument function`,
+    it(`if its argument is a function, it should return a function that returns the logical complement of passing its arguments to the argument function`,
         function () {
 
             function iseven(x) { return (x%2) === 0 }
