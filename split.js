@@ -4,13 +4,12 @@
 
 'use strict';
 
-const tostring = require('./tostring');
+const isstring = require('./isstring');
 
 /**
  * Function variant of {@link external:String.prototype.split String.prototype.split()}.
  * 
- * If *source* is not a string, it is converted to a string before splitting. However, if source is `null`, `undefined`
- * or `NaN`, it is converted to an empty string, not to 'null'/'undefined'/'NaN'.
+ * If *source* is not a string, an empty array is returned.
  * 
  * `split()` is curried by default.
  * 
@@ -23,6 +22,6 @@ const tostring = require('./tostring');
 module.exports = require('./curry2')(
 
     function split(separator, source) {
-        return tostring(source).split(separator);
+        return isstring(source) ? source.split(separator) : [];
     }
 )
