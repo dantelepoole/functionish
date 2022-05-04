@@ -4,7 +4,9 @@
 
 'use strict';
 
+const classname = require('./classname');
 const freeze = require('./freeze');
+const isarray = require('./isarray');
 
 /**
  * Simple stack implementation. Return a stack object with four methods and one field:
@@ -39,8 +41,11 @@ const freeze = require('./freeze');
  * @func stack
  * @param {any[]} [list] An array of items to initialize the stack with
  * @returns {object} A stack object
+ * @throws {TypeError} if *list* is not an array
  */
 module.exports = function stack(list=[]) {
+
+    checkarray(list);
 
     list = list.slice();
 
@@ -55,4 +60,11 @@ module.exports = function stack(list=[]) {
     freeze(stackinstance);
 
     return stackinstance;
+}
+
+function checkarray(list) {
+
+    if( isarray(list) ) return list;
+    
+    throw new TypeError(`stack(): the argument is not an array (${classname(list)})`);
 }
