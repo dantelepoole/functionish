@@ -37,10 +37,10 @@ const freeze = require('./freeze');
  * pop(); // returns `undefined`
  *  
  * @func stack
- * @param {any[]} list An array of items to initialize the stack with
+ * @param {any[]} [list] An array of items to initialize the stack with
  * @returns {object} A stack object
  */
-module.exports = function stack(list) {
+module.exports = function stack(list=[]) {
 
     list = list.slice();
 
