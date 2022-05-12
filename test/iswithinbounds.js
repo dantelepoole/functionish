@@ -4,7 +4,7 @@ const iswithinbounds = require('../iswithinbounds');
 const teststring = 'Hari Seldon';
 const testarray = [1,2,3,4,5];
 
-describe.only(`iswithinbounds()`, function() {
+describe(`iswithinbounds()`, function() {
 
     it(`should be curried with binary arity`,
         function () {
