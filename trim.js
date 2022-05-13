@@ -6,11 +6,11 @@
 
 const EMPTY_STRING = '';
 
-const isvoid = require('./isvoid');
+const isnullorundefined = require('./isnullorundefined');
 
 /**
- * If *value* is a string, remove any leading and trailing whitespace before returning it. If *value* is `null`,
- * `undefined` or `NaN`, return an empty string. Otherwise, convert *value* to a string and trim the result.
+ * If *value* is a string, remove any leading and trailing whitespace before returning it. If *value* is `null` or
+ * `undefined`, return an empty string. Otherwise, convert *value* to a string and trim the result.
  * 
  * @func trim
  * @param {any} value The value to trim
@@ -19,6 +19,6 @@ const isvoid = require('./isvoid');
 module.exports = function trim(value) {
 
     return (typeof value === 'string') ? value.trim()
-         : isvoid(value) ? EMPTY_STRING
+         : isnullorundefined(value) ? EMPTY_STRING
          : String(value).trim();
 }
