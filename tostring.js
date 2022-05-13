@@ -6,10 +6,8 @@
 
 const EMPTY_STRING = '';
 
-const isvoid = require('./isvoid');
-
 /**
- * Return a string representation of *value*, converting `null`, `undefined` and `NaN` to empty strings instead of
+ * Return a string representation of *value*, converting `null` and `undefined` to empty strings instead of
  * 'null', 'undefined' and 'NaN' like the Javascript {@link external:String String()} function does. Otherwise, this
  * function behaves identically to {@link external:String String()}.
  * 
@@ -18,5 +16,5 @@ const isvoid = require('./isvoid');
  * @returns {string}
  */
 module.exports = function tostring(value) {
-    return isvoid(value) ? EMPTY_STRING : String(value);
+    return String(value ?? EMPTY_STRING);
 }
