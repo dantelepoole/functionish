@@ -27,8 +27,17 @@ const setproperty = Object.defineProperty;
  * @see {@link module:predicate predicate()}
  * @param {function} func The function to tag as a predicate function
  * @returns {function} *func*
+ * @throws {TypeError} if *func* is not a function
  */
 
 module.exports = function tagaspredicate(func) {
-    return ispredicate(func) ? func : setproperty(func, PREDICATE_TAG, PREDICATE_TAG_PROPERTY_DESCRIPTOR);
+    
+    return ispredicate(func) ? func 
+         : (typeof func !== 'function') ? raisetypeerror(obj)
+         : setproperty(func, PREDICATE_TAG, PREDICATE_TAG_PROPERTY_DESCRIPTOR);
+}
+
+function raisetypeerror(obj) {
+    const message = `tagaspredicate(): The argument has type ${typeof obj}. Expected a function`;
+    throw new TypeError(message);
 }
