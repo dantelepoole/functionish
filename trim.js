@@ -6,7 +6,7 @@
 
 const EMPTY_STRING = '';
 
-const isnullorundefined = require('./isnullorundefined');
+const isnullorundefined = value => (value === null || value === undefined);
 
 /**
  * If *value* is a string, remove any leading and trailing whitespace before returning it. If *value* is `null` or
