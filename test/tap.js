@@ -5,7 +5,7 @@ function sum(a,b) {
     return (a+b);
 }
 
-describe.only(`tap()`, function() {
+describe(`tap()`, function() {
 
     it(`should return a function`,
         function () {
