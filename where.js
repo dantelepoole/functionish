@@ -6,6 +6,7 @@
 
 const KEY_STRICT = '_strict_';
 
+const isdeepequal = require('./isdeepequal');
 const isobject = require('./isobject');
 
 const asobject = Object;
@@ -17,7 +18,7 @@ const islenient = spec => ! spec?.[KEY_STRICT];
  * 
  * Each property of *specification* represents a rule. If a rule is a function, it is applied to the value of
  * corresponding property of *subject*. The rule matches if it returns a truthy value, otherwise the rule fails. If a
- * rule is not a function, it is compared to *subject*'s corresponding property using strict equality.
+ * rule is not a function, it is compared to *subject*'s corresponding property for deep equality.
  * 
  * Only *specification*'s own, enumerable properties are matched.
  * 
@@ -81,7 +82,7 @@ function testspec(specification, subject) {
 
         const result = (typeof predicate === 'function') 
                        ? !! predicate( subject[key] )
-                       : (predicate === subject[key]);
+                       : isdeepequal(predicate, subject[key]);
 
         if( ! result ) return false;
     }
