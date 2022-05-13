@@ -11,7 +11,7 @@ const PREDICATE_TAG = Symbol.for('functionish/predicate/tag');
 
 const PREDICATE_TAG_PROPERTY_DESCRIPTOR = {
     configurable : false,
-    enumerable   : true,
+    enumerable   : false,
     value        : PREDICATE_TAG,
     writable     : false
 }
