@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const tostring = require('../tostring');
 
-describe.only(`tostring()`, function() {
+describe(`tostring()`, function() {
 
     it(`should return the result of passing its argument to String()`,
         function () {
