@@ -15,6 +15,13 @@ describe.only(`tap()`, function() {
 
     describe(`tap()'s returned function`, function () {
 
+        it(`should throw if the first argument passed to tap() is not a function`,
+            function() {
+                const tappedsum = tap({});
+                expect( ()=>tappedsum(42, 43) ).to.throw();
+            }
+        )
+
         it(`should return its first argument`,
             function() {
                 const tappedsum = tap(sum);
