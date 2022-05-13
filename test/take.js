@@ -3,6 +3,15 @@ const take = require('../take');
 
 describe(`take()`, function() {
 
+    it(`should be curried with binary arity`,
+        function () {
+            const curried = take(3);
+            expect(curried).to.be.a('function');
+
+            expect(curried('foobar')).to.be.equal('foo');
+        }
+    )
+
     it(`should call its second argument's slice() method with 0 and its first argument and return the result`,
         function () {
 
