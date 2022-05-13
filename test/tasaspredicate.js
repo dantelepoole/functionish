@@ -11,7 +11,7 @@ function isevenfactory() {
     }
 }
 
-describe.only(`tagaspredicate()`, function() {
+describe(`tagaspredicate()`, function() {
 
     beforeEach( function() {
     })
