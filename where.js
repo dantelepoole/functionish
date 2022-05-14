@@ -76,13 +76,14 @@ function testspec(specification, subject) {
         if( key === KEY_STRICT ) continue;
 
         const predicate = specification[key];
-
-        const result = (typeof predicate === 'function') 
-                       ? !! predicate( subject[key] )
-                       : isdeepequal(predicate, subject[key]);
+        const result = testproperty(predicate, subject, key);
 
         if( ! result ) return false;
     }
 
     return true;
+}
+
+function testproperty(predicate, subject, key) {
+    return (typeof predicate === 'function') ? !! predicate(subject[key]) : isdeepequal(predicate, subject[key]);
 }
