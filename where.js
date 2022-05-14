@@ -4,25 +4,22 @@
 
 'use strict';
 
-const KEY_STRICT = '_strict_';
-
-const isdeepequal = require('./isdeepequal');
-
-const asobject = Object;
-const islenient = spec => ! spec?.[KEY_STRICT];
-
 /**
- * Return `true` if the *subject* object matches the rules specified by the *specification* object, otherwise return
- * `false`. If either argument is not an object, return `false`.
+ * Match the *subject* object to the rules specified by the *specification* object and return an object reporting
+ * the failed rules.
  * 
  * Each property of *specification* represents a rule. If a rule is a function, it is applied to the value of
  * corresponding property of *subject*. The rule matches if it returns a truthy value, otherwise the rule fails. If a
- * rule is not a function, it is compared to *subject*'s corresponding property for deep equality.
+ * rule is not a function, it is compared to *subject*'s corresponding property for strict equality.
  * 
  * Only *specification*'s own, enumerable properties are matched.
  * 
- * If *specification* has a `_strict_` property set to a truthy value (default: `false`), *subject* must have exactly
- * the same properties as *specificiation*. If *subject* has any additional values, the match fails.
+ * The returned object has a property `error` which is an array containing an entry for each *specification* rule that
+ * failed. Each entry is a two-element array containing the *specification* rule's key in the first element and the
+ * corresponding *subject* value in the second element. If *subject* passed all rules, the errors array will be empty.
+ * 
+ * The return object also has a boolean property `success` which will be `true` if no errors were encountered or
+ * `false` otherwise.
  * 
  * `where()` is curried by default.
  * 
@@ -34,14 +31,11 @@ const islenient = spec => ! spec?.[KEY_STRICT];
  * const isstring = x => (typeof x === 'string');
  * 
  * const spec = { age:iseven, name:isstring };
- * const test = { age:42, name: 'Hari Seldon' }
+ * const test = { age:41, name: 'Hari Seldon' }
  * 
- * where(spec, test); // returns true
- * 
- * spec._strict_ = true;
- * test.city = 'Trantor';
- * 
- * where(spec, test); // returns false
+ * const result = where(spec, test);
+ * console.log( result.success ); // prints 'false'
+ * console.log( result.errors ); // prints [ ['age', 41] ]
  * 
  * @func where
  * @param {object} specification The object providing the rules to match
@@ -52,38 +46,37 @@ module.exports = require('./curry2')(
 
     function where(specification, subject) {
 
-        specification = asobject(specification);
-        subject = asobject(subject);
+        if( typeof specification !== 'object' || specification === null ) {
+            const spectype = (specification === null) ? 'null' : typeof specification;
+            throw new TypeError(`where(): The specification has type ${spectype}. Expected an object`);
+        }
 
-        return (islenient(specification) || strictequalkeycount(specification, subject))
-               &&
-               testspec(specification, subject);
+        subject = Object(subject);
+
+        const errors = testspec(specification, subject);
+
+        return { 
+            errors,
+            success : (errors.length === 0)
+        }
     }
 )
 
-function strictequalkeycount(specification, subject) {
-
-    const speckeycount = Object.keys(specification).length - 1; // adjust for _strict_ property
-    const subjectkeycount = Object.keys(subject).length;
-
-    return (speckeycount === subjectkeycount);
-}
-
 function testspec(specification, subject) {
 
-    for( const key in specification )  {
+    const errors = [];
 
-        if( key === KEY_STRICT ) continue;
+    for( const key in specification )  {
 
         const predicate = specification[key];
         const result = testproperty(predicate, subject, key);
 
-        if( ! result ) return false;
+        if( ! result ) errors.push( [ key, subject[key] ]);
     }
 
-    return true;
+    return errors;
 }
 
 function testproperty(predicate, subject, key) {
-    return (typeof predicate === 'function') ? !! predicate(subject[key]) : isdeepequal(predicate, subject[key]);
+    return (typeof predicate === 'function') ? !! predicate(subject[key]) : (predicate === subject[key]);
 }
