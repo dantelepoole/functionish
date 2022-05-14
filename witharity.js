@@ -33,9 +33,9 @@ function witharity(arity, func) {
 
     return function _witharity(...args) {
 
-        const arityargs = args.slice(0, arity);
+        args.length = arity;
 
-        return func(...arityargs);
+        return func(...args);
     }
 }
 
@@ -46,9 +46,8 @@ function witharity_named(arity, func) {
     const container = {
         [witharity_name] : function (...args) {
 
-            const arityargs = args.slice(0, arity);
-    
-            return func(...arityargs);
+            args.length = arity
+            return func(...args);
         }
     }
 
