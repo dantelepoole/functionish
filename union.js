@@ -19,7 +19,18 @@ module.exports = require('./curry2')(
     function union(list1, list2) {
 
         return [ 
-            ...new Set( [...list1, ...list2] )  
+            ...new Set( concat(list1, list2) )  
             ];
     }
 )
+
+function concat(iter1, iter2) {
+
+    return {
+        [Symbol.iterator] : function* () {
+
+            for( const item of iter1 ) yield item;
+            for( const item of iter2 ) yield item;
+        }
+    }
+}
