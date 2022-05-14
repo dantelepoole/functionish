@@ -8,7 +8,7 @@
  * Return an array containing only the unique items in *list*, i.e. without any duplicate items.
  * 
  * @func uniq
- * @param {any[]} list The array of items to remove duplicates from
+ * @param {any[]} list The array or iterable of items to remove duplicates from
  * @returns {any[]}
  */
 module.exports = function uniq(list) {
