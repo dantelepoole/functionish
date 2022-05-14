@@ -4,15 +4,6 @@
 
 'use strict';
 
-const PRIMITIVE_TYPES = {
-    bigint    : true,
-    boolean   : true,
-    number    : true,
-    string    : true,
-    symbol    : true,
-    undefined : true
-}
-
 /**
  * Return `true` if *value* is `null` or has one of the Javascript primitive types: bigint, boolean, number,
  * string, symbol or undefined
