@@ -22,5 +22,5 @@ const PRIMITIVE_TYPES = {
  * @returns {boolean}
  */
 module.exports = function isprimitive(value) {
-    return PRIMITIVE_TYPES[typeof value] || (value === null);
+    return (typeof value !== 'object' && typeof value !== 'function') || value === null
 }
