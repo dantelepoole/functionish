@@ -10,8 +10,8 @@
  * `union()` is curried by default.
  * 
  * @func union
- * @param {any[]} list1 The first array of items to combine
- * @param {any[]} list2 The second array of items to combine
+ * @param {(any[]|iterable)} list1 The first array or iterable of to combine
+ * @param {(any[]|iterable)} list2 The second array or iterable of items to combine
  * @returns {any[]}
  */
 module.exports = require('./curry2')(
