@@ -7,7 +7,7 @@ const numbers1to10 = {
     }
 }
 
-describe.only('union()', function() {
+describe('union()', function() {
 
     it('should be curried',
         function () {
