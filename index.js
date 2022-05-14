@@ -18,6 +18,7 @@ module.exports.copy = require('./copy');
 module.exports.curry = require('./curry');
 module.exports.curry2 = require('./curry2');
 module.exports.curry3 = require('./curry3');
+module.exports.deepclone = require('./deepclone');
 module.exports.defaultto = require('./defaultto');
 module.exports.difference = require('./difference');
 module.exports.evaluate = require('./evaluate');
