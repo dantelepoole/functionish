@@ -33,7 +33,10 @@ function witharity(arity, func) {
 
     return function _witharity(...args) {
 
+        const argcount = args.length;
         args.length = arity;
+
+        if( argcount < arity ) args = Array.from(args);
 
         return func(...args);
     }
@@ -46,7 +49,11 @@ function witharity_named(arity, func) {
     const container = {
         [witharity_name] : function (...args) {
 
-            args.length = arity
+            const argcount = args.length;
+            args.length = arity;
+    
+            if( argcount < arity ) args = Array.from(args);
+    
             return func(...args);
         }
     }
