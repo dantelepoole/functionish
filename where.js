@@ -7,7 +7,6 @@
 const KEY_STRICT = '_strict_';
 
 const isdeepequal = require('./isdeepequal');
-const isobject = require('./isobject');
 
 const asobject = Object;
 const islenient = spec => ! spec?.[KEY_STRICT];
@@ -56,9 +55,7 @@ module.exports = require('./curry2')(
         specification = asobject(specification);
         subject = asobject(subject);
 
-        return isobject(specification) && isobject(subject)
-               &&
-               (islenient(specification) || strictequalkeycount(specification, subject))
+        return (islenient(specification) || strictequalkeycount(specification, subject))
                &&
                testspec(specification, subject);
     }
