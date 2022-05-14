@@ -35,7 +35,7 @@
  * 
  * const result = where(spec, test);
  * console.log( result.success ); // prints 'false'
- * console.log( result.errors ); // prints [ ['age', 41] ]
+ * console.log( result.errors ); // prints '[ ['age', 41] ]'
  * 
  * @func where
  * @param {object} specification The object providing the rules to match
