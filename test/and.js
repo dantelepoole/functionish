@@ -84,31 +84,6 @@ describe('and()', function() {
         }
     )
 
-    it('should accept both functions and non-functions as clauses',
-        function() {
-            expect( and(iseven, 1)(2) ).to.be.true;
-            expect( and(iseven, 0)(2) ).to.be.false;
-        }
-    )
-
-    it('should interpret a non-function clause as a boolish value',
-        function() {
-            expect( and(1)() ).to.be.true;
-            expect( and(true)() ).to.be.true;
-            expect( and({})() ).to.be.true;
-            expect( and([])() ).to.be.true;
-            expect( and(" ")() ).to.be.true;
-            expect( and(42)() ).to.be.true;
-
-            expect( and(0)() ).to.be.false;
-            expect( and(false)() ).to.be.false;
-            expect( and(undefined)() ).to.be.false;
-            expect( and(null)() ).to.be.false;
-            expect( and("")() ).to.be.false;
-            expect( and(NaN)() ).to.be.false;
-        }
-    )
-
     it('can be called as a unary function or a variadic function',
         function() {
             expect( and( [isnumber, iseven, ispositive] )(2) ).to.be.true;

@@ -4,14 +4,12 @@
 
 'use strict';
 
-const evaluate = require('./evaluate');
 const isarray = require('./isarray');
 const partial = require('./partial');
 
 /**
  * Return a function that passes its arguments to each *clause* and returns `true` if any *clause*
- * returns a truthy false. Otherwise, it returns `false`. Each *clause* may be either a function (the result of which
- * is evaluated) or a value to evaluate itself. 
+ * returns a truthy false. Otherwise, it returns `false`.
  * 
  * The function is short-circuited, so it returns as soon as a *clause* returns a truthy value, without evaluating any
  * remaining *clauses*.
@@ -43,15 +41,15 @@ module.exports = function or(...clauses) {
 
     if( clauses.length === 1 && isarray(clauses[0]) ) clauses = clauses[0];
 
-    function _or(index, clauses, ...args) {
+    const clausecount = clauses.length;
 
-        if( index >= clauses.length ) return false;
+    function _or(index, ...args) {
 
-        return index < clauses.length
+        return (index < clausecount)
                 &&
-               ( !! evaluate(clauses[index], ...args) || _or( index+1, clauses, ...args ) );
+               ( !! clauses[index](...args) || _or( index+1, ...args ) );
 
     }
 
-    return partial(_or, 0, clauses);
+    return partial(_or, 0);
 }

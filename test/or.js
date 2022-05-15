@@ -67,30 +67,6 @@ describe('or()', function() {
         }
     )
 
-    it('should accept both functions and non-functions as clauses',
-        function() {
-            expect( or(iseven, 1)(1) ).to.be.true;
-            expect( or(iseven, 0)(1) ).to.be.false;
-        }
-    )
-
-    it('should interpret a non-function clause as a boolish value',
-        function() {
-            expect( or(1)() ).to.be.true;
-            expect( or(true)() ).to.be.true;
-            expect( or({})() ).to.be.true;
-            expect( or(" ")() ).to.be.true;
-            expect( or(42)() ).to.be.true;
-
-            expect( or(0)() ).to.be.false;
-            expect( or(false)() ).to.be.false;
-            expect( or(undefined)() ).to.be.false;
-            expect( or(null)() ).to.be.false;
-            expect( or("")() ).to.be.false;
-            expect( or(NaN)() ).to.be.false;
-        }
-    )
-
     it('should return false if passed an empty array',
         function() {
             expect( or([])() ).to.be.false;
