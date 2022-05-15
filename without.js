@@ -3,19 +3,14 @@
  */
 'use strict';
 
-const filter = require('./filter');
 const isarray = require('./isarray');
-const isprimitive = require('./isprimitive');
-
-const asobject = Object;
 
 /**
  * Return a copy of *list* with *values* removed. Comparison is performed using strict equality.
  * 
  * If *list* is an array, a new array is returned containing all original items except those
- * contained in *values*. If *list* is `null` or a primitive, *list* itself is returned unless it matches any item
- * in *values*, in which case `undefined` is returned. If *list* is an object, a copy of *list* is returned without
- * the properties whose names are contained *values*. 
+ * contained in *values*. If *list* is an object, a copy of *list* is returned without the properties whose names are
+ * contained *values*. 
  * 
  * `without()` is curried by default.
  * 
@@ -45,26 +40,24 @@ module.exports = require('./curry2')(
 
     function without(values, list) {
 
-        return isarray(list) ? filter( notincludes(values), list )
-             : isprimitive(list) ? (values.includes(list) ? undefined : list)
-             : objectwithout( values, asobject(list) );
+        const skipkeys = new Set(values);
+        return isarray(list) ? list.filter( notpresent(skipkeys) ) : objectwithout( skipkeys, Object(list) );
     }
 )
 
-function notincludes(list) {
+function notpresent(keyset) {
 
-    return function _notincludes(value) {
-        return ! list.includes(value);
+    return function _notincludes(key) {
+        return ! keyset.has(key);
     }
 }
 
-function objectwithout(keys, object) {
+function objectwithout(skipkeyset, source) {
 
     const target = {};
-    const shouldcopy = notincludes(keys);
 
-    Object.keys(object).forEach(
-        key => shouldcopy(key) && (target[key] = object[key])
+    Object.keys(source).forEach(
+        key => skipkeyset.has(key) || (target[key] = source[key])
     )
 
     return target;
