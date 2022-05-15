@@ -21,9 +21,7 @@ const partial = require('./partial');
  * @param {any} source The value to clone
  * @returns {any}
  */
-module.exports = deepclone;
-
-function deepclone(source) {
+module.exports = function deepclone(source) {
     return deepclonesafe( new Map(), source );
 }
 
