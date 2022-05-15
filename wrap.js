@@ -54,11 +54,9 @@ module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap );
 
 function wrap(wrapperfunc, func) {
 
-    function _wrappedfunction(...args) {
+    return function _wrappedfunction(...args) {
         return wrapperfunc(func, ...args);
     }
-
-    return _wrappedfunction;
 }
 
 function wrap_named(wrapperfunc, func) {
