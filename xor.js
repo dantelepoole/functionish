@@ -11,8 +11,6 @@ const callable = require('./callable');
  * same boolish value (i.e. either both truthy or both falsy). If the clauses return different boolish values, the
  * function returns `true`. In short, `xor()` returns `true` if *clause* and *otherclause* are unequal.
  * 
- * Each *clause* may be either a function (the return value of which is evaluated) or a value to evaluate itself. 
- * 
  * `xor()` is curried by default.
  * 
  * @example
@@ -42,17 +40,12 @@ module.exports = require('./curry2')(
 
     function xor(clause, otherclause) {
 
-        clause = callable(clause);
-        otherclause = callable(otherclause);
-
-        function _xor(...args) {
+        return function _xor(...args) {
 
             const result = !! clause(...args);
             const otherresult = !! otherclause(...args);
 
-            return !! (result && (! otherresult));
+            return (result !== otherresult);
         }
-
-        return _xor;
     }
 )
