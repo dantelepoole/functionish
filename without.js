@@ -4,13 +4,14 @@
 'use strict';
 
 const isarray = require('./isarray');
+const isobject = require('./isobject');
 
 /**
  * Return a copy of *list* with *values* removed. Comparison is performed using strict equality.
  * 
  * If *list* is an array, a new array is returned containing all original items except those
  * contained in *values*. If *list* is an object, a copy of *list* is returned without the properties whose names are
- * contained *values*. 
+ * contained *values*. Otherwise, it returns *list* itself.
  * 
  * `without()` is curried by default.
  * 
@@ -26,11 +27,6 @@ const isarray = require('./isarray');
  * without( ['a','b'], {a:'aaa', b:'bbb'} ); // returns {}
  * without( [], {a:'aaa', b:'bbb'} ); // returns {a:'aaa', b:'bbb'}
  * 
- * without( [1,2], 2 ); // returns `undefined`
- * without( [1,2], 3 ); // returns 3
- * without( [1,2], null ); // returns `null`
- * without( null, null ); // returns `undefined`
- * 
  * @func without
  * @param {any[]} values The array of values to remove from *list*
  * @param {(any[]|object)} list The source to remove *values* from
@@ -41,7 +37,10 @@ module.exports = require('./curry2')(
     function without(values, list) {
 
         const skipkeys = new Set(values);
-        return isarray(list) ? list.filter( notpresent(skipkeys) ) : objectwithout( skipkeys, Object(list) );
+
+        return isarray(list) ? list.filter( notpresent(skipkeys) ) 
+             : isobject(list) ? objectwithout( skipkeys, Object(list) )
+             : list;
     }
 )
 
