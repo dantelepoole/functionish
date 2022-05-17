@@ -1,7 +1,7 @@
 const without = require('../without');
 const expect = require('chai').expect;
 
-describe.only('without()', function() {
+describe('without()', function() {
 
     beforeEach(
         function() {
