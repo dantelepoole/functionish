@@ -31,17 +31,13 @@ const minimumvalue = Math.min;
 module.exports = require('./curry2')(
 
     function zip(list1, list2) {
-        return ziparrays( list1, list2 );
+
+        const itemcount = minimumvalue(array1.length, array2.length);
+
+        const resultarray = new Array(itemcount);
+    
+        for( let index = 0; index < itemcount; index++ ) resultarray[index] = [array1[index], array2[index]];
+    
+        return resultarray;
     }
 )
-
-function ziparrays(array1, array2) {
-
-    const itemcount = minimumvalue(array1.length, array2.length);
-
-    const resultarray = new Array(itemcount);
-
-    for( let index = 0; index < itemcount; index++ ) resultarray[index] = [array1[index], array2[index]];
-
-    return resultarray;
-}
