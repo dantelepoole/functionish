@@ -7,14 +7,14 @@
 const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
 
 /**
- * If *value* is a function, return a function that passes its arguments to *value* and returns the logical complement
- * of the result. Otherwise, return the logical complement of *value* itself.
+ * If *expression* is a function, return a function that passes its arguments to *expression* and returns the logical
+ * complement of the result. Otherwise, return the logical complement of *expression* itself.
  * 
  * @func not
  * @see {@link module:and and()}
  * @see {@link module:or or()}
  * @see {@link module:xor xor()}
- * @param {any} value The value to negate
+ * @param {any} expression The expression to negate
  * @returns {(function|boolean)}
  * @example
  *    
@@ -32,22 +32,22 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  */
 module.exports = NAMED_FUNCTIONS ? not_named : not;
 
-function not(value) {
+function not(expression) {
     
-    return (typeof value === 'function') 
-         ? function _not(...args) { return ! value(...args) }
-         : (! value);
+    return (typeof expression === 'function') 
+         ? function _not(...args) { return ! expression(...args) }
+         : (! expression);
 }
 
-function not_named(value) {
+function not_named(expression) {
 
-    if( typeof value !== 'function' ) return (! value);
+    if( typeof expression !== 'function' ) return (! expression);
 
-    const negatedname = `negated ${value.name}`;
+    const negatedname = `negated ${expression.name}`;
 
     const container = {
         [negatedname] : function (...args) {
-            return ! value(...args);
+            return ! expression(...args);
         }
     
     }
