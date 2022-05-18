@@ -5,7 +5,6 @@
 'use strict';
 
 const classname = require('./classname');
-const freeze = require('./freeze');
 const isarray = require('./isarray');
 
 /**
@@ -56,8 +55,6 @@ module.exports = function stack(list=[]) {
         push  : function stackpush(...items) { list.push(...items) },
         get length() { return list.length }
     }
-
-    freeze(stackinstance);
 
     return stackinstance;
 }
