@@ -33,20 +33,23 @@
 module.exports = require('./curry2')(
 
     function zip(list1, list2) {
-
-        const iterator1 = list1[Symbol.iterator]();
-        const iterator2 = list2[Symbol.iterator]();
-    
-        function next() {
-            const item1 = iterator1.next();
-            const item2 = iterator2.next();
-    
-            return (item1.done || item2.done) ? { done:true } : { done:false, value:[item1.value, item2.value]}
-        }
     
         return {
             [Symbol.iterator]() {
-                return { next }
+
+                const iterator1 = list1[Symbol.iterator]();
+                const iterator2 = list2[Symbol.iterator]();
+
+                return { 
+                    next() {
+                        const item1 = iterator1.next();
+                        const item2 = iterator2.next();
+                
+                        return (item1.done || item2.done)
+                             ? { done:true }
+                             : { done:false, value:[item1.value, item2.value] }
+                    }
+                }
             }
         }
     }
