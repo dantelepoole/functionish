@@ -4,8 +4,6 @@
 
 'use strict';
 
-const isvoid = require('./isvoid');
-
 /**
  * Functional variant of {@link external:Array.prototype.slice Array.prototype.slice()}. Return a shallow copy of
  * the *list* array or string starting at *startindex* up to but including *endindex*. Pass 0, `null`, `undefined` or

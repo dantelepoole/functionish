@@ -15,7 +15,7 @@ const iterate = require('./iterate');
  * each item in *list*. Each key on the returned object contains an array holding the items for which *selectgroup*
  * returned that key.
  * 
- * If *selectgroup* returns `null`, `undefined` or `NaN` for an item, that item is discarded.
+ * If *selectgroup* returns `null` or `undefined` for an item, that item is discarded.
  * 
  * @example
  * 

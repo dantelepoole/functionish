@@ -13,11 +13,10 @@ describe(`isvoid()`, function() {
         }
     )
 
-    it(`should return true if its argument is null, undefined or NaN`,
+    it(`should return true if its argument is null or undefined`,
         function () {
             expecttrue( isvoid(null) );
             expecttrue( isvoid(undefined) );
-            expecttrue( isvoid(NaN) );
         }
     )
 
@@ -35,6 +34,7 @@ describe(`isvoid()`, function() {
             expectfalse( isvoid('foobar') );
             expectfalse( isvoid(true) );
             expectfalse( isvoid(markersymbol) );
+            expectfalse( isvoid(NaN) );
         }
     )
 })

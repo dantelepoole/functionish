@@ -22,12 +22,11 @@ describe(`lift()`, function() {
         }
     )
 
-    it(`should return an empty array if its argument is null, undefined or NaN`,
+    it(`should return an empty array if its argument is null or undefined`,
         function () {
         
             expectdeepequal( lift(undefined), [] );
             expectdeepequal( lift(null), [] );
-            expectdeepequal( lift(NaN), [] );
             expectdeepequal( lift(), [] );
         }
     )

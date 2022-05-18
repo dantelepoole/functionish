@@ -4,9 +4,8 @@
 
 'use strict';
 
+const isnan = require('./isnan');
 const isvoid = require('./isvoid');
-
-const defaultto = (defaultvalue, value) => isvoid(value) ? defaultvalue : value;
 
 /**
  * Return *value* unless it is `null`, `undefined` or `NaN`, in which case *defaultvalue* is returned.
@@ -27,4 +26,12 @@ const defaultto = (defaultvalue, value) => isvoid(value) ? defaultvalue : value;
  * @param {any} value The value to check and return unless it is `null`, `undefined` or `NaN`
  * @returns {any}
  */
-module.exports = require('./curry2')(defaultto);
+module.exports = require('./curry2')(
+
+    function defaultto(defaultvalue, value) {
+
+        return isvoid(value) ? defaultvalue
+             : (typeof value === 'number' && isnan(value)) ? defaultvalue
+             : value; 
+    }
+)

@@ -25,12 +25,6 @@ describe(`isdefined()`, function() {
         }
     )
 
-    it(`should return false if its argument is NaN`,
-        function () {
-            expectfalse( isdefined(NaN) )
-        }
-    )
-
     it(`should return true if its argument is any other value`,
         function () {
             expecttrue( isdefined('') );
@@ -43,6 +37,7 @@ describe(`isdefined()`, function() {
             expecttrue( isdefined(markerarray) );
             expecttrue( isdefined(markersymbol) );
             expecttrue( isdefined( ()=>{} ) );
+            expecttrue( isdefined( NaN ) );
         }
     )
 })
