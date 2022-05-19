@@ -18,9 +18,6 @@ const isarray = require('./isarray');
  * These methods are not dependent on a `this` and so may be invoked independently of the returned stack object.
  * 
  * The stack will be initialized with the items in the *list* array.
- * 
- * The returned stack object is frozen. However, its methods are not dependent on a `this` and so may be invoked
- * independently of the returned stack object.
  *
  * @example
  * 
