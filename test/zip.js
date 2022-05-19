@@ -25,7 +25,7 @@ const onetwothreeobject = {
 
 }
 
-describe.only('zip()', function() {
+describe('zip()', function() {
 
     beforeEach(
         function() {
