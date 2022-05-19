@@ -29,7 +29,7 @@ function concat(a,b) {
     return `${a}${b}`;
 }
 
-describe.only('zipwith()', function() {
+describe('zipwith()', function() {
 
     beforeEach(
         function() {
