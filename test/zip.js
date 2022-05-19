@@ -57,7 +57,7 @@ describe('zip()', function() {
         }
     )
 
-    describe('the returned iterable()', function() {
+    describe('the returned iterable', function() {
         
         it('should throw if either argument is not iterable', 
             function() {
