@@ -18,25 +18,12 @@ describe('deepclone()', function() {
         }
     )
 
-    it('should return a non-object value',
+    it('should simply return a non-object argument',
         function () {
-            let x = 42;
-            expect( deepclone(x) ).to.be.equal(x);
+            const nonobjects = [42,true,null,undefined,x=>x,42n];
+            for( const item of nonobjects) expect( deepclone(item) ).to.be.equal(item);
 
-            x = true;
-            expect( deepclone(x) ).to.be.equal(x);
-
-            x = null;
-            expect( deepclone(x) ).to.be.equal(x);
-
-            x = undefined;
-            expect( deepclone(x) ).to.be.equal(x);
-
-            x = undefined;
-            expect( deepclone(x) ).to.be.equal(x);
-
-            x = x=>x;
-            expect( deepclone(x) ).to.be.equal(x);
+            expect( deepclone(NaN) ).to.be.NaN;
         }
     )
 

@@ -17,7 +17,7 @@ const partial = require('./partial');
  * 
  * The cloning algorithm does protect against circular references.
  * 
- * @func clone
+ * @func deepclone
  * @param {any} source The value to clone
  * @returns {any}
  */
