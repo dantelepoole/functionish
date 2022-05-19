@@ -43,5 +43,25 @@ describe('deepclone()', function() {
         }
     )
 
-    it('should be further tested')
+    it('should return a deep clone of an array argument',
+        function () {
+
+            const family = [mother, father, son, daughter];
+            const eviltwins = deepclone(family);
+
+            expect(eviltwins).to.be.an('array').with.length(family.length);
+            expect(eviltwins).not.to.be.equal(family);
+            expect(eviltwins).to.be.deep.equal(family);
+
+            expect(family[0]).not.to.be.equal(eviltwins[0]);
+            expect(family[0]).to.be.deep.equal(eviltwins[0]);
+            expect(family[1]).not.to.be.equal(eviltwins[1]);
+            expect(family[1]).to.be.deep.equal(eviltwins[1]);
+            expect(family[2]).not.to.be.equal(eviltwins[2]);
+            expect(family[2]).to.be.deep.equal(eviltwins[2]);
+            expect(family[3]).not.to.be.equal(eviltwins[3]);
+            expect(family[3]).to.be.deep.equal(eviltwins[3]);
+        }
+    )
+
 })
