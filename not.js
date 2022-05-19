@@ -4,8 +4,6 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 /**
  * If *expression* is a function, return a function that passes its arguments to *expression* and returns the logical
  * complement of the result. Otherwise, return the logical complement of *expression* itself.
@@ -30,27 +28,11 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * not(false); // returns true
  * 
  */
-module.exports = NAMED_FUNCTIONS ? not_named : not;
+module.exports = not;
 
 function not(expression) {
     
     return (typeof expression === 'function') 
          ? function _not(...args) { return ! expression(...args) }
          : (! expression);
-}
-
-function not_named(expression) {
-
-    if( typeof expression !== 'function' ) return (! expression);
-
-    const negatedname = `negated ${expression.name}`;
-
-    const container = {
-        [negatedname] : function (...args) {
-            return ! expression(...args);
-        }
-    
-    }
-
-    return container[negatedname];
 }

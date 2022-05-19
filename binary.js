@@ -4,8 +4,6 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 /**
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
  * and passes them both *func*. Any other arguments passed to the returned function are ignored.
@@ -29,24 +27,11 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * @param {function} func The function to invoke with two arguments
  * @returns {function}
  */
-module.exports = NAMED_FUNCTIONS ? binary_named : binary;
+module.exports = binary;
 
 function binary(func) {
 
     return function _binary(a, b) {
         return func(a, b);
     }
-}
-
-function binary_named(func) {
-
-    const binaryname = `binary ${func.name}`;
-
-    const container = {
-        [binaryname] : function (a, b) {
-            return func(a, b);
-        }
-    }
-
-    return container[binaryname];
 }

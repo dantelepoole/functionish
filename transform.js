@@ -4,16 +4,11 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 const compose = require('./compose');
 const curry2 = require('./curry2');
 const isfunction = require('./isfunction');
 const ispredicate = require('./ispredicate');
 const map = require('./map');
-
-const filtertransformerfactory = NAMED_FUNCTIONS ? _filtertransformerfactory_named : _filtertransformerfactory;
-const transformerfactory = NAMED_FUNCTIONS ? _transformerfactory_named : _transformerfactory;
 
 const simpletransform_curried = curry2(simpletransform);
 const mapsimpletransform = map(simpletransform_curried);
@@ -102,7 +97,7 @@ function simpletransform(transformation, reducer) {
                                        : transformerfactory(transformation, reducer);
 }
 
-function _transformerfactory(transformation, reducer) {
+function transformerfactory(transformation, reducer) {
     
     function transformreducer(accumulator, nextvalue) {
         return reducer(accumulator, transformation(nextvalue));
@@ -111,7 +106,7 @@ function _transformerfactory(transformation, reducer) {
     return curry2(transformreducer);
 }
 
-function _filtertransformerfactory(predicate, reducer) {
+function filtertransformerfactory(predicate, reducer) {
 
     function filterreducer(accumulator, nextvalue) {
         
@@ -120,32 +115,4 @@ function _filtertransformerfactory(predicate, reducer) {
     }
 
     return curry2(filterreducer);
-}
-
-function _transformerfactory_named(transformation, reducer) {
-    
-    const reducername = `transform-reduce[${reducer.name}] ${transformation.name}`;
-
-    const container = {
-        [reducername] : function (accumulator, nextvalue) {
-            return reducer(accumulator, transformation(nextvalue));
-        }
-    }
-
-    return curry2( container[reducername] );
-}
-
-function _filtertransformerfactory_named(predicate, reducer) {
-
-    const reducername = `filter-reduce[${reducer.name}] ${func.name}`;
-
-    const container = {
-        [reducername] : function (accumulator, nextvalue) {
-        
-            const predicateresult = !! predicate(nextvalue);
-            return predicateresult ? reducer(accumulator, nextvalue) : accumulator;
-        }
-    }
-
-    return curry2( container[reducername] );
 }

@@ -4,9 +4,7 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
-module.exports = NAMED_FUNCTIONS ? flip_named : flip;
+module.exports = flip;
 
 /**
  * Return a function that calls the *func* function with the order of the first two parameters reversed.
@@ -38,17 +36,4 @@ function flip(func) {
     }
 
     return flippedfunction;
-}
-
-function flip_named(func) {
-   
-    const flippedname = `flipped ${func.name}`;
-
-    const container = {
-        [flippedname] : function(a,b, ...args) {
-            return (arguments.length === 0) ? func() : func(b,a, ...args);
-        }
-    }
-
-    return container[flippedname];
 }

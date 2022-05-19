@@ -4,8 +4,6 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 /**
  * Return a function that passes *func* and its arguments to *wrapperfunc* and returns the result, allowing
  * wrapperfunc to pre-process *func*'s arguments and/or post-process *func*'s return value.
@@ -50,24 +48,11 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * @param {function} wrapperfunc 
  * @returns {function}
  */
-module.exports = require('./curry2')( NAMED_FUNCTIONS ? wrap_named : wrap );
+module.exports = require('./curry2')(wrap);
 
 function wrap(wrapperfunc, func) {
 
     return function _wrappedfunction(...args) {
         return wrapperfunc(func, ...args);
     }
-}
-
-function wrap_named(wrapperfunc, func) {
-
-    const wrappedname = `wrapped[${wrapperfunc.name}] ${func.name}`;
-
-    const container = {
-        [wrappedname] : function (...args) {
-            return wrapperfunc(func, ...args);
-        }
-    }
-
-    return container[wrappedname];
 }

@@ -4,8 +4,6 @@
 
 'use strict'
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 const papply = require('./papply');
 
 /**
@@ -29,25 +27,11 @@ const papply = require('./papply');
  * @param {...any} preboundargs The argument to pre-bind to *func*
  * @returns {function}
  */
-module.exports = NAMED_FUNCTIONS ? promisify_named : promisify;
+module.exports = promisify;
 
 function promisify(func, ...preboundargs) {
 
     return function promisified(...args) {
         return papply(func, ...preboundargs, ...args);
     }
-}
-
-function promisify_named(func, ...preboundargs) {
-
-    const promisifiedname = `promisified ${func.name}`;
-
-    const container = {
-        [promisifiedname] : function (...args) {
-            return papply(func, ...preboundargs, ...args);
-        }
-    
-    }
-
-    return container[promisifiedname];
 }

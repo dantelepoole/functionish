@@ -4,8 +4,6 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
  * returning the result. If only a function is provided, *arity* is taken from the that function's `length` property.
@@ -24,9 +22,6 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * `iterate()`, `reduce()` and others. See the documentation for a specific function to see whether or not it is
  * curried by default.
  * 
- * If the FUNCTIONISH_NAMED_FUNCTIONS environment variable has been set, a curried function's name will reflect its
- * curried state by having "curried" prepended to its name along with the arity. This can aid in debugging.
- *
  * @example
  * 
  * const curry = require('functionish/curry');
@@ -50,7 +45,7 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * @returns {function}
 
  */
-module.exports = NAMED_FUNCTIONS ? curry_named : curry;
+module.exports = curry;
 
 function curry(arity, func) {
 
@@ -59,23 +54,6 @@ function curry(arity, func) {
     function curried(...args) {
         return (args.length < arity) ? curried.bind(null, ...args) : func(...args);
     }
-
-    return curried;
-}
-
-function curry_named(arity, func) {
-   
-    if( arguments.length === 1 && typeof arity === 'function' ) [arity, func] = [arity.length, arity]
-    
-    const curriedname = `curried(${arity}) ${func.name}`;
-
-    const container = {
-        [curriedname] : function(...args) {
-            return (args.length < arity) ? curried.bind(null, ...args) : func(...args);
-        }
-    }
-
-    const curried = container[curriedname];
 
     return curried;
 }

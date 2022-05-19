@@ -6,8 +6,6 @@
 
 const tagaspredicate = require('./tagaspredicate');
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 /**
  * Return a function that passes its arguments to *func* and coerces the result to a boolean, indicating whether or not
  * the arguments meet some criterion. The returned function is recognized by {@link module:transform transform()} as
@@ -21,7 +19,7 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * @returns {function}
  */
 
-module.exports = NAMED_FUNCTIONS ? predicate_named : predicate;
+module.exports = predicate;
 
 function predicate(func) {
 
@@ -32,19 +30,4 @@ function predicate(func) {
     tagaspredicate(predicatefunction);
 
     return predicatefunction;
-}
-
-function predicate_named(func) {
-
-    const predicatename = `predicate ${func.name}`;
-
-    const container = {
-        [predicatename] : function (...args) {
-            return !! func(...args);
-        }
-    }
-
-    tagaspredicate( container[predicatename] );
-
-    return container[predicatename];
 }

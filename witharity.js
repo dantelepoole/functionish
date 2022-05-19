@@ -4,8 +4,6 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 /**
  * Return a function that always passes *arity* number of its arguments to *func*, no more and no less.
  * Use `witharity()` to ensure that a function is always passed the specified
@@ -27,7 +25,7 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * @returns {function}
  */
 
-module.exports = require('./curry2')(NAMED_FUNCTIONS ? witharity_named : witharity)
+module.exports = require('./curry2')(witharity)
 
 function witharity(arity, func) {
 
@@ -40,23 +38,4 @@ function witharity(arity, func) {
 
         return func(...args);
     }
-}
-
-function witharity_named(arity, func) {
-
-    const witharity_name = `witharity[${arity}] ${func.name}`;
-
-    const container = {
-        [witharity_name] : function (...args) {
-
-            const argcount = args.length;
-            args.length = arity;
-    
-            if( argcount < arity ) args = Array.from(args);
-    
-            return func(...args);
-        }
-    }
-
-    return container[witharity_name];
 }

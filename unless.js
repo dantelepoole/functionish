@@ -4,14 +4,12 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 const callable = require('./callable');
 const evaluate = require('./evaluate');
 const id = require('./id');
 const when = require('./when');
 
-module.exports = require('./curry2')(NAMED_FUNCTIONS ? unless_named : unless);
+module.exports = require('./curry2')(unless);
 
 /**
  * Return a function that passes its arguments to *predicate*. If *predicate* returns a falsy value, the function
@@ -45,23 +43,4 @@ module.exports = require('./curry2')(NAMED_FUNCTIONS ? unless_named : unless);
  */
 function unless(predicate, mainbranch, alternativebranch=id) {
     return when(predicate, alternativebranch, mainbranch);
-}
-
-function unless_named(predicate, mainbranch, alternativebranch=id) {
-
-    const unlessname = `unless[${predicate?.name ?? typeof predicate}]`;
-
-    predicate = callable(predicate);
-
-    const container = {
-        [unlessname] : function (...args) {
-
-            const predicateresult = !! predicate(...args);
-            const selectedbranch = predicateresult ? alternativebranch : mainbranch;
-
-            return evaluate(selectedbranch, ...args);
-        }
-    }
-
-    return container[unlessname];
 }

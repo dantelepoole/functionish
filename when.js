@@ -4,8 +4,6 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 const callable = require('./callable');
 const evaluate = require('./evaluate');
 const id = require('./id');
@@ -40,7 +38,7 @@ const id = require('./id');
  * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is falsy
  * @returns {any}
  */
-module.exports = require('./curry2')(NAMED_FUNCTIONS ? when_named : when )
+module.exports = require('./curry2')(when)
 
 function when(predicate, mainbranch, alternativebranch=id) {
 
@@ -55,23 +53,4 @@ function when(predicate, mainbranch, alternativebranch=id) {
     }
 
     return when_conditional;
-}
-
-function when_named(predicate, mainbranch, alternativebranch=id) {
-
-    const whenname = `when[${predicate?.name ?? typeof predicate}]`;
-
-    predicate = callable(predicate);
-
-    const container = {
-        [whenname] : function (...args) {
-
-            const predicateresult = !! predicate(...args);
-            const selectedbranch = predicateresult ? mainbranch : alternativebranch;
-            
-            return evaluate(selectedbranch, ...args);
-        }
-    }
-
-    return container[whenname];
 }

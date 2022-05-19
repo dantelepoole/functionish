@@ -4,8 +4,6 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
 /**
  * Coerce *func* to have have unary arity. More specifically, return a function that accepts exactly one parameter
  * and passes it to *func*. Any other arguments passed to the returned function are ignored.
@@ -23,24 +21,11 @@ const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
  * @returns {function}
  */
 
-module.exports = NAMED_FUNCTIONS ? unary_named : unary;
+module.exports = unary;
 
 function unary(func) {
 
     return function _unary(x) {
         return func(x);
     }
-}
-
-function unary_named(func) {
-
-    const unary_name = `unary ${func.name}`;
-
-    const container = {
-        [unary_name] : function (x) {
-            return func(x);
-        }
-    }
-
-    return container[unary_name];
 }

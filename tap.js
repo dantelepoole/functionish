@@ -4,9 +4,7 @@
 
 'use strict';
 
-const NAMED_FUNCTIONS = require('./config').NAMED_FUNCTIONS;
-
-module.exports = NAMED_FUNCTIONS ? tap_named : tap;
+module.exports = tap;
 
 /**
  * Return a function that passes its arguments (preceded by any *preboundargs* passed to `tap()`) but returns its own
@@ -25,18 +23,4 @@ function tap(func, ...preboundargs) {
     }
 
     return tappedfunction;
-}
-
-function tap_named(func) {
-
-    const tappedname = `tapped ${func.name}`;
-
-    const container = {
-        [tappedname] : function (...args) {
-            func(...args);
-            return args[0];
-        }
-    }
-
-    return container[tappedname];
 }
