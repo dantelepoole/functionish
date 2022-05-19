@@ -76,6 +76,7 @@ module.exports.presolve = require('./presolve');
 module.exports.promisify = require('./promisify');
 module.exports.ptimeout = require('./ptimeout');
 module.exports.ptimeoutabort = require('./ptimeoutabort');
+module.exports.queue = require('./queue');
 module.exports.queuemicrotask = require('./queuemicrotask');
 module.exports.reduce = require('./reduce');
 module.exports.repeat = require('./repeat');
