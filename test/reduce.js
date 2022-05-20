@@ -42,7 +42,15 @@ describe(`reduce()`, function() {
         }
     )
 
-    it(`should throw if its third argument has no reduce() method`,
+    it(`should reduce its third argument's items if the third argument has no reduce() method`,
+        function() {
+            const concatreverse = (a,b)=>`${b}${a}`
+            const result = reduce(concatreverse, '', 'foobar');
+            expect(result).to.be.equal('raboof');
+        }
+    )
+
+    it(`should throw if its third argument has no reduce() method and is not iterable`,
         function () {
             expect( () => reduce(sum, 0, {}) ).to.throw();
         }
