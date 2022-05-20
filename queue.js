@@ -54,7 +54,9 @@ module.exports = function queue(initialitems=[]) {
 function createqueue() {
 
     const q = {
-        list : createitemlist()
+        headindex : 0,
+        itemlist  : {},
+        tailindex : 0
     }
 
     return {
@@ -65,56 +67,38 @@ function createqueue() {
         peek    : partial(peek, q),
 
         get length() {
-            return (q.list.tailindex - q.list.headindex);
+            return (q.tailindex - q.headindex);
         }
     }
 }
 
 function clear(q) {
-    q.list = createitemlist();
-}
-
-function createitemlist() {
-
-    return {
-        headindex : 0,
-        tailindex : 0
-    }
+    q.itemlist = {};
+    q.headindex = q.tailindex = 0;
 }
 
 function enqueue(q, ...items) {
 
-    if( items.length === 0 ) return;
-    
-    const list = q.list;
-    let tailindex = list.tailindex;
+    for(let index = 0; index < items.length; index++) q.itemlist[q.tailindex+index] = items[index];
 
-    for( const item of items ) {
-        list[tailindex] = item;
-        tailindex += 1;
-    }
-
-    list.tailindex = tailindex;
+    q.tailindex += items.length;
 }
 
 function peek(q) {
-    return q.list[q.list.headindex];
+    return q.itemlist[q.headindex];
 }
 
 function dequeue(q) {
 
-    const list = q.list;
-
-    if( list.headindex === list.tailindex) return undefined;
-
-    const itemindex = list.headindex;
-    const item = list[itemindex];
-    delete list[itemindex];
+    if(q.headindex === q.tailindex) return undefined;
     
-    list.headindex += 1;
-
-    if(list.headindex === list.tailindex) q.list = createitemlist();
+    const item = q.itemlist[q.headindex];
+    delete q.itemlist[q.headindex];
     
+    q.headindex += 1;
+
+    if(q.headindex === q.tailindex) clear(q);
+
     return item;
 }
 
