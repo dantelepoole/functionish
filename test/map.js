@@ -1,4 +1,5 @@
 const expect = require('chai').expect;
+const isiterable = require('../isiterable');
 const map = require('../map');
 
 const markerobject = Object.freeze({});
@@ -35,10 +36,12 @@ describe(`map()`, function() {
         }
     )
     
-    it(`should throw if its second argument has no map() method`,
+    it(`should return an iterable if its second argument has no map() method but is iterable`,
         function () {
-            const obj = {}
-            expecttothrow(map, double, obj);
+            const uppercase = str=>str.toUpperCase();
+            const result = map(uppercase, 'foobar');
+            expect( isiterable(result) ).to.be.true;
+            expect( Array.from(result) ).to.be.deep.equal( ['F','O','O','B','A','R'] );
         }
     )
 
