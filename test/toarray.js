@@ -9,6 +9,7 @@ describe('toarray()', function() {
     )
 
     it('should return an array containing the items from the iterable in order', test_returnarray);
+    it('should return a shallow copy of the iterable if the iterable is an array', test_shallowcopyarray);
     it('should return an empty array if the iterable produces no items', test_returnemptyarray);
     it('should throw if the iterable is not iterable', test_throwbaditerable);
     it('should apply the mapfunc to each item in the iterable if a mapfunc is provided', test_applymapfunc);
@@ -40,6 +41,16 @@ function test_returnemptyarray() {
     expect( toarray() ).to.be.an('array').with.length(0);
     expect( toarray('') ).to.be.an('array').with.length(0);
     expect( toarray([]) ).to.be.an('array').with.length(0);
+}
+
+function test_shallowcopyarray() {
+
+    const array = [ {}, [], Symbol() ];
+    expect( toarray(array) ).to.be.deep.equal(array);
+    expect( toarray(array) ).not.to.be.equal(array);
+    expect( toarray(array)[0] ).to.be.equal( array[0] );
+    expect( toarray(array)[1] ).to.be.equal( array[1] );
+    expect( toarray(array)[2] ).to.be.equal( array[2] );
 }
 
 function test_throwbaditerable() {
