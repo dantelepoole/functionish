@@ -1,12 +1,22 @@
 const expect = require('chai').expect;
 const reverse = require('../reverse');
 
+const isiterable = require('../isiterable');
+
 describe(`reverse()`, function() {
 
-    it(`should return an array with the items in its argument array in reverse order`,
+    it(`should return an array with the items in its argument array in reverse order if the list is an array`,
         function () {
             const reversed = reverse([1,2,3]);
             expect(reversed).to.be.deep.equal([3,2,1]);
+        }
+    )
+
+    it(`should return an iterable that produces *list*'s items in reverse order if the list is a non-array iterable`,
+        function () {
+            const iterable = reverse('foobar');
+            expect( isiterable(iterable) ).to.be.true;
+            expect( Array.from(iterable) ).to.be.deep.equal( ['r','a','b','o','o','f'] );
         }
     )
 
