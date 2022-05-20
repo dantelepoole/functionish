@@ -26,7 +26,7 @@
  * 
  * @func separate
  * @param {function} predicate The predicate function to apply to each item in *list*
- * @param {any[]} list The list of items to separate
+ * @param {iterable} list An iterable object that produces the items to separate
  * @returns {any[][]}
  */
 module.exports = require('./curry2') (
