@@ -7,12 +7,12 @@
 const unary = require('./unary');
 
 /**
- * Functional variant of {@link external:Array.prototype.map Array.prototype.map()}. Pass *func* to *list*'s
+ * Functional variant of {@link external:Array.prototype.map Array.prototype.map()}. Pass *func* to *mappable*'s
  * `map()`-method and return the result.
  * 
- * *Important:* the *func* function is coerced to unary arity before it is passed to *list*'s `map()` method. This
+ * *Important:* the *func* function is coerced to unary arity before it is passed to *mappable*'s `map()` method. This
  * means that *func* will only ever receive a single argument (the item being mapped), regardless of how many arguments
- * *list*'s `map()` method actually passes.
+ * *mappable*'s `map()` method actually passes.
  * 
  * `map()` is curried by default.
  * 
