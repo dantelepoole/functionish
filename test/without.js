@@ -34,6 +34,13 @@ describe('without()', function() {
         }
     )
 
+    it('should throw if its second argument is null or undefined',
+        function () {
+            expect( ()=>without([], null) ).to.throw();
+            expect( ()=>without([], undefined) ).to.throw();
+        }
+    )
+
     it('it should return a separate object without the keys contained in the first argument',
         function () {
             const obj = {
