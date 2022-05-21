@@ -35,15 +35,6 @@ describe(`map()`, function() {
             expectequal(invoked, markerobject);
         }
     )
-    
-    it(`should return an iterable if its second argument has no map() method but is iterable`,
-        function () {
-            const uppercase = str=>str.toUpperCase();
-            const result = map(uppercase, 'foobar');
-            expect( isiterable(result) ).to.be.true;
-            expect( Array.from(result) ).to.be.deep.equal( ['F','O','O','B','A','R'] );
-        }
-    )
 
     it(`should ensure its first argument is only ever passed a single argument on each invocation`,
         function () {
