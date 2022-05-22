@@ -43,13 +43,10 @@ module.exports = function or(...clauses) {
 
     const clausecount = clauses.length;
 
-    function _or(index, ...args) {
+    return function _or(...args) {
 
-        return (index < clausecount)
-                &&
-               ( !! clauses[index](...args) || _or( index+1, ...args ) );
+        for( let index = 0; index < clausecount; index++ ) if ( clauses[index](...args) ) return true;
 
+        return false;
     }
-
-    return partial(_or, 0);
 }

@@ -43,12 +43,10 @@ module.exports = function and(...clauses) {
 
     const clausecount = clauses.length;
 
-    function _and(index, ...args) {
+    return function _and(...args) {
 
-        return (index >= clausecount)
-                ||
-               ( !! clauses[index](...args) && _and( index+1, ...args ) );
+        for( let index = 0; index < clausecount; index++ ) if( ! clauses[index](...args) ) return false;
+
+        return true;
     }
-
-    return partial(_and, 0);
 }
