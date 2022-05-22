@@ -13,6 +13,9 @@ const isstring = require('./isstring');
  * 
  * If *count* is negative, an empty array (or string) is returned.
  * 
+ * This function calls *iterable*'s `slice()` method if it is an array or a string. Otherwise, it iterates over
+ * *iterable* taking only the specified number of items.
+ * 
  * `take()` is curried by default.
  * 
  * @func take
