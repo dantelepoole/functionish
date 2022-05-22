@@ -80,6 +80,7 @@ module.exports.ptimeout = require('./ptimeout');
 module.exports.ptimeoutabort = require('./ptimeoutabort');
 module.exports.queue = require('./queue');
 module.exports.queuemicrotask = require('./queuemicrotask');
+module.exports.range = require('./range');
 module.exports.reduce = require('./reduce');
 module.exports.repeat = require('./repeat');
 module.exports.reverse = require('./reverse');
