@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const take = require('../take');
+const isiterable = require('../isiterable');
 
 describe(`take()`, function() {
 
@@ -12,27 +13,19 @@ describe(`take()`, function() {
         }
     )
 
-    it(`should call its second argument's slice() method with 0 and its first argument and return the result`,
+    it(`should return a string with the first specified number of characters if the iterable argument is a string`,
         function () {
-
-            let wasinvoked = false;
-            
-            const obj = {
-                slice(...args) {
-                    wasinvoked = true;
-                    expect(args).to.be.deep.equal([0,3]);
-                    return 'foo';
-                }
-            }
-
-            const result = take(3, obj);
-
-            expect(wasinvoked).to.be.true;
-            expect(result).to.be.equal('foo');
+            expect( take(3, 'foobar') ).to.be.equal('foo');
         }
     )
 
-    it(`should throw if its argument does not have a slice() method`,
+    it(`should return an array with the first specified number of items if the iterable argument is an iterable`,
+        function () {
+            expect( take(3, [1,2,3,4,5]) ).to.be.deep.equal([1,2,3]);
+        }
+    )
+
+    it(`should throw if the iterable argument is not iterable`,
         function () {
             expect( ()=>take(3,{}) ).to.throw();
         }
@@ -40,19 +33,7 @@ describe(`take()`, function() {
 
     it(`should convert its first argument to 0 if it is negative`,
         function () {
-            let wasinvoked = false;
-            
-            const obj = {
-                slice(...args) {
-                    wasinvoked = true;
-                    expect(args).to.be.deep.equal([0,0]);
-                    return '';
-                }
-            }
-
-            const result = take(-3, obj);
-
-            expect(wasinvoked).to.be.true;
+            const result = take(-3, 'foobar');
             expect(result).to.be.equal('');
         }
     )
