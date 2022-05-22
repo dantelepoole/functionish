@@ -1,5 +1,15 @@
 const expect = require('chai').expect;
 const intersection = require('../intersection');
+const isiterable = require('../isiterable');
+
+function toarray(iterable) {
+    expect( isiterable(iterable) ).to.be.true;
+    return Array.from(iterable);
+}
+
+function expectiterable(iterable) {
+    expect( isiterable(iterable) ).to.be.true;
+}
 
 const markerobject = Object.freeze({});
 const markerarray = Object.freeze([]);
@@ -21,46 +31,40 @@ describe(`intersection()`, function() {
         function () {
             const curried = intersection(numbers1to10);
             expectfunction(curried);
-            expectdeepequal( curried(evennumbers1to10), evennumbers1to10 );
+
+            const result = curried(evennumbers1to10);
+            expect( isiterable(result) ).to.be.true;
         }
     )
 
-    it(`should throw if either argument is not an array`,
+    it(`should throw if either argument is not iterable`,
         function () {
             expecttothrow(intersection, {}, {});
         }
     )
 
-    it(`should return an array`,
+    it(`should return an iterable`,
         function () {
-            expectarray( intersection(numbers1to10, evennumbers1to10) );
-            expectarray( intersection([], evennumbers1to10) );
-            expectarray( intersection(numbers1to10, []) );
+            expectiterable( intersection(numbers1to10, evennumbers1to10) );
+            expectiterable( intersection([], evennumbers1to10) );
+            expectiterable( intersection(numbers1to10, []) );
         }
     )
 
     it(`should return the intersection of its two arguments`,
         function () {
-            let result = intersection(numbers1to10, evennumbers1to10);
+            let result = toarray( intersection(numbers1to10, evennumbers1to10) );
             expectdeepequal(result, evennumbers1to10);
 
-            result = intersection(oddnumbers1to10, numbers1to10);
+            result = toarray( intersection(oddnumbers1to10, numbers1to10) );
             expectdeepequal(result, oddnumbers1to10);
         }
     )
 
-    it(`should return an array without duplicate elements`,
+    it(`should return an iterable without duplicate elements`,
         function () {
-            const result = intersection(numbers1to10, [...evennumbers1to10, ...evennumbers1to10]);
+            const result = toarray( intersection(numbers1to10, [...evennumbers1to10, ...evennumbers1to10]) );
             expectdeepequal(result, evennumbers1to10);
-        }
-    )
-
-    it(`should work with empty arrays as arguments`,
-        function () {
-            expectdeepequal( [], intersection(numbers1to10, []) );
-            expectdeepequal( [], intersection([], numbers1to10) );
-            expectdeepequal( [], intersection([], []) );
         }
     )
 

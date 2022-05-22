@@ -4,29 +4,27 @@
 
 'use strict';
 
-const unary = require('./unary');
+const filteriterable = require('./filteriterable');
 const uniq = require('./uniq');
 
 /**
- * Return a list containing all elements common to both *list1* and *list2*. The returned array will not contain any
- * duplicates.
+ * Return an iterable producing all items common to both *list1* and *list2*, but without duplicates.
  * 
  * `intersection()` is curried by default.
  * 
  * @func intersection
- * @param {any[]} list1 The first list
- * @param {any[]} list2 The second list
- * @returns {any[]}
+ * @param {iterable} iterable1 The first iterable
+ * @param {iterable} iterable2 The second iterable
+ * @returns {iterable}
  */
 module.exports = require('./curry2') (
 
-    function intersection(list1, list2) {
+    function intersection(iterable1, iterable2) {
 
-        if( list2.length < list1.length ) [list1, list2] = [list2, list1];
-
-        const iscommon = unary(list1.includes.bind(list1));
-        const commonitems = list2.filter(iscommon);
-
-        return uniq(commonitems);
+        const iterable1set = new Set(iterable1);
+        const intersectionfilter = iterable1set.has.bind(iterable1set);
+        const intersectioniterable = filteriterable(intersectionfilter, iterable2);
+ 
+        return uniq(intersectioniterable);
     }
 )
