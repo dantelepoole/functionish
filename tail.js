@@ -4,16 +4,33 @@
 
 'use strict';
 
+const isarray = require('./isarray');
+const isstring = require('./isstring');
+
 /**
- * Return a shallow copy of the *list* array or string without its first item or character.
+ * Return an iterable producing all items from *iterable* except the first one. If *iterable* is an array, return an
+ * array. If *iterable* is a string, return a string. Otherwise, return an iterable.
  * 
- * This function complements the `head()` function, which returns the first item of its argument list.
+ * This function calls the `slice()` method of *iterable* if it is a string or an array. Otherwise, it iterates over
+ * *iterable*, dropping the first item.
  * 
  * @func tail
  * @see {@link module:head head()}
- * @param {(any[]|string)} list The string or array of items to return the tail of
- * @returns {(any[]|string)}
+ * @param {iterable} iterable The iterable of items to return the tail of
+ * @returns {(any[]|string|iterable)}
  */
-module.exports = function tail(list) {
-    return list.slice(1);
+module.exports = function tail(iterable) {
+    return isarray(iterable) || isstring(iterable) ? iterable.slice(1) : tailiterable(iterable);
+}
+
+function tailiterable(iterable) {
+
+    return {
+        [Symbol.iterator]() {
+            const iterator = iterable[Symbol.iterator]();
+            iterator.next();
+
+            return iterator;
+        }
+    }
 }
