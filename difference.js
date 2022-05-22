@@ -30,10 +30,8 @@ module.exports = require('./curry2') (
         const iterable2filter = iterablefilterfactory(iterable2);
         const differencefilter = filteriterable(iterable2filter, iterable1);
 
-        const uniqiterable = uniq(differencefilter);
+        return uniq(differencefilter);
         
-        return isarray(iterable1) ? Array.from(uniqiterable) : uniqiterable;
-
     }
 )
 
