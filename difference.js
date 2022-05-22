@@ -7,7 +7,6 @@
 const bind = require('./bind');
 const filteriterable = require('./filteriterable');
 const isarray = require('./isarray');
-const isstring = require('./isstring');
 const not = require('./not');
 const uniq = require('./uniq');
 
@@ -27,16 +26,21 @@ module.exports = require('./curry2') (
 
     function difference(iterable1, iterable2) {
 
-        const iterable2filter = iterablefilterfactory(iterable2);
-        const differencefilter = filteriterable(iterable2filter, iterable1);
+        const excludeiterable2 = excludeiterablepredicatefactory(iterable2);
+        const differencefilter = filteriterable(excludeiterable2, iterable1);
 
         return uniq(differencefilter);
         
     }
 )
 
-function iterablefilterfactory(iterable) {
+function isarrayorstring(value) {
+    return (typeof value === 'string' || isarray(value));
+}
 
-    return isarray(iterable) || isstring(iterable) ? not( bind('includes', iterable) )
-         : not( bind('has', new Set(iterable)) );
+function excludeiterablepredicatefactory(iterable) {
+
+    const includespredicate = isarrayorstring(iterable) ? bind('includes', iterable) : bind('has', new Set(iterable));
+
+    return not(includespredicate);
 }
