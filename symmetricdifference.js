@@ -9,15 +9,15 @@ const difference = require('./difference');
 const union = require('./union');
 
 /**
- * Return an array with only those items that are present in either *list1* or *list2*, but not both. The returned
- * array will not contain any duplicates. 
+ * Return an iterable producing only those items that are present in either *list1* or *list2*, but not both. The
+ * returned iterable will not produce any duplicates. 
  * 
  * `symmetricdifference()` is curried by default.
  * 
  * @func symmetricdifference
- * @param {any[]} list1 The first array
- * @param {any[]} list2 The second array
- * @returns {any[]}
+ * @param {iterable} iterable1 The first iterable
+ * @param {iterable} iterable2 The second iterable
+ * @returns {iterable}
  */
 
 module.exports = require('./curry2') (
