@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const filter = require('../filter');
+const isiterable = require('../isiterable');
 
 const markerobject = Object.freeze({});
 const markerarray = Object.freeze([]);
@@ -42,9 +43,11 @@ describe(`filter()`, function() {
         }
     )
 
-    it(`should throw if its second argument does not have a filter()-method`,
+    it(`should return an iterable if its second argument does not have a filter()-method but is iterable`,
         function () {
-            expecttothrow(filter, iseven, {});
+            const islowercase = x => (x === x.toLowerCase());
+            const result = filter(islowercase, 'foobar');
+            expect( isiterable(result) ).to.be.true;
         }
     )
 
@@ -60,6 +63,14 @@ describe(`filter()`, function() {
             expectdeepequal( filter(iseven, numbers1to10), [2,4,6,8,10] );
             expectdeepequal( filter(alwaystrue, numbers1to10), numbers1to10 );
             expectnotequal( filter(alwaystrue, numbers1to10), numbers1to10 );
+        }
+    )
+
+    it(`if passed an iterable, it should return a new iterable the produces only those items for which predicate returns true`,
+        function () {
+            const islowercase = x => (x === x.toLowerCase());
+            const result = Array.from( filter(islowercase, 'FoObAr') );
+            expect(result).to.be.deep.equal( ['o','b', 'r'] );
         }
     )
 })

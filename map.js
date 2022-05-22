@@ -4,15 +4,17 @@
 
 'use strict';
 
+const mapiterable = require('./mapiterable');
 const unary = require('./unary');
 
 /**
- * Functional variant of {@link external:Array.prototype.map Array.prototype.map()}. Pass *func* to *mappable*'s
- * `map()`-method and return the result.
+ * Functional variant of {@link external:Array.prototype.map Array.prototype.map()}. Pass *func* to *list*'s
+ * `map()`-method and return the result. If *list* does not have a `map()` method, it is assumed to be iterable and
+ * an iterable object is returned that applies *func* to each item produced by *list*.
  * 
- * *Important:* the *func* function is coerced to unary arity before it is passed to *mappable*'s `map()` method. This
+ * *Important:* the *func* function is coerced to unary arity before it is passed to *list*'s `map()` method. This
  * means that *func* will only ever receive a single argument (the item being mapped), regardless of how many arguments
- * *mappable*'s `map()` method actually passes.
+ * *list*'s `map()` method actually passes.
  * 
  * `map()` is curried by default.
  * 
@@ -31,13 +33,13 @@ const unary = require('./unary');
  * @see {@link external:Array.prototype.map Array.prototype.map()}
  * @see {@link module:unary unary()}
  * @param {function} func The function to apply to each item in *list*
- * @param {mappable} mappable An object with a `map()` method
+ * @param {(mappable|iterable)} list An object with a `map()` method or an iterable object
  * @returns {any}
  */
 
 module.exports = require('./curry2')(
 
-    function map(func, mappable) {
-        return mappable.map( unary(func) );
+    function map(func, list) {
+        return (typeof list.map === 'function') ? list.map( unary(func) ) : mapiterable(func, list);
     }
 )

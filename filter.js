@@ -3,8 +3,9 @@
  */
 
  'use strict';
- 
- const unary = require('./unary');
+
+const filteriterable = require('./filteriterable');
+const unary = require('./unary');
 
 /**
  * Function variant of `Array.prototype.filter()`. Apply the *predicate* function to *filterable*'s `filter()`-method
@@ -41,8 +42,8 @@
 
 module.exports = require('./curry2')(
 
-    function filter(predicate, filterable) {
-        return filterable.filter( unary(predicate) );
+    function filter(predicate, list) {
+        return (typeof list.filter === 'function') ? list.filter( unary(predicate) ) : filteriterable(predicate, list);
     }
 )
 
