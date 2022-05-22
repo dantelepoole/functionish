@@ -4,7 +4,9 @@
 
 'use strict';
 
+const cachingiterable = require('./lib/cachingiterable');
 const difference = require('./difference');
+const union = require('./union');
 
 /**
  * Return an array with only those items that are present in either *list1* or *list2*, but not both. The returned
@@ -20,11 +22,20 @@ const difference = require('./difference');
 
 module.exports = require('./curry2') (
 
-    function symmetricdifference(list1, list2) {
+    function symmetricdifference(iterable1, iterable2) {
 
-        return [
-            ...difference(list1, list2),
-            ...difference(list2, list1)
-        ]
+        const cachediterable1 = cachingiterable(iterable1);
+        const cachediterable2 = cachingiterable(iterable2);
+    
+        const symmdiff = union(
+            difference(cachediterable1, cachediterable2),
+            difference(cachediterable2, cachediterable1)
+        )
+
+        cachediterable1.clearcache();
+        cachediterable2.clearcache();
+
+        return symmdiff;
     }
 )
+
