@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const difference = require('../difference');
+const isiterable = require('../isiterable');
 
 const list1 = [1,2,3,4,2];
 const list2 = [3,4,5,6,6];
@@ -63,9 +64,15 @@ describe(`difference()`, function() {
         }
     )
 
-    it(`should accept either arrays or iterables for both arguments, and always return an array`,
+    it(`should return an iterable if the first argument is not an array`,
         function () {
-            expect( difference('hari', ['s','e','l','d','o','n']) ).to.be.deep.equal(['h','a','r','i']);
+
+            let result = difference('hari', ['s','e','l','d','o','n']);
+            
+            expect( isiterable(result) ).to.be.true;
+            expect( Array.isArray(result) ).to.be.false;
+            expect( Array.from(result) ).to.be.deep.equal(['h','a','r','i']);
+            
             expect( difference(['h','a','r','i'], 'seldon') ).to.be.deep.equal(['h','a','r','i']);
         }
     )
