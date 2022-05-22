@@ -7,7 +7,7 @@
 const isdefined = require('./isdefined');
 
 /**
- * Return an array containing *value* as its only item. If *value* is `undefined`, `null` or `NaN` an empty array is
+ * Return an array containing *value* as its only item. If *value* is `undefined` or `null` an empty array is
  * returned.
  * 
  * @param {any} value 
