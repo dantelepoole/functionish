@@ -4,8 +4,11 @@
 
 'use strict';
 
+const bind = require('./bind');
 const cachingiterable = require('./lib/cachingiterable');
-const difference = require('./difference');
+const filteriterable = require('./filteriterable');
+const isarray = require('./isarray');
+const not = require('./not');
 const union = require('./union');
 
 /**
@@ -39,3 +42,20 @@ module.exports = require('./curry2') (
     }
 )
 
+function difference(iterable1, iterable2) {
+
+    const excludeiterable2 = excludeiterablepredicatefactory(iterable2);
+
+    return filteriterable(excludeiterable2, iterable1);
+}
+
+function isarrayorstring(value) {
+    return (typeof value === 'string' || isarray(value));
+}
+
+function excludeiterablepredicatefactory(iterable) {
+
+    const includespredicate = isarrayorstring(iterable) ? bind('includes', iterable) : bind('has', new Set(iterable));
+
+    return not(includespredicate);
+}
