@@ -1,5 +1,12 @@
 const expect = require('chai').expect;
 const find = require('../find');
+const isiterable = require('../isiterable');
+const range = require('../range');
+
+function toarray(iterable) {
+    expect( isiterable(iterable) || (typeof iterable === 'string') ).to.be.true;
+    return Array.from(iterable);
+}
 
 const markerobject = Object.freeze({});
 const markerarray = Object.freeze([]);
@@ -37,14 +44,21 @@ describe(`find()`, function() {
         }
     )
 
-    it(`should return the result of calling the find() method of its second argument`,
+    it(`should return the result of calling the find() method of its second argument if it has one`,
         function () {
             const result = find(iseven, findable);
             expectequal(result, findable);
         }
     )
 
-    it(`should throw if its second argument does not have a find() method`,
+    it(`should return the first item produced by its second argument if it has no find() method`,
+        function () {
+            const result = find(iseven, range(5));
+            expectequal(result, 2);
+        }
+    )
+
+    it(`should throw if its second argument is not iterable`,
         function () {
             expecttothrow(find, iseven, {});
         }
@@ -57,41 +71,53 @@ describe(`find()`, function() {
         }
     )
 
-    it(`if passed an array, it should return the first item in the array for which the predicate returns true`,
+    it(`should return the first item in in the second argument for which the predicate returns true`,
         function () {
             expectequal( 2, find(iseven, numbers1to10) );
-            expectequal( 1, find(isodd, numbers1to10) );
+            expectequal( 1, find(isodd, range(5)) );
             expectequal( markerobject, find(ismarkerobject, [1,2,3,4,markerobject,5,6,7]) );
         }
     )
 
-    it(`if passed an array, it should return undefined if the predicate returns false for all items in the array`,
+    it(`should return undefined if the predicate returns false for all items in the second argument`,
         function () {
             expectundefined( find(iseven, [1,3,5,7,9]) );
+            expectundefined( find(x=>(x > 10), range(9)) );
         }
     )
 
-    it(`if passed an array, it should return undefined if the array is empty`,
+    it(`should return undefined if the second argument is empty`,
         function () {
             expectundefined( find(iseven, []) );
+            expectundefined( find(iseven, range(0)) );
         }
     )
 
-    it(`if passed an array, it should call the predicate for each item in the array`,
+    it(`should call the predicate for each item in the second argument`,
         function () {
             const predicate = countingpredicate.bind(null, iseven);
-            const result = find( predicate, [1,3,5,7,9] );
+            let result = find( predicate, [1,3,5,7,9] );
             expectundefined(result);
             expectequal(predicatecallcount, 5);
+
+            predicatecallcount = 0;
+            result = find( predicate, 'foobar');
+            expectundefined(result);
+            expectequal(predicatecallcount, 6);
         }
     )
 
-    it(`if passed an array, it should stop oassing further items to the predicate once the predicate returns true`,
+    it(`should stop passing further items to the predicate once the predicate returns true`,
         function () {
             const predicate = countingpredicate.bind(null, iseven);
-            const result = find( predicate, [1,3,5,8,9] );
+            let result = find( predicate, [1,3,5,8,9] );
             expectequal(predicatecallcount, 4);
             expectequal(result, 8);
+
+            predicatecallcount = 0;
+            result = find( predicate, range(5));
+            expectequal(predicatecallcount, 2);
+            expectequal(result, 2);
         }
     )
 })

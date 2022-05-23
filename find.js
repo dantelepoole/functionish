@@ -7,12 +7,13 @@
 const unary = require('./unary');
 
 /**
- * Function variant of {@link external:Array.prototype.find Array.prototype.find()}. Pass *predicate* to *list*'s
- * `find()` function and return the result.
+ * Function variant of {@link external:Array.prototype.find Array.prototype.find()}. Pass *predicate* to *iterable*'s
+ * `find()` function and return the result. If *iterable* has no `find()` method, iterate over *iterable*'s items and 
+ * return the first item for which *predicate* returns a truthy value.
  * 
- * *Important:* the *predicate* function is coerced to unary arity before it is passed to *list*'s `find()` method
+ * *Important:* the *predicate* function is coerced to unary arity before it is passed to *iterable*'s `find()` method
  * (if it exists). This means that *predicate* will only ever receive a single argument (the item being searched),
- * regardless of how many arguments *list*'s `find()` method actually passes.
+ * regardless of how many arguments *iterable*'s `find()` method actually passes.
  * 
  * `find()` is curried by default.
  * 
@@ -27,12 +28,16 @@ const unary = require('./unary');
  * 
  * @func find
  * @param {function} predicate The predicate function that identifies the item being sought
- * @param {any[]} list An array of items to search
- * @returns {any}
+ * @param {iterable} iterable An iterable object producing the items to search
+ * @returns {iterable}
  */
 module.exports = require('./curry2')(
 
-    function find(predicate, list) {
-        return list.find( unary(predicate) );
+    function find(predicate, iterable) {
+        return (typeof iterable.find === 'function') ? iterable.find( unary(predicate) ) : finditerable(predicate, iterable);
     }
 )
+
+function finditerable(predicate, iterable) {
+    for( const item of iterable ) if( predicate(item) ) return item;
+}
