@@ -34,7 +34,7 @@ describe(`iterate()`, function() {
         }
     )
 
-    it(`should throw if its second argument has no forEach() method`,
+    it(`should throw if its second argument is not iterable`,
         function () {
             expecttothrow(iterate, addtototal, markerobject);
         }
@@ -53,7 +53,7 @@ describe(`iterate()`, function() {
         }
     )
 
-    it(`should pass a function to the forEach() method of its second argument`,
+    it(`should pass its first argument to the forEach() method of its second argument if it has one`,
         function () {
             let wasinvoked = 0;
             const obj = {
@@ -64,6 +64,23 @@ describe(`iterate()`, function() {
             }
             iterate(addtototal, obj);
             expectequal(wasinvoked, 1);
+        }
+    )
+
+    it(`should invoke its first argument for each item produced by its second argument if it has no forEach() method`,
+        function () {
+            let wasinvoked = 0;
+            const obj = {
+                [Symbol.iterator]: function* () {
+                    for(const num of numbers1to10) {
+                        wasinvoked += 1;
+                        yield num;
+                    }
+                }
+            }
+            iterate(addtototal, obj);
+            expectequal(wasinvoked, numbers1to10.length);
+            expectequal(total, 55);
         }
     )
 
