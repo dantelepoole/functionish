@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const includes = require('../includes');
+const range = require('../range');
 
 const markerobject = Object.freeze({});
 const markerarray = Object.freeze([]);
@@ -34,7 +35,14 @@ describe(`includes()`, function() {
         }
     )
 
-    it(`should throw if its second argument does not have an includes() method`,
+    it(`should iterate over its second argument if it has nog includes() method`,
+        function () {
+            expect( includes(3, range(5)) ).to.be.true;
+            expect( includes(42, range(5)) ).to.be.false;
+        }
+    )
+
+    it(`should throw if its second argument is not iterable`,
         function () {
             expecttothrow(includes, 42, {});
         }
