@@ -1,7 +1,18 @@
 const expect = require('chai').expect;
 const concat = require('../concat');
+const isiterable = require('../isiterable');
+const range = require('../range');
 
 const marker = Object.freeze({});
+
+function toarray(iterable) {
+    expect( isiterable(iterable) || (typeof iterable === 'string') ).to.be.true;
+    return Array.from(iterable);
+}
+
+function* emptyiterable() {
+    // noop
+}
 
 describe('concat()', function() {
 
@@ -20,9 +31,9 @@ describe('concat()', function() {
         }
     )
 
-    it('should throw if the first argument does not have a `concat()` method',
+    it('should return an iterable combining both arguments if the first argument does not have a concat() method',
         function () {
-            expect( () => concat({}, []) ).to.throw();
+            expect( toarray( concat( range(3), range(3) ) ) ).to.be.deep.equal([1,2,3,1,2,3])
         }
     )
 
@@ -40,22 +51,23 @@ describe('concat()', function() {
         }
     )
 
-    it('should work with strings',
+    it('should return an empty array if both arguments are empty arrays',
         function () {
-            
-            const result = concat('abc', 'def');
-            expect(result).to.be.equal( 'abcdef' );
+            expect( concat([], []) ).to.be.deep.equal( [] );
         }
     )
 
-    it('should return an empty array if both arguments are empty arrays, ditto an empty string if both are empty strings',
+    it('should return an empty string if both arguments are empty strings',
         function () {
-            
-            expect( concat([], []) ).to.be.deep.equal( [] );
             expect( concat('', '') ).to.be.equal('');
         }
     )
 
+    it('should return an empty iterable if both arguments are empty iterables',
+        function () {
+            expect( toarray( concat(emptyiterable(), []) ) ).to.be.deep.equal( [] );
+        }
+    )
 
     it('should be curried',
         function () {

@@ -5,7 +5,8 @@
 'use strict';
 
 /**
- * Pass *list2* to *list1*'s `concat()`-method and return the result.
+ * Pass *iterable2* to *iterable1*'s `concat()`-method and return the result. If *iterable1* has no `concat()` method,
+ * return an iterable object that produces *iterable1*'s items followed by *iterable2*'s items.
  * 
  * `concat()` is curried by default.
  * 
@@ -22,14 +23,26 @@
  * concat(list1, list2); // returns '[1,2,3,4]'
  * 
  * @func concat
- * @param {any[]} list1 The array to concat *list2* to
- * @param  {any[]} list2 The array of items to concat to *list1*
- * @returns {any[]}
+ * @param {iterable} iterable1 The iterable object to append *iterable2* to
+ * @param  {iterable} iterable2 The iterable object to append to *iterable1*
+ * @returns {iterable}
  */
 
 module.exports = require('./curry2') (
 
-    function concat(list1, list2) {
-        return list1.concat(list2);
+    function concat(iterable1, iterable2) {
+        
+        return (typeof iterable1.concat === 'function') ? iterable1.concat(iterable2)
+             : concatiterable(iterable1, iterable2);
     }
 )
+
+function concatiterable(iterable1, iterable2) {
+
+    return {
+        [Symbol.iterator] : function* () {
+            for( const item of iterable1 ) yield item;
+            for( const item of iterable2 ) yield item;
+        }
+    }
+}
