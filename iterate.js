@@ -11,9 +11,9 @@ const unary = require('./unary');
  * `forEach()` method, invoke it with *func*. Otherwise, assume *iterable* is an iterable object and invoke *func* with
  * each item that *iterable* produces.
  * 
- * *Important:* the *func* function is coerced to unary arity before it is passed to *list*'s `forEach()` method. This
- * means that *func* will only ever receive a single argument (the item being iterated), regardless of how many
- * arguments *list*'s `forEach()` method actually passes.
+ * *Important:* the *func* function is coerced to unary arity before it is passed to *iterable*'s `forEach()` method.
+ * This means that *func* will only ever receive a single argument (the item being iterated), regardless of how many
+ * arguments *iterable*'s `forEach()` method actually passes.
  * 
  * `iterate()` is curried by default.
  * 
@@ -32,8 +32,8 @@ const unary = require('./unary');
  * 
  * @func iterate
  * @see {@link external:Array.prototype.forEach Array.prototype.forEach()}
- * @param {function} func The function to apply to each item in *list*
- * @param {iterable} list An iterable object producing items to apply *func* to
+ * @param {function} func The function to apply to each item in *iterable*
+ * @param {iterable} iterable An iterable object producing items to apply *func* to
  */
 module.exports = require('./curry2')(
 
