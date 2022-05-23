@@ -15,19 +15,19 @@ describe(`head()`, function() {
         }
     )
 
-    it(`should return the first item of an array`,
+    it(`should return the first item of iterable`,
         function () {
             expectequal( head(list), 42 );
         }
     )
 
-    it(`should return undefined if the array is empty`,
+    it(`should return undefined if the iterable is empty`,
         function () {
             expectundefined( head([]) );
         }
     )
 
-    it(`should return the value of an object's property with the integer key 0`,
+    it(`should return the value of iterable's property with the integer key 0 if the iterable is indexable`,
         function () {
             const obj = {}
             obj[0] = 42;
@@ -35,25 +35,24 @@ describe(`head()`, function() {
         }
     )
 
-    it(`should throw if the object is null or undefined`,
+    it(`should return the first value producdes by the iterable if the iterable is not indexable`,
+        function () {
+            expectequal( head('foobar'), 'f' );
+        }
+    )
+
+    it(`should throw if the object is not iterable`,
         function () {
             expecttothrow( head, null );
             expecttothrow( head, undefined );
+            expecttothrow( head, {} );
+            expecttothrow( head, 42 );
         }
     )
 
     it(`should throw if it is not passed an argument`,
         function () {
             expecttothrow( head );
-        }
-    )
-
-    it(`should return undefined if its argument is a primitive value`,
-        function () {
-            expectundefined( head(42) );
-            expectundefined( head(42n) );
-            expectundefined( head(true) );
-            expectundefined( head(markersymbol) );
         }
     )
 })
