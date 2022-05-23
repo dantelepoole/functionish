@@ -5,7 +5,9 @@
 'use strict';
 
 const isvoid = require('./isvoid');
+const isdefined = require('./isdefined');
 const iterate = require('./iterate');
+const partial = require('./partial');
 
 /**
  * Splits a list into sub-lists stored in an object, based on the result of calling a key-returning function on each
@@ -51,31 +53,35 @@ const iterate = require('./iterate');
  * // }
  * 
  * @func groupby
- * @param {func} selectgroup A function that returns a key for a given item
- * @param {any[]} list The list of items to group
+ * @param {func} keyselector A function that returns a key for a given item
+ * @param {iterable} list An iterable producing the items to group
  * @returns {object} An object containing the items grouped by their corresponding keys
  */
 module.exports = require('./curry2') (
 
-    function groupby(selectgroup, list) {
+    function groupby(keyselector, iterable) {
 
         const target = {};
 
-        const additemtogroup = addtogroup(selectgroup, target);
-        iterate(additemtogroup, list);
+        for(const item of iterable) {
+
+            const key = keyselector(item);
+            const group = getgroup(target, key);
+            
+            addtogroup(group, item);
+        }
 
         return target;
     }
 )
 
-const addtogroup = require('./curry3') ( 
+function getgroup(target, key) {
 
-    function addtogroup(selectgroup, target, item) {
+    return isvoid(key) ? undefined
+         : isdefined(target[key]) ? target[key]
+         : (target[key] = []);
+}
 
-        const key = selectgroup(item);
-
-        if( isvoid(key) ) return;
-
-        isvoid( target[key] ) ? (target[key] = [item]) : target[key].push(item);
-    }
-)
+function addtogroup(group, item) {
+    if( isdefined(group) ) group.push(item);
+}
