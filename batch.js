@@ -4,13 +4,15 @@
 
 'use strict';
 
-const lift = require('./lift');
+const isarray = require('./isarray');
 
 const maximumvalue = Math.max;
 
 /**
- * Return an array of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
- * a batch size of `1` will be used.
+ * Return an iterable of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
+ * a batch size of `1` will be used. If *iterable* is an array itself, an array is returned.
+ * 
+ * If *batchsize* is negative, an empty array is returned.
  * 
  * `batch()` is curried by default.
  * 
@@ -24,32 +26,52 @@ const maximumvalue = Math.max;
  * 
  * @func batch
  * @param {number} batchsize The maximum number of items in each batch
- * @param {any[]} list The list of items to batch
- * @returns {any[][]}
+ * @param {iterable} iterable The iterable producing the items to batch
+ * @returns {iterable}
  */
 
 module.exports = require('./curry2')(
     
-    function batch(batchsize, list) {
+    function batch(batchsize, iterable) {
 
         batchsize = maximumvalue( parseInt(batchsize), 1);
 
-        return arraybatch(batchsize, list);
+        return isarray(iterable) ? batcharray(batchsize, iterable) : batchiterable(batchsize, iterable);
     }
 )
 
-function arraybatch(batchsize, list) {
+function batchiterable(batchsize, iterable) {
 
-    if( batchsize === 1 ) return list.map(lift);
+    return {
+        
+        [Symbol.iterator] : function* () {
 
-    const batches = [];
-    const listlength = (list.length ?? 0);
+            let batch = [];
 
-    if( listlength === 0 ) return [ [] ];
+            for( const item of iterable ) {
+        
+                batch.push(item);
+        
+                if( batch.length >= batchsize ) {
+                    yield batch;
+                    batch = [];
+                }
+            }
+        
+            if( batch.length > 0 ) yield batch;
+        }
+    }
+}
+
+function batcharray(batchsize, list) {
+
     
+    if( list.length === 0 ) return [ [] ];
+    
+    const batches = [];
     let index = 0;
 
-    while( index < listlength ) {
+    while( index < list.length ) {
         
         const nextbatch = list.slice(index, index + batchsize);
 

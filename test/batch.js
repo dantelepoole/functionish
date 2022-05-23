@@ -1,5 +1,11 @@
 const batch = require('../batch');
 const expect = require('chai').expect;
+const isiterable = require('../isiterable');
+
+function toarray(iterable) {
+    expect( isiterable(iterable) ).to.be.true;
+    return Array.from(iterable);
+}
 
 const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);
 
@@ -65,18 +71,17 @@ describe('batch()', function() {
         }
     )
 
-    it('should return a single empty batch if its second argument is not indexable (e.g. an array)',
+    it('should return an iterable that throws if its second argument is not iterable',
         function () {
             let result = batch(5, 42);
-            expect(result).to.be.an('array').with.lengthOf(1);
-            expect(result[0]).to.be.an('array').with.lengthOf(0);
+            expect( () => toarray(result) ).throw();
         }
     )
 
-    it('should accept any indexable object for its second parameter (e.g. a string)',
+    it('should accept any iterable for its second argument',
         function () {
-            let result = batch(2, 'abcdefghijklmnopqrstuvwxyz');
-            expect(result).to.be.an('array').with.lengthOf(13);
+            const result = batch(2, 'foobar');
+            expect( toarray(result) ).to.be.deep.equal([['f','o'], ['o','b'], ['a','r']]);
         }
     )
 
