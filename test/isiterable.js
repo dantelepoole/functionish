@@ -13,13 +13,6 @@ describe(`isiterable()`, function() {
         }
     )
 
-    it(`should return false if its argument is a string`,
-        function () {
-            expectfalse( isiterable('') );
-            expectfalse( isiterable('foobar') );
-        }
-    )
-
     it(`should return true if its argument has a method with the key [Symbol.iterator]`,
         function () {
             const obj = {
