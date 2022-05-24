@@ -15,7 +15,7 @@ describe(`last()`, function() {
         }
     )
 
-    it(`should return the last item in its argument if its argument is indexable`,
+    it(`should return the last item in its argument if its argument is iterable`,
         function () {
             let result = last(numbers1to10);
             expectequal(result, 10);
@@ -25,25 +25,19 @@ describe(`last()`, function() {
         }
     )
 
-    it(`should return undefined if its argument is empty`,
+    it(`should return undefined if its argument is an empty iterable`,
         function () {
             expectundefined( last([]) );
             expectundefined( last('') );
         }
     )
 
-    it(`should return undefined if its argument is not indexable`,
+    it(`should throw if its argument is not iterable`,
         function () {
-            const result = last(markerobject);
-            expectundefined(result);
-        }
-    )
-
-    it(`should return undefined if its argument is null or undefined`,
-        function () {
-            expectundefined( last(null) );
-            expectundefined( last(undefined) );
-            expectundefined( last() );
+            expect( () => last(null) ).to.throw();
+            expect( () => last(undefined) ).to.throw();
+            expect( () => last() ).to.throw();
+            expect( () => last({}) ).to.throw();
         }
     )
 })
