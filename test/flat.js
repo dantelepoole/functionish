@@ -1,4 +1,4 @@
-const flatten = require('../flatten');
+const flat = require('../flat');
 const expect = require('chai').expect;
 
 const markerobject = Object.freeze({});
@@ -9,7 +9,7 @@ const array1dimension = [1,2,3,4,5];
 const array2dimensions = [[1,1], [2,2], [3,3], [4,4], [5,5]];
 const array3dimensions = [[[1,1]], [[2,2]], [[3,3]], [[4,4]], [[5,5]]];
 
-describe(`flatten()`, function() {
+describe(`flat()`, function() {
 
     beforeEach(
         function() {
@@ -25,36 +25,36 @@ describe(`flatten()`, function() {
                     flatdepth = depth;
                 }
             }
-            flatten(42, flattenable);
+            flat(42, flattenable);
             expectequal(flatdepth, 42);
         }
     )
 
     it(`should throw if its second argument has no flat() method`,
         function () {
-            expecttothrow(flatten, 42, {});
+            expecttothrow(flat, 42, {});
         }
     )
 
     it(`if its second argument is an array, it should return a copy of the array flattened by depth number of dimensions`,
         function () {
-            let result = flatten(1, array1dimension);
+            let result = flat(1, array1dimension);
             expectdeepequal(result, array1dimension)
 
-            result = flatten(1, array2dimensions);
+            result = flat(1, array2dimensions);
             expectdeepequal(result, [1,1,2,2,3,3,4,4,5,5]);
 
-            result = flatten(1, array3dimensions);
+            result = flat(1, array3dimensions);
             expectdeepequal(result, array2dimensions);
 
-            result = flatten(2, array3dimensions);
+            result = flat(2, array3dimensions);
             expectdeepequal(result, [1,1,2,2,3,3,4,4,5,5]);
         }
     )
     
     it(`should be curried`,
         function () {
-            const curried = flatten(1);
+            const curried = flat(1);
             expectfunction(curried);
             expectdeepequal( curried(array2dimensions), [1,1,2,2,3,3,4,4,5,5] );
         }
