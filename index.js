@@ -28,7 +28,6 @@ module.exports.filteriterable = require('./filteriterable');
 module.exports.find = require('./find');
 module.exports.findindex = require('./findindex');
 module.exports.flatten = require('./flatten');
-module.exports.flatmap = require('./flatmap');
 module.exports.flip = require('./flip');
 module.exports.format = require('./format');
 module.exports.freeze = require('./freeze');
