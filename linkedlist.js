@@ -31,7 +31,7 @@ function linkedlistfromnodes(nodelist) {
         pop        : partial(pop, nodelist),
         push       : partial(push, nodelist),
         pushmany   : partial(pushmany, nodelist),
-        remove     : partial(removenode, nodelist),
+        remove     : partial(remove, nodelist),
         reverse    : partial(reverse, nodelist),
 
         get head() { return nodelist.head },
@@ -60,7 +60,7 @@ function createnode(previousnode, value) {
     return node;
 }
 
-function createnodelist(initialvalues) {
+function createnodelist(initialvalues=[]) {
 
     const nodelist = {
         head   : NODE_NONE,
@@ -141,20 +141,6 @@ function getnodelistiterator(nodelist) {
     }
 }
 
-function getnodelistreverseiterator(nodelist) {
-
-    let currentnode = { previous:nodelist.tail }
-
-    return {
-        next() {
-            if( currentnode.previous === NODE_NONE ) return { done:true }
-            
-            currentnode = currentnode.previous;
-            return { done:false, value:currentnode.value }
-        }
-    }
-}
-
 function insert(llist, targetnode, value) {
 
     const newnode = insertnode(targetnode?.previous, {value}, targetnode);
@@ -220,7 +206,7 @@ function pop(llist) {
 
     if( lastnode === NODE_NONE ) return undefined;
 
-    removenode(llist, lastnode);
+    remove(llist, lastnode);
 
     return lastnode.value;
 }
@@ -246,7 +232,7 @@ function pushmany(llist, iterable) {
     return llist.length;
 }
 
-function removenode(llist, targetnode) {
+function remove(llist, targetnode) {
 
     const nextnode = targetnode?.next;
     const previousnode = targetnode?.previous;
@@ -266,8 +252,26 @@ function removenode(llist, targetnode) {
     return targetnode?.value;
 }
 
-function reverse(llist) {
+function reverse(nodelist) {
 
-    const nodelistreverseiterator = getnodelistreverseiterator(llist);
-    return linkedlistfromnodes(nodelistreverseiterator);
+    if( nodelist.length === 0 ) return linkedlist();
+
+    const newlist = createnodelist();
+
+    let currentnode = nodelist.tail;
+    let reversednode = { next:currentnode.previous, previous:currentnode.next, value:currentnode.value }
+
+    newlist.head = reversednode;
+
+    while(currentnode.previous !== NODE_NONE) {
+
+        currentnode = currentnode.previous;
+        reversednode = createnode(reversednode, currentnode.value);
+
+    }
+
+    newlist.tail = reversednode;
+    newlist.length = nodelist.length;
+
+    return linkedlistfromnodes(newlist);
 }
