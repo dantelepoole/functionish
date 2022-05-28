@@ -21,7 +21,7 @@ function linkedlist(initialitems=[]) {
 function linkedlistfromnodes(nodelist) {
 
     return {
-
+        add         : partial(add, nodelist),
         at          : partial(at, nodelist),
         clear       : partial(clear, nodelist),
         filter      : partial(filter, nodelist),
@@ -29,18 +29,19 @@ function linkedlistfromnodes(nodelist) {
         findindex   : partial(findindex, nodelist),
         getnode     : partial(getnode, nodelist),
         insert      : partial(insert, nodelist),
-        insertmany  : partial(insertmany, nodelist),
+        // insertmany  : partial(insertmany, nodelist),
         map         : partial(map, nodelist),
-        peek        : partial(peek, nodelist),
-        pop         : partial(pop, nodelist),
-        push        : partial(push, nodelist),
-        pushmany    : partial(pushmany, nodelist),
+        // peek        : partial(peek, nodelist),
+        // pop         : partial(pop, nodelist),
+        // push        : partial(push, nodelist),
+        // pushmany    : partial(pushmany, nodelist),
         reduce      : partial(reduce, nodelist),
         remove      : partial(remove, nodelist),
         reverse     : partial(reverse, nodelist),
-        shift       : partial(shift, nodelist),
-        unshift     : partial(unshift, nodelist),
-        unshiftmany : partial(unshiftmany, nodelist),
+        // shift       : partial(shift, nodelist),
+        // unshift     : partial(unshift, nodelist),
+        // unshiftmany : partial(unshiftmany, nodelist),
+        toarray     : partial(toarray, nodelist),
 
         get head() { return nodelist.head },
         get length() { return nodelist.length },
@@ -50,6 +51,15 @@ function linkedlistfromnodes(nodelist) {
             return getnodelistiterator(nodelist);
         }
     }
+}
+
+function add(nodelist, value) {
+
+    nodelist.tail = createnode(nodelist.tail, value);
+
+    nodelist.length += 1;
+
+    return nodelist.length;
 }
 
 function at(nodelist, index) {
@@ -356,4 +366,19 @@ function unshift(nodelist, value) {
 
 function unshiftmany(nodelist, iterable) {
     return insertmany(nodelist, nodelist.head, iterable);
+}
+
+function toarray(nodelist) {
+
+    function* nodelistiterate() {
+
+        let currentnode = nodelist.head;
+
+        while(currentnode !== NODE_NONE) {
+            yield currentnode.value;
+            currentnode = currentnode.next;
+        }
+    }
+
+    return Array.from( nodelistiterate() );
 }
