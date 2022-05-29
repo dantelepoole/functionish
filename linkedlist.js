@@ -49,6 +49,8 @@ function add(nodelist, value) {
 
     nodelist.tail = createnode(nodelist.tail, value);
 
+    if(nodelist.head === NODE_NONE) nodelist.head = nodelist.tail;
+
     nodelist.length += 1;
 
     return nodelist.length;
@@ -71,7 +73,7 @@ function createnode(previousnode, value) {
     node.previous = previousnode;
     node.value = value;
 
-    previousnode.next = node;
+    if(previousnode !== NODE_NONE) previousnode.next = node;
 
     return node;
 }
@@ -250,8 +252,6 @@ function remove(nodelist, targetnode) {
 
     const nextnode = targetnode?.next;
     const previousnode = targetnode?.previous;
-
-    if( nextnode === NODE_NONE && previousnode === NODE_NONE ) return nodelist;
 
     targetnode.next = targetnode.previous = undefined;
 
