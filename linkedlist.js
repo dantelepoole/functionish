@@ -181,6 +181,8 @@ function getnodelistiterator(nodelist) {
 
 function insert(nodelist, targetnode, value) {
 
+    if( targetnode === NODE_NONE ) targetnode = nodelist.tail;
+    
     const newnode = insertnode(targetnode?.previous, {value}, targetnode);
 
     if( nodelist.head === targetnode ) nodelist.head = newnode;
@@ -202,37 +204,37 @@ function insertnode(previousnode, newnode, nextnode) {
     return newnode;
 }
 
-function insertnodelist(previousnode, newnodes, nextnode) {
+// function insertnodelist(previousnode, newnodes, nextnode) {
 
-    if( newnodes.length === 0 ) return newnodes;
+//     if( newnodes.length === 0 ) return newnodes;
 
-    const headnode = newnodes.head;
-    const tailnode = newnodes.tail;
+//     const headnode = newnodes.head;
+//     const tailnode = newnodes.tail;
 
-    headnode.previous = previousnode ?? nextnode?.previous;
-    tailnode.next = nextnode ?? previousnode?.next;
+//     headnode.previous = previousnode ?? nextnode?.previous;
+//     tailnode.next = nextnode ?? previousnode?.next;
 
-    if( headnode.previous ) headnode.previous.next = headnode;
-    if( tailnode.next ) tailnode.next.previous = tailnode;
+//     if( headnode.previous ) headnode.previous.next = headnode;
+//     if( tailnode.next ) tailnode.next.previous = tailnode;
 
-    return newnodes;
-}
+//     return newnodes;
+// }
 
-function insertmany(nodelist, targetnode, newvalues) {
+// function insertmany(nodelist, targetnode, newvalues) {
 
-    const newnodelist = createnodelist(newvalues);
+//     const newnodelist = createnodelist(newvalues);
 
-    if( newnodelist.length === 0 ) return NODE_NONE;
+//     if( newnodelist.length === 0 ) return NODE_NONE;
 
-    insertnodelist(targetnode?.previous, newnodelist, targetnode);
+//     insertnodelist(targetnode?.previous, newnodelist, targetnode);
 
-    if( nodelist.head === targetnode ) nodelist.head = newnodelist.head;
-    if( nodelist.tail === NODE_NONE ) nodelist.tail = nodelist.head;
+//     if( nodelist.head === targetnode ) nodelist.head = newnodelist.head;
+//     if( nodelist.tail === NODE_NONE ) nodelist.tail = nodelist.head;
 
-    nodelist.length += newnodelist.length;
+//     nodelist.length += newnodelist.length;
 
-    return nodelist.length;
-}
+//     return nodelist.length;
+// }
 
 function map(nodelist, mapfunc) {
 
@@ -249,42 +251,42 @@ function map(nodelist, mapfunc) {
     return linkedlist(mapiterate());
 }
 
-function peek(nodelist) {
-    return nodelist.tail?.value;
-}
+// function peek(nodelist) {
+//     return nodelist.tail?.value;
+// }
 
-function pop(nodelist) {
+// function pop(nodelist) {
 
-    const lastnode = nodelist.tail;
+//     const lastnode = nodelist.tail;
 
-    if( lastnode === NODE_NONE ) return undefined;
+//     if( lastnode === NODE_NONE ) return undefined;
 
-    remove(nodelist, lastnode);
+//     remove(nodelist, lastnode);
 
-    return lastnode.value;
-}
+//     return lastnode.value;
+// }
 
-function push(nodelist, value) {
+// function push(nodelist, value) {
 
-    nodelist.tail = createnode(nodelist.tail, value);
+//     nodelist.tail = createnode(nodelist.tail, value);
 
-    nodelist.length += 1;
+//     nodelist.length += 1;
 
-    return nodelist.length;
-}
+//     return nodelist.length;
+// }
 
-function pushmany(nodelist, iterable) {
+// function pushmany(nodelist, iterable) {
 
-    const newnodes = createnodelist(iterable);
-    if( newnodes.length === 0 ) return nodelist.length;
+//     const newnodes = createnodelist(iterable);
+//     if( newnodes.length === 0 ) return nodelist.length;
 
-    (nodelist.length === 0) ? (nodelist.head = newnodes.head) : (nodelist.tail.next = newnodes.head);
+//     (nodelist.length === 0) ? (nodelist.head = newnodes.head) : (nodelist.tail.next = newnodes.head);
 
-    nodelist.tail = newnodes.tail;
-    nodelist.length += newnodes.length;
+//     nodelist.tail = newnodes.tail;
+//     nodelist.length += newnodes.length;
 
-    return nodelist.length;
-}
+//     return nodelist.length;
+// }
 
 function reduce(nodelist, reducer, initialvalue) {
 
@@ -343,30 +345,30 @@ function reverse(nodelist) {
     return linkedlistfromnodes(newlist);
 }
 
-function shift(nodelist) {
+// function shift(nodelist) {
 
-    const firstnode = nodelist.head;
+//     const firstnode = nodelist.head;
 
-    if( firstnode === NODE_NONE ) return undefined;
+//     if( firstnode === NODE_NONE ) return undefined;
 
-    remove(nodelist, firstnode);
+//     remove(nodelist, firstnode);
 
-    return firstnode.value;
+//     return firstnode.value;
     
-}
+// }
 
-function unshift(nodelist, value) {
+// function unshift(nodelist, value) {
 
-    nodelist.head = insertnode(NODE_NONE, {value}, nodelist.head);
+//     nodelist.head = insertnode(NODE_NONE, {value}, nodelist.head);
 
-    nodelist.length += 1;
+//     nodelist.length += 1;
 
-    return nodelist.length;
-}
+//     return nodelist.length;
+// }
 
-function unshiftmany(nodelist, iterable) {
-    return insertmany(nodelist, nodelist.head, iterable);
-}
+// function unshiftmany(nodelist, iterable) {
+//     return insertmany(nodelist, nodelist.head, iterable);
+// }
 
 function toarray(nodelist) {
 
