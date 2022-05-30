@@ -5,7 +5,7 @@
 'use strict';
 
 const INDEX_NOT_FOUND = -1;
-const NODE_NONE = undefined;
+const NODE_EMPTY = undefined;
 
 const partial = require('./partial');
 
@@ -22,7 +22,6 @@ function linkedlistfromnodes(nodelist) {
 
     return {
         add         : partial(add, nodelist),
-        at          : partial(at, nodelist),
         clear       : partial(clear, nodelist),
         filter      : partial(filter, nodelist),
         findnode    : partial(findnode, nodelist),
@@ -33,6 +32,7 @@ function linkedlistfromnodes(nodelist) {
         reduce      : partial(reduce, nodelist),
         remove      : partial(remove, nodelist),
         reverse     : partial(reverse, nodelist),
+        slice       : partial(slice, nodelist),
         toarray     : partial(toarray, nodelist),
 
         get head() { return nodelist.head },
@@ -49,31 +49,28 @@ function add(nodelist, value) {
 
     nodelist.tail = createnode(nodelist.tail, value);
 
-    if(nodelist.head === NODE_NONE) nodelist.head = nodelist.tail;
+    if(nodelist.head === NODE_EMPTY) nodelist.head = nodelist.tail;
 
     nodelist.length += 1;
 
     return nodelist.length;
 }
 
-function at(nodelist, index) {
-    return getnode(nodelist, index)?.value;
-}
-
 function clear(nodelist) {
 
-    nodelist.head = nodelist.tail = NODE_NONE;
+    nodelist.head = nodelist.tail = NODE_EMPTY;
     nodelist.length = 0;
 }
 
-function createnode(previousnode, value) {
+function createnode(previousnode, value, nextnode=NODE_EMPTY) {
 
-    const node = Object.create(null);
+    const node = {
+        next     : nextnode,
+        previous : previousnode,
+        value    : value
+    }
 
-    node.previous = previousnode;
-    node.value = value;
-
-    if(previousnode !== NODE_NONE) previousnode.next = node;
+    if( previousnode !== NODE_EMPTY ) previousnode.next = node;
 
     return node;
 }
@@ -81,25 +78,25 @@ function createnode(previousnode, value) {
 function createnodelist(initialvalues=[]) {
 
     const nodelist = {
-        head   : NODE_NONE,
+        head   : NODE_EMPTY,
         length : 0,
-        tail   : NODE_NONE
+        tail   : NODE_EMPTY
     }
 
     const stubnode = {};
-    let currentnode = stubnode;
+    let node = stubnode;
     let nodecount = 0;
 
     for(const value of initialvalues) {
-        currentnode = createnode(currentnode, value);
+        node = createnode(node, value);
         nodecount += 1;
     }
 
     if( nodecount > 0 ) {
         nodelist.length = nodecount;
-        nodelist.tail = currentnode;
+        nodelist.tail = node;
         nodelist.head = stubnode.next;
-        nodelist.head.previous = NODE_NONE;
+        nodelist.head.previous = NODE_EMPTY;
     }
 
     return nodelist;
@@ -108,13 +105,10 @@ function createnodelist(initialvalues=[]) {
 function filter(nodelist, predicate) {
 
     function* filteriterate() {
-        
-        let currentnode = nodelist.head;
 
-        while(currentnode !== NODE_NONE) {
-            if( predicate(currentnode.value) ) yield currentnode.value;
-            currentnode = currentnode.next;
-        }
+        let node = { next:nodelist.head }
+
+        while( (node = node.next) !== NODE_EMPTY ) if( predicate(node.value) ) yield node.value;
     }
 
     return linkedlist(filteriterate());
@@ -122,25 +116,21 @@ function filter(nodelist, predicate) {
 }
 
 function findnode(nodelist, predicate) {
-    
-    let currentnode = nodelist.head;
 
-    while( currentnode !== NODE_NONE ) {
-        if( predicate(currentnode.value) ) return currentnode;
-        currentnode = currentnode.next;
-    }
+    let node = { next:nodelist.head }
 
-    return NODE_NONE;
+    while( (node = node.next) !== NODE_EMPTY ) if( predicate(node.value) ) break;
+
+    return node;
 }
 
 function findindex(nodelist, predicate) {
 
-    let currentnode = nodelist.head;
+    let node = { next:nodelist.head };
     let index = 0;
 
-    while( currentnode !== NODE_NONE ) {
-        if( predicate(currentnode.value) ) return index;
-        currentnode = currentnode.next;
+    while( (node = node.next) !== NODE_EMPTY ) {
+        if( predicate(node.value) ) return index;
         index += 1;
     }
 
@@ -151,155 +141,155 @@ function getnode(nodelist, index) {
 
     if( index < 0 ) index = (nodelist.length + index);
 
-    let currentnode = nodelist.head;
+    if( index < 0 || index > nodelist.length ) return undefined;
 
-    while( index > 0 && currentnode !== NODE_NONE ) {
-        currentnode = currentnode.next;
-        index -= 1;
-    }
+    let node = { next:nodelist.head }
 
-    return (index === 0) ? currentnode : NODE_NONE;
+    while( (node = node.next) !== NODE_EMPTY && index > 0 ) index -= 1;
+
+    return node;
 }
 
 function getnodelistiterator(nodelist) {
 
-    let currentnode = { next:nodelist.head }
+    let node = { next:nodelist.head }
 
     return {
         next() {
-            currentnode = currentnode?.next;
-            return (currentnode === NODE_NONE) ? {done:true} : { done:false, value:currentnode.value }
+            return ((node = node?.next) === NODE_EMPTY) ? {done:true} : { done:false, value:node.value }
         }
     }
 }
 
-function insert(nodelist, targetnode, value) {
+function insert(nodelist, node, value) {
 
-    if( typeof targetnode === 'number' ) {
-        const index = targetnode;
-        targetnode = getnode(nodelist, index);
-        if( targetnode === NODE_NONE ) raiseindexnotfounderror(index, 'linkedlist.insert()');
-    }
-
-    if( targetnode === NODE_NONE ) targetnode = nodelist.tail;
+    node = (typeof node === 'number') ? lookupnode(nodelist, node) : (node ?? nodelist.tail);
     
-    const newnode = insertnode(targetnode?.previous, {value}, targetnode);
+    const newnode = insertnode(node?.previous, {value}, node);
 
-    if( nodelist.head === targetnode ) nodelist.head = newnode;
-    if( nodelist.tail === NODE_NONE ) nodelist.tail = nodelist.head;
+    if( nodelist.head === node ) nodelist.head = newnode;
+    if( nodelist.tail === NODE_EMPTY ) nodelist.tail = nodelist.head;
 
     nodelist.length += 1;
 
     return nodelist.length;
 }
 
-function insertnode(previousnode, newnode, nextnode) {
+function insertnode(previousnode, node, nextnode) {
 
-    newnode.previous = previousnode ?? nextnode?.previous;
-    newnode.next = nextnode ?? previousnode?.next;
+    node.previous = previousnode ?? nextnode?.previous;
+    node.next = nextnode ?? previousnode?.next;
 
-    if( newnode.previous ) newnode.previous.next = newnode;
-    if( newnode.next ) newnode.next.previous = newnode;
+    if( node.previous ) node.previous.next = node;
+    if( node.next ) node.next.previous = node;
 
-    return newnode;
+    return node;
+}
+
+function lookupnode(nodelist, index) {
+
+    const node = getnode(nodelist, index);
+    
+    if( node !== NODE_EMPTY ) return node;
+
+    const error = new Error(`linkedlist: node ${index} not found`);
+    error.name = 'NodeNotFoundError';
+
+    return error;
 }
 
 function map(nodelist, mapfunc) {
 
     function* mapiterate() {
-        
-        let currentnode = nodelist.head;
 
-        while(currentnode !== NODE_NONE) {
-            yield mapfunc(currentnode.value);
-            currentnode = currentnode.next;
-        }
+        let node = { next:nodelist.head }
+
+        while( (node = node.next) !== NODE_EMPTY ) yield mapfunc(node.value);
+
     }
 
     return linkedlist(mapiterate());
 }
 
-function raiseindexnotfounderror(index, source) {
-
-    const errormessage = `${source}: index ${index} not found`;
-
-    const error = new Error(errormessage);
-    error.name = 'IndexNotFoundError';
-
-    throw error;
-}
-
 function reduce(nodelist, reducer, initialvalue) {
 
     let accumulator = initialvalue;
-    let currentnode = nodelist.head;
+    let node = { next:nodelist.head }
 
-    while( currentnode !== NODE_NONE ) {
-        accumulator = reducer(accumulator, currentnode.value);
-        currentnode = currentnode.next;
-    }
+    while( (node = node.next) !== NODE_EMPTY ) accumulator = reducer(accumulator, node.value);
 
     return accumulator;
 }
 
-function remove(nodelist, targetnode) {
+function remove(nodelist, node) {
 
-    if( typeof targetnode === 'number' ) {
-        const index = targetnode;
-        targetnode = getnode(nodelist, index);
-        if( targetnode === NODE_NONE ) raiseindexnotfounderror(index,'linkedlist.remove()');
-    }
+    if( typeof node === 'number' ) node = lookupnode(nodelist, node);
 
-    const nextnode = targetnode?.next;
-    const previousnode = targetnode?.previous;
+    if( node === NODE_EMPTY ) return nodelist.length;
 
-    targetnode.next = targetnode.previous = undefined;
+    if( nodelist.head === node ) nodelist.head = node.next;
+    if( nodelist.tail === node ) nodelist.tail = node.previous;
 
-    if( nextnode !== NODE_NONE ) nextnode.previous = previousnode;
-    if( previousnode !== NODE_NONE ) previousnode.next = nextnode;
-
-    if( nodelist.head === targetnode ) nodelist.head = nextnode;
-    if( nodelist.tail === targetnode ) nodelist.tail = previousnode;
+    if( node.next !== NODE_EMPTY ) node.next.previous = node.previous;
+    if( node.previous !== NODE_EMPTY ) node.previous.next = node.next;
+    
+    node.next = node.previous = NODE_EMPTY;
 
     nodelist.length -= 1;
 
-    return targetnode?.value;
+    return nodelist.length;
 }
 
 function reverse(nodelist) {
 
     if( nodelist.length === 0 ) return linkedlist();
 
-    const newlist = createnodelist();
+    const flippednodelist = createnodelist();
 
-    let currentnode = nodelist.tail;
-    let reversednode = { next:currentnode.previous, previous:currentnode.next, value:currentnode.value }
+    let node = nodelist.tail;
+    let flippednode = flippednodelist.head = createnode(NODE_EMPTY, node.value, node.previous);
 
-    newlist.head = reversednode;
+    while( (node = node.previous) !== NODE_EMPTY ) flippednode = createnode(flippednode, node.value);
 
-    while(currentnode.previous !== NODE_NONE) {
+    flippednodelist.tail = flippednode;
+    flippednodelist.length = nodelist.length;
 
-        currentnode = currentnode.previous;
-        reversednode = createnode(reversednode, currentnode.value);
+    return linkedlistfromnodes(flippednodelist);
+}
 
+function slice(nodelist, startindex=0, endindex=undefined) {
+
+    endindex = (endindex ?? nodelist.length);
+
+    if( startindex < 0 ) startindex = nodelist.length + startindex;
+    if( endindex < 0 ) endindex = nodelist.length + endindex;
+
+    let nodecount = (endindex - startindex);
+    let node = getnode(nodelist, startindex);
+    if( node === NODE_EMPTY || nodecount <= 0 ) return linkedlist();
+
+    const slicenodelist = createnodelist();
+    let slicenode = slicenodelist.head = createnode(NODE_EMPTY, node.value);
+    slicenodelist.length = 1;
+
+    while( slicenodelist.length < nodecount && (node = node.next) !== NODE_EMPTY ) {
+        slicenode = createnode(slicenode, node.value);
+        slicenodelist.length += 1;
     }
 
-    newlist.tail = reversednode;
-    newlist.length = nodelist.length;
+    slicenodelist.tail = slicenode;
 
-    return linkedlistfromnodes(newlist);
+    return linkedlistfromnodes(slicenodelist);
 }
 
 function toarray(nodelist) {
 
     function* nodelistiterate() {
 
-        let currentnode = nodelist.head;
+        let node = { next:nodelist.head }
 
-        while(currentnode !== NODE_NONE) {
-            yield currentnode.value;
-            currentnode = currentnode.next;
-        }
+        while( (node = node.next) !== NODE_EMPTY ) yield node.value;
+
     }
 
     return Array.from( nodelistiterate() );
