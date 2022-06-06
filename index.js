@@ -52,7 +52,6 @@ module.exports.iterate = require('./iterate');
 module.exports.last = require('./last');
 module.exports.length = require('./length');
 module.exports.lift = require('./lift');
-module.exports.linkedlist = require('./linkedlist');
 module.exports.map = require('./map');
 module.exports.mapiterable = require('./mapiterable');
 module.exports.merge = require('./merge');
