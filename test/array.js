@@ -1,7 +1,7 @@
-const toarray = require('../toarray');
+const array = require('../array');
 const expect = require('chai').expect;
 
-describe('toarray()', function() {
+describe('array()', function() {
 
     beforeEach(
         function() {
@@ -17,27 +17,27 @@ describe('toarray()', function() {
 })
 
 function test_returnarray() {
-    expect( toarray([1,2,3]) ).to.be.deep.equal([1,2,3]);
-    expect( toarray('foobar') ).to.be.deep.equal(['f','o','o','b','a','r']);
+    expect( array([1,2,3]) ).to.be.deep.equal([1,2,3]);
+    expect( array('foobar') ).to.be.deep.equal(['f','o','o','b','a','r']);
 }
 
 function test_returnemptyarray() {
-    expect( toarray('') ).to.be.an('array').with.length(0);
-    expect( toarray([]) ).to.be.an('array').with.length(0);
+    expect( array('') ).to.be.an('array').with.length(0);
+    expect( array([]) ).to.be.an('array').with.length(0);
 }
 
 function test_reflectarray() {
 
-    const array = [ {}, [], Symbol() ];
-    expect( toarray(array) ).to.be.equal(array);
+    const list = [ {}, [], Symbol() ];
+    expect( array(list) ).to.be.equal(list);
 }
 
 function test_returnemptyarrayifnotiterable() {
-    expect( toarray({}) ).to.be.deep.equal([]);
+    expect( array({}) ).to.be.deep.equal([]);
 }
 
 function test_throwifnullorundefined() {
-    expect( ()=>toarray() ).to.throw();
-    expect( ()=>toarray(null) ).to.throw();
-    expect( ()=>toarray(undefined) ).to.throw();
+    expect( ()=>array() ).to.throw();
+    expect( ()=>array(null) ).to.throw();
+    expect( ()=>array(undefined) ).to.throw();
 }
