@@ -69,7 +69,6 @@ module.exports.pcompose = require('./pcompose');
 module.exports.pfinally = require('./pfinally');
 module.exports.pipe = require('./pipe');
 module.exports.pluck = require('./pluck');
-module.exports.pmap = require('./pmap');
 module.exports.ppipe = require('./ppipe');
 module.exports.predicate = require('./predicate');
 module.exports.preject = require('./preject');
