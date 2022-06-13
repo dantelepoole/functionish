@@ -41,11 +41,13 @@ module.exports = function or(...clauses) {
 
     if( clauses.length === 1 && isarray(clauses[0]) ) clauses = clauses[0];
 
-    const clausecount = clauses.length;
-
     return function _or(...args) {
 
-        for( let index = 0; index < clausecount; index++ ) if ( clauses[index](...args) ) return true;
+        for( let index = 0; index < clauses.length; index++ ) {
+
+            const clause = clauses[index];
+            if( clause(...args) ) return true;
+        }
 
         return false;
     }
