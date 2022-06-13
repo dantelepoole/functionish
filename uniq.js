@@ -14,27 +14,22 @@ const partial = require('./partial');
  * @param {iterable} iterable The iterable of items to remove duplicates from
  * @returns {iterable}
  */
- module.exports = function uniq(iterable) {
+module.exports = uniq;
+ 
+function uniq(iterable) {
 
     return {
-        [Symbol.iterator]() {
+        [Symbol.iterator] : function* () {
 
-            const iterator = iterable[Symbol.iterator]();
             const duplicateitems = new Set();
-            const next = partial(nextuniqitem, duplicateitems, iterator);
 
-            return { next }
+            for(const item of iterable) {
+                
+                if( ! duplicateitems.has(item) ) {
+                    duplicateitems.add(item);
+                    yield item;
+                }
+            }
         }
     }
-}
-
-function nextuniqitem(duplicateitems, iterator) {
-
-    let nextitem = iterator.next();
-
-    while( ( ! nextitem.done ) && duplicateitems.has(nextitem.value) ) nextitem = iterator.next();
-
-    nextitem.done ? duplicateitems.clear() : duplicateitems.add(nextitem.value);
-
-    return nextitem;
 }
