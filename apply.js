@@ -8,8 +8,6 @@
  * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()}.
  * Pass *args* to *func* and return the result.
  * 
- * `apply()` is curried by default.
- * 
  * @example
  * 
  * const apply = require('functionish/apply');
@@ -25,9 +23,6 @@
  * @returns {any}
  */
 
-module.exports = require('./curry2') (
-
-    function apply(func, args) {
-        return func(...args);
-    }
-)
+module.exports = function apply(func, ...args) {
+    return func(...args);
+}
