@@ -21,15 +21,23 @@ function uniq(iterable) {
     return {
         [Symbol.iterator] : function* () {
 
-            const duplicateitems = new Set();
+            const isuniq = isuniqfactory();
 
-            for(const item of iterable) {
-                
-                if( ! duplicateitems.has(item) ) {
-                    duplicateitems.add(item);
-                    yield item;
-                }
-            }
+            for(const item of iterable) if( isuniq(item) ) yield item;
         }
+    }
+}
+
+function isuniqfactory() {
+
+    const cache = new Set();
+
+    return function isuniq(item) {
+
+        const priorcachesize = cache.size;
+
+        cache.add(item);
+
+        return (cache.size !== priorcachesize);
     }
 }

@@ -11,9 +11,8 @@ const uniq = require('./uniq');
 
 /**
  * Return an iterable producing only those items from *list1* that are not present in *list2*, but without duplicates.
- * If *iterable1* is an array, an array is returned instead.
  * 
- * `difference()` is curried by default.
+ * `difference()` is curried by default with binary arity.
  * 
  * @func difference
  * @param {iterable} iterable1 The first iterable
@@ -39,9 +38,9 @@ function isarrayorstring(value) {
 
 function excludeiterablepredicatefactory(iterable) {
 
-    const includespredicate = isarrayorstring(iterable) ? bind('includes', iterable) : bind('has', new Set(iterable));
+    const includes = isarrayorstring(iterable) ? bind('includes', iterable) : bind('has', new Set(iterable));
 
-    return not(includespredicate);
+    return not(includes);
 }
 
 function filteriterable(predicate, iterable) {
