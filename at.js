@@ -19,14 +19,14 @@
  * console.log( item ); // prints `42`
  * 
  * @func at
- * @param {number} index The index of the item to retrieve
  * @param {any[]} list The array to retrieve the item from
+ * @param {number} index The index of the item to retrieve
  * @returns {any}
  */
 
 module.exports = require('./curry2')(
 
-    function at(index, list) {
+    function at(list, index) {
 
         if( index < 0 ) index += list.length;
 
