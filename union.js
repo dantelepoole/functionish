@@ -4,11 +4,13 @@
 
 'use strict';
 
+const uniq = require('./uniq');
+
 /**
  * Return an iterable producing the items from *list1* and *list2* but without duplicates. The function iterates through
  * *list1* followed by *list2*, skipping any duplicate items in either list.
  * 
- * `union()` is curried by default.
+ * `union()` is curried by default with binary arity.
  * 
  * @func union
  * @param {iterable} list1 The first iterable of items to combine
@@ -21,36 +23,20 @@ module.exports = require('./curry2')(
 
         return {
             [Symbol.iterator] : function* () {
-    
-                const duplicateitems = new Set();
-    
-                for( const item of iterateuniq(duplicateitems, list1)) yield item;
-                for( const item of iterateuniq(duplicateitems, list2)) yield item;
-    
+
+                const combinedlist = concatiterables(list1, list2);
+                for(const item of uniq(combinedlist) ) yield item;
             }
         }
     }
 )
 
-function* iterateuniq(duplicateitems, iterable) {
+function concatiterables(iterable1, iterable2) {
 
-    const iterator = iterable[Symbol.iterator]();
-
-    let nextitem = nextuniqitem(duplicateitems, iterator);
-
-    while( ! nextitem.done ) {
-        yield nextitem.value;
-        nextitem = nextuniqitem(duplicateitems, iterator);
+    return {
+        [Symbol.iterator] : function* () {
+            for( const item of iterable1 ) yield item;
+            for( const item of iterable2 ) yield item;
+        }
     }
-}
-
-function nextuniqitem(duplicateitems, iterator) {
-
-    let nextitem = iterator.next();
-
-    while( ( ! nextitem.done ) && duplicateitems.has(nextitem.value) ) nextitem = iterator.next();
-
-    if(! nextitem.done) duplicateitems.add(nextitem.value);
-
-    return nextitem;
 }
