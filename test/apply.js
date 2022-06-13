@@ -13,15 +13,30 @@ describe('apply()', function() {
         }
     )
 
-    it('should apply its first argument to its other arguments and return the result',
+    it('should pass the items in the args array to the function and return the result',
         function() {
-            expect( apply(sum, ...numbers1to10) ).to.be.equal(55);
+            expect( apply(sum, numbers1to10) ).to.be.equal(55);
+        }
+    )
+
+    it('should pass a non-array args as a sole argument to the function',
+        function() {
+            expect( apply(sum, 42) ).to.be.equal(42);
         }
     )
 
     it('should throw if its first argument is not a function',
         function () {
             expect( () => apply(42, numbers1to10) ).to.throw();
+        }
+    )
+
+    it('should be curried',
+        function () {
+
+            const curried = apply(sum);
+            expect(curried).to.be.a('function');
+            expect( curried(numbers1to10) ).to.be.equal(55);
         }
     )
 
