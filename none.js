@@ -14,7 +14,7 @@ const any = require('./any');
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
  * 
- * `none()` is curried by default.
+ * `none()` is curried by default with binary arity.
  * 
  * @func none
  * @see {@link module:any any()}
