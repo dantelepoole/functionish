@@ -5,7 +5,6 @@
 'use strict';
 
 const isarray = require('./isarray');
-const partial = require('./partial');
 
 /**
  * Return a function that passes its arguments to each *clause* and returns `true` if and only if each *clause*
@@ -34,18 +33,20 @@ const partial = require('./partial');
  * @see {@link module:or or()}
  * @see {@link module:not not()}
  * @see {@link module:xor xor()}
- * @param {...clause} clauses One or more clauses to test
+ * @param {...function} clauses One or more predicate functions to test
  * @returns {boolean}
  */
 module.exports = function and(...clauses) {
 
-    if( clauses.length === 1 && isarray(clauses[0]) ) clauses = clauses[0];
-
-    const clausecount = clauses.length;
+    if( clauses.length === 1 && isarray(clauses[0]) ) clauses = clauses[0].slice();
 
     return function _and(...args) {
 
-        for( let index = 0; index < clausecount; index++ ) if( ! clauses[index](...args) ) return false;
+        for( let index = 0; index < clauses.length; index++ ) {
+
+            const clause = clauses[index];
+            if( ! clause(...args) ) return false;
+        }
 
         return true;
     }

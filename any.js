@@ -4,8 +4,6 @@
 
 'use strict';
 
-const unary = require('./unary');
-
 /**
  * Apply the *predicate* function to each item in *list* and return `true` when *predicate* returns a truthy value. If
  * *predicate* returns a falsy value for each item, return `false`.
@@ -13,7 +11,7 @@ const unary = require('./unary');
  * The function is short-circuited, so it returns `true` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
  * 
- * `any()` is curried by default.
+ * `any()` is curried by default with binary arity.
  * 
  * @example
  * 
@@ -27,14 +25,17 @@ const unary = require('./unary');
  * @see {@link module:all all()}
  * @see {@link module:none none()}
  * @param {function} predicate The predicate function
- * @param {any[]} list An array of items to test
+ * @param {any[]} list An iterable object producing items to test
  * @returns {boolean}
  */
 
 module.exports = require('./curry2')(
 
     function any(predicate, list) {
-        return list.some( unary(predicate) );
+
+        for( const item of list ) if( predicate(item) ) return true;
+
+        return false;
     }
     
 )

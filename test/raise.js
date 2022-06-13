@@ -1,7 +1,7 @@
-const filteriterable = require('../filteriterable');
+const raise = require('../raise');
 const expect = require('chai').expect;
 
-describe('filteriterable()', function() {
+describe('raise()', function() {
 
     beforeEach(
         function() {
@@ -9,4 +9,5 @@ describe('filteriterable()', function() {
     )
 
     it('should be tested')
+
 })

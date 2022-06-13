@@ -8,8 +8,6 @@
  * Retrieve the item from *list* at index *index* or `undefined` if the index is invalid. If *index* is negative,
  * it represents the index counting down from the end of *list* (so -1 represents the last item in *list*).
  * 
- * `at()` is curried by default.
- * 
  * @example
  * 
  * const at = require('functionish/at');
@@ -24,12 +22,9 @@
  * @returns {any}
  */
 
-module.exports = require('./curry2')(
+module.exports = function at(list, index) {
 
-    function at(list, index) {
+    if( index < 0 ) index += list.length;
 
-        if( index < 0 ) index += list.length;
-
-        return list[index];
-    }
-)
+    return list[index];
+}

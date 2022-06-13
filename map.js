@@ -4,7 +4,6 @@
 
 'use strict';
 
-const mapiterable = require('./mapiterable');
 const unary = require('./unary');
 
 /**
@@ -16,7 +15,7 @@ const unary = require('./unary');
  * means that *func* will only ever receive a single argument (the item being mapped), regardless of how many arguments
  * *list*'s `map()` method actually passes.
  * 
- * `map()` is curried by default.
+ * `map()` is curried by default with binary arity.
  * 
  * @example
  * 
@@ -26,15 +25,12 @@ const unary = require('./unary');
  * 
  * map(double, [1,2,3]); // returns [2,4,6]
  *     
- * const obj = { a:42, b:30 }
- * map(double, obj); // returns { a:84, b:60 }
- * 
  * @func map
  * @see {@link external:Array.prototype.map Array.prototype.map()}
  * @see {@link module:unary unary()}
  * @param {function} func The function to apply to each item in *list*
  * @param {(mappable|iterable)} list An object with a `map()` method or an iterable object
- * @returns {any}
+ * @returns {any} The return value of *list*'s `map()` method or an iterable object if it doesn't have one
  */
 
 module.exports = require('./curry2')(
@@ -43,3 +39,13 @@ module.exports = require('./curry2')(
         return (typeof list.map === 'function') ? list.map( unary(func) ) : mapiterable(func, list);
     }
 )
+
+function mapiterable(mapfunc, iterable) {
+
+    return {
+
+        [Symbol.iterator] : function* () {
+            for( const item of iterable ) yield mapfunc(item);
+        }
+    }
+}

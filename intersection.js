@@ -4,7 +4,6 @@
 
 'use strict';
 
-const filteriterable = require('./filteriterable');
 const uniq = require('./uniq');
 
 /**
@@ -28,3 +27,13 @@ module.exports = require('./curry2') (
         return uniq(intersectioniterable);
     }
 )
+
+function filteriterable(predicate, iterable) {
+    
+    return {
+
+        [Symbol.iterator] : function* () {
+            for(const item of iterable) if( predicate(item) ) yield item;
+        }
+    }
+}

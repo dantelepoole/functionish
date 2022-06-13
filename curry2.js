@@ -12,7 +12,7 @@ const curry = require('./curry');
  * @func curry2
  * @see {@link module:curry curry()}
  * @see {@link module:curry3 curry3()}
- * @param {function} func The function to curry
+ * @param {function} func The function (or `require()`-like path to the function) to curry
  * @returns {function}
  */
 module.exports = function curry2(func) {

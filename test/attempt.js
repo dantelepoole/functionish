@@ -1,7 +1,7 @@
-const mapiterable = require('../mapiterable');
+const attempt = require('../attempt');
 const expect = require('chai').expect;
 
-describe('mapiterable()', function() {
+describe('attempt()', function() {
 
     beforeEach(
         function() {
@@ -9,4 +9,5 @@ describe('mapiterable()', function() {
     )
 
     it('should be tested')
+
 })

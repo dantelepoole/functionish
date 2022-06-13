@@ -5,7 +5,6 @@
 'use strict';
 
 const bind = require('./bind');
-const filteriterable = require('./filteriterable');
 const isarray = require('./isarray');
 const not = require('./not');
 const uniq = require('./uniq');
@@ -43,4 +42,14 @@ function excludeiterablepredicatefactory(iterable) {
     const includespredicate = isarrayorstring(iterable) ? bind('includes', iterable) : bind('has', new Set(iterable));
 
     return not(includespredicate);
+}
+
+function filteriterable(predicate, iterable) {
+    
+    return {
+
+        [Symbol.iterator] : function* () {
+            for(const item of iterable) if( predicate(item) ) yield item;
+        }
+    }
 }

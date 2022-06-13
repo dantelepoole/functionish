@@ -25,10 +25,6 @@ const binary = require('./binary');
  * 
  * reduce(sum, 0, [1,2,3]); // returns 6
  * 
- * const objectreducer = (accumulator, entry) => (accumulator + entry[1]);
- * const obj = { a:42, b:24 };
- * reduce(objectreducer, 0, obj); // returns 66
- * 
  * @func reduce
  * @param {function} reducer The reducer function
  * @param {any} initialvalue The initial value to pass to *reducer* as the accumulator
@@ -48,9 +44,9 @@ module.exports = require('./curry3')(
 
 function reduceiterable(reducer, initialvalue, iterable) {
 
-    let currentvalue = initialvalue;
+    let accumulator = initialvalue;
 
-    for( const item of iterable ) currentvalue = reducer(currentvalue, item);
+    for( const item of iterable ) accumulator = reducer(accumulator, item);
 
-    return currentvalue;
+    return accumulator;
 }

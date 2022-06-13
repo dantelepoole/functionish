@@ -4,8 +4,6 @@
 
 'use strict';
 
-const unary = require('./unary');
-
 /**
  * Functional variant of {@link external:Array.prototype.every() Array.prototype.every()}. Apply the *predicate*
  * function to each item in *list* and return `true` if and only if *predicate* returns `true` each time. Otherwise,
@@ -14,7 +12,7 @@ const unary = require('./unary');
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a falsy value, without
  * evaluating any remaining items in *list*.
  * 
- * `all()` is curried by default.
+ * `all()` is curried by default with binary arity.
  *
  * @example
  * 
@@ -29,12 +27,15 @@ const unary = require('./unary');
  * @see {@link module:any any()}
  * @see {@link module:none none()}
  * @param {function} predicate The predicate function
- * @param {any[]} list An array of items to test
+ * @param {iterable} list An iterable object producing the items to test
  * @returns {boolean}
  */
 module.exports = require('./curry2')(
 
     function all(predicate, list) {
-        return list.every( unary(predicate) );
+
+        for( const item of list ) if ( ! predicate(item) ) return false;
+
+        return true;
     }
 )

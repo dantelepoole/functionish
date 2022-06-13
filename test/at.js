@@ -10,60 +10,45 @@ describe('at()', function() {
         }
     )
 
-    it('should return the item of its second argument at the index passed as its first argument',
+    it('should return the item at the specified index of the list',
         function () {
-            let result = at(0, numbers1to10);
+            let result = at(numbers1to10, 0);
             expect(result).to.be.equal(1);
 
-            result = at(9, numbers1to10);
+            result = at(numbers1to10, 9);
             expect(result).to.be.equal(10);
         }
     )
 
-    it('should return undefined if its index argument is higher than the highest index in its second arguments',
+    it('should return undefined if the index is higher than the highest index in the list',
         function () {
-            let result = at(10, numbers1to10);
+            let result = at(numbers1to10, 10);
             expect(result).to.be.undefined;
         }
     )
 
-    it('should retrieve the item counting down from the end of its second argument of the index is negative',
+    it('should retrieve the item counting down from the end of the list if the index is negative',
         function () {
-            let result = at(-1, numbers1to10);
+            let result = at(numbers1to10, -1);
             expect(result).to.be.equal(10);
-            result = at(-10, numbers1to10);
+            result = at(numbers1to10, -10);
             expect(result).to.be.equal(1);
  
         }
     )
 
-    it('should return the keyed property of the second argument if its first argument is not a number',
+    it('should return the keyed property of the list if the index is not a number',
         function () {
-            let result = at('length', numbers1to10);
+            let result = at(numbers1to10, 'length');
             expect(result).to.be.equal(10);
         }
     )
 
-    it('should return undefined if its second argument is not indexable (e.g. an array)',
+    it('should return undefined if the list is not indexable (e.g. an array)',
         function () {
-            let result = at(3, 42);
+            let result = at(42, 3);
             expect(result).to.be.undefined;
         }
     )
 
-    it('should return undefined if its second argument is not iterable',
-        function () {
-            let result = at(0, 42)
-            expect( result ).to.be.undefined;
-        }
-    )
-
-    it('should be curried with arity 2',
-        function () {
-            let result = at(0);
-            expect(result).to.be.a('function');
-            result = result(numbers1to10)
-            expect(result).to.be.equal(1);
-        }
-    )
 })
