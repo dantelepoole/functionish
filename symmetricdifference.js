@@ -8,40 +8,40 @@ const partial = require('./partial');
 const uniq = require('./uniq');
 
 /**
- * Return an iterable that produces the items from *list1* that are not present in *list2, in order, followed by the
- * items from *list2* that are not present in *list1*, in order. The returned iterable will not produce any duplicates. 
+ * Return an iterable that produces the items from *iterable1* that are not present in *iterable2, in order, followed
+ * by the items from *iterable2* that are not present in *iterable1*, in order. The returned iterable will not produce
+ * any duplicates. 
  * 
  * `symmetricdifference()` is curried by default with binary arity.
  * 
  * @func symmetricdifference
- * @param {iterable} list1 The first iterable
+ * @param {iterable} iterable1 The first iterable
  * @param {iterable} list2 The second iterable
  * @returns {iterable}
  */
 
 module.exports = require('./curry2') (
 
-    function symmetricdifference(list1, list2) {
+    function symmetricdifference(iterable1, iterable2) {
     
         return {
             [Symbol.iterator] : function* () {
     
-                const list2set = new Set(list2);
-                const list1uniq = uniq(list1);
-                const predicate = partial(list1diffpredicate, list2set);
+                const iterable2set = new Set(iterable2);
+                const predicate = partial(diffpredicate, iterable2set);
 
-                const list1diff = filteriterable(predicate, list1uniq);
-                for(const item of list1diff) yield item;
+                const iterable1diff = filteriterable(predicate, uniq(iterable1));
+                for(const item of iterable1diff) yield item;
     
-                const list2diff = list2set.values();
-                for(const item of list2diff) yield item;
+                const iterable2diff = iterable2set.values();
+                for(const item of iterable2diff) yield item;
             }
         }
     }
 )
 
-function list1diffpredicate(list2set, item) {
-    return ! list2set.delete(item);
+function diffpredicate(diffset, item) {
+    return ! diffset.delete(item);
 }
 
 function filteriterable(predicate, iterable) {
