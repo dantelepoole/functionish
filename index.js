@@ -100,6 +100,7 @@ module.exports.transduce = require('./transduce');
 module.exports.transform = require('./transform');
 module.exports.transmap = require('./transmap');
 module.exports.trim = require('./trim');
+module.exports.typeorclass = require('./typeorclass');
 module.exports.unary = require('./unary');
 module.exports.uniq = require('./uniq');
 module.exports.union = require('./union');
