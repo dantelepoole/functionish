@@ -10,7 +10,7 @@ const INDEX_NOT_FOUND = -1;
 const NAME_NONE = undefined;
 const NAME_SEPARATOR = '~';
 
-module.exports = raise;
+module.exports = fail;
 
 /**
  * Throw an error with a `printf()`-formatted message. The *formatmsg* is formatted with *formatargs* (using Node's 
@@ -21,16 +21,16 @@ module.exports = raise;
  * 
  * @example
  * 
- * const raise = require('functionish/raise');
+ * const fail = require('functionish/fail');
  * 
- * raise('FortyTwoError~The value %s is not 42', 'foobar');
+ * fail('FortyTwoError~The value %s is not 42', 'foobar');
  * // Throws an error with the name 'FortyTwoError' and the message: "The value foobar is not 42"
  * 
- * @param {string} formatmsg 
- * @param  {...any} formatargs 
+ * @param {string} formatmsg The formatted error message
+ * @param  {...any} formatargs The arguments to *formatmsg*
  * @throws Always throws an error
  */
-function raise(formatmsg, ...formatargs) {
+function fail(formatmsg, ...formatargs) {
 
     const [name, message] = parseformatmsg(formatmsg);
     const errormessage = format(message, ...formatargs);

@@ -4,7 +4,8 @@
 
 'use strict';
 
-const raise = require('./raise');
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
 
 const ARITY_NONE = undefined;
 const ERR_BAD_ARITY = "TypeError~curry(): the arity has type %s. Expected a number.";
@@ -71,7 +72,7 @@ function curry(arity, func) {
     if( typeof func !== 'function' ) func = loadfunction(func);
 
     if( arity === ARITY_NONE ) arity = func.length;
-    else if( typeof arity !== 'number' ) raise(ERR_BAD_ARITY, typeof arity);
+    else if( typeof arity !== 'number' ) fail(ERR_BAD_ARITY, typeorclass(arity));
 
     return function curried(...args) {
         return (args.length < arity) ? curried.bind(null, ...args) : func(...args);
@@ -84,7 +85,7 @@ function loadfunction(path) {
 
     const func = (key === undefined) ? require(modulepath) : require(modulepath)?.[key];
 
-    if( typeof func !== 'function' ) raise(ERR_BAD_FUNCTION, path, typeof func);
+    if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, path, typeorclass(func));
 
     return func;
 }

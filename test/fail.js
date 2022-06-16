@@ -1,7 +1,7 @@
-const raise = require('../raise');
+const fail = require('../fail');
 const expect = require('chai').expect;
 
-describe('raise()', function() {
+describe('fail()', function() {
 
     beforeEach(
         function() {
