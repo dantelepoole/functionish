@@ -4,8 +4,6 @@
 
 'use strict';
 
-const partial = require('./partial');
-
 /**
  * Return an iterable that produces the unique items in *iterable*, i.e. silently dropping any duplicate items it
  * encounters.
