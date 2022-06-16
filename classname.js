@@ -18,8 +18,5 @@ const prototostring = Object.prototype.toString;
  * @returns {string}
  */
 module.exports = function classname(value) {
-
-    const objectstring = prototostring.call(value);
-
-    return objectstring.slice(8, objectstring.length - 1);
+    return prototostring.call(value).slice(8, -1);
 }
