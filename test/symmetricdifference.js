@@ -50,13 +50,6 @@ describe(`symmetricdifference()`, function() {
         }
     )
 
-    it(`should throw if either argument is not iterable`,
-        function () {
-            expect( ()=>symmetricdifference({}, []) ).to.throw();
-            expect( ()=>symmetricdifference([], {}) ).to.throw();
-        }
-    )
-
     it(`should return an iterable producing the items from both arguments that are not present in the other argument`,
         function () {
             const result = symmetricdifference( [1,2,3,4,5], [4,5,6,7,8] );
