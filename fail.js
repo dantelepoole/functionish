@@ -33,8 +33,7 @@ module.exports = fail;
 function fail(formatmsg, ...formatargs) {
 
     const [name, message] = parseformatmsg(formatmsg);
-    const errormessage = format(message, ...formatargs);
-    const error = new Error(errormessage);
+    const error = new Error( format(message, ...formatargs) );
 
     if( name !== NAME_NONE ) error.name = name;
 
