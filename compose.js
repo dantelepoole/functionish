@@ -4,17 +4,11 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-const pipe = require('./pipe');
+const idfunctioncomposition = function functioncomposition(x) { return x }
 
 /**
  * Compose is implemented in terms of {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
- * from right to left. See {@link module:pipe pipe()} for further information.
- * 
- * If an array is passed as the only argument, the array is presumed to hold the functions to compose.  This allows you
- * to invoke `compose()` both as a variadic function and as a unary function.
- * 
- * The returned function is not curried, so if you require currying of the returned function you must do so yourself.
+ * from right to left. See {@link module:pipe pipe()} for further details.
  * 
  * @example
  * 
@@ -24,8 +18,7 @@ const pipe = require('./pipe');
  * const double = x => (x*2);
  * const negate = x => -x;
  * 
- * const allthree = compose(negate, double, increment); // variadic invocation
- * // OR unary invocation: const allthree = compose( [negate, double, increment] ); 
+ * const allthree = compose(negate, double, increment);
  * 
  * allthree(42); // returns `-86`
  * 
@@ -37,9 +30,20 @@ const pipe = require('./pipe');
 
 module.exports = function compose(...funcs) {
     
-    if( arguments.length === 1 && isarray(funcs[0]) ) funcs = funcs[0];
+    if( funcs.length === 0 ) return idfunctioncomposition
 
-    funcs.reverse();
+    return function functioncomposition(...args) {
 
-    return pipe(funcs);
+        let index = funcs.length - 1;
+        let result = funcs[index](...args);
+        
+        index -= 1;
+
+        while(index >= 0) {
+            result = funcs[index](result);
+            index -= 1;
+        }
+
+        return result;
+    }
 }

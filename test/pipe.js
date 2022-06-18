@@ -43,19 +43,6 @@ describe('pipe()', function() {
         }
     )
 
-    it('should be invocable as a unary function or a variadic function with the same result',
-        function () {
-            const unaryfunc = pipe([sum, increment, double]);
-            const unaryresult = unaryfunc(1,2);
-
-            const variadicfunc = pipe(sum, increment, double);
-            const variadicresult = variadicfunc(1,2);
-
-            expect(unaryresult).to.be.equal(variadicresult);
-            expect(unaryresult).to.be.equal(8);
-        }
-    )
-
     it('should return its first argument if no functions are composed',
         function () {
             const func = pipe();
