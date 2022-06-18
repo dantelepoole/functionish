@@ -77,6 +77,23 @@ describe(`curry()`, function() {
         }
     )
 
+    it(`should throw if the arity is neither a number nor undefined`,
+        function () {
+
+            expect( ()=>curry(null, countargs) ).to.throw();
+            expect( ()=>curry('foobar', countargs) ).to.throw();
+            expect( ()=>curry(42n, countargs) ).to.throw();
+
+            expect( ()=>curry(undefined, countargs) ).not.to.throw();
+        }
+    )
+
+    it(`should throw if the target function does not resolve to a function`,
+        function () {
+            expect( ()=>curry('foobar') ).to.throw();
+        }
+    )
+
     describe(`the curried function`, function() {
 
         it(`should propagate its 'this'-object to the target function`,
