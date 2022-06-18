@@ -32,18 +32,15 @@ module.exports = function compose(...funcs) {
     
     if( funcs.length === 0 ) return idfunctioncomposition
 
+    funcs.reverse();
+
     return function functioncomposition(...args) {
 
-        let index = funcs.length - 1;
-        let result = funcs[index](...args);
+        let result = funcs[0](...args);
         
-        index -= 1;
-
-        while(index >= 0) {
-            result = funcs[index](result);
-            index -= 1;
-        }
+        for( let index = 1; index < funcs.length; index += 1 ) result = funcs[index](result);
 
         return result;
+
     }
 }
