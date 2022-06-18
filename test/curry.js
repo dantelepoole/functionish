@@ -77,4 +77,30 @@ describe(`curry()`, function() {
         }
     )
 
+    describe(`the curried function`, function() {
+
+        it(`should propagate its 'this'-object to the target function`,
+            function () {
+
+                const returnthis = curry( 2, function () { return this; } );
+                expect( returnthis(1,2) === global ).to.be.true;
+
+                const that = {};
+                expect( returnthis.call(that, 1,2) === that ).to.be.true;
+
+                expect( returnthis(1,2) === global ).to.be.true;
+            }
+        )
+
+        it(`should have a meaningful name`,
+            function () {
+
+                let curried = curry(2, countargs);
+                expect( curried.name ).to.be.equal(`curried(2) countargs`);
+
+                curried = curry(2, (a,b)=>(a+b));
+                expect( curried.name ).to.be.equal(`curried(2) <anonymous>`);
+            }
+        )
+    })
 })

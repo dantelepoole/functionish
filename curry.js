@@ -29,6 +29,8 @@ const ERR_BAD_FUNCTION = "TypeError~curry(): the value at '%s' has type %s. Expe
  * explicity *arity*, regardless of the function you are currying. Functionish provides the convenience
  * functions `curry2()` and `curry3()`, which set the appropriate arity for you.
  * 
+ * If you bind the curried function to a custom `this`-object, it will be propagated to the target function.
+ * 
  * @example
  * 
  * const curry = require('functionish/curry');
@@ -69,23 +71,28 @@ function curry(arity, func) {
 
     if( arguments.length === 1 ) [arity, func] = [ARITY_NONE, arity];
 
-    if( typeof func !== 'function' ) func = loadfunction(func);
+    if( typeof func !== 'function' ) func = resolvefunction(func);
 
     if( arity === ARITY_NONE ) arity = func.length;
     else if( typeof arity !== 'number' ) fail(ERR_BAD_ARITY, typeorclass(arity));
 
-    return function curried(...args) {
-        return (args.length < arity) ? curried.bind(null, ...args) : func(...args);
-    }
+    const curriedname = `curried(${arity}) ${func.name || '<anonymous>'}`;
+    const curriedfunction = {
+        [curriedname] : function (...args) {
+            return (args.length < arity) ? curriedfunction.bind(this, ...args) : func.call(this, ...args);
+        }
+    }[curriedname];
+
+    return curriedfunction;
 }
 
-function loadfunction(path) {
+function resolvefunction(path) {
 
-    const [modulepath, key] = String(path).split('#');
+    const [targetpath, key] = String(path).split('#');
 
-    const func = (key === undefined) ? require(modulepath) : require(modulepath)?.[key];
+    const func = (key === undefined) ? require(targetpath) : require(targetpath)?.[key];
 
-    if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, path, typeorclass(func));
+    if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, String(path), typeorclass(func));
 
     return func;
 }
