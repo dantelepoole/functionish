@@ -22,7 +22,7 @@ const partial = require('./partial');
  * @returns {any}
  */
 module.exports = function deepclone(source) {
-    return deepclonesafe( new Map(), source );
+    return deepclonesafe( new WeakMap(), source );
 }
 
 function deepclonesafe(cache, source) {
