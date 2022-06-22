@@ -109,14 +109,14 @@ describe(`curry()`, function() {
             }
         )
 
-        it(`should have a meaningful name`,
+        it(`should have the same name as the original function`,
             function () {
 
                 let curried = curry(2, countargs);
-                expect( curried.name ).to.be.equal(`curried(2) countargs`);
+                expect( curried.name ).to.be.equal(`countargs`);
 
                 curried = curry(2, (a,b)=>(a+b));
-                expect( curried.name ).to.be.equal(`curried(2) <anonymous>`);
+                expect( curried.name ).to.be.equal(``);
             }
         )
     })

@@ -76,12 +76,11 @@ function curry(arity, func) {
     if( arity === ARITY_NONE ) arity = func.length;
     else if( typeof arity !== 'number' ) fail(ERR_BAD_ARITY, typeorclass(arity));
 
-    const curriedname = `curried(${arity}) ${func.name || '<anonymous>'}`;
     const curriedfunction = {
-        [curriedname] : function (...args) {
+        [func.name] : function (...args) {
             return (args.length < arity) ? curriedfunction.bind(this, ...args) : func.call(this, ...args);
         }
-    }[curriedname];
+    }[func.name];
 
     return curriedfunction;
 }
