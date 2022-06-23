@@ -7,10 +7,10 @@
 const INDEX_NOT_FOUND = -1;
 
 /**
- * Function variant of {@link external:Array.prototype.indexOf Array.prototype.indexOf()}. Return the index *value*
- * in *list* or -1 if values is not found.
+ * Function variant of {@link external:Array.prototype.indexOf Array.prototype.indexOf()}. Return the index of *value*
+ * in *list* or -1 if *value* is not found.
  * 
- * The *list* argument may be either an array or an iterable object. If it is neither, -1 is returned.
+ * The *list* argument may be any object with an `indexOf()` method or an iterable object.
  * 
  * `indexof()` is curried by default.
  * 
