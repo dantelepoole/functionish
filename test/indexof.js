@@ -21,7 +21,7 @@ describe(`indexof()`, function() {
         }
     )
 
-    it(`should pass its first argument to the indexOf() method of its second argument`,
+    it(`should pass its first argument to the indexOf() method of its second argument, if it has one`,
         function () {
             let invoked = false;
             const list = {
@@ -34,7 +34,13 @@ describe(`indexof()`, function() {
         }
     )
 
-    it(`should throw if its second argument does not have an indexOf() method`,
+    it(`should iterate the second argument if it does not have an indexOf() method`,
+        function () {
+            expect( indexof('b', 'foobar') ).to.be.equal(3);
+        }
+    )
+
+    it(`should throw if its second argument does not have an indexOf() method and is not iterable`,
         function () {
             expecttothrow(indexof, 42, {});
         }

@@ -4,6 +4,8 @@
 
 'use strict';
 
+const INDEX_NOT_FOUND = -1;
+
 /**
  * Function variant of {@link external:Array.prototype.indexOf Array.prototype.indexOf()}. Return the index *value*
  * in *list* or -1 if values is not found.
@@ -20,6 +22,18 @@
 module.exports = require('./curry2')(
 
     function indexof(value, list) {
-        return list.indexOf(value);
+        return (typeof list?.indexOf === 'function') ? list.indexOf(value) : indexofiterable(value, list);
     }
 )
+
+function indexofiterable(value, iterable) {
+
+    let index = INDEX_NOT_FOUND;
+
+    for(const item of iterable) {
+        index += 1;
+        if( value === item ) break;
+    }
+
+    return index;
+}
