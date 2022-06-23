@@ -4,8 +4,6 @@
 
 'use strict';
 
-const isnan = require('./isnan');
-
 /**
  * Return `true` if value is neither `null` nor `undefined`, otherwise return `false`.
  * 
