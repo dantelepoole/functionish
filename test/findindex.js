@@ -37,14 +37,24 @@ describe(`findindex()`, function() {
         }
     )
 
-    it(`should return the result of calling the findindex() method of its second argument`,
+    it(`should return the result of calling the findIndex() method of its second argument if it is an array`,
         function () {
-            const result = findindex(iseven, findable);
-            expectequal(result, findable);
+            const array = [1,3,5,7,42];
+            const index = findindex(iseven, array);
+            expect(index).to.be.equal(4); 
         }
     )
 
-    it(`should throw if its second argument does not have a findindex() method`,
+    it(`should return the found element's index if the second argument is not an array but is iterable`,
+        function () {
+            const iterable = 'foobar';
+            const predicate = ch => ch === 'b';
+            const index = findindex(predicate, iterable);
+            expect(index).to.be.equal(3);
+        }
+    )
+
+    it(`should throw if its second argument is not an array nor iterable`,
         function () {
             expecttothrow(findindex, iseven, {});
         }
@@ -57,7 +67,7 @@ describe(`findindex()`, function() {
         }
     )
 
-    it(`if passed an array, it should return the index of the first item in the array for which the predicate returns true`,
+    it(`it should return the index of the first item for which the predicate returns true`,
         function () {
             expectequal( 1, findindex(iseven, numbers1to10) );
             expectequal( 0, findindex(isodd, numbers1to10) );
@@ -65,19 +75,19 @@ describe(`findindex()`, function() {
         }
     )
 
-    it(`if passed an array, it should return -1 if the predicate returns false for all items in the array`,
+    it(`it should return -1 if the predicate returns false for all items`,
         function () {
             expectequal( -1, findindex(iseven, [1,3,5,7,9]) );
         }
     )
 
-    it(`if passed an array, it should return undefined if the array is empty`,
+    it(`it should return -1 if the list is empty`,
         function () {
             expectequal( -1, findindex(iseven, []) );
         }
     )
 
-    it(`if passed an array, it should call the predicate for each item in the array`,
+    it(`it should call the predicate for each item in the list`,
         function () {
             const predicate = countingpredicate.bind(null, iseven);
             const result = findindex( predicate, [1,3,5,7,9] );
@@ -86,7 +96,7 @@ describe(`findindex()`, function() {
         }
     )
 
-    it(`if passed an array, it should stop passing further items to the predicate once the predicate returns true`,
+    it(`it should stop passing further items to the predicate once the predicate returns true`,
         function () {
             const predicate = countingpredicate.bind(null, iseven);
             const result = findindex( predicate, [1,3,5,8,9] );
