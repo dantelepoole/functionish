@@ -6,8 +6,6 @@
 
 const isvoid = require('./isvoid');
 const isdefined = require('./isdefined');
-const iterate = require('./iterate');
-const partial = require('./partial');
 
 /**
  * Splits a list into sub-lists stored in an object, based on the result of calling a key-returning function on each
