@@ -17,18 +17,12 @@
  */
 module.exports = function once(func) {
 
-    let isvirginal = true;
-    let cachedresult = undefined;
+    let cache = undefined;
 
-    function oncefunction(...args) {
+    return function oncefunction(...args) {
 
-        if( isvirginal ) {
-            cachedresult = func(...args);
-            isvirginal = false;
-        }
+        if (cache === undefined) cache = { value:func(...args) };
 
-        return cachedresult;
+        return cache.value;
     }
-
-    return oncefunction;
 }
