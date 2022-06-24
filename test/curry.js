@@ -94,30 +94,30 @@ describe(`curry()`, function() {
         }
     )
 
-    describe(`the curried function`, function() {
+    // describe(`the curried function`, function() {
 
-        it(`should propagate its 'this'-object to the target function`,
-            function () {
+    //     it(`should propagate its 'this'-object to the target function`,
+    //         function () {
 
-                const returnthis = curry( 2, function () { return this; } );
-                expect( returnthis(1,2) === global ).to.be.true;
+    //             const returnthis = curry( 2, function () { return this; } );
+    //             expect( returnthis(1,2) === global ).to.be.true;
 
-                const that = {};
-                expect( returnthis.call(that, 1,2) === that ).to.be.true;
+    //             const that = {};
+    //             expect( returnthis.call(that, 1,2) === that ).to.be.true;
 
-                expect( returnthis(1,2) === global ).to.be.true;
-            }
-        )
+    //             expect( returnthis(1,2) === global ).to.be.true;
+    //         }
+    //     )
 
-        it(`should have the same name as the original function`,
-            function () {
+    //     it(`should have the same name as the original function`,
+    //         function () {
 
-                let curried = curry(2, countargs);
-                expect( curried.name ).to.be.equal(`countargs`);
+    //             let curried = curry(2, countargs);
+    //             expect( curried.name ).to.be.equal(`countargs`);
 
-                curried = curry(2, (a,b)=>(a+b));
-                expect( curried.name ).to.be.equal(``);
-            }
-        )
-    })
+    //             curried = curry(2, (a,b)=>(a+b));
+    //             expect( curried.name ).to.be.equal(``);
+    //         }
+    //     )
+    // })
 })
