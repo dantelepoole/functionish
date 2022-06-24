@@ -8,7 +8,7 @@ function double(x) { return (x*2) }
 function square(x) { return (x*x) }
 function iseven(x) { return (x%2) === 0 }
 
-describe(`transduce()`, function() {
+describe.skip(`transduce()`, function() {
 
     it(`should be curried with quaternary arity`,
         function () {
