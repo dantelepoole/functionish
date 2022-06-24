@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/dantelepoole/functionish#readme",
   "devDependencies": {
-    "chai": "^4.3.6"
+    "chai": "^4.3.6",
+    "sinon": "^14.0.0"
   }
 }
