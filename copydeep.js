@@ -1,5 +1,5 @@
 /**
- * @module deepclone
+ * @module copydeep
  */
 
 'use strict';
@@ -17,11 +17,11 @@ const partial = require('./partial');
  * 
  * The cloning algorithm does protect against circular references.
  * 
- * @func deepclone
+ * @func copydeep
  * @param {any} source The value to clone
  * @returns {any}
  */
-module.exports = function deepclone(source) {
+module.exports = function copydeep(source) {
     return deepclonesafe( new WeakMap(), source );
 }
 

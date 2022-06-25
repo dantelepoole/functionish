@@ -1,4 +1,4 @@
-const deepclone = require('../deepclone');
+const deepclone = require('../copydeep');
 const expect = require('chai').expect;
 
 const mother = { name : 'Ann', age  : 42, children : [] }
