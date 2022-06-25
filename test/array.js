@@ -30,20 +30,14 @@ describe('array()', function() {
         }
     )
 
-    it('should return a single-item array containing if the iterable is not iterable', 
+    it('should return an empty array if the iterable is not iterable', 
         function() {
-            expect(array(42)).to.be.deep.equal([42]);
-            expect(array(null)).to.be.deep.equal([null]);
+            expect(array(42)).to.be.an('array').with.length(0);
+            expect(array(null)).to.be.an('array').with.length(0);
+            expect(array(undefined)).to.be.an('array').with.length(0);
 
             const sentinel = {}
-            expect(array(sentinel)).to.be.deep.equal([sentinel]);
-        }
-    )
-
-    it('should return an empty array if the iterable is undefined', 
-        function() {
-            expect( array() ).to.be.an('array').with.length(0);
-            expect( array(undefined) ).to.be.an('array').with.length(0);
+            expect(array(sentinel)).to.be.an('array').with.length(0);
         }
     )
 
