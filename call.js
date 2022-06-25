@@ -5,9 +5,10 @@
  'use strict';
 
  /**
-  * Functional variant of {@link external:Function.prototype.call Function.prototype.call()}.
-  * 
   * Pass *args* to *func* and return the result.
+  * 
+  * Functional variant of {@link external:Function.prototype.call Function.prototype.call()} except it does not provide
+  * for passing a custom `this`-object.
   * 
   * @example
   * 

@@ -4,13 +4,11 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-
 /**
- * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()}.
+ * Pass *args* to *func* and return the result.
  * 
- * Pass *args* to *func* and return the result. The *args* should be an array containing the arguments to pass to
- * *func*. If *args* is not array, *arg*'s value will be passed to *func* as the only argument.
+ * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()} except it does not provide
+ * for passing a custom `this`-obejct.
  * 
  * `apply()` is curried by default with binary arity.
  * 
@@ -29,11 +27,9 @@ const isarray = require('./isarray');
  * @returns {any} *func*'s return value
  */
 
-module.exports = require('./curry2')(apply)
+module.exports = require('./curry2')(
 
-function apply(func, args) {
-
-    if( ! isarray(args) ) args = [args];
-
-    return func.apply(null, args);
-}
+    function apply(func, args) {
+        return func.apply(null, args);
+    }
+)

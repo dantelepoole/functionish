@@ -1,45 +1,54 @@
 const all = require('../all');
 const expect = require('chai').expect;
+const spy = require('sinon').spy;
 
 const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);
 
-let callcount = 0;
-function isnumber(x) { callcount += 1; return typeof x ==='number'; };
-function islessthan(num, x) { callcount += 1; return (x < num); };
+const isnumber = spy( function isnumber(x) { return typeof x ==='number'; } )
+const islessthan = spy( function islessthan(num, x) { return (x < num); } )
 
 describe('all()', function() {
 
     beforeEach(
         function() {
-            callcount = 0;
+            isnumber.resetHistory();
+            islessthan.resetHistory();
         }
     )
 
-    it('should return true for an empty list argument',
+    it('should return true if the list is empty',
         function() {
             expect( all(isnumber, []) ).to.be.true;
+            expect( isnumber.callCount ).to.be.equal(0);
         }
     )
 
-    it('should return true if its predicate argument returns true for each item in the list',
+    it('should return true if the predicate returns true for each item in the list',
         function() {
             expect( all(isnumber, numbers1to10) ).to.be.true;
+            expect( isnumber.callCount ).to.be.equal(10);
         }
     )
 
-    it('should return false if its predicate argument returns false for one item in the list',
+    it('should return false if the predicate returns false for one or more items in the list',
         function() {
 
             const islessthan10 = islessthan.bind(null, 10);
             expect( all(islessthan10, numbers1to10) ).to.be.false;
+            expect( islessthan.callCount ).to.be.equal(10);
+
+            islessthan.resetHistory();
+            const islessthan5 = islessthan.bind(null, 5);
+            expect( all(islessthan5, numbers1to10) ).to.be.false;
+            expect( islessthan.callCount ).to.be.equal(5);
         }
     )
 
-    it('should run its predicate argument once for each item in the list if the predicate returns true for each item',
+    it('should call the predicate once for each item in the list if the predicate returns true for each item',
         function() {
             const result = all(isnumber, numbers1to10);
             expect( result ).to.be.true;
-            expect( callcount ).to.be.equal(10);
+            expect( isnumber.callCount ).to.be.equal(numbers1to10.length);
         }
     )
 
@@ -48,7 +57,7 @@ describe('all()', function() {
             const islessthan5 = islessthan.bind(null, 5);
             const result = all(islessthan5, numbers1to10);
             expect( result ).to.be.false;
-            expect( callcount ).to.be.equal(5);
+            expect( islessthan.callCount ).to.be.equal(5);
         }
     )
 
@@ -61,15 +70,15 @@ describe('all()', function() {
         }
     )
 
-    it('should throw if its first argument is not a function',
+    it('should throw if the predicate is not a function',
         function () {
             expect( () => all(42, [1,2,3]) ).to.throw();
         }
     )
 
-    it('should throw if its second argument is not an array',
+    it('should throw if the list is not iterable',
         function () {
-            expect( () => all(isnumber, 42) ).to.throw();
+            expect( () => all(isnumber, {}) ).to.throw();
         }
     )
 })

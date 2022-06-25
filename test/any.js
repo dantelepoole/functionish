@@ -1,34 +1,36 @@
 const any = require('../any');
 const expect = require('chai').expect;
 
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
+
 const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);
 
-let callcount = 0;
-function isnumber(x) { callcount += 1; return typeof x ==='number'; };
-function isstring(x) { callcount += 1; return typeof x === 'string' };
-function isgreaterthan(num, x) { callcount += 1; return (x > num) };
+const isnumber = spy( function isnumber(x) { return typeof x ==='number'; } )
+const isstring = spy( function isstring(x) { return typeof x === 'string' } )
+const isgreaterthan = spy( function isgreaterthan(num, x) { return (x > num) } )
 
 describe('any()', function() {
 
     beforeEach(
         function() {
-            callcount = 0;
+            sandbox.resetHistory();
         }
     )
 
-    it('should return false for an empty list argument',
+    it('should return false if the list is empty',
         function() {
             expect( any(isnumber, []) ).to.be.false;
         }
     )
 
-    it('should return false if its predicate argument returns false for each item in the list',
+    it('should return false if the predicate returns false for each item in the list',
         function() {
             expect( any(isstring, numbers1to10) ).to.be.false;
         }
     )
 
-    it('should return true if its predicate argument returns true for one item in the list',
+    it('should return true if the predicate returns true for at least one item in the list',
         function() {
 
             const isgreaterthan9 = isgreaterthan.bind(null, 9);
@@ -36,20 +38,20 @@ describe('any()', function() {
         }
     )
 
-    it('should run its predicate argument once for each item in the list if the predicate returns false for each item',
+    it('should run the predicate once for each item in the list if the predicate returns false',
         function() {
             const result = any(isstring, numbers1to10);
             expect( result ).to.be.false;
-            expect( callcount ).to.be.equal(10);
+            expect( isstring.callCount ).to.be.equal(10);
         }
     )
 
     it('should be short-circuited',
         function() {
-            const isgreaterthan4 = isgreaterthan.bind(null, 4);
+            const isgreaterthan4 = spy( isgreaterthan.bind(null, 4) );
             const result = any(isgreaterthan4, numbers1to10);
             expect( result ).to.be.true;
-            expect( callcount ).to.be.equal(5);
+            expect( isgreaterthan4.callCount ).to.be.equal(5);
         }
     )
 
@@ -62,13 +64,13 @@ describe('any()', function() {
         }
     )
 
-    it('should throw if its first argument is not a function',
+    it('should throw if the predicate is not a function',
         function () {
             expect( () => any(42, [1,2,3]) ).to.throw();
         }
     )
 
-    it('should throw if its second argument is not an array',
+    it('should throw if the list is not iterable',
         function () {
             expect( () => any(isnumber, 42) ).to.throw();
         }

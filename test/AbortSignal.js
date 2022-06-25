@@ -1,22 +1,8 @@
 const expect = require('chai').expect;
+const spy = require('sinon').spy;
 const AbortSignal = require('../AbortSignal');
 
-const markerobject = Object.freeze({});
-const markerarray = Object.freeze([]);
-const markersymbol = Symbol();
-
-let aborteventtriggered = false;
-function aborteventhandler(event) {
-    aborteventtriggered = (event?.type === 'abort');
-}
-
 describe(`AbortSignal`, function() {
-
-    beforeEach(
-        function() {
-            aborteventtriggered = false;
-        }
-    )
 
     it(`should have a static abort-method that returns an aborted AbortSignal instance`,
         function () {
@@ -24,7 +10,7 @@ describe(`AbortSignal`, function() {
             const signal = AbortSignal.abort();
 
             expect(signal).to.be.an.instanceof(AbortSignal);
-            expecttrue(signal.aborted);
+            expect(signal.aborted).to.be.true;
         }
     )
 
@@ -32,7 +18,7 @@ describe(`AbortSignal`, function() {
         function () {
 
             const signal = new AbortSignal();
-            expectboolean(signal.aborted);
+            expect(signal.aborted).to.be.a('boolean');
         }
     )
 
@@ -40,132 +26,60 @@ describe(`AbortSignal`, function() {
         function () {
 
             const signal = new AbortSignal();
-            expectfunction(signal.dispatchEvent);
+            expect(signal.dispatchEvent).to.be.a('function');
 
+            const aborteventhandler = spy(event => expect(event?.type).to.be.equal('abort'));
             signal.addEventListener('abort', aborteventhandler);
             signal.dispatchEvent('abort');
-            expecttrue(aborteventtriggered);
+
+            expect(aborteventhandler.callCount).to.be.equal(1);
         }
     )
 
-    it(`should have an addEventListener method`,
+    it(`should have an addEventListener() method`,
         function () {
 
             const signal = new AbortSignal();
 
-            expectfunction(signal.addEventListener);
+            expect(signal.addEventListener).to.be.a('function');
 
+            const aborteventhandler = spy(event => expect(event?.type).to.be.equal('abort'));
             signal.addEventListener('abort', aborteventhandler);
             signal.dispatchEvent('abort');
-            expecttrue(aborteventtriggered);
+
+            expect(aborteventhandler.callCount).to.be.equal(1);
         }
     )
 
-    it(`should have a removeEventListener method`,
+    it(`should have a removeEventListener() method`,
         function () {
 
             const signal = new AbortSignal();
-
-            expectfunction(signal.removeEventListener);
+            expect(signal.removeEventListener).to.be.a('function');
             
+            const aborteventhandler = spy(event => expect(event?.type).to.be.equal('abort'));
             signal.addEventListener('abort', aborteventhandler);
             signal.dispatchEvent('abort');
-            expecttrue(aborteventtriggered);
+            expect(aborteventhandler.callCount).to.be.equal(1);
 
-            aborteventtriggered = false;
+            aborteventhandler.resetHistory();
             signal.removeEventListener('abort', aborteventhandler);
             signal.dispatchEvent('abort');
-            expectfalse(aborteventtriggered);
+            expect(aborteventhandler.callCount).to.be.equal(0);
         }
     )
 
-    it(`should call its onabort method if one has been defined`,
+    it(`should call its onabort() method if one has been defined`,
         function () {
 
             const signal = new AbortSignal();
 
-            signal.onabort = aborteventhandler;
-            expectfunction(signal.onabort);
+            const onaborthandler = spy(event => expect(event?.type).to.be.equal('abort'));
+            signal.onabort = onaborthandler;
+            expect(signal.onabort).to.be.a('function');
             
             signal.dispatchEvent('abort');
-            expecttrue(aborteventtriggered);
+            expect(onaborthandler.callCount).to.be.equal(1);
         }
     )
 })
-
-function countarguments(...args) {
-    return args.length;
-}
-
-function returnarguments(...args) {
-    return args;
-}
-
-function expecttothrow(func, ...args) {
-    expect( () => func(...args) ).to.throw();
-}
-
-function expectnottothrow(func, ...args) {
-    expect( () => func(...args) ).to.not.throw();
-}
-
-function expectequal(value1, value2) {
-    expect(value1).to.be.equal(value2);
-}
-
-function expectdeepequal(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-}
-
-function expectnotequal(value1, value2) {
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnotdeepequal(value1, value2) {
-    expect(value1).to.be.not.deep.equal(value2);
-}
-
-function expectclone(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnull(value) {
-    expect(value).to.be.null;
-}
-
-function expectundefined(value) {
-    expect(value).to.be.undefined;
-}
-
-function expectnan(value) {
-    expect(value).to.be.NaN;
-}
-
-function expectfalsy( value ) {
-    expect( !! value ).to.be.false;
-}
-
-function expectfalse(value) {
-    expect(value).to.be.false;
-}
-
-function expecttrue(value) {
-    expect(value).to.be.true;
-}
-
-function expecttruthy(value) {
-    expect( !! value ).to.be.true;
-}
-
-function expecttype(type, value) {
-    expect(value).to.be.a(type);
-} 
-
-const expectarray = expecttype.bind(null, 'array');
-const expectfunction = expecttype.bind(null, 'function');
-const expectnumber = expecttype.bind(null, 'number');
-const expectstring = expecttype.bind(null, 'string');
-const expectobject = expecttype.bind(null, 'object');
-const expectboolean = expecttype.bind(null, 'boolean');
-const expectsymbol = expecttype.bind(null, 'symbol');

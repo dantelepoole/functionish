@@ -15,19 +15,21 @@ const ERR_BAD_FUNCTION = "TypeError~curry(): the value at '%s' has type %s. Expe
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
  * returning the result.
  * 
+ * You may pass only the function to curry. In that case, `curry()` will retrieve the arity from the function's
+ * `length` property. However, a function's `length` property does not count a spread parameter, default parameters
+ * nor any parameters following the first default parameter in the parameter list. This can lead to unexpected currying
+ * results (even more so when composing a curried function with other functions). As a best practice, always pass an
+ * explicit *arity*. Functionish provides the convenience functions `curry2()` and `curry3()`, which set the
+ * appropriate arity for you.
+ * 
  * The *func* argument may be a string representing a path to a module that resolves to a function. The string is first
  * passed to Node's `require()` function and the result is curried. Optionally, the module path may end with a `#`
  * followed by a key, in which case the key is first resolved against the loaded module object to obtain the function to
  * curry. See the example below.
  * 
- * You may pass only a single argument containing the function (or module path) to curry. In that case, `curry()` will
- * retrieve the arity from the function's `length` property. However, a function's `length` property does not count a
- * spread parameter, default parameters nor any parameters following the first default parameter in the parameter list.
- * This can lead to unexpected currying results (even more so when composing a curried function with other functions).
- * 
- * Providing an explicit arity can help avoid these difficulties. Consider it a best practice to always provide an
- * explicity *arity*, regardless of the function you are currying. Functionish provides the convenience
- * functions `curry2()` and `curry3()`, which set the appropriate arity for you.
+ * To add in debugging, `curry()` preserves the name of the target function, but tagged with the label `curry` and
+ * the applicable arity. On subsequent invocations of the curried function, the returned function will also be
+ * tagged with the label `bound`.
  * 
  * If you bind the curried function to a custom `this`-object, it will be propagated to the target function.
  * 
@@ -35,13 +37,18 @@ const ERR_BAD_FUNCTION = "TypeError~curry(): the value at '%s' has type %s. Expe
  * 
  * const curry = require('functionish/curry');
  *
- * const sum = curry( 2, (a,b)=>(a+b) ); // optionally: curry( (a,b)=>(a+b) )
+ * const sum = curry( 
+ *     function sum(a,b) { 
+ *         return (a+b)
+ *     }
+ * )
+ * 
+ * console.log(sum.name); // prints 'sum[curry@2]'
  * 
  * const increment = sum(1);
- * const decrement = sum(-1);
+ * console.log(increment.name); // prints 'bound sum[curry@2]'
  * 
  * increment(42); // returns 43
- * decrement(42); // returns 41
  *  
  * @example
  * 
@@ -76,9 +83,15 @@ function curry(arity, func) {
     if( arity === ARITY_NONE ) arity = func.length;
     else if( typeof arity !== 'number' ) fail(ERR_BAD_ARITY, typeorclass(arity));
 
-    return function curriedfunction(...args) {
-        return (args.length < arity) ? curriedfunction.bind(null,...args) : func(...args);
-    }
+    const curriedname = `${func.name || '<anonymous>'}[curry@${arity}]`;
+
+    const curriedfunction = {
+        [curriedname] : function (...args) {
+            return (args.length < arity) ? curriedfunction.bind(null, ...args) : func(...args);
+        }
+    }[curriedname];
+
+    return curriedfunction;
 }
 
 function resolvefunction(path) {

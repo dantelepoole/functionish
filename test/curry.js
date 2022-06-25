@@ -1,23 +1,31 @@
 const expect = require('chai').expect;
 const curry = require('../curry');
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
 
-function sum(a,b) {
-    return (a+b);
-}
+const sum = spy(
+    function sum(a,b) {
+        return (a+b);
+    }
+)
 
-function countargs(...args) {
-    return args.length;
-}
+const countargs = spy(
+    function countargs(...args) {
+        return args.length;
+    }
+)
 
-function returnargs(...args) {
-    return args;
-}
+const returnargs = spy(
+    function returnargs(...args) {
+        return args;
+    }
+)
 
 describe(`curry()`, function() {
 
     beforeEach(
         function() {
-
+            sandbox.resetHistory();
         }
     )
 
@@ -30,30 +38,22 @@ describe(`curry()`, function() {
 
     it(`should collect the arity number of arguments before invoking the function`,
         function () {
+
             let curried = curry(sum); // arity = 2
-            curried = curried(1);
-            curried = curried(2);
-            expect(curried).to.be.equal(3);
+            expect(curried).to.be.a('function');
+            expect(curried(1)).to.be.a('function');
+            expect(curried(1,2)).to.be.equal(3);
+            expect(sum.callCount).to.be.equal(1);
 
-            curried = curry(5, countargs);
-            curried = curried('foobar');
-            curried = curried(null);
-            curried = curried(undefined);
-            curried = curried(NaN);
-            curried = curried(42);
-            expect(curried).to.be.equal(5);
-        }
-    )
-
-    it(`should invoke the function with the collected arguments`,
-        function () {
             curried = curry(5, returnargs);
-            curried = curried('foobar');
-            curried = curried(null);
-            curried = curried(undefined);
-            curried = curried(NaN);
-            curried = curried(42);
-            expect(curried).to.be.deep.equal(['foobar',null,undefined,NaN,42]);
+            expect(curried).to.be.a('function');
+            expect(curried('foobar')).to.be.a('function');
+            expect(curried('foobar',null)).to.be.a('function');
+            expect(curried('foobar',null,undefined)).to.be.a('function');
+            expect(curried('foobar',null,undefined,42)).to.be.a('function');
+            expect(curried('foobar',null,undefined,42,NaN)).to.be.deep.equal(['foobar',null,undefined,42,NaN]);
+            expect(returnargs.callCount).to.be.equal(1);
+
         }
     )
 
@@ -61,8 +61,10 @@ describe(`curry()`, function() {
         function () {
             curried = curry(5, returnargs);
             curried = curried('foobar');
+            expect(curried).to.be.a('function');
             curried = curried(null, undefined, NaN, 42);
             expect(curried).to.be.deep.equal(['foobar',null,undefined,NaN,42]);
+            expect(returnargs.callCount).to.be.equal(1);
         }
     )
 
@@ -74,6 +76,8 @@ describe(`curry()`, function() {
 
             curried = curry(countargs) // arity = 0
             expect( curried() ).to.be.equal(0);
+            expect( curried(1) ).to.be.equal(1);
+            expect( curried(1,2,3,4,5) ).to.be.equal(5);
         }
     )
 
@@ -83,41 +87,48 @@ describe(`curry()`, function() {
             expect( ()=>curry(null, countargs) ).to.throw();
             expect( ()=>curry('foobar', countargs) ).to.throw();
             expect( ()=>curry(42n, countargs) ).to.throw();
-
             expect( ()=>curry(undefined, countargs) ).not.to.throw();
         }
     )
 
-    it(`should throw if the target function does not resolve to a function`,
+    it(`should throw if the function argument is a string that does not resolve to a function`,
         function () {
             expect( ()=>curry('foobar') ).to.throw();
         }
     )
 
-    // describe(`the curried function`, function() {
+    it(`should throw if the function argument is neither a function nor a string that resolves to a function`,
+        function () {
+            expect( ()=>curry() ).to.throw();
+            expect( ()=>curry(null) ).to.throw();
+            expect( ()=>curry(42) ).to.throw();
+            expect( ()=>curry({}) ).to.throw();
+            expect( ()=>curry([]) ).to.throw();
+        }
+    )
 
-    //     it(`should propagate its 'this'-object to the target function`,
-    //         function () {
+    describe(`the curried function`, function() {
 
-    //             const returnthis = curry( 2, function () { return this; } );
-    //             expect( returnthis(1,2) === global ).to.be.true;
+        it(`should have a meaningful name`,
+            function () {
 
-    //             const that = {};
-    //             expect( returnthis.call(that, 1,2) === that ).to.be.true;
+                let curried = curry(2, countargs);
+                expect( curried.name ).to.be.equal(`countargs[curry@2]`);
 
-    //             expect( returnthis(1,2) === global ).to.be.true;
-    //         }
-    //     )
+                curried = curry(2, (a,b)=>(a+b));
+                expect( curried.name ).to.be.equal(`<anonymous>[curry@2]`);
+            }
+        )
 
-    //     it(`should have the same name as the original function`,
-    //         function () {
+        it(`should be tagged as 'bound' on subsequent invocations`,
+            function () {
 
-    //             let curried = curry(2, countargs);
-    //             expect( curried.name ).to.be.equal(`countargs`);
+                let curried = curry(2, countargs);
+                expect( curried(1).name ).to.be.equal(`bound countargs[curry@2]`);
 
-    //             curried = curry(2, (a,b)=>(a+b));
-    //             expect( curried.name ).to.be.equal(``);
-    //         }
-    //     )
-    // })
+                curried = curry(2, (a,b)=>(a+b));
+                expect( curried(1).name ).to.be.equal(`bound <anonymous>[curry@2]`);
+            }
+        )
+    })
 })

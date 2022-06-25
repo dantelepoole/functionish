@@ -37,17 +37,16 @@ describe('at()', function() {
         }
     )
 
-    it('should return the keyed property of the list if the index is not a number',
+    it('should return undefined if the list is not indexable',
         function () {
-            let result = at(numbers1to10, 'length');
-            expect(result).to.be.equal(10);
+            let result = at({}, 3);
+            expect(result).to.be.undefined;
         }
     )
 
-    it('should return undefined if the list is not indexable (e.g. an array)',
+    it('should throw if the index is not a number',
         function () {
-            let result = at(42, 3);
-            expect(result).to.be.undefined;
+            expect( ()=>at([1,2,3], 'foobar') ).to.throw();
         }
     )
 

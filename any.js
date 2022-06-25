@@ -25,7 +25,7 @@
  * @see {@link module:all all()}
  * @see {@link module:none none()}
  * @param {function} predicate The predicate function
- * @param {any[]} list An iterable object producing items to test
+ * @param {iterable} list An iterable object producing items to test
  * @returns {boolean}
  */
 

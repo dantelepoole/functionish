@@ -5,10 +5,10 @@
 'use strict';
 
 /**
- * Return a function that applies its argument function to *args* and returns the result.
+ * Return a function that applies its argument function to *args* and returns the result. 
  * 
- * The returned function has the signature `_applicable(function, ...additionalargs)`. The
- * *additionalargs* are passed to *function* in addition to the *args* passed to `applicable()`.
+ * The returned function has the signature `apply(*func*, ...*additionalargs*)`. It will invoke *func* with *args* as
+ * well as *additionalargs* (if any).
  * 
  * @example
  * 
@@ -20,15 +20,13 @@
  * fortytwo(iseven); // returns `true`;
  * 
  * @func applicable
- * @param {...any} args The arguments to pass to the received function
+ * @param {...any} args The arguments to apply the target function to
  * @returns {function}
  */
 
 module.exports = function applicable(...args) {
 
-    function _applicable(func, ...additionalargs) {
+    return function apply(func, ...additionalargs) {
         return func(...args, ...additionalargs);
     }
-
-    return _applicable;
 }

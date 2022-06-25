@@ -1,11 +1,9 @@
 const always = require('../always');
 const expect = require('chai').expect;
 
-const marker = Object.freeze({});
+const sentinel = Object.freeze({});
 
-describe(
-    'always()', 
-    function() {
+describe( 'always()', function() {
 
         it('should return a function',
             function() {
@@ -15,19 +13,19 @@ describe(
 
         it('should return its first argument',
             function() {
-                expect( always(marker)() ).to.equal(marker);
+                expect( always(sentinel)() ).to.equal(sentinel);
             }
         )
 
         it('should only return its first argument',
             function() {
-                expect( always(marker, 42)() ).to.equal(marker);
+                expect( always(sentinel, 42)() ).to.equal(sentinel);
             }
         )
 
         it('should return a function that ignores its own arguments',
             function() {
-                expect( always(marker)('foo', 'bar', 42) ).to.equal(marker);
+                expect( always(sentinel)('foo', 'bar', 42) ).to.equal(sentinel);
             }
         )
 

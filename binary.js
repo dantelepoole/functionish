@@ -4,6 +4,11 @@
 
 'use strict';
 
+const ERR_BAD_FUNCTION = `BinaryError~The function has type %s. Expected a function.`;
+
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
+
 /**
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
  * and passes them both *func*. Any other arguments passed to the returned function are ignored.
@@ -27,11 +32,13 @@
  * @param {function} func The function to invoke with two arguments
  * @returns {function}
  */
-module.exports = binary;
+module.exports = function binary(func) {
 
-function binary(func) {
+    if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    return function _binary(a, b) {
-        return func(a, b);
-    }
+    return {
+        [func.name] : function (a,b) {
+            return func(a,b);
+        }
+    }[func.name]
 }

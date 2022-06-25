@@ -13,19 +13,13 @@ describe('apply()', function() {
         }
     )
 
-    it('should pass the items in the args array to the function and return the result',
+    it('should pass the args array to the function and return the result',
         function() {
             expect( apply(sum, numbers1to10) ).to.be.equal(55);
         }
     )
 
-    it('should pass a non-array args as a sole argument to the function',
-        function() {
-            expect( apply(sum, 42) ).to.be.equal(42);
-        }
-    )
-
-    it('should throw if its first argument is not a function',
+    it('should throw if the target function is not a function',
         function () {
             expect( () => apply(42, numbers1to10) ).to.throw();
         }

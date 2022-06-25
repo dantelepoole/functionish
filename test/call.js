@@ -12,7 +12,7 @@ describe('call()', function() {
         }
     )
 
-    it('should pass its second and following arguments to the function and return the result',
+    it('should pass the args to the function and return the result',
         function() {
             expect( call(sum, ...numbers1to10) ).to.be.equal(55);
         }
