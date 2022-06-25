@@ -4,7 +4,7 @@
 
 'use strict';
 
-const idfunctioncomposition = function functioncomposition(x) { return x }
+const id = function composition(x) { return x }
 
 /**
  * Compose is implemented in terms of {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
@@ -30,11 +30,11 @@ const idfunctioncomposition = function functioncomposition(x) { return x }
 
 module.exports = function compose(...funcs) {
     
-    if( funcs.length === 0 ) return idfunctioncomposition
+    if( funcs.length === 0 ) return id;
 
     funcs.reverse();
 
-    return function functioncomposition(...args) {
+    return function composition(...args) {
 
         let result = funcs[0](...args);
         

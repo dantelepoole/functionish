@@ -1,7 +1,7 @@
 const callable = require('../callable');
 const expect = require('chai').expect;
 
-const marker = Object.freeze({});
+const sentinel = Object.freeze({});
 
 function sum(a,b) { return (a+b) };
 
@@ -12,38 +12,49 @@ describe('callable()', function() {
         }
     )
 
-    it('should return its argument if it is a function',
+    it('should always return a function',
         function () {
-            let result = callable(sum);
-            expect( result ).to.be.a('function');
-            expect( result ).to.be.equal(sum);
+            expect( callable(sum) ).to.be.a('function');
+            expect( callable(42) ).to.be.a('function');
+            expect( callable() ).to.be.a('function');
+            expect( callable(undefined) ).to.be.a('function');
+            expect( callable(sentinel) ).to.be.a('function');
         }
     )
 
-    it('should return a function that returns its argument if its argument is not a function, regardless of its own arguments',
+    it('should return the value if it is a function',
         function () {
-            let result = callable(marker);
-            expect( result ).to.be.a('function');
-            expect( result() ).to.be.equal(marker);
-            expect( result(1,2,4) ).to.be.equal(marker);
+            expect( callable(sum) ).to.be.equal(sum);
         }
     )
 
-    it('should return a function that returns undefined if it is invoked with any arguments',
-        function () {
-            let result = callable();
-            expect( result ).to.be.a('function');
-            expect( result() ).to.be.undefined;
-            expect( result(1,2,4) ).to.be.undefined;
-        }
-    )
+    describe('the function returned by callable()', function() {
 
-    it('should return a function that returns only the first argument if it is invoked with multiple arguments',
-        function () {
-            let result = callable(marker,1,2,3);
-            expect( result ).to.be.a('function');
-            expect( result() ).to.be.equal(marker);
-            expect( result(1,2,4) ).to.be.equal(marker);
-        }
-    )
+        it(`should always return the value if the value is not a function, regardless of the function's arguments`,
+            function () {
+                const expression = callable(sentinel);
+                expect( expression ).to.be.a('function');
+                expect( expression() ).to.be.equal(sentinel);
+                expect( expression(1,2,4) ).to.be.equal(sentinel);
+            }
+        )
+
+        it('should return undefined if callable() was invoked without arguments',
+            function () {
+                const expression = callable();
+                expect( expression ).to.be.a('function');
+                expect( expression() ).to.be.undefined;
+                expect( expression(1,2,4) ).to.be.undefined;
+            }
+        )
+
+        it('should return only first argument to callable() if callable() was invoked with multiple arguments',
+            function () {
+                const expression = callable(sentinel,1,2,3);
+                expect( expression ).to.be.a('function');
+                expect( expression() ).to.be.equal(sentinel);
+                expect( expression(1,2,4) ).to.be.equal(sentinel);
+            }
+        )
+    })
 })

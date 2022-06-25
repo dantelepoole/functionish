@@ -12,9 +12,7 @@
  * @param {iterable} iterable The iterable of items to remove duplicates from
  * @returns {iterable}
  */
-module.exports = uniq;
- 
-function uniq(iterable) {
+module.exports = function uniq(iterable) {
 
     return {
         [Symbol.iterator] : function* () {
@@ -26,16 +24,6 @@ function uniq(iterable) {
     }
 }
 
-function isuniqfactory() {
-
-    const cache = new Set();
-
-    return function isuniq(item) {
-
-        const priorcachesize = cache.size;
-
-        cache.add(item);
-
-        return (cache.size !== priorcachesize);
-    }
+function isuniqfactory(cache=new Set()) {
+    return item => (cache.size !== cache.add(item).size);
 }

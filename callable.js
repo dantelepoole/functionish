@@ -4,8 +4,6 @@
 
 'use strict';
 
-const always = require('./always');
-
 /**
  * If *value* is a function, return it. Otherwise, return a function that always returns *value* regardless of its
  * arguments.
@@ -26,8 +24,6 @@ const always = require('./always');
  * @returns {function}
  */
 
-module.exports = callable;
-
-function callable(value) {
-    return (typeof value === 'function') ? value : always(value);
+module.exports = function callable(value) {
+    return (typeof value === 'function') ? value : () => value;
 }
