@@ -36,7 +36,7 @@ describe(`difference()`, function() {
         }
     )
     
-    it(`should return an empty iterable object if both arguments are empty iterable objects`,
+    it(`should return an empty iterable object if both lists are empty`,
         function () {
             expect( Array.from(difference([],[])) ).to.be.deep.equal([]);
         }

@@ -4,13 +4,6 @@
 
 'use strict';
 
-const bind = require('./bind');
-const isarray = require('./isarray');
-const not = require('./not');
-// const uniq = require('./uniq');
-
-const isarrayorstring = value => (typeof value === 'string' || isarray(value));
-
 /**
  * Return an iterable producing only those items from *list1* that are not present in *list2*, but without duplicates.
  * 
