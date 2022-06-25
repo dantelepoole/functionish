@@ -4,7 +4,12 @@
 
 'use strict'
 
-const prototostring = Object.prototype.toString;
+const CLASS_OBJECT = 'Object';
+
+const objectstring = Object.prototype.toString.call.bind(Object.prototype.toString);
+const getclassname = obj => objectstring(obj).slice(8,-1);
+const getprototype = Object.getPrototypeOf;
+const constructorname = obj => getprototype(obj)?.constructor?.name;
 
 /**
  * Return the name of the class (constructor) of *value*. If *value* is primitive, the name of its object constructor
@@ -14,9 +19,18 @@ const prototostring = Object.prototype.toString;
  * class that does not implement a getter with the well-known symbol `Symbol.toStringTag` as key, a generic classname
  * of `Object` will be returned.
  * 
+ * @function classname
  * @param {any} value 
  * @returns {string}
  */
 module.exports = function classname(value) {
-    return prototostring.call(value).slice(8, -1);
+
+    const objectclassname = getclassname(value);
+
+    return ((objectclassname !== CLASS_OBJECT) && objectclassname)
+            ||
+           constructorname(value)
+            ||
+           objectclassname;
+
 }
