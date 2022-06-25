@@ -17,9 +17,10 @@ describe(`copy()`, function() {
         }
     )
 
-    it(`should create a shallow copy of an array argument`,
+    it(`should create a shallow copy of an array`,
         function () {
             const array = [1,2,3];
+
             const result = copy(array);
             expect(result).not.to.be.equal(array);
             expect(result).to.be.deep.equal(array);
@@ -28,7 +29,7 @@ describe(`copy()`, function() {
         }
     )
 
-    it(`should create a shallow copy of an object argument`,
+    it(`should create a shallow copy of an object`,
         function () {
             const clone = copy(sourceobject);
             expect(clone).not.to.be.equal(sourceobject);
@@ -39,7 +40,7 @@ describe(`copy()`, function() {
         }
     )
 
-    it(`should simply return arguments primitive values`,
+    it(`should simply return arguments that are primitive values, including null and undefined`,
         function () {
             expect( copy(42) ).to.be.equal(42);
             expect( copy(true) ).to.be.equal(true);
