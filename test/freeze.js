@@ -9,7 +9,7 @@ describe(`freeze()`, function() {
         }
     )
 
-    it(`should be a reference to Javascript's Object.freeze method`,
+    it(`should be a reference to Javascript's Object.freeze() method`,
         function () {
             expect(freeze).to.equal(Object.freeze);
         }
