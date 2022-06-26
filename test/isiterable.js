@@ -23,6 +23,12 @@ describe(`isiterable()`, function() {
         }
     )
 
+    it(`should return false if its argument is a string`,
+        function () {
+            expect( isiterable('foobar') ).to.be.false;
+        }
+    )
+
     it(`should return true if its argument is an array, Map or Set`,
         function () {
             expecttrue( isiterable([]) );

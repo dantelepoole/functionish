@@ -16,5 +16,5 @@
  * @returns {boolean}
  */
 module.exports = function isiterable(value) {
-    return (typeof value?.[Symbol.iterator] === 'function');
+    return (typeof value?.[Symbol.iterator] === 'function') && (typeof value !== 'string');
 }

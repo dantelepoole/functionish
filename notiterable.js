@@ -17,5 +17,5 @@
  * @returns {boolean}
  */
 module.exports = function notiterable(value) {
-    return (typeof value?.[Symbol.iterator] !== 'function');
+    return (typeof value === 'string') || (typeof value?.[Symbol.iterator] !== 'function');
 }

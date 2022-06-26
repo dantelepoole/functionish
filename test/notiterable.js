@@ -33,4 +33,10 @@ describe(`notiterable()`, function() {
             expect( notiterable(iterator) ).to.be.false;
         }
     )
+
+    it(`should return true if its argument is a string`,
+        function () {
+            expect( notiterable('foobar') ).to.be.true;
+        }
+    )
 })
