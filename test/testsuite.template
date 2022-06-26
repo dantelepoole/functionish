@@ -1,13 +1,26 @@
-const fail = require('../fail');
 const expect = require('chai').expect;
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
 
-describe('fail()', function() {
+describe(<ENTER SUITE NAME>, function() {
 
-    beforeEach(
-        function() {
-        }
-    )
+    afterEach(function() {
+        sandbox.resetHistory();
+    })
+    
+    beforeEach(function() {})
 
-    it('should be tested')
+    it(`should be tested`)
 
+    // describe(<ENTER SUBSUITE NAME>, function() {
+
+    //     afterEach(function() {
+    //         sandbox.resetHistory();
+    //     })
+            
+    //     beforeEach(function() {})
+
+    //     it(`should be tested`)
+
+    // })
 })
