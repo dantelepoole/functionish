@@ -4,18 +4,28 @@
 
 'use strict';
 
+const ERR_BAD_PREDICATE = `FindError~The predicate has type %s. Expected a function.`
+const ERR_BAD_FINDABLE = `FindError~The findable has type %s. Expected an object with a find() method or an iterable object`;
+const ITEM_NOT_FOUND = undefined;
+
+const fail = require('./fail');
+const isiterable = require('./isiterable');
+const typeorclass = require('./typeorclass');
 const unary = require('./unary');
 
+const isfindable = obj => (typeof obj?.find === 'function');
+
 /**
- * Function variant of {@link external:Array.prototype.find Array.prototype.find()}. Pass *predicate* to *iterable*'s
- * `find()` function and return the result. If *iterable* has no `find()` method, iterate over *iterable*'s items and 
- * return the first item for which *predicate* returns a truthy value.
+ * Pass the *predicate* function to the `find()` method of *findable* and return the result. If *findable* has
+ * no such method but it is iterable, return pass each item produced by *findable* to the *predicate* function and
+ * return the first item for which the *predicate* function returns a truthy value. If no such item exists, return
+ * `undefined`.
  * 
- * *Important:* the *predicate* function is coerced to unary arity before it is passed to *iterable*'s `find()` method
+ * *Important:* the *predicate* function is coerced to unary arity before it is passed to *findables*'s `find()` method
  * (if it exists). This means that *predicate* will only ever receive a single argument (the item being searched),
- * regardless of how many arguments *iterable*'s `find()` method actually passes.
+ * regardless of how many arguments *findable*'s `find()` method actually passes.
  * 
- * `find()` is curried by default.
+ * `find()` is curried by default with binary arity.
  * 
  * @example
  *     
@@ -28,16 +38,21 @@ const unary = require('./unary');
  * 
  * @func find
  * @param {function} predicate The predicate function that identifies the item being sought
- * @param {iterable} iterable An iterable object producing the items to search
- * @returns {iterable}
+ * @param {(findable|iterable)} findable An object with a `find()` method or an iterable object
+ * @returns {any}
  */
 module.exports = require('./curry2')(
 
-    function find(predicate, iterable) {
-        return (typeof iterable.find === 'function') ? iterable.find( unary(predicate) ) : finditerable(predicate, iterable);
+    function find(predicate, findable) {
+
+        if(typeof predicate !== 'function') fail(ERR_BAD_PREDICATE, typeorclass(predicate));
+        
+        return isfindable(findable) ? findable.find( unary(predicate) )
+             : isiterable(findable) ? (finditerable(predicate, findable) ?? ITEM_NOT_FOUND)
+             : fail(ERR_BAD_FINDABLE, typeorclass(findable));
     }
 )
 
-function finditerable(predicate, iterable) {
-    for( const item of iterable ) if( predicate(item) ) return item;
+function finditerable(predicate, list) {
+    for(const item of list) if( predicate(item) ) return item;
 }
