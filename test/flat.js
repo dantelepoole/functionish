@@ -80,4 +80,16 @@ describe(`flat()`, function() {
             expect( Array.from( flat(2, list(array3dimensions)) ) ).to.deep.equal(array1dimension);
         }
     )
+
+    it(`should accept Infinity for the depth argument`,
+        function () {
+            expect( Array.from( flat(Infinity, list(array3dimensions)) ) ).to.deep.equal(array1dimension);
+        }
+    )
+
+    it(`should not flatten strings to individual characters`,
+        function () {
+            expect( Array.from( flat(Infinity, ['foo','bar']) ) ).to.deep.equal(['foo','bar']);
+        }
+    )
 })
