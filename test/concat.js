@@ -6,61 +6,52 @@ const range = require('../range');
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);
 
-const array = spy( require('../array') );
-
-const sentinel = Object.freeze({});
-
-function* emptyiterable() {
-    // noop
-}
-
 describe('concat()', function() {
 
     beforeEach(
         function() {
-
+            sandbox.resetHistory();
         }
     )
 
-    it('should return an iterable',
+    it('should be curried',
         function () {
-            expect( isiterable( concat( range(3), range(3) ) ) ).to.be.true;
+
+            const curried = concat([1,2,3]);
+            expect(curried).to.be.a('function');
+            expect( curried([4,5,6]) ).to.be.an('array').with.length(6);
         }
     )
 
-    it('should throw if either list is not an iterable object',
+    it('should throw if the concatable has no concat() method and is not iterable',
         function () {
-            expect( () => concat({},{}) ).to.throw();
+            expect( ()=>concat({}, 1,2,3) ).to.throw();
         }
     )
 
-    describe('the iterable object returned by concat()', function() {
-
-        it('should produce the items of the first list followed by those of the second list',
-            function () {
-                const result = array( concat([1,2,3], [4,5,6]) );
-                expect(result).to.be.deep.equal( [1,2,3,4,5,6] );
+    it(`should invoke the concatable's concat() method if it has one and return the result`,
+        function () {
+            let concatable = {
+                concat : function concat(...items) { return ['a','b','c', ...items] }
             }
-        )
+            spy( concatable, 'concat' );
 
-        it('should return an empty iterable if both lists are empty',
-            function () {
-                expect( array( concat([], []) ) ).to.be.deep.equal( [] );
-            }
-        )
+            expect( concat(concatable, 1,2,3) ).to.deep.equal( ['a','b','c',1,2,3] );
+            expect(concatable.concat.callCount).to.equal(1);
 
+            expect( concat([1,2,3], 4,5,6) ).to.deep.equal([1,2,3,4,5,6]);
+            expect( concat('foo', 'bar') ).to.equal( 'foo'.concat('bar') );
 
-        it('should be curried',
-            function () {
+        }
+    )
 
-                const curried = concat([1,2,3]);
-                expect(curried).to.be.a('function');
+    it(`should, if the concatable has no concat() method but is iterable, return an iterable object concats the items to concatable's items`,
+        function () {
 
-                const result = curried([4,5,6]);
-                expect( isiterable(result) ).to.be.true;
-            }
-        )
-
-    })
+            const result = concat( range(3), 1,2,3 );            
+            expect( isiterable(result) ).to.be.true;
+            expect( Array.from(result) ).to.deep.equal([1,2,3,1,2,3]);
+        }
+    )
 
 })

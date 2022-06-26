@@ -4,44 +4,42 @@
 
 'use strict';
 
-const ERR_BAD_ITERABLE = `ConcatError~The %s has type %s. Expected an iterable object`;
+const ERR_BAD_CONCATABLE = `ConcatError~The concatable has type %s. Expected an object with a concat() method or an iterable object`;
 
+const concatlist = require('./concatlist');
 const fail = require('./fail');
-const notiterable = require('./notiterable');
+const isiterable = require('./isiterable');
 const typeorclass = require('./typeorclass');
 
+const isconcatable = obj => (typeof obj?.concat === 'function');
+
 /**
- * Return an iterable object that produces *list1*'s items followed by *list2*'s items.
+ * Pass the *items* to *concatable*'s `concat()` method. If *concatable* has no such method but it is iterable, 
+ * return an iterable object that produces *concatable*'s items followed by *items*' items.
  * 
  * `concat()` is curried by default.
  * 
  * @example
  * 
- * const array = require('functionish/concat');
  * const concat = require('functionish/concat');
  * 
- * const list1 = [1,2];
- * const list2 = [3,4];
- * array( concat(list1, list2) ); // returns '[1,2,3,4]'
+ * concat([1,2], 3, 4); // returns '[1,2,3,4]'
+ * concat('foo', 'bar'); // return 'foobar';
  * 
  * @func concat
- * @param {iterable} list1 The iterable object to append *list2* to
- * @param  {iterable} list2 The iterable object to append to *list1*
- * @returns {iterable}
+ * @param {(concatable|iterable)} concatable An object with a concat() method or an iterable object
+ * @param  {...any[]} items The items to concat to *concatable*
+ * @returns {any}
+ * @throws {Error} Error if *concatable* has no `concat()` method and is not iterable.
  */
 
 module.exports = require('./curry2') (
 
-    function concat(list1, list2) {
+    function concat(concatable, ...items) {
         
-        if( notiterable(list1) ) fail(ERR_BAD_ITERABLE, 'list1', typeorclass(list1));
-        if( notiterable(list2) ) fail(ERR_BAD_ITERABLE, 'list2', typeorclass(list2));
+        return isconcatable(concatable) ? concatable.concat(...items)
+             : isiterable(concatable) ? concatlist(concatable, items)
+             : fail(ERR_BAD_CONCATABLE, typeorclass(concatable));
 
-        return {
-            [Symbol.iterator] : function* () {
-                for( const item of list1 ) yield item;
-                for( const item of list2 ) yield item;
-            }
-        }
     }
 )
