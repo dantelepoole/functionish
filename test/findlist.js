@@ -12,7 +12,7 @@ const issentinel = spy( x => (x === sentinel) );
 
 const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);
 
-describe(`find()`, function() {
+describe(`findlist()`, function() {
 
     beforeEach(
         function() {
