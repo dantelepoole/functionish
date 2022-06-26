@@ -4,7 +4,10 @@
 
 'use strict';
 
-module.exports = flip;
+const ERR_BAD_FUNCTION = `FlipError~The function has type %s. Expected a function.`;
+
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
 
 /**
  * Return a function that calls the *func* function with the order of the first two parameters reversed.
@@ -29,8 +32,10 @@ module.exports = flip;
  * @param {function} func The function to flip the parameters for
  * @returns {function}
  */
-function flip(func) {
+module.exports = function flip(func) {
 
+    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+    
     function flippedfunction(a, b, ...args) {
         return (arguments.length === 0) ? func() : func(b,a, ...args);
     }
