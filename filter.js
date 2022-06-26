@@ -35,10 +35,9 @@ const isfilterable = obj => (typeof obj?.filter === 'function');
  * filter(iseven, [1,2,3,4,5]); // returns [2,4]
  * 
  * @func filter
- * @see {@link external:Array.prototype.filter Array.prototype.filter()}
  * @param {function} predicate The predicate function
  * @param {(filterable|iterable)} filterable An object that has a `filter()`-method or an iterable object
- * @returns {any} The return value of *list*'s `filter()` method or an iterable object if it doesn't have one
+ * @returns {any} 
  */
 
 module.exports = require('./curry2')(
