@@ -24,6 +24,12 @@ describe('compose()', function() {
         }
     )
 
+    it('should throw if any of the composed functions are not functions',
+        function () {
+            expect( ()=>compose(sum, 42, double) ).to.throw();
+        }
+    )
+
     describe('the function returned by compose()', function() {
 
         beforeEach(
@@ -34,19 +40,21 @@ describe('compose()', function() {
 
         it('should invoke the composed functions in reverse order (right to left)',
             function () {
-                const func = compose(double, increment, sum);
-                const result = func(1,2);
+                const composition = compose(double, increment, sum);
+                const result = composition(1,2);
+                expect( result ).to.equal(8);
 
-                expect(result).to.equal(8);
+                expect( sum.calledImmediatelyBefore(increment) ).to.be.true;
+                expect( sum.calledWith(1,2) ).to.be.true;
+                expect( sum.returned(3) ).to.be.true;
 
-                expect( sum.calledImmediatelyBefore(increment) );
-                expect( sum.calledWith(1,2) );
+                expect( increment.calledImmediatelyBefore(double) ).to.be.true;
+                expect( increment.calledWith(3) ).to.be.true;
+                expect( increment.returned(4) ).to.be.true;
 
-                expect( increment.calledImmediatelyBefore(double) );
-                expect( increment.calledWith(3) );
-
-                expect( double.calledImmediatelyAfter(increment) );
-                expect( double.calledWith(4) );
+                expect( double.calledImmediatelyAfter(increment) ).to.be.true;
+                expect( double.calledWith(4) ).to.be.true;
+                expect( double.returned(8) ).to.be.true;
             }
         )
 
@@ -65,13 +73,5 @@ describe('compose()', function() {
                 expect(result).to.be.equal(42);
             }
         )
-
-        it('should throw if any of the composed functions are not functions',
-            function () {
-                const func = compose(sum, 42, double);
-                expect( ()=>func(1,2) ).to.throw();
-            }
-        )
-
     })
 })
