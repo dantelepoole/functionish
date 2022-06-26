@@ -52,21 +52,21 @@ const isdefined = require('./isdefined');
  * 
  * @func groupby
  * @param {func} keyselector A function that returns a key for a given item
- * @param {iterable} list An iterable producing the items to group
+ * @param {iterable} list An iterable object producing the items to group
  * @returns {object} An object containing the items grouped by their corresponding keys
  */
 module.exports = require('./curry2') (
 
-    function groupby(keyselector, iterable) {
+    function groupby(keyselector, list) {
 
         const target = {};
 
-        for(const item of iterable) {
+        for(const item of list) {
 
             const key = keyselector(item);
             const group = getgroup(target, key);
             
-            addtogroup(group, item);
+            if( isdefined(group) ) group.push(item);
         }
 
         return target;
@@ -78,8 +78,4 @@ function getgroup(target, key) {
     return isvoid(key) ? undefined
          : isdefined(target[key]) ? target[key]
          : (target[key] = []);
-}
-
-function addtogroup(group, item) {
-    if( isdefined(group) ) group.push(item);
 }
