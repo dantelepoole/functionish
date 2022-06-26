@@ -32,10 +32,12 @@ module.exports = fail;
  */
 function fail(formatmsg, ...formatargs) {
 
-    const [name, message] = parseformatmsg(formatmsg);
-    const error = new Error( format(message, ...formatargs) );
+    const formattedmessage = format(formatmsg, ...formatargs);
+    const [name, message] = parseformatmsg(formattedmessage);
 
-    if( name !== NAME_NONE ) error.name = name;
+    const error = new Error(message);
+
+    if(name !== NAME_NONE) error.name = name;
 
     throw error;
 }
