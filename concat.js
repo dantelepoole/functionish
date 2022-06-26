@@ -6,7 +6,6 @@
 
 const ERR_BAD_CONCATABLE = `ConcatError~The concatable has type %s. Expected an object with a concat() method or an iterable object`;
 
-const concatlist = require('./concatlist');
 const fail = require('./fail');
 const isiterable = require('./isiterable');
 const typeorclass = require('./typeorclass');
@@ -43,3 +42,13 @@ module.exports = require('./curry2') (
 
     }
 )
+
+function concatlist(list1, list2) {
+
+    return {
+        [Symbol.iterator] : function* () {
+            for( const item of list1 ) yield item;
+            for( const item of list2 ) yield item;
+        }
+    }
+}
