@@ -16,6 +16,7 @@ module.exports.callable = require('./callable');
 module.exports.classname = require('./classname');
 module.exports.compose = require('./compose');
 module.exports.concat = require('./concat');
+module.exports.concatlist = require('./concatlist');
 module.exports.copy = require('./copy');
 module.exports.curry = require('./curry');
 module.exports.curry2 = require('./curry2');
