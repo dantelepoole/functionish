@@ -4,18 +4,15 @@
 
 'use strict';
 
-const ERR_BAD_FLATTENABLE = `FlatError~The flattenable has type %. Expect an object with a flat() method or an iterable object.`;
-
-const fail = require('./fail');
 const flatlist = require('./flatlist');
-const isiterable = require('./isiterable');
-const typeorclass = require('./typeorclass');
 
 const isflattenable = obj => (typeof obj?.flat === 'function');
 
 /**
  * Pass the *depth* to *flattenable*'s `flat()` method and return the result. If *flattenable* has no such method but
  * is iterable, return an iterable that flattens the *flattenable*'s items to the specified *depth*.
+ * 
+ * Pass `Infinity` to flatten the flattenable completely.
  * 
  * `flat()` is curried by default with binary arity.
  * 
@@ -28,9 +25,6 @@ const isflattenable = obj => (typeof obj?.flat === 'function');
 module.exports = require('./curry2')(
 
     function flat(depth, flattenable) {
-
-        return isflattenable(flattenable) ? flattenable.flat(depth)
-             : isiterable(flattenable) ? flatlist(depth, flattenable)
-             : fail(ERR_BAD_FLATTENABLE, typeorclass(flattenable));
+        return isflattenable(flattenable) ? flattenable.flat(depth) : flatlist(depth, flattenable)
     }
 )
