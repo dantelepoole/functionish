@@ -2,14 +2,23 @@
  * @module filter
  */
 
- 'use strict';
+'use strict';
+
+const ERR_BAD_PREDICATE = `FilterError~The predicate has type %s. Expected a function.`
+const ERR_BAD_FILTERABLE = `FilterError~The filterable has type %s. Expected an object with a filter() method or an iterable object`;
 
 const unary = require('./unary');
 
+const fail = require('./fail');
+const isiterable = require('./isiterable');
+const typeorclass = require('./typeorclass');
+
+const isfilterable = obj => (typeof obj?.filter === 'function');
+
 /**
- * Function variant of `Array.prototype.filter()`. Apply the *predicate* function to *filterable*'s `filter()`-method
- * and return the result. If *filterable* has no `filter()`-method, it is assumed to be iterable and an iterable object
- * is returned that produces only the items in *list* for which the *predicate* function returns a truthy value.
+ * Pass the *predicate* function to the `filter()` method of *filterable* and return the result. If *filterable* has
+ * no such method but it is iterable, return an iterable object that produces only those items from *filterable* for
+ * which the *predicate* returns a truthy value.
  * 
  * *Important:* the *predicate* function is coerced to unary arity before it is passed to *filterable*'s `filter()`
  * method (if it exists). This means that *predicate* will only ever receive a single argument (the item being
@@ -34,17 +43,22 @@ const unary = require('./unary');
 
 module.exports = require('./curry2')(
 
-    function filter(predicate, list) {
-        return (typeof list.filter === 'function') ? list.filter( unary(predicate) ) : filteriterable(predicate, list);
+    function filter(predicate, filterable) {
+
+        if(typeof predicate !== 'function') fail(ERR_BAD_PREDICATE, typeorclass(predicate));
+
+        return isfilterable(filterable) ? filterable.filter( unary(predicate) )
+             : isiterable(filterable) ? filterlist(predicate, filterable)
+             : fail(ERR_BAD_FILTERABLE, typeorclass(filterable));
     }
 )
 
-function filteriterable(predicate, iterable) {
+function filterlist(predicate, list) {
     
     return {
 
         [Symbol.iterator] : function* () {
-            for(const item of iterable) if( predicate(item) ) yield item;
+            for(const item of list) if( predicate(item) ) yield item;
         }
     }
 }
