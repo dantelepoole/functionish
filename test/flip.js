@@ -17,15 +17,15 @@ describe(`flip()`, function() {
 
     it(`should return a function`,
         function () {
-            expect( returnargs_flipped(returnargs) ).to.be.a('function');
+            expect( flip(returnargs) ).to.be.a('function');
         }
     )
 
     it(`should throw if the target function is not a function`,
         function () {
-            expect( ()=>returnargs_flipped() ).to.throw();
-            expect( ()=>returnargs_flipped(null) ).to.throw();
-            expect( ()=>returnargs_flipped({}) ).to.throw();
+            expect( ()=>flip() ).to.throw();
+            expect( ()=>flip(null) ).to.throw();
+            expect( ()=>flip({}) ).to.throw();
         }
     )
 

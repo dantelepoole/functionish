@@ -11,7 +11,7 @@ describe(`format()`, function() {
 
     it(`should be a reference to Node's util.format() method`,
         function () {
-            expectequal( format, require('util').format );
+            expect(format).to.equal( require('util').format );
         }
     )
 
