@@ -31,6 +31,7 @@ module.exports.fail = require('./fail');
 module.exports.filter = require('./filter');
 module.exports.filterlist = require('./filterlist');
 module.exports.find = require('./find');
+module.exports.findlist = require('./findlist');
 module.exports.findindex = require('./findindex');
 module.exports.flat = require('./flat');
 module.exports.flip = require('./flip');
