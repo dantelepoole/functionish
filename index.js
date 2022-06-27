@@ -43,6 +43,7 @@ module.exports.hasownproperty = require('./hasownproperty');
 module.exports.head = require('./head');
 module.exports.id = require('./id');
 module.exports.includes = require('./includes');
+module.exports.includeslist = require('./includeslist');
 module.exports.indexof = require('./indexof');
 module.exports.intersection = require('./intersection');
 module.exports.isdeepequal = require('./isdeepequal');
