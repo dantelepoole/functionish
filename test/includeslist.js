@@ -1,6 +1,5 @@
 const expect = require('chai').expect;
 const includeslist = require('../includeslist');
-const range = require('../range');
 
 const sentinel = {};
 
