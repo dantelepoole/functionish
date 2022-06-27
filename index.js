@@ -72,6 +72,7 @@ module.exports.notempty = require('./notempty');
 module.exports.notequal = require('./notequal');
 module.exports.noterror = require('./noterror');
 module.exports.notfunction = require('./notfunction');
+module.exports.notindexable = require('./notindexable');
 module.exports.notinteger = require('./notinteger');
 module.exports.notiterable = require('./notiterable');
 module.exports.notnumber = require('./notnumber');
