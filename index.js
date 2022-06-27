@@ -69,6 +69,7 @@ module.exports.not = require('./not');
 module.exports.notarray = require('./notarray');
 module.exports.notdeepequal = require('./notdeepequal');
 module.exports.notempty = require('./notempty');
+module.exports.notequal = require('./notequal');
 module.exports.notfunction = require('./notfunction');
 module.exports.notinteger = require('./notinteger');
 module.exports.notiterable = require('./notiterable');
