@@ -6,10 +6,10 @@
 
 /**
  * Return `true` if *value* is recognized as an iterable object, meaning that *value* has a `[Symbol.iterator]`-property
- * that is a function.
+ * that is a function. Iterator objects also qualify as being iterable.
  * 
- * This method is not perfect for identifying iterators, but it should suffice for most use cases. Beware that in
- * Javascript strings are iterable.
+ * Although in Javascript strings are considered iterable, this function does *not* recognize strings as iterable, since
+ * in practice the intention is usually not to iterate over strings.
  * 
  * @func isiterable
  * @param {any} value The value to check
