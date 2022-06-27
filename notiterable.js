@@ -8,8 +8,8 @@
  * Return `false` if *value* is recognized as an iterable object, meaning that *value* has a `[Symbol.iterator]`
  * property that is a function. Otherwise, return `true`.
  * 
- * This method is not perfect for identifying iterators, but it should suffice for most use cases. Beware that in
- * Javascript strings are iterable.
+ * Although strings are iterable in Javascript, this function will designate strings as not being iterable, since in 
+ * practice treating strings as iterables is often not intended.
  * 
  * @func notiterable
  * @see {@link module:isiterable isiterable()}

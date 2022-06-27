@@ -9,6 +9,9 @@ const isequal = (a,b) => (a === b);
 /**
  * Return `true` if *a* and *b* are strictly equal, otherwise return false.
  * 
+ * `isequal()` compares its arguments using the strictly equality operator `===`. This means that comparing `NaN` to
+ * any value will always return `false`.
+ * 
  * `isequal()` is curried by default.
  * 
  * @func isequal
