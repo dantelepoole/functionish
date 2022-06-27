@@ -7,11 +7,11 @@
 const isdeepequal = require('util').isDeepStrictEqual;
 
 /**
- * Alias for the `isDeepStrictEqual()` method of Node's `util` package.
+ * Alias for the `isDeepStrictEqual()` method of Node's `util` package, but curried with binary arity.
  * 
  * @func isdeepequal
  * @param {any} a The value to compare
  * @param {any} b The value to compare against
  * @returns {boolean}
  */
-module.exports = require('./curry2')(isdeepequal );
+module.exports = require('./curry2')(isdeepequal);
