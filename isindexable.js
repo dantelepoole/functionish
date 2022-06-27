@@ -5,16 +5,11 @@
 'use strict';
 
 const hasownproperty = require('./hasownproperty');
-const isarray = require('./isarray');
-const isobject = require('./isobject');
-const isstring = require('./isstring');
 
 /**
- * Return `true` if *object* can be indexed by numeric keys. Strings and arrays are indexable, as are objects that
- * have a `length` property when either of the following two conditions is true:
- * 1. its `length` property has the value `0`, or
- * 2. it has a property with the key `0` AND a property with the key equal to the value of its `length` property
- * minus 1.
+ * Return `true` if *value* is an indexable object, i.e. an array or a string or an non-null object that has a numeric
+ * `length` property and, if the `length` property is not `0`, has a property with the numeric key `0` and a property
+ * with a numeric key equal to the value of its `length` property minus 1.
  *  
  * @example
  * 
@@ -32,22 +27,31 @@ const isstring = require('./isstring');
  * 
  * isindexable( obj ); // returns true
  * 
+ * const obj2 = { length:0 }
+ * isindexable( obj2 ); // returns true
+ * 
+ * const obj3 = {
+ *    length : 1,
+ *    [0]    : 'foobar'
+ * }
+ * isindexable( obj3 ); // returns true
+ * 
  * @func isindexable
- * @param {(object|string)} object The value to check
+ * @param {any} value The value to check
  * @returns {boolean}
  */
 
-module.exports = function isindexable(object) {
-    return isarray(object) || isstring(object) || isindexableobject(object);
-}
+module.exports = function isindexable(value) {
 
-function isindexableobject(object) {
+    return (typeof value?.length !== 'number') ? false 
+         : (typeof value === 'array')
+            ||
+           (typeof value === 'string')
+            ||
+           (value.length === 0)
+            ||
+           (value.length === 1 && hasownproperty(0, value))
+            ||
+           (hasownproperty(0, value) && hasownproperty(value.length-1, value));
 
-    return isobject(object)
-           && (typeof object.length === 'number')
-           && (
-               object.length === 0
-               ||
-               (hasownproperty(0, object) && hasownproperty(object.length-1, object))
-              )
 }
