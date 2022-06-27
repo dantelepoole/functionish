@@ -4,36 +4,42 @@
 
 'use strict';
 
-const uniq = require('./uniq');
+const ERR_BAD_LIST = `IntersectionError~The list%d argument has type %s. Expected an iterable object.`;
+
+const bind = require('./bind');
+// const uniq = require('./uniq');
+
+const fail = require('./fail');
+const notiterable = require('./notiterable');
+const typeorclass = require('./typeorclass');
 
 /**
  * Return an iterable producing all items common to both *list1* and *list2*, but without duplicates.
  * 
- * `intersection()` is curried by default.
+ * `intersection()` is curried by default with binary arity.
  * 
  * @func intersection
- * @param {iterable} iterable1 The first iterable
- * @param {iterable} iterable2 The second iterable
+ * @param {iterable} list1 An iterable object
+ * @param {iterable} list2 Another iterable object to intersect with
  * @returns {iterable}
  */
 module.exports = require('./curry2') (
 
-    function intersection(iterable1, iterable2) {
+    function intersection(list1, list2) {
 
-        const iterable1set = new Set(iterable1);
-        const intersectionfilter = iterable1set.has.bind(iterable1set);
-        const intersectioniterable = filteriterable(intersectionfilter, iterable2);
- 
-        return uniq(intersectioniterable);
-    }
-)
+        if( notiterable(list1) ) fail(ERR_BAD_LIST, 1, typeorclass(list1));
+        if( notiterable(list2) ) fail(ERR_BAD_LIST, 2, typeorclass(list2));
 
-function filteriterable(predicate, iterable) {
+        const intersectionfilter = bind('has', new Set(list1));
+
+        const uniqitems = new Set();
+        const isuniq = item => (uniqitems.size !== uniqitems.add(item).size);
     
-    return {
-
-        [Symbol.iterator] : function* () {
-            for(const item of iterable) if( predicate(item) ) yield item;
+        return {
+    
+            [Symbol.iterator] : function* () {
+                for(const item of list2) if( isuniq(item) && intersectionfilter(item) ) yield item;
+            }
         }
     }
-}
+)
