@@ -4,10 +4,17 @@
 
 'use strict';
 
+const ERR_BAD_LIST = `IncludesError~The list has type %s. Expected an object with an includes() method or an iterable object.`;
+
+const fail = require('./fail');
+const includeslist = require('./includeslist');
+const isiterable = require('./isiterable');
+const typeorclass = require('./typeorclass');
+
 /**
- * Functional variant of {@link external:Array.prototype.includes Array.prototype.includes()}. If *iterable* has a
- * `includes()` method, call it with *value* and return the result. Otherwise, assume *iterable* is iterable and compare
- * *value* to each item it produces until a match is found. If no match is found, return `false`.
+ * Functional variant of {@link external:Array.prototype.includes Array.prototype.includes()}. Pass *value* to *list*'s
+ * `includes()` method and return the result. If *list* has no such method and *list* is iterable, compare *value* to
+ * each item produced by list and return `true` when a match is found. If no matching item is found, return `false`.
  * 
  * Value comparison is performed by {@link external:Object#is Object.is()}.
  * 
@@ -16,21 +23,15 @@
  * @func includes
  * @see {@link external:Array.prototype.includes Array.prototype.includes()}
  * @param {any} value The value to look for
- * @param {iterable} iterable An iterable producing the items to search
+ * @param {(object|iterable)} list An iterable producing the items to search
  * @returns {boolean}
  */
 module.exports = require('./curry2')(
     
-    function includes(value, iterable) {
+    function includes(value, list) {
 
-        return (typeof iterable?.includes === 'function') ? iterable.includes(value) 
-             : includesiterable(value, iterable);
+        return (typeof list?.includes === 'function') ? list.includes(value) 
+             : isiterable(list) ? includeslist(value, list)
+             : fail(ERR_BAD_LIST, typeorclass(list));
     }
 )
-
-function includesiterable(value, iterable) {
-
-    for( const item of iterable ) if( Object.is(value, item) ) return true;
-
-    return false;
-}

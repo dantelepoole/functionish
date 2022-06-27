@@ -2,126 +2,80 @@ const expect = require('chai').expect;
 const includes = require('../includes');
 const range = require('../range');
 
-const markerobject = Object.freeze({});
-const markerarray = Object.freeze([]);
-const markersymbol = Symbol();
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
+
+const sentinel = {};
+
+function spyincludable(includable) {
+
+    const object = {
+        includes : includable.includes.bind(includable)
+    }
+
+    spy(object, 'includes');
+
+    return object;
+}
 
 describe(`includes()`, function() {
 
     beforeEach(
         function() {
-
+            sandbox.resetHistory();
         }
     )
 
     it(`should be curried`,
         function () {
             const curried = includes(42);
-            expectfunction(curried);
-            expecttrue( curried([42]) );
+            expect(curried).to.be.a('function');
+            expect( curried([42]) ).to.be.true;
         }
     )
 
-    it(`should pass its first argument to the includes() method of its second argument`,
+    it(`should pass the value to list's includes() method if it has one`,
         function () {
-            let invoked = false;
-            const list = {
-                includes(value) {
-                    invoked = true;
-                }
-            }
-            includes(42, list);
-            expecttrue(invoked);
+
+            let includable = spyincludable([1,2,3,sentinel]);
+            expect( includes(sentinel, includable) ).to.be.true;
+            expect( includable.includes.calledOnceWith(sentinel) ).to.be.true;
+
+            sandbox.resetHistory();
+
+            includable = spyincludable('foobar');
+            expect( includes('b', includable) ).to.be.true;
+            expect( includable.includes.calledOnceWith('b') ).to.be.true;
         }
     )
 
-    it(`should iterate over its second argument if it has nog includes() method`,
+    it(`should work if the list has no includes() method but it is iterable`,
         function () {
             expect( includes(3, range(5)) ).to.be.true;
-            expect( includes(42, range(5)) ).to.be.false;
         }
     )
 
-    it(`should throw if its second argument is not iterable`,
+    it(`should return true if any item in the list is strictly equal to the argument value`,
         function () {
-            expecttothrow(includes, 42, {});
+            expect( includes(sentinel, [null, undefined, NaN, 42, {}, [], includes, sentinel]) ).to.be.true; 
+        }
+    )
+
+    it(`should return false if the list contains no item that is strictly equal to the argument value`,
+        function () {
+            expect( includes(sentinel, []) ).to.be.false;
+        }
+    )
+
+    it(`should throw if the list has no includes() method and is not iterable`,
+        function () {
+            expect( ()=>includes(42, {}) ).to.throw();
+        }
+    )
+
+    it(`should work properly when searching for NaN`,
+        function () {
+            expect( includes(NaN, [NaN]) ).to.be.true;
         }
     )
 })
-
-function countarguments(...args) {
-    return args.length;
-}
-
-function returnarguments(...args) {
-    return args;
-}
-
-function expecttothrow(func, ...args) {
-    expect( () => func(...args) ).to.throw();
-}
-
-function expectnottothrow(func, ...args) {
-    expect( () => func(...args) ).to.not.throw();
-}
-
-function expectequal(value1, value2) {
-    expect(value1).to.be.equal(value2);
-}
-
-function expectdeepequal(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-}
-
-function expectnotequal(value1, value2) {
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnotdeepequal(value1, value2) {
-    expect(value1).to.be.not.deep.equal(value2);
-}
-
-function expectclone(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnull(value) {
-    expect(value).to.be.null;
-}
-
-function expectundefined(value) {
-    expect(value).to.be.undefined;
-}
-
-function expectnan(value) {
-    expect(value).to.be.NaN;
-}
-
-function expectfalsy( value ) {
-    expect( !! value ).to.be.false;
-}
-
-function expectfalse(value) {
-    expect(value).to.be.false;
-}
-
-function expecttrue(value) {
-    expect(value).to.be.true;
-}
-
-function expecttruthy(value) {
-    expect( !! value ).to.be.true;
-}
-
-function expecttype(type, value) {
-    expect(value).to.be.a(type);
-} 
-
-const expectarray = expecttype.bind(null, 'array');
-const expectfunction = expecttype.bind(null, 'function');
-const expectnumber = expecttype.bind(null, 'number');
-const expectstring = expecttype.bind(null, 'string');
-const expectobject = expecttype.bind(null, 'object');
-const expectboolean = expecttype.bind(null, 'boolean');
-const expectsymbol = expecttype.bind(null, 'symbol');
