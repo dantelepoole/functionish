@@ -66,6 +66,7 @@ module.exports.merge = require('./merge');
 module.exports.none = require('./none');
 module.exports.noop = require('./noop');
 module.exports.not = require('./not');
+module.exports.notarray = require('./notarray');
 module.exports.notfunction = require('./notfunction');
 module.exports.notinteger = require('./notinteger');
 module.exports.notiterable = require('./notiterable');
