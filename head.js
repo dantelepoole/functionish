@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * Return the first item in *indexable* or `undefined` if *indexable* is empty.
+ * Return the first item in *indexable* or `undefined` if *indexable* is empty of if it is not indexable.
  * 
  * @example
  *     
