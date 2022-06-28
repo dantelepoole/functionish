@@ -4,6 +4,8 @@
 
 'use strict';
 
+const EMPTY = Symbol();
+
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
  * invocations, the cached result is returned without calling *func* again.
@@ -17,12 +19,9 @@
  */
 module.exports = function once(func) {
 
-    let cache = undefined;
+    let returnvalue = EMPTY;
 
     return function oncefunction(...args) {
-
-        if (cache === undefined) cache = { value:func(...args) };
-
-        return cache.value;
+        return (returnvalue !== EMPTY) ? returnvalue : (returnvalue = func(...args));
     }
 }
