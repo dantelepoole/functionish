@@ -1,6 +1,7 @@
 /**
  * @module isobject
  */
+
 'use strict';
 
 /**
