@@ -4,8 +4,6 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-
 /**
  * Return a function that passes its arguments to each *clause* and returns `true` if and only if each *clause*
  * returns a truthy false. Otherwise, it returns `false`.
