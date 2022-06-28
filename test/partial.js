@@ -1,23 +1,32 @@
 const expect = require('chai').expect;
 const partial = require('../partial');
 
-function sum(a,b) {
-    return (a+b);
-}
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
 
-function returnthis() {
-    return this;
-}
+const sum = spy(
+    function sum(a,b) {
+        return (a+b);
+    }
+)
 
-function returnarguments(...args) {
-    return args;
-}
+const returnthis = spy(
+    function returnthis() {
+        return this;
+    }
+)
+
+const returnarguments = spy(
+    function returnarguments(...args) {
+        return args;
+    }
+)
 
 describe(`partial()`, function() {
 
     beforeEach(
         function() {
-
+            sandbox.resetHistory();
         }
     )
 
@@ -27,26 +36,42 @@ describe(`partial()`, function() {
         }
     )
 
-    it(`should return a bound function`,
-        function () {
-            const increment = partial(sum, 1);
-            const isbound = increment.name.startsWith('bound ');
-            expect( isbound ).to.be.true;
-        }
-    )
+    describe(`the partiallly applied function`, function() {
 
-    it(`should return a function whose 'this' is the 'global' object`,
-        function () {
-            const thistest = partial(returnthis);
-            expect( thistest() ).to.be.equal(global);
-        }
-    )
+        it(`should invoke the target function`,
+            function () {
 
-    it(`should return a function that receives its own arguments prepended by the second and further arguments passed to partial()`,
-        function () {
-            const argumentstest = partial(returnarguments, 42, 33);
-            const result = argumentstest('foobar');
-            expect( result ).to.be.deep.equal([42,33,'foobar']);
-        }
-    )
+                const increment = partial(sum, 1);
+                const result = increment(42);
+                expect(result).to.equal(43);
+                expect(sum.callCount).to.equal(1);
+            }
+        )
+
+        it(`should invoke the target function with the bound arguments followed by its own arguments`,
+            function () {
+                const reflectargs = partial(returnarguments, 1,2,3);
+                const result = reflectargs(4,5,6);
+                expect(result).to.deep.equal([1,2,3,4,5,6]);
+                expect(returnarguments.calledOnceWith(1,2,3,4,5,6)).to.be.true;
+            }
+        )
+
+        it(`should propagate a custom 'this'-object to the target function`,
+            function () {
+                const that = {};
+                const reflectthis = partial(returnthis, 1,2,3);
+
+                let result = reflectthis.call(that, 4,5,6);
+                expect(result).to.equal(that);
+                expect(returnthis.calledOnceWith(1,2,3,4,5,6)).to.be.true;
+
+                sandbox.resetHistory();
+
+                result = reflectthis.bind(that, 4,5)(6);
+                expect(result).to.equal(that);
+                expect(returnthis.calledOnceWith(1,2,3,4,5,6)).to.be.true;
+            }
+        )
+    })
 })
