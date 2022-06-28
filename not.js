@@ -33,6 +33,6 @@ module.exports = not;
 function not(expression) {
     
     return (typeof expression === 'function') 
-         ? function _not(...args) { return ! expression(...args) }
+         ? function complement(...args) { return ! expression(...args) }
          : (! expression);
 }
