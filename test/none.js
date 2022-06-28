@@ -1,158 +1,90 @@
 const expect = require('chai').expect;
 const none = require('../none');
+const range = require('../range');
+
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
 
 const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);
 
-let callcount = 0;
-function isnumber(x) { callcount += 1; return typeof x ==='number'; };
-function isstring(x) { callcount += 1; return typeof x === 'string' };
-function isgreaterthan(num, x) { callcount += 1; return (x > num) };
+const isnumber = spy( function isnumber(x) { return typeof x ==='number'; } );
+const isstring = spy( function isstring(x) { return typeof x === 'string' } );
 
-const markerobject = Object.freeze({});
-const markerarray = Object.freeze([]);
-const markersymbol = Symbol();
+function isgreaterthan(num) {
+    return spy(
+        function(x) {
+            return (num > x);
+        }
+    )
+}
 
 describe(`none()`, function() {
 
     beforeEach(
         function() {
-            callcount = 0;
+            sandbox.resetHistory();
         }
     )
 
-    it('should return true for an empty list argument',
+    it('should return true for an empty list',
         function() {
             expect( none(isnumber, []) ).to.be.true;
         }
     )
 
-    it('should return true if its predicate argument returns false for each item in the list',
+    it('should return true if the predicate returns false for each item in the list',
         function() {
             expect( none(isstring, numbers1to10) ).to.be.true;
         }
     )
 
-    it('should return false if its predicate argument returns true for one item in the list',
+    it('should return false if the predicate returns true for one or more items in the list',
         function() {
-
-            const isgreaterthan9 = isgreaterthan.bind(null, 9);
-            expect( none(isgreaterthan9, numbers1to10) ).to.be.false;
+            expect( none(isgreaterthan(9), numbers1to10) ).to.be.false;
+            expect( none(isgreaterthan(3), numbers1to10) ).to.be.false;
         }
     )
 
-    it('should run its predicate argument once for each item in the list if the predicate returns false for each item',
+    it('should call the predicate once for each item in the list if the predicate returns false for each item',
         function() {
-            const result = none(isstring, numbers1to10);
-            expect( result ).to.be.true;
-            expect( callcount ).to.be.equal(10);
+            none(isstring, numbers1to10);
+            expect( isstring.callCount ).to.be.equal(10);
         }
     )
 
     it('should be short-circuited',
         function() {
-            const isgreaterthan4 = isgreaterthan.bind(null, 4);
-            const result = none(isgreaterthan4, numbers1to10);
-            expect( result ).to.be.false;
-            expect( callcount ).to.be.equal(5);
+            const isgreaterthan2 = isgreaterthan(2);
+            none(isgreaterthan2, numbers1to10);
+            expect( isgreaterthan2.callCount ).to.be.equal(1);
+        }
+    )
+
+    it('should accept any iterable for the list',
+        function() {
+            expect( none(isstring, range(10)) ).to.be.true;
         }
     )
 
     it('should be curried with arity 2',
         function () {
-            let result = none(isstring);
-            expect(result).to.be.a('function');
-            result = result(numbers1to10)
-            expect(result).to.be.true;
+            const curried = none(isstring);
+            expect(curried).to.be.a('function');
+            expect( curried(numbers1to10) ).not.to.be.a('function');
+            expect( curried(numbers1to10) ).to.be.true;
         }
     )
 
-    it('should throw if its first argument is not a function',
+    it('should throw if the predicate is not a function',
         function () {
             expect( () => none(42, [1,2,3]) ).to.throw();
         }
     )
 
-    it('should throw if its second argument is not an array',
+    it('should throw if the list is not iterable',
         function () {
             expect( () => none(isnumber, 42) ).to.throw();
         }
     )
 
 })
-
-function countarguments(...args) {
-    return args.length;
-}
-
-function returnarguments(...args) {
-    return args;
-}
-
-function expecttothrow(func, ...args) {
-    expect( () => func(...args) ).to.throw();
-}
-
-function expectnottothrow(func, ...args) {
-    expect( () => func(...args) ).to.not.throw();
-}
-
-function expectequal(value1, value2) {
-    expect(value1).to.be.equal(value2);
-}
-
-function expectdeepequal(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-}
-
-function expectnotequal(value1, value2) {
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnotdeepequal(value1, value2) {
-    expect(value1).to.be.not.deep.equal(value2);
-}
-
-function expectclone(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnull(value) {
-    expect(value).to.be.null;
-}
-
-function expectundefined(value) {
-    expect(value).to.be.undefined;
-}
-
-function expectnan(value) {
-    expect(value).to.be.NaN;
-}
-
-function expectfalsy( value ) {
-    expect( !! value ).to.be.false;
-}
-
-function expectfalse(value) {
-    expect(value).to.be.false;
-}
-
-function expecttrue(value) {
-    expect(value).to.be.true;
-}
-
-function expecttruthy(value) {
-    expect( !! value ).to.be.true;
-}
-
-function expecttype(type, value) {
-    expect(value).to.be.a(type);
-} 
-
-const expectarray = expecttype.bind(null, 'array');
-const expectfunction = expecttype.bind(null, 'function');
-const expectnumber = expecttype.bind(null, 'number');
-const expectstring = expecttype.bind(null, 'string');
-const expectobject = expecttype.bind(null, 'object');
-const expectboolean = expecttype.bind(null, 'boolean');
-const expectsymbol = expecttype.bind(null, 'symbol');
