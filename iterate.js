@@ -4,46 +4,43 @@
 
 'use strict';
 
+const ERR_BAD_LIST = `IterateError~The list has type %s. Expected an object with a forEach() method or an iterable object.`;
+
+const fail = require('./fail');
+const isiterable = require('./isiterable');
+const typeorclass = require('./typeorclass');
 const unary = require('./unary');
 
 /**
- * Functional variant of {@link external:Array.prototype.forEach Array.prototype.forEach()}. If *iterable* has a
- * `forEach()` method, invoke it with *func*. Otherwise, assume *iterable* is an iterable object and invoke *func* with
- * each item that *iterable* produces.
+ * Functional variant of {@link external:Array.prototype.forEach Array.prototype.forEach()}. If *list* has a
+ * `forEach()` method, invoke it with *func*. Otherwise, assume *list* is an iterable object and invoke *func* with
+ * each item that *list* produces. If *list* has no forEach() method and it is not iterable, an error is thrown.
  * 
- * *Important:* the *func* function is coerced to unary arity before it is passed to *iterable*'s `forEach()` method.
+ * *Important:* the *func* function is coerced to unary arity before it is passed to *list*'s `forEach()` method.
  * This means that *func* will only ever receive a single argument (the item being iterated), regardless of how many
- * arguments *iterable*'s `forEach()` method actually passes.
+ * arguments *list*'s `forEach()` method actually passes.
  * 
- * `iterate()` is curried by default.
+ * `list()` is curried by default with binary arity.
  * 
  * @example
  *     
  * const iterate = require('functionish/iterate');
  * 
- * const printdouble = x => console.log( (x*2) );
- * 
- * iterate(printdouble, [1,2,3]); // prints `2`, `4` and `6`
+ * iterate(console.log, [1,2,3]); // prints `2`, `4` and `6`
  *     
- * const printdoubleproperty = entry => console.log( entry[0] + ': ' + (entry[1] * 2) );
- * const obj = { a:42, b:30 }
- * 
- * iterate(printdoubleproperty, obj); // prints `a:84` and `b:60`
- * 
  * @func iterate
  * @see {@link external:Array.prototype.forEach Array.prototype.forEach()}
  * @param {function} func The function to apply to each item in *iterable*
- * @param {iterable} iterable An iterable object producing items to apply *func* to
+ * @param {iterable} list An iterable object producing items to apply *func* to or an object with a `forEach()` method
  */
 module.exports = require('./curry2')(
 
-    function iterate(func, iterable) {
+    function iterate(func, list) {
 
-        return (typeof iterable?.forEach === 'function') ? iterable.forEach( unary(func) )
-             : iterateiterable(func, iterable);
+        if(typeof list?.forEach === 'function') list.forEach( unary(func) );
+
+        else if( isiterable(list) ) for(const item of list) func(item);
+
+        else fail(ERR_BAD_LIST, typeorclass(list));
     }
 )
-
-function iterateiterable(func, iterable) {
-    for( const item of iterable ) func(item);
-}
