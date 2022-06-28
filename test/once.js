@@ -50,7 +50,7 @@ describe(`once()`, function() {
             }
         )
 
-        it(`should return the initial return value on subsequent call, regardless of its arguments`,
+        it(`should return the initial return value on subsequent calls, regardless of its arguments`,
             function () {
                 const sumonce = once(sum);
                 
