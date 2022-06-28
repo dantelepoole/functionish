@@ -7,7 +7,6 @@
 const ERR_BAD_FUNCTION = `ComposeError~The function at index %d has type %s. Expected a function.`;
 
 const fail = require('./fail');
-const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 const id = function composition(x) { return x }
