@@ -1,10 +1,6 @@
 const expect = require('chai').expect;
 const isnull = require('../isnull');
 
-const markerobject = Object.freeze({});
-const markerarray = Object.freeze([]);
-const markersymbol = Symbol();
-
 describe(`isnull`, function() {
 
     beforeEach(
@@ -13,98 +9,24 @@ describe(`isnull`, function() {
         }
     )
 
-    it(`should return true if and only if its argument is null`,
+    it(`should return true if its argument is null`,
         function () {
-            expecttrue( isnull(null) );
-
-            expectfalse( isnull() );
-            expectfalse( isnull(undefined) );
-            expectfalse( isnull('null') );
-            expectfalse( isnull(0) );
-            expectfalse( isnull(-0) );
-            expectfalse( isnull(NaN) );
-            expectfalse( isnull(0n) );
-            expectfalse( isnull([]) );
-            expectfalse( isnull({}) );
-            expectfalse( isnull(()=>{}) );
+            expect( isnull(null) ).to.be.true;
         }
     )
 
+    it(`should return false if its argument is not null`,
+        function () {
+            expect( isnull() ).to.be.false;
+            expect( isnull(undefined) ).to.be.false;
+            expect( isnull('null') ).to.be.false;
+            expect( isnull(0) ).to.be.false;
+            expect( isnull(-0) ).to.be.false;
+            expect( isnull(NaN) ).to.be.false;
+            expect( isnull(0n) ).to.be.false;
+            expect( isnull([]) ).to.be.false;
+            expect( isnull({}) ).to.be.false;
+            expect( isnull(()=>{}) ).to.be.false;
+        }
+    )
 })
-
-function countarguments(...args) {
-    return args.length;
-}
-
-function returnarguments(...args) {
-    return args;
-}
-
-function expecttothrow(func, ...args) {
-    expect( () => func(...args) ).to.throw();
-}
-
-function expectnottothrow(func, ...args) {
-    expect( () => func(...args) ).to.not.throw();
-}
-
-function expectequal(value1, value2) {
-    expect(value1).to.be.equal(value2);
-}
-
-function expectdeepequal(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-}
-
-function expectnotequal(value1, value2) {
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnotdeepequal(value1, value2) {
-    expect(value1).to.be.not.deep.equal(value2);
-}
-
-function expectclone(value1, value2) {
-    expect(value1).to.be.deep.equal(value2);
-    expect(value1).to.be.not.equal(value2);
-}
-
-function expectnull(value) {
-    expect(value).to.be.null;
-}
-
-function expectundefined(value) {
-    expect(value).to.be.undefined;
-}
-
-function expectnan(value) {
-    expect(value).to.be.NaN;
-}
-
-function expectfalsy( value ) {
-    expect( !! value ).to.be.false;
-}
-
-function expectfalse(value) {
-    expect(value).to.be.false;
-}
-
-function expecttrue(value) {
-    expect(value).to.be.true;
-}
-
-function expecttruthy(value) {
-    expect( !! value ).to.be.true;
-}
-
-function expecttype(type, value) {
-    expect(value).to.be.a(type);
-} 
-
-const expectarray = expecttype.bind(null, 'array');
-const expectfunction = expecttype.bind(null, 'function');
-const expectnumber = expecttype.bind(null, 'number');
-const expectstring = expecttype.bind(null, 'string');
-const expectobject = expecttype.bind(null, 'object');
-const expectboolean = expecttype.bind(null, 'boolean');
-const expectsymbol = expecttype.bind(null, 'symbol');
