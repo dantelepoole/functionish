@@ -4,9 +4,6 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-const partial = require('./partial');
-
 /**
  * Return a function that passes its arguments to each *clause* and returns `true` if any *clause*
  * returns a truthy false. Otherwise, it returns `false`.
@@ -38,8 +35,6 @@ const partial = require('./partial');
  */
 
 module.exports = function or(...clauses) {
-
-    if( clauses.length === 1 && isarray(clauses[0]) ) clauses = clauses[0];
 
     return function _or(...args) {
 

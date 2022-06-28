@@ -1,14 +1,14 @@
-const or = require('../or');
 const expect = require('chai').expect;
+const or = require('../or');
 
-let callcount = 0;
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
 
-const isnumber = x => (callcount +=1, typeof x === 'number');
-const isstring = x => (callcount +=1, typeof x === 'string');
-const iseven = x => (callcount +=1, (x%2) === 0);
-const isodd = x => (callcount +=1, Math.abs(x%2) === 1);
-const ispositive = x => (callcount +=1, (x >= 0));
-const isnegative = x => (callcount +=1, (x < 0));
+const isstring = spy( x => typeof x === 'string');
+const iseven = spy( x => (x%2) === 0);
+const isodd = spy( x => Math.abs(x%2) === 1);
+const ispositive = spy( x => (x >= 0));
+const isnegative = spy( x => (x < 0));
 
 const isoddorpositivenumber = or(isodd, ispositive);
 
@@ -16,67 +16,66 @@ describe('or()', function() {
 
     beforeEach(
         function() {
-            callcount = 0;
+            sandbox.resetHistory();
         }
     )
 
-    it('should return a function that returns a boolean', 
+    it('should return a boolean', 
         function() {
             expect( isoddorpositivenumber ).to.be.a('function');
-            expect( isoddorpositivenumber(2) ).to.be.a('boolean');
-            expect( isoddorpositivenumber(1) ).to.be.a('boolean');
         }
     )
 
-    it('should return true if at least one clause returns true', 
-        function() {
-            expect( isoddorpositivenumber(2) ).to.be.true;
-            expect( isoddorpositivenumber(-1) ).to.be.true;
-        }
-    )
+    describe('the function returned by or()', function() {
 
-    it('should call each clause once as long as they return false', 
-        function() {
-            expect( isoddorpositivenumber(-2) ).to.be.false;
-            expect( callcount ).to.be.equal(2);
-        }
-    )
+        it('should return a boolean', 
+            function() {
+                expect( isoddorpositivenumber(2) ).to.be.a('boolean');
+                expect( isoddorpositivenumber(1) ).to.be.a('boolean');
+            }
+        )
 
-    it('should be short-circuited', 
-        function() {
-            let result = or(iseven, isnegative)(2);
-            expect(result).to.be.true;
-            expect(callcount).to.be.equal(1);
+        it('should return true if at least one clause returns true', 
+            function() {
+                expect( isoddorpositivenumber(2) ).to.be.true;
+                expect( isoddorpositivenumber(-1) ).to.be.true;
+            }
+        )
 
-            callcount = 0;
-            result = or(isodd, ispositive)(2);
-            expect(result).to.be.true;
-            expect(callcount).to.be.equal(2);
+        it('should call each clause once as long as they return false', 
+            function() {
+                expect( isoddorpositivenumber(-2) ).to.be.false;
+                expect( isodd.callCount ).to.equal(1);
+                expect( ispositive.callCount).to.equal(1);
+            }
+        )
 
-            callcount = 0;
-            result = or(isstring, ispositive)(-42);
-            expect(result).to.be.false;
-            expect(callcount).to.be.equal(2);
-        }
-    )
+        it('should be short-circuited', 
+            function() {
+                let result = or(iseven, isnegative)(2);
+                expect(iseven.calledOnce).to.be.true;
+                expect(isnegative.called).to.be.false;
+
+                sandbox.resetHistory();
+
+                result = or(isodd, ispositive)(2);
+                expect(isodd.calledOnce).to.be.true;
+                expect(ispositive.calledOnce).to.be.true;
+
+                sandbox.resetHistory();
+
+                result = or(isstring, ispositive)(-42);
+                expect(isstring.calledOnce).to.be.true;
+                expect(ispositive.calledOnce).to.be.true;
+            }
+        )
 
 
-    it('should return false if no clauses or arguments are passed', 
-        function() {
-            expect( or()() ).to.be.false;
-        }
-    )
+        it('should return false if no clauses or arguments are passed', 
+            function() {
+                expect( or()() ).to.be.false;
+            }
+        )
 
-    it('should return false if passed an empty array',
-        function() {
-            expect( or([])() ).to.be.false;
-        }
-    )
-
-    it('can be called as a unary function or a variadic function',
-        function() {
-            expect( or( [iseven, ispositive] )(2) ).to.be.true;
-            expect( or( iseven, ispositive )(2) ).to.be.true;
-        }
-    )
+    })
 })
