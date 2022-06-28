@@ -10,9 +10,8 @@ const fail = require('./fail');
 const typeorclass = require('./typeorclass');
 
 /**
- * Bind the *args* to the *func*-function. This function simply calls *func*'s `bind()` method, but does not provide
- * for also passing a value for *func*'s `this`. However, the returned partially applied function may be called with
- * (or bound to) a custom `this`.
+ * Bind the *args* to the *func*-function. Although `partial()` does not allow you to also pass a custom `this`-object,
+ *  the returned partially applied function itself may still be called with (or bound to) a custom `this`.
  *  
  * @example
  * 
