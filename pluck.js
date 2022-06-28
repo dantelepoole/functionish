@@ -61,7 +61,8 @@ module.exports = require('./curry2')(
         const target = source?.[key];
         
         return (nextpath === EMPTY_STRING) ? target
-             : notobject(target) ? TARGET_NOT_FOUND 
+             : (target === null) ? TARGET_NOT_FOUND
+             : (typeof target !== 'object') ? TARGET_NOT_FOUND
              : pluck(nextpath, target);
     }
 
