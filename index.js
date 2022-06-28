@@ -78,6 +78,7 @@ module.exports.notiterable = require('./notiterable');
 module.exports.notnan = require('./notnan');
 module.exports.notnull = require('./notnull');
 module.exports.notnumber = require('./notnumber');
+module.exports.notobject = require('./notobject');
 module.exports.once = require('./once');
 module.exports.or = require('./or');
 module.exports.parsejson = require('./parsejson');
