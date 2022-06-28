@@ -4,8 +4,6 @@
 
 'use strict';
 
-const notnan = x => ! Number.isNaN(x);
-
 /**
  * Return `true` if *value* has type `number` *AND* it is not `NaN`.
  * 
@@ -14,5 +12,5 @@ const notnan = x => ! Number.isNaN(x);
  * @returns {boolean}
  */
 module.exports = function isnumber(value) {
-    return (typeof value === 'number') && notnan(value);
+    return (typeof value === 'number') && (! Number.isNaN(value));
 }
