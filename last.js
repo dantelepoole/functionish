@@ -7,10 +7,10 @@
 const isnumber = require('./isnumber');
 
 /**
- * Return the last item in *iterable* or `undefined` if *iterable* is empty.
+ * Return the last item in *indexable* or `undefined` if *indexable* is empty or if it is not indexable.
  * 
  * @func last
- * @param {iterable} iterable The iterable to get the last item from
+ * @param {indexable} indexable The indexable object to retrieve the last item from
  * @returns {any}
  * @example
  *     
@@ -21,15 +21,6 @@ const isnumber = require('./isnumber');
  * last('foobar'); // returns 'r'
  * 
  */
-module.exports = function last(iterable) {
-    return isnumber(iterable?.length) ? iterable[iterable.length-1] : lastiterable(iterable);
-}
-
-function lastiterable(iterable) {
-
-    let value = undefined;
-
-    for(const item of iterable) value = item;
-
-    return value;
+module.exports = function last(indexable) {
+    return (typeof indexable?.length === 'number') ? indexable[indexable.length - 1] : undefined;
 }
