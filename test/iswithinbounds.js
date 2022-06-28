@@ -10,6 +10,7 @@ describe(`iswithinbounds()`, function() {
         function () {
             const curried = iswithinbounds(testarray);
             expect(curried).to.be.a('function');
+            expect( curried(3) ).not.to.be.a('function');
             expect( curried(3) ).to.be.true;
         }
     )
@@ -51,7 +52,7 @@ describe(`iswithinbounds()`, function() {
         }
     )
 
-    it(`should work any argument that has a numeric 'length'-property`,
+    it(`should work with any indexable object that has a numeric 'length'-property`,
         function () {
             const indexable = { length:3 };
 
@@ -62,7 +63,7 @@ describe(`iswithinbounds()`, function() {
         }
     )
 
-    it(`should always return false for an argument that does not have a 'length'-property`,
+    it(`should return false for an object that does not have a 'length'-property`,
         function () {
             const indexable = {};
 
@@ -73,10 +74,19 @@ describe(`iswithinbounds()`, function() {
         }
     )
 
-    it(`should throw if the argument is null or undefined`,
+    it(`should use indexable as the length if it is a number`,
         function () {
-            expect( () => iswithinbounds(null, 3) ).to.throw();
-            expect( () => iswithinbounds(undefined, 3) ).to.throw();
+            expect( iswithinbounds(42, -1) ).to.be.false;
+            expect( iswithinbounds(42, 42) ).to.be.false;
+            expect( iswithinbounds(42, 0) ).to.be.true;
+            expect( iswithinbounds(42, 41) ).to.be.true;
+        }
+    )
+
+    it(`should return false if the argument is null or undefined`,
+        function () {
+            expect( iswithinbounds(null, 3) ).to.be.false;
+            expect( iswithinbounds(undefined, 3) ).to.be.false;
         }
     )
 })
