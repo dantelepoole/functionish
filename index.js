@@ -81,6 +81,7 @@ module.exports.notnumber = require('./notnumber');
 module.exports.notobject = require('./notobject');
 module.exports.notprimitive = require('./notprimitive');
 module.exports.notpromise = require('./notpromise');
+module.exports.notstring = require('./notstring');
 module.exports.once = require('./once');
 module.exports.or = require('./or');
 module.exports.parsejson = require('./parsejson');
