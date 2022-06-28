@@ -4,7 +4,17 @@
 
 'use strict';
 
-const idfunctionpipe = function functionpipe(x) { return x; }
+const ERR_BAD_FUNCTION = `PipeError~The function at index %d has type %s. Expected a function.`;
+
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
+
+const id = function composition(x) { return x }
+
+const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
+const validatefunc = (index, func) => { if( typeof func !== 'function') raisebadfunction(index, func) };
+const validatefuncs = funcs => { for(let i = 0; i < funcs.length; i += 1) validatefunc(i, funcs[i]) };
+
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
  * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
@@ -30,14 +40,16 @@ const idfunctionpipe = function functionpipe(x) { return x; }
 
 module.exports = function pipe(...funcs) {
 
-    if( funcs.length === 0 ) return idfunctionpipe;
+    if( funcs.length === 0 ) return id;
 
-    return function functionpipe(...args) {
+    validatefuncs(funcs);
+
+    return function pipeline(...args) {
 
         let result = funcs[0](...args);
-        
-        for( let index = 1; index < funcs.length; index += 1 ) result = funcs[index](result);
 
+        for(let i = 1; i < funcs.length; i += 1) result = funcs[i](result);
+        
         return result;
 
     }
