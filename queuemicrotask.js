@@ -16,7 +16,5 @@ const partial = require('./partial');
  */
 module.exports = function queuemicrotask(func, ...args) {
 
-    queueMicrotask( 
-        partial(func, ...args)
-    );
+    queueMicrotask( partial(func, ...args) )
 }
