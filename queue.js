@@ -7,7 +7,6 @@
 const classname = require('./classname');
 const hasitems = require('./hasitems');
 const isarray = require('./isarray');
-const partial = require('./partial');
 
 /**
  * Simple queue implementation. Return a queue object with four methods and one field:
@@ -61,10 +60,10 @@ function createqueue() {
 
     return {
 
-        clear   : partial(clear, q),
-        dequeue : partial(dequeue, q),
-        enqueue : partial(enqueue, q),
-        peek    : partial(peek, q),
+        clear   : clear.bind(null, q),
+        dequeue : dequeue.bind(null, q),
+        enqueue : enqueue.bind(null, q),
+        peek    : peek.bind(null, q),
 
         get length() {
             return (q.tailindex - q.headindex);
@@ -79,7 +78,12 @@ function clear(q) {
 
 function enqueue(q, ...items) {
 
-    for(let index = 0; index < items.length; index++) q.itemlist[q.tailindex+index] = items[index];
+    let index = 0;
+
+    while(index < items.length) {
+        q.itemlist[q.tailindex + index] = items[index];
+        index += 1;
+    }
 
     q.tailindex += items.length;
 }
