@@ -15,7 +15,7 @@ describe(`queue()`, function() {
 
     it(`should initialize the returned queue with its arguments`,
         function () {
-            const q = queue( [42, 'foobar', 3] );
+            const q = queue( 42, 'foobar', 3 );
 
             expect(q.length).to.be.equal(3);
             expect(q.dequeue()).to.be.equal(42);
@@ -29,7 +29,7 @@ describe(`queue()`, function() {
 
         it(`should purge all items in the queue`,
             function () {
-                const q = queue( [1,2,3] );
+                const q = queue( 1,2,3 );
                 expect(q.length).to.be.equal(3);
                 expect(q.peek()).to.be.equal(1);
 
@@ -50,7 +50,7 @@ describe(`queue()`, function() {
     
     describe(`queue.enqueue()`, function() {
     
-        it(`should add its argument to the end of the queue`,
+        it(`should add its arguments to the end of the queue`,
             function () {
                 const symbol = Symbol();
                 const q = queue();
@@ -60,9 +60,7 @@ describe(`queue()`, function() {
                 expect( q.length ).to.be.equal(1);
                 expect( q.dequeue() ).to.be.equal(symbol);
     
-                q.enqueue(symbol);
-                q.enqueue('foobar');
-                q.enqueue(42);
+                q.enqueue(symbol, 'foobar', 42);
     
                 expect( q.length ).to.be.equal(3);
     
@@ -123,9 +121,10 @@ describe(`queue()`, function() {
     
                 const bound_enqueue = enqueue.bind({});
                 expect(q.length).to.be.equal(0);
-                bound_enqueue(symbol);
-                expect(q.length).to.be.equal(1);
+                bound_enqueue(symbol, 42);
+                expect(q.length).to.be.equal(2);
                 expect(q.dequeue()).to.be.equal(symbol);
+                expect(q.dequeue()).to.be.equal(42);
     
             }
         )
@@ -141,7 +140,7 @@ describe(`queue()`, function() {
     
         it(`should reflect the number of items in a queue after each operation on the queue`,
             function () {
-                const q = queue( [42, 'foobar', 3] );
+                const q = queue( 42, 'foobar', 3 );
                 expect(q.length).to.be.equal(3);
                 q.dequeue();
                 expect(q.length).to.be.equal(2);
@@ -156,8 +155,8 @@ describe(`queue()`, function() {
                 expect(q.length).to.be.equal(0);
                 q.dequeue();
                 expect(q.length).to.be.equal(0);
-                q.enqueue('foobar');
-                expect(q.length).to.be.equal(1);
+                q.enqueue('foobar', 42);
+                expect(q.length).to.be.equal(2);
     
                 expect( queue().length ).to.be.equal(0);
             }
@@ -178,7 +177,7 @@ describe(`queue()`, function() {
     
         it(`should return the item at the head of a queue without mutating the queue`,
             function () {
-                const q = queue( [42] );
+                const q = queue( 42 );
     
                 expect( q.length ).to.be.equal(1);
                 expect( q.peek() ).to.be.equal(42);
@@ -212,7 +211,7 @@ describe(`queue()`, function() {
         it(`should not depend on its runtime 'this'`,
             function () {
                 const symbol = Symbol();
-                const q = queue( [symbol] );
+                const q = queue( symbol );
                 const peek = q.peek;
     
                 expect(q.length).to.be.equal(1);

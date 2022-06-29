@@ -4,9 +4,7 @@
 
 'use strict';
 
-const classname = require('./classname');
-const hasitems = require('./hasitems');
-const isarray = require('./isarray');
+const NODE_NONE = undefined;
 
 /**
  * Simple queue implementation. Return a queue object with four methods and one field:
@@ -24,7 +22,7 @@ const isarray = require('./isarray');
  * 
  * const queue = require('functionish/queue');
  * 
- * const foundation = queue( ['Hari Seldon', 'Salvor Hardin', 'Hober Mallow'] );
+ * const foundation = queue( 'Hari Seldon', 'Salvor Hardin', 'Hober Mallow' );
  * 
  * const { enqueue, dequeue, peek, clear } = foundation;
  * 
@@ -36,79 +34,79 @@ const isarray = require('./isarray');
  * dequeue(); // returns `undefined`
  * 
  * @func queue
- * @param  {any[]} [initialitems] The initial items to add to the queue
+ * @param  {...any[]} [initialitems] The initial items to add to the queue
  * @returns {object} A queue object
  */
-module.exports = function queue(initialitems=[]) {
-
-    checkarray(initialitems);
-
-    const queue = createqueue();
-
-    hasitems(initialitems) && queue.enqueue(...initialitems);
-
-    return queue;
+module.exports = function queue(...initialitems) {
+    return createqueue(initialitems);
 }
 
-function createqueue() {
+function createqueue(initialitems) {
 
-    const q = {
-        headindex : 0,
-        itemlist  : {},
-        tailindex : 0
+    const nodelist = {
+        head   : NODE_NONE,
+        length : initialitems.length,
+        tail   : NODE_NONE,
     }
+
+    if(initialitems.length > 0) initializequeue(nodelist, initialitems);
 
     return {
 
-        clear   : clear.bind(null, q),
-        dequeue : dequeue.bind(null, q),
-        enqueue : enqueue.bind(null, q),
-        peek    : peek.bind(null, q),
+        clear   : clear.bind(null, nodelist),
+        dequeue : dequeue.bind(null, nodelist),
+        enqueue : enqueue.bind(null, nodelist),
+        peek    : peek.bind(null, nodelist),
 
         get length() {
-            return (q.tailindex - q.headindex);
+            return nodelist.length;
         }
     }
 }
 
-function clear(q) {
-    q.itemlist = {};
-    q.headindex = q.tailindex = 0;
+function initializequeue(nodelist, initialitems) {
+
+    const itemcount = initialitems.length;
+
+    let node = nodelist.head = { value:initialitems[0], next:undefined }
+
+    for(let i = 1; i < itemcount; i += 1) node = node.next = { value:initialitems[i], next:undefined }
+
+    nodelist.tail = node;
+
 }
 
-function enqueue(q, ...items) {
+function clear(nodelist) {
+    nodelist.head = NODE_NONE;
+    nodelist.tail = NODE_NONE;
+    nodelist.length = 0;
+}
 
-    let index = 0;
+function enqueue(nodelist, ...items) {
 
-    while(index < items.length) {
-        q.itemlist[q.tailindex + index] = items[index];
-        index += 1;
+    for(let i = 0; i < items.length; i += 1) {
+
+        if(nodelist.tail === NODE_NONE) nodelist.head = nodelist.tail = { value:items[i], next:NODE_NONE }
+        else (nodelist.tail = nodelist.tail.next = {value:items[i], next:NODE_NONE })
     }
 
-    q.tailindex += items.length;
+    nodelist.length += items.length;
 }
 
-function peek(q) {
-    return q.itemlist[q.headindex];
+function peek(nodelist) {
+    return nodelist.head?.value;
 }
 
-function dequeue(q) {
+function dequeue(nodelist) {
 
-    if(q.headindex === q.tailindex) return undefined;
-    
-    const item = q.itemlist[q.headindex];
-    delete q.itemlist[q.headindex];
-    
-    q.headindex += 1;
+    if(nodelist.length === 0) return undefined;
 
-    if(q.headindex === q.tailindex) clear(q);
+    const value = nodelist.head.value;
+    nodelist.head = nodelist.head.next;
 
-    return item;
-}
+    nodelist.length -= 1;
 
-function checkarray(list) {
+    if(nodelist.length === 0) nodelist.tail = nodelist.head = NODE_NONE;
 
-    if( isarray(list) ) return list;
-    
-    throw new TypeError(`queue(): the argument is not an array (${classname(list)})`);
+    return value;
 }
