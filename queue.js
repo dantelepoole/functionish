@@ -22,16 +22,15 @@ const NODE_NONE = undefined;
  * 
  * const queue = require('functionish/queue');
  * 
- * const foundation = queue( 'Hari Seldon', 'Salvor Hardin', 'Hober Mallow' );
+ * const q = queue( 'a', 42, {}, [] );
+ * const { enqueue, dequeue } = q;
  * 
- * const { enqueue, dequeue, peek, clear } = foundation;
- * 
- * dequeue(); // returns 'Hari Seldon';
- * peek(); // returns 'Salvor Hardin;
- * enqueue( 'The Mule', 'Bel riose' );
- * foundation.length; // => 4
- * clear();
- * dequeue(); // returns `undefined`
+ * dequeue(); // returns 'a';
+ * q. peek(); // returns 42;
+ * enqueue( 'foo', 'bar' );
+ * q.clear();
+ * q.length; // returns 4
+ * dequeue(); // returns undefined
  * 
  * @func queue
  * @param  {...any[]} [initialitems] The initial items to add to the queue
