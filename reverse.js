@@ -4,25 +4,28 @@
 
 'use strict';
 
-const isarray = require('./isarray');
+const ERR_BAD_LIST = `ReverseError~The list has type %s. Expected an iterable object.`;
+
+const fail = require('./fail');
+const notiterable = require('./notiterable');
+const typeorclass = require('./typeorclass');
 
 /**
- * Return an iterable object that produces the items from *iterable* in reverse order. Be aware that this function
- * first loads all items into an array before iterating the array in reverse order.
- * 
- * Unlike the `Array.prototype.reverse()` method, this function does not affect the (order of) of the items in the
- * argument if the argument is an array.
+ * Return an iterable object that produces the items from *list* in reverse order, without affecting or altering
+ * *list* itself.
  * 
  * @func reverse
- * @param {iterable} iterable The iterable of items to produce in reverse order
+ * @param {iterable} list An iterable object producing the items to reverse
  * @returns {iterable}
  */
-module.exports = function reverse(iterable) {
+module.exports = function reverse(list) {
+
+    if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
 
     return {
         [Symbol.iterator] : function* () {
 
-            const items = Array.from(iterable);
+            const items = Array.from(list);
             for( let index = items.length - 1; index >= 0; index -= 1) yield items[index];
         }
    }
