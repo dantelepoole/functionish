@@ -7,8 +7,13 @@ describe(`split()`, function() {
         function () {
             const curried = split('a');
             expect(curried).to.be.a('function');
-
             expect( curried('foobar') ).to.be.an('array');
+        }
+    )
+
+    it(`should throw if the source is not a string`,
+        function () {
+            expect( ()=>split('a', {}) ).to.throw();
         }
     )
 

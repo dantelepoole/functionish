@@ -4,14 +4,17 @@
 
 'use strict';
 
-const isstring = require('./isstring');
+const ERR_BAD_SOURCE = `SplitError~The source has type %s. Expected a string.`;
+
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
 
 /**
  * Function variant of {@link external:String.prototype.split String.prototype.split()}.
  * 
- * If *source* is not a string, an empty array is returned.
+ * If *source* is not a string, an error is thrown.
  * 
- * `split()` is curried by default.
+ * `split()` is curried by default with binary arity.
  * 
  * @func split
  * @see {@link external:String.prototype.split String.prototype.split()}
@@ -22,6 +25,9 @@ const isstring = require('./isstring');
 module.exports = require('./curry2')(
 
     function split(separator, source) {
-        return isstring(source) ? source.split(separator) : [];
+
+        if(typeof source !== 'string') fail(ERR_BAD_SOURCE, typeorclass(source));
+
+        return source.split(separator);
     }
 )
