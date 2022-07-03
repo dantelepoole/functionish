@@ -22,19 +22,16 @@ const uniq = require('./uniq');
 
 module.exports = require('./curry2') (
 
-    function symmetricdifference(iterable1, iterable2) {
+    function symmetricdifference(list1, list2) {
     
         return {
             [Symbol.iterator] : function* () {
     
-                const iterable2set = new Set(iterable2);
-                const predicate = partial(diffpredicate, iterable2set);
+                const list2items = new Set(list2);
+                const predicate = partial(diffpredicate, list2items);
 
-                const iterable1diff = filteriterable(predicate, uniq(iterable1));
-                for(const item of iterable1diff) yield item;
-    
-                const iterable2diff = iterable2set.values();
-                for(const item of iterable2diff) yield item;
+                yield* filterlist(predicate, uniq(list1));
+                yield* list2items.values();
             }
         }
     }
@@ -44,11 +41,11 @@ function diffpredicate(diffset, item) {
     return ! diffset.delete(item);
 }
 
-function filteriterable(predicate, iterable) {
+function filterlist(predicate, list) {
     
     return {
         [Symbol.iterator] : function* () {
-            for(const item of iterable) if( predicate(item) ) yield item;
+            for(const item of list) if( predicate(item) ) yield item;
         }
     }
 }

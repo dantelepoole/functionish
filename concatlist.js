@@ -39,8 +39,8 @@ module.exports = require('./curry2') (
 
         return {
             [Symbol.iterator] : function* () {
-                for( const item of list1 ) yield item;
-                for( const item of list2 ) yield item;
+                yield* list1;
+                yield* list2;
             }
         }
     }

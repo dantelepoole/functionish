@@ -52,7 +52,7 @@ function* recursiveflat(depth, iterable) {
     for(const item of iterable) {
 
         if(maxdepth || notiterable(item)) yield item;
-        else for(const subitem of recursiveflat(depth-1, item)) yield subitem;
+        else yield* recursiveflat(depth-1, item);
 
     }
 }
