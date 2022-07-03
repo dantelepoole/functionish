@@ -1,10 +1,10 @@
 /**
- * @module symmetricdifference
+ * @module symdiff
  */
 
 'use strict';
 
-const ERR_BAD_LIST = `SymmetricDifferenceError~The %s list has type %s. Expected an iterable object.`;
+const ERR_BAD_LIST = `SymDiffError~The %s list has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');
 const notiterable = require('./notiterable');
@@ -15,9 +15,9 @@ const typeorclass = require('./typeorclass');
  * by the items from *list1* that are not present in *list2*, in order. The returned iterable will not produce
  * any duplicates. 
  * 
- * `symmetricdifference()` is curried by default with binary arity.
+ * `symdiff()` is curried by default with binary arity.
  * 
- * @func symmetricdifference
+ * @func symdiff
  * @param {iterable} list1 The first iterable
  * @param {iterable} list2 The second iterable
  * @returns {iterable}
@@ -25,7 +25,7 @@ const typeorclass = require('./typeorclass');
 
 module.exports = require('./curry2') (
 
-    function symmetricdifference(list1, list2) {
+    function symdiff(list1, list2) {
     
         if( notiterable(list1) ) fail(ERR_BAD_LIST, 'first', typeorclass(list1));
         else if ( notiterable(list2) ) fail(ERR_BAD_LIST, 'second', typeorclass(list2));
