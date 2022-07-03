@@ -28,24 +28,15 @@ module.exports = require('./curry2') (
             [Symbol.iterator] : function* () {
     
                 const list2items = new Set(list2);
-                const predicate = partial(diffpredicate, list2items);
+                const diffpredicate = item => ! list2items.delete(item);
 
-                yield* filterlist(predicate, uniq(list1));
+                yield* filterlist(diffpredicate, uniq(list1));
                 yield* list2items.values();
             }
         }
     }
 )
 
-function diffpredicate(diffset, item) {
-    return ! diffset.delete(item);
-}
-
-function filterlist(predicate, list) {
-    
-    return {
-        [Symbol.iterator] : function* () {
-            for(const item of list) if( predicate(item) ) yield item;
-        }
-    }
+function* filterlist(predicate, list) {
+    for(const item of list) if( predicate(item) ) yield item;
 }
