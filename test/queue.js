@@ -13,6 +13,13 @@ describe(`queue()`, function() {
         }
     )
 
+    it(`should return an object with the class name 'Queue'`,
+        function () {
+            expect( typeof queue() ).to.equal('object');
+            expect( queue() ).to.be.a('Queue');
+        }
+    )
+
     it(`should initialize the returned queue with its arguments`,
         function () {
             const q = queue( 42, 'foobar', 3 );

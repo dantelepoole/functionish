@@ -4,8 +4,7 @@
 
 'use strict';
 
-const classname = require('./classname');
-const isarray = require('./isarray');
+const STACK_CLASSNAME = 'Stack';
 
 /**
  * Simple stack implementation. Return a stack object with four methods and one field:
@@ -39,26 +38,44 @@ const isarray = require('./isarray');
  * @returns {object} A stack object
  * @throws {TypeError} if *list* is not an array
  */
-module.exports = function stack(list=[]) {
+module.exports = function stack(...initialitems) {
 
-    checkarray(list);
+    const nodes = { head:undefined, length:0 }
 
-    list = list.slice();
+    if(initialitems.length > 0) {
 
-    const stackinstance = {
-        clear : function stackclear() { list.length = 0 },
-        peek  : function stackpeek() { return list[ list.length - 1 ] },
-        pop   : function stackpop() { return list.pop() },
-        push  : function stackpush(...items) { list.push(...items) },
-        get length() { return list.length }
+        for(const item of initialitems) nodes.head = { next:nodes.head, value:item }
+
+        nodes.length += initialitems.length;
     }
 
-    return stackinstance;
-}
+    return {
+        
+        clear : () => (nodes.length = 0, nodes.head = undefined),
+        
+        peek  : () => nodes.head?.value,
+        
+        pop   : () => {
 
-function checkarray(list) {
+            if(nodes.length === 0) return undefined;
+            
+            const value = nodes.head.value;
+            nodes.head = nodes.head.next;
+            
+            nodes.length -= 1;
 
-    if( isarray(list) ) return list;
-    
-    throw new TypeError(`stack(): the argument is not an array (${classname(list)})`);
+            return value;
+        },
+        
+        push(...items) {
+
+            for(const item of items) nodes.head = { next:nodes.head, value:item };
+            
+            nodes.length += items.length;
+        },
+
+        get length() { return nodes.length },
+
+        get [Symbol.toStringTag]() { return STACK_CLASSNAME }
+    }
 }

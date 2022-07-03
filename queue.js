@@ -5,6 +5,7 @@
 'use strict';
 
 const NODE_NONE = undefined;
+const QUEUE_CLASSNAME = 'Queue';
 
 /**
  * Simple queue implementation. Return a queue object with four methods and one field:
@@ -57,9 +58,9 @@ function createqueue(initialitems) {
         enqueue : enqueue.bind(null, nodelist),
         peek    : peek.bind(null, nodelist),
 
-        get length() {
-            return nodelist.length;
-        }
+        get length() { return nodelist.length },
+
+        get [Symbol.toStringTag]() { return QUEUE_CLASSNAME }
     }
 }
 
