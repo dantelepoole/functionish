@@ -30,7 +30,7 @@ describe(`symmetricdifference()`, function() {
         }
     )
 
-    it(`should return an empty iterable if the arguments contain the same items`,
+    it(`should return an empty iterable if both lists contain the same items`,
         function () {
 
             const result = symmetricdifference( [1,2,3], [1,2,3] );
@@ -39,25 +39,21 @@ describe(`symmetricdifference()`, function() {
         }
     )
 
-    it(`should accept iterables for the arguments`,
+    it(`should throw if either list is not iterable`,
         function () {
-
-            const iter1 = iteratorfactory(1,2,3);
-            const iter2 = iteratorfactory(2,3,4);
-
-            const result = symmetricdifference( iter1, iter2 );
-            expect( toarray(result) ).to.be.deep.equal( [1,4] );
+            expect( ()=>symmetricdifference({},[1,2,3]) ).to.throw();
+            expect( ()=>symmetricdifference([1,2,3], {}) ).to.throw();
         }
     )
 
-    it(`should return an iterable producing the items from both arguments that are not present in the other argument`,
+    it(`should return an iterable producing the items from both lists that are not present in the other list`,
         function () {
             const result = symmetricdifference( [1,2,3,4,5], [4,5,6,7,8] );
             expect( toarray(result) ).to.be.deep.equal( [1,2,3,6,7,8] );
         }
     )
 
-    it(`should, if one argument is empty, return an iterable producing all items in the other array, in the same order`,
+    it(`should, if any list is empty, return an iterable producing all items in the other list, in the same order`,
         function () {
             let result = symmetricdifference( [1,2,3,4,5], [] );
             expect( toarray(result) ).to.be.deep.equal( [1,2,3,4,5] );
