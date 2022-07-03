@@ -11,7 +11,7 @@ function iteratorfactory(...items) {
 
     return {
         [Symbol.iterator] : function*() {
-            for(const item of items) yield item;
+            yield* items;
         }
     }
 
