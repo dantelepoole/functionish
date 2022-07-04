@@ -4,49 +4,65 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-const isstring = require('./isstring');
+const ERR_BAD_COUNT = `TakeError~The count %s. Expected a positive integer number.`;
+const ERR_BAD_LIST = `TakeError~The list has type %s. Expected an object with a slice() method or an iterable object.`;
+
+const fail = require('./fail');
+const isinteger = require('./isinteger');
+const isiterable = require('./isiterable');
+const typeorclass = require('./typeorclass');
+
+const issliceable = x => (typeof x?.slice === 'function');
 
 /**
- * Return an array with the first *count* number of items from *iterable*. If *iterable* is a string, a string with
- * the first *count* number of characters from *iterable* is returned instead of an array.
+ * If *list* has a `slice()`, invoke it as `slice(0, *count*)` and return the result. If *list* is an iterable object,
+ * return an iterable object containing the first *count* items produced by *list*. Otherwise, throw an error.
  * 
- * If *count* is negative, an empty array (or string) is returned.
- * 
- * This function calls *iterable*'s `slice()` method if it is an array or a string. Otherwise, it iterates over
- * *iterable* taking only the specified number of items.
- * 
- * `take()` is curried by default.
+ * `take()` is curried by default with binary arity.
  * 
  * @func take
  * @param {number} count The number of items to take from *list*
- * @param {iterable} list The iterable to take the items from
- * @returns {(iterable|string)} A string if *iterable* is a string, otherwise an array.
+ * @param {iterable} list An object with a `slice()` method or an iterable object.
+ * @returns {any}
  */
 module.exports = require('./curry2')(
 
-    function take(count, iterable) {
+    function take(count, list) {
+
+        checkcount(count);
 
         count = Math.max(0, count);
 
-        return isarray(iterable) || isstring(iterable) ? iterable.slice(0, count)
-             : takeiterable(count, iterable);
+        return issliceable(list) ? list.slice(0, count)
+             : isiterable(list) ? takeiterable(count, list)
+             : fail(ERR_BAD_LIST, typeorclass(list));
 
     }
 )
 
-function takeiterable(itemcount, iterable) {
+function checkcount(count) {
 
-    const array = [];
-    let count = 0;
+    if( isinteger(count) && count >= 0 ) return count;
 
-    for( const item of iterable ) {
+    const message = (typeof count === 'number') ? `is ${count}` : `has type ${typeorclass(count)}`;
+    fail(ERR_BAD_COUNT, message);
+}
 
-        if( count >= itemcount ) break;
+function takeiterable(itemcount, list) {
 
-        array.push(item);
-        count += 1;
+    return {
+        [Symbol.iterator] : function* () {
+
+            let counter = 0;
+
+            for(const item of list) {
+                
+                if(counter >= itemcount) break;
+
+                counter += 1;
+
+                yield item;
+            }
+        }
     }
-
-    return array;
 }
