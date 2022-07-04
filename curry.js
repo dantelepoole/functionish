@@ -8,8 +8,8 @@ const fail = require('./fail');
 const typeorclass = require('./typeorclass');
 
 const ARITY_NONE = undefined;
-const ERR_BAD_ARITY = "TypeError~curry(): the arity has type %s. Expected a number.";
-const ERR_BAD_FUNCTION = "TypeError~curry(): the value at '%s' has type %s. Expected a function.";
+const ERR_BAD_ARITY = "CurryError~The arity has type %s. Expected a number.";
+const ERR_BAD_FUNCTION = "CurryError~The value at '%s' has type %s. Expected a function.";
 
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
@@ -27,11 +27,8 @@ const ERR_BAD_FUNCTION = "TypeError~curry(): the value at '%s' has type %s. Expe
  * followed by a key, in which case the key is first resolved against the loaded module object to obtain the function to
  * curry. See the example below.
  * 
- * To add in debugging, `curry()` preserves the name of the target function, but tagged with the label `curry` and
- * the applicable arity. On subsequent invocations of the curried function, the returned function will also be
- * tagged with the label `bound`.
- * 
- * If you bind the curried function to a custom `this`-object, it will be propagated to the target function.
+ * To add in debugging, `curry()` preserves the name of the target function. On subsequent invocations of the curried
+ * function itself, the returned function will also be tagged `bound`.
  * 
  * @example
  * 
@@ -83,13 +80,11 @@ function curry(arity, func) {
     if( arity === ARITY_NONE ) arity = func.length;
     else if( typeof arity !== 'number' ) fail(ERR_BAD_ARITY, typeorclass(arity));
 
-    const curriedname = `${func.name || '<anonymous>'}[curry@${arity}]`;
-
     const curriedfunction = {
-        [curriedname] : function (...args) {
+        [func.name] : function (...args) {
             return (args.length < arity) ? curriedfunction.bind(null, ...args) : func(...args);
         }
-    }[curriedname];
+    }[func.name];
 
     return curriedfunction;
 }

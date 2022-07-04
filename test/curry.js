@@ -109,14 +109,14 @@ describe(`curry()`, function() {
 
     describe(`the curried function`, function() {
 
-        it(`should have a meaningful name`,
+        it(`should preserve the target function's name`,
             function () {
 
                 let curried = curry(2, countargs);
-                expect( curried.name ).to.be.equal(`countargs[curry@2]`);
+                expect( curried.name ).to.be.equal(`countargs`);
 
                 curried = curry(2, (a,b)=>(a+b));
-                expect( curried.name ).to.be.equal(`<anonymous>[curry@2]`);
+                expect( curried.name ).to.be.equal(``);
             }
         )
 
@@ -124,10 +124,10 @@ describe(`curry()`, function() {
             function () {
 
                 let curried = curry(2, countargs);
-                expect( curried(1).name ).to.be.equal(`bound countargs[curry@2]`);
+                expect( curried(1).name ).to.be.equal(`bound countargs`);
 
                 curried = curry(2, (a,b)=>(a+b));
-                expect( curried(1).name ).to.be.equal(`bound <anonymous>[curry@2]`);
+                expect( curried(1).name ).to.be.equal(`bound `);
             }
         )
     })
