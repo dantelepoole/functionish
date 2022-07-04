@@ -4,30 +4,37 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-const isstring = require('./isstring');
+const ERR_BAD_SLICEABLE = `TailError~The argument has type %s. Expected an object with a slice() method or an iterable object.`;
+
+const fail = require('./fail');
+const isiterable = require('./isiterable');
+const typeorclass = require('./typeorclass');
+
+const issliceable = x => (typeof x?.slice === 'function');
 
 /**
- * Return an iterable producing all items from *iterable* except the first one. If *iterable* is an array, return an
- * array. If *iterable* is a string, return a string. Otherwise, return an iterable.
- * 
- * This function calls the `slice()` method of *iterable* if it is a string or an array. Otherwise, it iterates over
- * *iterable*, dropping the first item.
+ * If `list` is an array, a shallow copy of `list` is returned without the first element. If `list` is
+ * a string, a string is returned without the first character. If `list` is an iterable object, return an iterable
+ * object containing all but the first item in *list*. Otherwise, throw an error.
  * 
  * @func tail
  * @see {@link module:head head()}
- * @param {iterable} iterable The iterable of items to return the tail of
- * @returns {(any[]|string|iterable)}
+ * @param {iterable} list An object with a `slice()` method or an iterable object.
+ * @returns {any}
  */
-module.exports = function tail(iterable) {
-    return isarray(iterable) || isstring(iterable) ? iterable.slice(1) : tailiterable(iterable);
+module.exports = function tail(list) {
+
+    return issliceable(list) ? list.slice(1) 
+         : isiterable(list) ? tailiterable(list)
+         : fail(ERR_BAD_SLICEABLE, typeorclass(list));
 }
 
-function tailiterable(iterable) {
+function tailiterable(list) {
 
     return {
-        [Symbol.iterator]() {
-            const iterator = iterable[Symbol.iterator]();
+        [Symbol.iterator] : function () {
+
+            const iterator = list[Symbol.iterator]();
             iterator.next();
 
             return iterator;
