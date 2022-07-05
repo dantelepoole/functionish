@@ -7,10 +7,17 @@
 const ABORTEVENT_TYPE = 'abort';
 const OPTIONS_ONCE = Object.freeze( { once:true } );
 
+const ERR_BAD_DELAY = `TimeoutAbortError~The delay %s. Expected a positive integer.`;
+const ERR_BAD_ABORTSIGNAL = `TimeoutAbortError~The signal has type %s. Expected an AbortSignal.`;
+
 const bind = require('./bind');
-const noop = require('./noop');
-const not = require('./not');
+const classname = require('./classname');
+const fail = require('./fail');
+const isinteger = require('./isinteger');
+const typeorclass = require('./typeorclass');
 const timeout = require('./timeout');
+
+const noop = ()=>{}
 
 /**
  * A variant of {@link module:timeout timeout()} that triggers an `'abort'` event instead of calling a function when
@@ -22,8 +29,6 @@ const timeout = require('./timeout');
  * 
  * If an `'abort'` event is triggered on *abortcontroller*'s `signal` by external code, it will cancel the pending
  * timeout.
- * 
- * `timeoutabort()` is curried with an arity of 2 by default.
  * 
  * @example
  * 
@@ -37,20 +42,29 @@ const timeout = require('./timeout');
  * 
  * @func timeoutabort
  * @see {@link module:timeout timeout()}
- * @param {integer} delayms The number of milliseconds to wait before triggering an abort event
+ * @param {integer} delay The number of milliseconds to wait before triggering an abort event
  * @param {AbortController} abortcontroller The AbortController to trigger the abort event with
  * @returns {function} A function to cancel the pending timeout
  */
-module.exports = require('./curry2') (timeoutabort)
+module.exports = function timeoutabort(delay, abortsignal) {
 
-function timeoutabort(delayms, abortsignal) {
+    checkdelay(delay);
+
+    if( classname(abortsignal) !== 'AbortSignal' ) fail(ERR_BAD_ABORTSIGNAL, typeorclass(abortsignal));
 
     if( abortsignal.aborted ) return noop;
 
-    const abort = bind('dispatchEvent', abortsignal, ABORTEVENT_TYPE);
-    const cleartimeout = timeout(delayms, abort);
+    const canceltimeout = timeout(delay, () => abortsignal.dispatchEvent(ABORTEVENT_TYPE));
 
-    abortsignal.addEventListener(ABORTEVENT_TYPE, cleartimeout, OPTIONS_ONCE);
+    abortsignal.addEventListener(ABORTEVENT_TYPE, canceltimeout, OPTIONS_ONCE);
     
-    return cleartimeout;
+    return canceltimeout;
+}
+
+function checkdelay(delay) {
+
+    if( isinteger(delay) && delay >= 0 ) return delay;
+
+    const message = (typeof delay === 'number') ? `is ${delay}` : `has type ${typeof delay}`;
+    fail(ERR_BAD_DELAY, message);
 }
