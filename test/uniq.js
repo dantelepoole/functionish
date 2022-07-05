@@ -3,7 +3,7 @@ const expect = require('chai').expect;
 const isiterable = require('../isiterable');
 
 function uniqarray(iterable) {
-    expect( isiterable(iterable) || (typeof iterable === 'string') ).to.be.true;
+    expect( isiterable(iterable) ).to.be.true;
     return Array.from( uniq(iterable) );
 }
 
@@ -25,12 +25,6 @@ describe('uniq()', function() {
             expect( uniqarray( [3,3,2,2,1,1] ) ).to.be.deep.equal( [3,2,1] );
             expect( uniqarray( [1,2,3,1,2,3] ) ).to.be.deep.equal( [1,2,3] );
             expect( uniqarray( ['a','b','a','c','b'] ) ).to.be.deep.equal( ['a','b','c'] );
-        }
-    )
-
-    it('should work with strings',
-        function () {
-            expect( uniqarray('dante le poole') ).to.be.deep.equal(['d','a','n','t','e',' ','l','p','o']);
         }
     )
 
