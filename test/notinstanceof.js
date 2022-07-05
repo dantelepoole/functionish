@@ -1,28 +1,49 @@
 const expect = require('chai').expect;
 const notinstanceof = require('../notinstanceof');
 
-const sandbox = require('sinon').createSandbox();
-const spy = sandbox.spy.bind(sandbox);
+class Foobar {}
+class SubFoobar extends Foobar {}
 
 describe(`notinstanceof()`, function() {
 
-    afterEach(function() {
-        sandbox.resetHistory();
-    })
-    
-    beforeEach(function() {})
+    it(`should be curried`, 
+        function() {
+            const curried = notinstanceof(Foobar);
+            expect(curried).to.be.a('function');
+            expect( curried(new Foobar()) ).to.be.a('boolean');
+        }
+    )
 
-    it(`should be tested`)
+    it(`should throw if the class is not a function`, 
+        function() {
+            expect( ()=>notinstanceof({}, new Foobar()) ).to.throw();
+            expect( ()=>notinstanceof(null, new Foobar()) ).to.throw();
+            expect( ()=>notinstanceof('foobar', new Foobar()) ).to.throw();
+            expect( ()=>notinstanceof(42, new Foobar()) ).to.throw();
+        }
+    )
 
-    // describe(<ENTER SUBSUITE NAME>, function() {
+    it(`should return false if the object is an instance of the class`, 
+        function() {
+            expect( notinstanceof(Foobar, new Foobar()) ).to.be.false;
+            expect( notinstanceof(Array, []) ).to.be.false;
+            expect( notinstanceof(Object, {}) ).to.be.false;
+            expect( notinstanceof(Date, new Date()) ).to.be.false;
+        }
+    )
 
-    //     afterEach(function() {
-    //         sandbox.resetHistory();
-    //     })
-            
-    //     beforeEach(function() {})
+    it(`should return false if the object is an instance of a subclass of the class`, 
+        function() {
+            expect( notinstanceof(Foobar, new SubFoobar()) ).to.be.false;
+        }
+    )
 
-    //     it(`should be tested`)
-
-    // })
+    it(`should return true if the object is not an instance of the class`, 
+        function() {
+            expect( notinstanceof(Foobar, {}) ).to.be.true;
+            expect( notinstanceof(Foobar, null) ).to.be.true;
+            expect( notinstanceof(Foobar, undefined) ).to.be.true;
+            expect( notinstanceof(Foobar, 42) ).to.be.true;
+        }
+    )
 })

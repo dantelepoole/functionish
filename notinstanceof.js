@@ -12,6 +12,8 @@ const typeorclass = require('./typeorclass');
 /**
  * Return true if *anobject* is *not* an instance of *aclass*. Otherwise, return false.
  * 
+ * `notinstanceof()` is curried by default with binary arity.
+ * 
  * @func notinstanceof
  * @param {function} aclass The class to check against
  * @param {object} anobject The object to check the class for
