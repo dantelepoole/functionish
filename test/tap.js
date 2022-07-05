@@ -1,64 +1,61 @@
 const expect = require('chai').expect;
 const tap = require('../tap');
 
-function sum(a,b) {
-    return (a+b);
-}
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
+
+const sentinel = Symbol();
+
+const log = spy(
+    function log(...args) {
+        // no op
+    }
+)
 
 describe(`tap()`, function() {
 
+    beforeEach(
+        function() {
+            sandbox.resetHistory();
+        }
+    )
+
     it(`should return a function`,
         function () {
-            expect( tap(sum) ).to.be.a('function');
+            expect( tap(log) ).to.be.a('function');
+        }
+    )
+    
+    it(`should throw if the function is not a function`,
+        function () {
+            expect( ()=>tap({}) ).to.throw();
+            expect( ()=>tap() ).to.throw();
         }
     )
 
     describe(`tap()'s returned function`, function () {
 
-        it(`should throw if the first argument passed to tap() is not a function`,
+        it(`should invoke the target function with its arguments`,
             function() {
-                const tappedsum = tap({});
-                expect( ()=>tappedsum(42, 43) ).to.throw();
+
+                const tapped = tap(log);
+
+                tapped(42, 'foobar', sentinel);
+                
+                expect( log.calledOnceWith(42, 'foobar', sentinel) ).to.be.true;
             }
         )
 
-        it(`should return its first argument`,
-            function() {
-                const tappedsum = tap(sum);
-                const result = tappedsum(42, 43);
-                expect(result).to.be.equal(42);
-            }
-        )
-
-        it(`should pass its arguments to the function passed to tap()`,
+        it(`should return its own first argument`,
             function() {
 
-                let wasinvoked = false;
+                const tapped = tap(log);
 
-                function somefunction(...args) {
-                    wasinvoked = true;
-                    expect(args).to.be.deep.equal([42, 43]);
-                }
+                expect( tapped(sentinel, 42, 'foobar') ).to.equal(sentinel);
+                expect( tapped(sentinel) ).to.equal(sentinel);
+                expect( tapped() ).to.be.undefined;
 
-                const tappedfunction = tap(somefunction);
-                const result = tappedfunction(42,43);
-                expect(wasinvoked).to.be.true;
-            }
-        )
-
-        it(`should prepend the prebound arguments passed to tap() to its own arguments)`,
-            function() {
-
-                let wasinvoked = false;
-
-                function somefunction(...args) {
-                    wasinvoked = true;
-                    expect(args).to.be.deep.equal( [42, 43] );
-                }
-
-                const tappedfunction = tap(somefunction, 42);
-                tappedfunction(43);
-                expect(wasinvoked).to.be.true;
+                expect(log.callCount).to.equal(3);
             }
         )
     })

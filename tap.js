@@ -4,23 +4,27 @@
 
 'use strict';
 
-module.exports = tap;
+const ERR_BAD_FUNCTION = `TapError~The function has type %s. Expected a function.`;
+
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
 
 /**
- * Return a function that passes its arguments (preceded by any *preboundargs* passed to `tap()`) but returns its own
- * first argument (ignoring *func*'s return value).
+ * Return a function that passes its arguments to *func*, but ignores *func*'s return value and instead returns the
+ * first argument (or `undefined` if no arguments were passed).
  * 
  * @func tap
  * @param {function} func The function to call
- * @param  {...any} preboundargs The arguments to pre-bind to *func*
  * @returns {any} The first argument passed to the returned function
  */
-function tap(func, ...preboundargs) {
+ module.exports = function tap(func) {
 
-    function tappedfunction(...args) {
-        func(...preboundargs, ...args);
+    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+
+    return function tappedfunction(...args) {
+
+        func(...args);
+        
         return args[0];
     }
-
-    return tappedfunction;
 }
