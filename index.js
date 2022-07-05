@@ -105,7 +105,6 @@ module.exports.tail = require('./tail');
 module.exports.take = require('./take');
 module.exports.tap = require('./tap');
 module.exports.timeout = require('./timeout');
-module.exports.timeoutabort = require('./timeoutabort');
 module.exports.tojson = require('./tojson');
 module.exports.tostring = require('./tostring');
 module.exports.trim = require('./trim');
