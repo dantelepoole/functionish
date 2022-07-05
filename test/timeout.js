@@ -10,13 +10,28 @@ function waitfor(callback, ...expectedargs) {
 
 }
 
+const noop = ()=>{}
+
 describe(`timeout()`, function() {
 
-    it(`should be curried`,
-        function(callback) {
-            const curried = timeout(0);
-            expect(curried).to.be.a('function');
-            expect( curried( waitfor(callback) ) ).to.be.a('function');
+    beforeEach(
+        function() {
+
+        }
+    )
+
+    it(`should throw if the delay argument is not a positive integer`,
+        function() {
+            expect( ()=>timeout(3.33, noop) ).to.throw();
+            expect( ()=>timeout(-3, noop) ).to.throw();
+            expect( ()=>timeout('foobar', noop) ).to.throw();
+        }
+    )
+
+    it(`should throw if the target function is not a function`,
+        function() {
+            expect( ()=>timeout(100, {}) ).to.throw();
+            expect( ()=>timeout(100) ).to.throw();
         }
     )
 
@@ -26,16 +41,10 @@ describe(`timeout()`, function() {
         }
     )
 
-    it(`should throw if its second argument is not a function`,
-        function (callback) {
-            expect( () => timeout(0, {}) ).to.throw();
-            callback();
-        }
-    )
-
     describe(`timeout()'s returned function`, function () {
 
         it(`should return undefined`,
+
             function (callback) {
 
                 const cleartimeout = timeout(0,waitfor(callback) );
