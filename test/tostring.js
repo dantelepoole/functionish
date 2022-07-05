@@ -18,7 +18,7 @@ describe(`tostring()`, function() {
         }
     )
 
-    it(`should return an empty string if its argument is undefined`,
+    it(`should return an empty string if its argument is undefined or null`,
         function () {
             expect( tostring(null) ).to.be.equal( "" );
             expect( tostring(undefined) ).to.be.equal( "" );
