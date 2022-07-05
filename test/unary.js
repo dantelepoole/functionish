@@ -21,10 +21,10 @@ describe('unary()', function() {
         }
     )
 
-    it('should return a function that throws if the argument to argument() is not a function',
+    it('should throw if the target function is not a function',
         function () {
-            const unary_func = unary(42);
-            expect( unary_func ).to.throw();
+            expect( ()=>unary({}) ).to.throw();
+            expect( ()=>unary() ).to.throw();
         }
     )
 })

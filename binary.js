@@ -36,9 +36,7 @@ module.exports = function binary(func) {
 
     if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    return {
-        [func.name] : function (a,b) {
-            return func(a,b);
-        }
-    }[func.name]
+    return function binary_(a,b) {
+        return func(a,b);
+    }
 }

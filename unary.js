@@ -4,14 +4,17 @@
 
 'use strict';
 
+const ERR_BAD_FUNCTION = `UnaryError~The function has type %s. Expected a function.`;
+
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
+
 /**
  * Coerce *func* to have have unary arity. More specifically, return a function that accepts exactly one parameter
  * and passes it to *func*. Any other arguments passed to the returned function are ignored.
  * 
  * Be aware that that the returned function is *not* curried by default. If *func* is curried and you want to maintain
  * the currying, you need to curry the returned function yourself.
- * 
- * `unary()` itself is curried by default.
  * 
  * @func unary
  * @see {@link module:witharity witharity()}
@@ -21,11 +24,11 @@
  * @returns {function}
  */
 
-module.exports = unary;
+module.exports = function unary(func) {
 
-function unary(func) {
+    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    return function _unary(x) {
+    return function unary_(x) {
         return func(x);
     }
 }

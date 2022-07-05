@@ -33,11 +33,5 @@ describe('binary()', function() {
                 expect( returnargs_binary() ).to.be.deep.equal([undefined, undefined]);
             }
         )
-
-        it(`should have the same name as the target function`,
-            function () {
-                expect(binary(returnargs).name).to.be.equal('returnargs');
-            }
-        )
     })
 })
