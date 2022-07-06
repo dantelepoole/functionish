@@ -23,35 +23,31 @@ const typeorclass = require('./typeorclass');
  *     
  * const wrap = require('functionish/wrap');
  * 
- * function dosomething(arg1, arg2) { return 'dosomething was invoked' }
+ * function getdata(...args) { return 'foobar' }
  * 
- * function logwrapper(func, ...args) {
+ * const trace = wrap(
+ *    function trace(func, ..args) {
+ *    
+ *        console.log(func.name, 'called with', args);
+ *    
+ *        const result = func.call(this, ...args);
+ *    
+ *        console.log(func.name, 'returned', result);
+ *    
+ *        return result;
+ *    }
+ * )
  * 
- * const functionname = func.name;
+ * const getdata_traced = trace(getdata);
  * 
- * console.log(`${functionname} called with args:`, args);
- * 
- * try {
- * 
- *     const result = func(...args);
- * 
- *     console.log(`${functionname} completed, return value:`, result);
- * 
- *     return result;
- * 
- *     } catch (error) {
- *         console.error(`${functionname} threw:`, error);
- *         throw error;
- *     }
- * }
- * 
- * const dosomething_logged = wrap(dosomething, logwrapper);
- * 
- * dosomething_logged(42, 'foobar'); // runs logs the arguments, runs dosomething() and logs the result
+ * getdata_traced(42,236);
+ * // prints "getdata called with [42,236]"
+ * // then prints "getdata returned 'foobar'"
+ * // then returns 'foobar'
  * 
  * @func wrap
+ * @param {function} wrapperfunc The function to wrap *func* with
  * @param {function} func The function to wrap
- * @param {function} wrapperfunc 
  * @returns {function}
  */
 module.exports = require('./curry2')(wrap);
