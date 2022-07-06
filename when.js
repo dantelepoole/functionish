@@ -17,7 +17,7 @@ const id = require('./id');
  * If *predicate* or either branch are not functions, their value is evaluated directly and any arguments passed to
  * the returned function are ignored.
  * 
- * `when()` is curried by default.
+ * `when()` is curried by default with binary arity.
  * 
  * @example
  *     
@@ -38,17 +38,19 @@ const id = require('./id');
  * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is falsy
  * @returns {any}
  */
-module.exports = require('./curry2')(when)
+module.exports = require('./curry2')(
 
-function when(predicate, mainbranch, alternativebranch=id) {
+    function when(predicate, mainbranch, alternativebranch=id) {
 
-    predicate = callable(predicate);
+        if(typeof predicate !== 'function') predicate = callable(predicate);
+        if(typeof mainbranch !== 'function') mainbranch = callable(mainbranch);
+        if(typeof alternativebranch !== 'function') alternativebranch = callable(alternativebranch);
 
-    return function conditional(...args) {
-        
-        const predicateresult = !! predicate(...args);
-        const selectedbranch = predicateresult ? mainbranch : alternativebranch;
+        return function conditional(...args) {
 
-        return evaluate(selectedbranch, ...args);
+            const selectedbranch = predicate(...args) ? mainbranch : alternativebranch;
+
+            return selectedbranch(...args);
+        }
     }
-}
+)
