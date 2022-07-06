@@ -44,7 +44,7 @@ module.exports = function pipe(...funcs) {
 
     validatefuncs(funcs);
 
-    return function pipeline(...args) {
+    return function functionpipeline(...args) {
 
         let result = funcs[0](...args);
 

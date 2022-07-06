@@ -44,13 +44,11 @@ function when(predicate, mainbranch, alternativebranch=id) {
 
     predicate = callable(predicate);
 
-    function when_conditional(...args) {
+    return function conditional(...args) {
         
         const predicateresult = !! predicate(...args);
         const selectedbranch = predicateresult ? mainbranch : alternativebranch;
 
         return evaluate(selectedbranch, ...args);
     }
-
-    return when_conditional;
 }

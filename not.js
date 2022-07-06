@@ -31,8 +31,16 @@
 module.exports = not;
 
 function not(expression) {
-    
-    return (typeof expression === 'function') 
-         ? function complement(...args) { return ! expression(...args) }
-         : (! expression);
+
+    if(typeof expression !== 'function') return (! expression);
+
+    const complementname = `complement ${expression.name}`;
+
+    return {
+
+        [complementname] : function(...args) {
+            return ! expression.call(this, ...args);
+        }
+
+    }[complementname]
 }

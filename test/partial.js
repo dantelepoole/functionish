@@ -38,6 +38,16 @@ describe(`partial()`, function() {
 
     describe(`the partiallly applied function`, function() {
 
+        it(`should have the same name as the target function but tagged as 'partial'`,
+            function () {
+
+                const increment = partial(sum, 1);
+                expect( increment.name ).to.equal('partial sum');
+
+                expect( partial( (a,b)=>(a+b), 1 ).name ).to.equal('partial ');
+            }
+        )
+
         it(`should invoke the target function`,
             function () {
 

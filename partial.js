@@ -34,7 +34,11 @@ module.exports = function partial(func, ...boundargs) {
     
     if( typeof func !== 'function' ) fail(ERR_BAD_FUNC, typeorclass(func));
 
-    return function partial_(...args) {
-        return func.call(this, ...boundargs, ...args);
-    }
+    const partialfuncname = `partial ${func.name}`;
+    
+    return {
+        [partialfuncname] : function (...args) {
+            return func.call(this, ...boundargs, ...args);
+        }
+    }[partialfuncname]
 }

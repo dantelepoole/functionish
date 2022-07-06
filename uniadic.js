@@ -37,11 +37,17 @@ const typeorclass = require('./typeorclass');
 module.exports = function uniadic(func) {
 
     if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
-    
-    return function uniadic_(list=[]) {
 
-        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+    const uniadicname = `uniadic ${func.name}`;
 
-        return func.call(this, ...list);
-    }
+    return {
+
+        [uniadicname] : function (list=[]) {
+
+            if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+
+            return func.call(this, ...list);
+        }
+
+    }[uniadicname]
 }

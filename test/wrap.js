@@ -58,8 +58,8 @@ describe('wrap()', function() {
 
         it('should throw if either wrapperfunc or func is not a function',
             function () {
-                const wrapped = wrap({}, {});
-                expect( ()=>wrapped() ).to.throw();
+                expect( ()=>wrap({},sum) ).to.throw();
+                expect( ()=>wrap(sum,{}) ).to.throw();
             }
         )
     })

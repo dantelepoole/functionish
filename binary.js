@@ -36,7 +36,13 @@ module.exports = function binary(func) {
 
     if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    return function binary_(a,b) {
-        return func(a,b);
-    }
+    const binaryname = `binary ${func.name}`;
+
+    return {
+
+        [binaryname] : function (a,b) {
+            return func.call(this, a, b);
+        }
+        
+    }[binaryname]
 }

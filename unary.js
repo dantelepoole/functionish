@@ -28,7 +28,13 @@ module.exports = function unary(func) {
 
     if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    return function unary_(x) {
-        return func(x);
-    }
+    const unaryname = `unary ${func.name}`;
+
+    return {
+
+        [unaryname] : function(x) {
+            return func.call(this, x);
+        }
+
+    }[unaryname]
 }

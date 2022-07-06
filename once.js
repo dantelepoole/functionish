@@ -21,7 +21,12 @@ module.exports = function once(func) {
 
     let returnvalue = EMPTY;
 
-    return function oncefunction(...args) {
-        return (returnvalue !== EMPTY) ? returnvalue : (returnvalue = func(...args));
-    }
+    const oncename = `once ${func.name}`;
+
+    return {
+
+        [oncename] : function(...args) {
+            return (returnvalue !== EMPTY) ? returnvalue : (returnvalue = func.call(this, ...args));
+        }
+    }[oncename]
 }

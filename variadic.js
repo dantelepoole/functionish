@@ -37,7 +37,13 @@ module.exports = function variadic(func) {
 
     if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    return function variadic_(...args) {
-        return func.call(this, args);
-    }
+    const variadicname = `variadic ${func.name}`;
+
+    return {
+
+        [variadicname] : function (...args) {
+            return func.call(this, args);
+        }
+
+    }[variadicname]
 }

@@ -21,10 +21,16 @@ const typeorclass = require('./typeorclass');
 
     if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    return function tappedfunction(...args) {
+    const tapname = `tap ${func.name}`;
 
-        func(...args);
-        
-        return args[0];
-    }
+    return {
+
+        [tapname] : function(...args) {
+
+            func.call(this, ...args);
+            
+            return args[0];
+        }
+
+    }[tapname]
 }
