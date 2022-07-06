@@ -5,21 +5,21 @@
 'use strict';
 
 const ERR_BAD_FUNCTION = `UniadicError~The function has type %s. Expected a function.`;
+const ERR_BAD_LIST = `UniadicError~The argument has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');
-const isarray = require('./isarray');
+const notiterable = require('./notiterable');
 const typeorclass = require('./typeorclass');
 
 /**
- * Return a function that accepts a single argument and invokes the *func* function, passing the arguments
- * as a spread argument.
+ * Return a function that accepts a single argument *list* and invokes the *func* function, passing the list
+ * as a spread parameter.
  * 
  * Use this function to convert a variadic function that accepts variable number of arguments to a uniadic function
  * whose parameter list consists of a single parameter.
- * 
- * The returned function accepts a single argument. If that argument is an array, it is passed to *func* as a spread
- * argument. If the argument is not array, it is passed as-is. If the returned function is called without arguments,
- * *func* is called without arguments as well.
+ *
+ * If the argument passed to the returned function is not an iterable, an error is thrown. If the returned function is
+ * called without an argument, *func* is called without arguments.
  * 
  * @example
  * 
@@ -38,10 +38,10 @@ module.exports = function uniadic(func) {
 
     if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
     
-    return function uniadic_(arg) {
-        
-        return (arguments.length === 0) ? func.call(this)
-             : isarray(arg) ? func.call(this, ...arg)
-             : func.call(this, arg);
+    return function uniadic_(list=[]) {
+
+        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+
+        return func.call(this, ...list);
     }
 }
