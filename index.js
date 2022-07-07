@@ -120,7 +120,6 @@ module.exports.unless = require('./unless');
 module.exports.variadic = require('./variadic');
 module.exports.when = require('./when');
 module.exports.where = require('./where');
-module.exports.without = require('./without');
 module.exports.wrap = require('./wrap');
 module.exports.xor = require('./xor');
 module.exports.zip = require('./zip');
