@@ -9,15 +9,11 @@ describe(`isdefined()`, function() {
         }
     )
 
-    it(`should return false if its argument is null`,
+    it(`should return false if its argument is null, undefined or NaN`,
         function () {
             expect( isdefined(null) ).to.be.false;
-        }
-    )
-
-    it(`should return false if its argument is undefined`,
-        function () {
             expect( isdefined(undefined) ).to.be.false;
+            expect( isdefined(NaN) ).to.be.false;
         }
     )
 
@@ -33,7 +29,6 @@ describe(`isdefined()`, function() {
             expect( isdefined([]) ).to.be.true;
             expect( isdefined(Symbol()) ).to.be.true;
             expect( isdefined( ()=>{} ) ).to.be.true;
-            expect( isdefined( NaN ) ).to.be.true;
         }
     )
 })

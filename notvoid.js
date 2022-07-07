@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * Return `true` if *value* is neither `null` nor `undefined`, otherwise return `false`.
+ * Return `true` if *value* is neither `null`, `undefined` or `NaN`, otherwise return `false`.
  * 
  * This function does the same as {@link module:isdefined isdefined()}.
  * 
@@ -15,5 +15,5 @@
  * @returns {boolean}
  */
 module.exports = function notvoid(value) {
-    return (value !== null) && (value !== undefined);
+    return (value !== null) && (value !== undefined) && (value === value);
 }

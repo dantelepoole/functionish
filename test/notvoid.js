@@ -9,10 +9,11 @@ describe(`notvoid()`, function() {
         }
     )
 
-    it(`should return false if its argument is null or undefined`,
+    it(`should return false if its argument is null, undefined or NaN`,
         function () {
             expect( notvoid(null) ).to.be.false;
             expect( notvoid(undefined) ).to.be.false;
+            expect( notvoid(NaN) ).to.be.false;
         }
     )
 
@@ -30,7 +31,6 @@ describe(`notvoid()`, function() {
             expect( notvoid('foobar') ).to.be.true;
             expect( notvoid(true) ).to.be.true;
             expect( notvoid(Symbol()) ).to.be.true;
-            expect( notvoid(NaN) ).to.be.true;
             expect( notvoid(notvoid) ).to.be.true;
         }
     )
