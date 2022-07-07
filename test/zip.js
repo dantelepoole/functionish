@@ -42,33 +42,32 @@ describe('zip()', function() {
         }
     )
 
-    it('should return an iterable that pairs the next items from both arguments on each iteration', 
+    it('should throw if either list is not iterable', 
         function() {
 
-            const result = zip(abc,onetwothree);
-            let index = 0;
-
-            for( const item of result ) {
-                expect(item).to.be.an('array').with.length(2);
-                expect(item[0]).to.be.equal(abc[index]);
-                expect(item[1]).to.be.equal(onetwothree[index]);
-                index++;
-            }
+            expect( ()=>zip({}, abc) ).to.throw();
+            expect( ()=>zip(abc, {}) ).to.throw();
         }
     )
 
     describe('the returned iterable', function() {
         
-        it('should throw if either argument is not iterable', 
+        it('should pairs the next items from both lists on each iteration', 
             function() {
 
-                expect( ()=>zip({}, abc)[Symbol.iterator]() ).to.throw();
-                expect( ()=>zip(abc, {})[Symbol.iterator]() ).to.throw();
-                expect( ()=>zip(onetwothreeobject, abcobject)[Symbol.iterator]() ).to.not.throw();
+                const result = zip(abc,onetwothree);
+                let index = 0;
+
+                for( const item of result ) {
+                    expect(item).to.be.an('array').with.length(2);
+                    expect(item[0]).to.be.equal(abc[index]);
+                    expect(item[1]).to.be.equal(onetwothree[index]);
+                    index++;
+                }
             }
         )
-        
-        it('should iterate over the number of items in the "shortest" argument', 
+
+        it('should iterate over the number of items in the list with the smallest number of items', 
             function() {
                 const result = zip(onetwothree, onetwothreefourfive);
                 let index = 0;

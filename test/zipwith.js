@@ -48,43 +48,37 @@ describe('zipwith()', function() {
         }
     )
 
-    it('should return an iterable that produces the result of passing the next items from both list arguments to func', 
+    it('should throw if the function is not a function', 
+        function() {
+            expect( ()=>zipwith({}, onetwothree, abc) ).to.throw();
+        }
+    )
+
+    it('should throw if either list argument is not iterable', 
         function() {
 
-            const result = zipwith(concat, abc,onetwothree);
-            let index = 0;
-
-            for( const item of result ) {
-                expect(item).to.be.a('string').with.length(2);
-                expect(item).to.be.equal(`${abc[index]}${onetwothree[index]}`);
-                index++;
-            }
+            expect( ()=>zipwith(concat, {}, abc) ).to.throw();
+            expect( ()=>zipwith(concat, abc, {}) ).to.throw();
         }
     )
 
     describe('the iterable returned by zipwith()', function() {
 
-        it('should throw if the func argument is not a function', 
+        it('should return an iterable that produces the result of passing the next items from both lists to the function', 
             function() {
 
-                let iterator = zipwith({}, onetwothree, abc)[Symbol.iterator]();
-                expect( ()=>iterator.next() ).to.throw();
+                const result = zipwith(concat, abc,onetwothree);
+                let index = 0;
 
-                iterator = zipwith(concat, onetwothree, abc)[Symbol.iterator]();
-                expect( ()=>iterator.next() ).to.not.throw();
-            }
-        )
-
-        it('should throw if either list argument is not iterable', 
-            function() {
-
-                expect( ()=>zipwith(concat, {}, abc)[Symbol.iterator]() ).to.throw();
-                expect( ()=>zipwith(concat, abc, {})[Symbol.iterator]() ).to.throw();
-                expect( ()=>zipwith(concat, onetwothreeobject, abcobject)[Symbol.iterator]() ).to.not.throw();
+                for( const item of result ) {
+                    expect(item).to.be.a('string').with.length(2);
+                    expect(item).to.be.equal(`${abc[index]}${onetwothree[index]}`);
+                    index++;
+                }
             }
         )
         
-        it('should iterate over the number of items in the "shortest" argument', 
+        it('should iterate over the number of items in the list that produces the smallest number of items', 
             function() {
                 const result = zipwith(concat, onetwothree, onetwothreefourfive);
                 let index = 0;

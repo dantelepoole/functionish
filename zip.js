@@ -4,6 +4,12 @@
 
 'use strict';
 
+const ERR_BAD_LIST = `ZipError~The %s list has type %s. Expected an iterable object.`;
+
+const fail = require('./fail');
+const notiterable = require('./notiterable');
+const typeorclass = require('./typeorclass');
+
 /**
  * Return an iterable that produces a 2-element array on each iteration containing the next item from *list1* and
  * the next item from *list2*. The returned iterable completes as soon as either arguments completes.
@@ -34,6 +40,9 @@ module.exports = require('./curry2')(
 
     function zip(list1, list2) {
     
+        if( notiterable(list1) ) fail(ERR_BAD_LIST, 'first', typeorclass(list1));
+        if( notiterable(list2) ) fail(ERR_BAD_LIST, 'second', typeorclass(list2));
+        
         return {
             [Symbol.iterator]() {
 
@@ -46,7 +55,7 @@ module.exports = require('./curry2')(
                         const item2 = iterator2.next();
                 
                         return (item1.done || item2.done)
-                             ? { done:true }
+                             ? { done:true, value:undefined }
                              : { done:false, value:[item1.value, item2.value] }
                     }
                 }
