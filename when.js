@@ -43,14 +43,12 @@ module.exports = require('./curry2')(
     function when(predicate, mainbranch, alternativebranch=id) {
 
         if(typeof predicate !== 'function') predicate = callable(predicate);
-        if(typeof mainbranch !== 'function') mainbranch = callable(mainbranch);
-        if(typeof alternativebranch !== 'function') alternativebranch = callable(alternativebranch);
 
         return function conditional(...args) {
 
             const selectedbranch = predicate(...args) ? mainbranch : alternativebranch;
-
-            return selectedbranch(...args);
+            
+            return evaluate(selectedbranch, ...args);
         }
     }
 )
