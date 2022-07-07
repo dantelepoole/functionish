@@ -19,6 +19,23 @@ const constructorname = obj => getprototype(obj)?.constructor?.name;
  * class that does not implement a getter with the well-known symbol `Symbol.toStringTag` as key, a generic classname
  * of `Object` will be returned.
  * 
+ * @example
+ * 
+ * const classname = require('functionish/classname');
+ * 
+ * classname(42); // returns 'Number'
+ * classname(true); // returns 'Boolean'
+ * classname({}); // returns 'Object'
+ * classname(null); // returns 'Null'
+ * classname( new Date() ); // returns 'Date'
+ * 
+ * class Foobar {}
+ * class SubFoobar extends Foobar {}
+ * 
+ * classname(Foobar); // returns 'Function'
+ * classname( new Foobar() ); // returns 'Foobar'
+ * classname( new SubFoobar() ); // returns 'SubFoobar'
+ * 
  * @function classname
  * @param {any} value 
  * @returns {string}
