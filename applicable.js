@@ -27,6 +27,6 @@
 module.exports = function applicable(...args) {
 
     return function apply(func, ...additionalargs) {
-        return func(...args, ...additionalargs);
+        return func.call(this, ...args, ...additionalargs);
     }
 }
