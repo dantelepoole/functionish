@@ -7,11 +7,13 @@
 const callable = require('./callable');
 
 /**
- * Return a function that passes its arguments to both *clause* and *otherclause* returns `false` if both return the
+ * Return a function that passes its arguments to both *clause* and *clause2* returns `false` if both return the
  * same boolish value (i.e. either both truthy or both falsy). If the clauses return different boolish values, the
- * function returns `true`. In short, `xor()` returns `true` if *clause* and *otherclause* are unequal.
+ * function returns `true`. In short, `xor()` returns `true` if *clause* and *clause2* each other's complement.
  * 
- * `xor()` is curried by default.
+ * If either clause is not a function, its value is evaluated directly instead.
+ * 
+ * `xor()` is curried by default with binary arity.
  * 
  * @example
  * 
@@ -33,19 +35,18 @@ const callable = require('./callable');
  * @see {@link module:not not()}
  * @see {@link module:or or()}
  * @param {(function|any)} clause The first clause to evaluate
- * @param {(function|any)} otherclause The second clause to evaluate
+ * @param {(function|any)} clause2 The second clause to evaluate
  * @returns {boolean}
  */
 module.exports = require('./curry2')(
 
-    function xor(clause, otherclause) {
+    function xor(clause, clause2) {
 
-        return function _xor(...args) {
+        if(typeof clause !== 'function') clause = callable(clause);
+        if(typeof clause2 !== 'function') clause2 = callable(clause2);
 
-            const result = !! clause(...args);
-            const otherresult = !! otherclause(...args);
-
-            return (result !== otherresult);
+        return function xor_(...args) {
+            return clause(...args) ? !clause2(...args) : !!clause2(...args);
         }
     }
 )

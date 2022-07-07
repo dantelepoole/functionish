@@ -25,10 +25,10 @@ describe('xor()', function() {
     )
 
     it('should return a function', 
-    function() {
-        expect( xor(isodd,ispositive) ).to.be.a('function');
-    }
-)
+        function() {
+            expect( xor(isodd,ispositive) ).to.be.a('function');
+        }
+    )
 
     describe('its returned function()', function() {
 
@@ -36,6 +36,18 @@ describe('xor()', function() {
             function() {
                 const isoddorpositive = xor(isodd,ispositive);
                 expect( isoddorpositive(42) ).to.be.true;
+            }
+        )
+
+        it(`should evaluate a clause's value if the clause is not a function`, 
+            function() {
+                let conditional = xor(true,ispositive);
+                expect( conditional(42) ).to.be.false;
+                expect( conditional(-42) ).to.be.true;
+
+                conditional = xor(ispositive,true);
+                expect( conditional(42) ).to.be.false;
+                expect( conditional(-42) ).to.be.true;
             }
         )
 
@@ -52,16 +64,6 @@ describe('xor()', function() {
                 const isoddorpositive = xor(isodd,ispositive);
                 expect( isoddorpositive(41) ).to.be.false;
                 expect( isoddorpositive(-42) ).to.be.false;
-            }
-        )
-
-        it('should throw if either clause is not a function', 
-            function() {
-                let isoddorpositive = xor({},ispositive);
-                expect( ()=>isoddorpositive(42) ).to.throw();
-
-                isoddorpositive = xor(isodd,{});
-                expect( ()=>isoddorpositive(42) ).to.throw();
             }
         )
 

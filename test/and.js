@@ -71,6 +71,14 @@ describe('and()', function() {
             }
         )
 
+        it(`should evaluate a clause's value if the clause is not a function`, 
+            function() {
+                const conditional = and(true,isodd);
+                expect( conditional(42) ).to.be.false;
+                expect( conditional(41) ).to.be.true;
+            }
+        )
+
         it('should be short-circuited', 
             function() {
 
