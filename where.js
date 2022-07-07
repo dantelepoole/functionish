@@ -4,6 +4,12 @@
 
 'use strict';
 
+const ERR_BAD_SPEC = `WhereError~The specification object as type %s. Expected an object.`;
+
+const fail = require('./fail');
+const notobject = require('./notobject');
+const typeorclass = require('./typeorclass');
+
 /**
  * Match the *subject* object to the rules specified by the *specification* object and return an object reporting
  * the failed rules.
@@ -46,10 +52,7 @@ module.exports = require('./curry2')(
 
     function where(specification, subject) {
 
-        if( typeof specification !== 'object' || specification === null ) {
-            const spectype = (specification === null) ? 'null' : typeof specification;
-            throw new TypeError(`where(): The specification has type ${spectype}. Expected an object`);
-        }
+        if( notobject(specification) ) fail(ERR_BAD_SPEC, typeorclass(specification));
 
         subject = Object(subject);
 
@@ -68,8 +71,7 @@ function testspec(specification, subject) {
 
     for( const key in specification )  {
 
-        const predicate = specification[key];
-        const result = testproperty(predicate, subject, key);
+        const result = testproperty(specification[key], subject, key);
 
         if( ! result ) errors.push( [ key, subject[key] ]);
     }
