@@ -32,7 +32,6 @@ module.exports = function list(...items) {
 
             for(const item of items) {
 
-                // if( isiterable(item) ) for(const subitem of item) yield subitem;
                 if( isiterable(item) ) yield* item;
                 else yield item;
             }
