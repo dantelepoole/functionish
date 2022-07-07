@@ -4,7 +4,7 @@
 
 'use strict';
 
-const isnan = require('./isnan');
+const isvoid = require('./isvoid');
 
 /**
  * Return *value* unless it is `null`, `undefined` or `NaN`, in which case *defaultvalue* is returned.
@@ -28,9 +28,6 @@ const isnan = require('./isnan');
 module.exports = require('./curry2')(
 
     function withdefault(defaultvalue, value) {
-
-        return (value !== null && value !== undefined && (typeof value !== 'number' || ! isnan(value))) 
-             ? value
-             : defaultvalue;
+        return isvoid(value) ? defaultvalue : value;
     }
 )
