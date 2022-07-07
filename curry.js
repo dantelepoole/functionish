@@ -4,12 +4,13 @@
 
 'use strict';
 
-const fail = require('./fail');
-const typeorclass = require('./typeorclass');
-
 const ARITY_NONE = undefined;
 const ERR_BAD_ARITY = "CurryError~The arity has type %s. Expected a number.";
 const ERR_BAD_FUNCTION = "CurryError~The value at '%s' has type %s. Expected a function.";
+
+const fail = require('./fail');
+const partial = require('./partial');
+const typeorclass = require('./typeorclass');
 
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
@@ -30,6 +31,9 @@ const ERR_BAD_FUNCTION = "CurryError~The value at '%s' has type %s. Expected a f
  * To add in debugging, `curry()` preserves the name of the target function. On subsequent invocations of the curried
  * function itself, the returned function will also be tagged `bound`.
  * 
+ * The returned function will have a method `partial(...args)` that partially applies the target function to the *args*.
+ * See {@link module:partial partial()} for further details on partial application.
+ * 
  * @example
  * 
  * const curry = require('functionish/curry');
@@ -40,10 +44,10 @@ const ERR_BAD_FUNCTION = "CurryError~The value at '%s' has type %s. Expected a f
  *     }
  * )
  * 
- * console.log(sum.name); // prints 'sum[curry@2]'
+ * console.log(sum.name); // prints 'sum'
  * 
- * const increment = sum(1);
- * console.log(increment.name); // prints 'bound sum[curry@2]'
+ * const increment = sum(1); // or: const increment = sum.partial(1)
+ * console.log(increment.name); // prints 'bound sum' (or 'partial sum' if partial() was called)
  * 
  * increment(42); // returns 43
  *  
@@ -85,6 +89,8 @@ function curry(arity, func) {
             return (args.length < arity) ? curriedfunction.bind(null, ...args) : func(...args);
         }
     }[func.name];
+
+    curriedfunction.partial = function (...args) { return partial(func, ...args) }
 
     return curriedfunction;
 }

@@ -130,5 +130,17 @@ describe(`curry()`, function() {
                 expect( curried(1).name ).to.be.equal(`bound `);
             }
         )
+
+        it(`should have a partial() method that returns the partially applied target function`,
+            function () {
+
+                const curried = curry(2, countargs);
+                const partialcountargs = curried.partial(1);
+
+                expect( partialcountargs.name ).to.equal(`partial countargs`);
+
+                expect( partialcountargs(2,3) ).to.equal(3);
+            }
+        )
     })
 })
