@@ -1,5 +1,5 @@
 /**
- * @module isnumber
+ * @module notnumber
  */
 
 'use strict';
@@ -15,5 +15,5 @@ const isnan = require('./isnan');
  */
 module.exports = function notnumber(value)
  {
-    return (typeof value !== 'number') || Number.isNaN(value);
+    return (typeof value !== 'number') || (value !== value);
 }
