@@ -27,7 +27,7 @@ const typeorclass = require('./typeorclass');
  * The return object also has a boolean property `success` which will be `true` if no errors were encountered or
  * `false` otherwise.
  * 
- * `where()` is curried by default.
+ * `where()` is curried by default with binary arity.
  * 
  * @example
  *     
