@@ -17,6 +17,12 @@ const typeorclass = require('./typeorclass');
  * 
  * `symdiff()` is curried by default with binary arity.
  * 
+ * @example
+ * 
+ * const symdiff = require('functionish/symdiff');
+ * 
+ * Array.from( symdiff( [1,2,3], [3,4,5] ) ); // returns [1,2,4,5]
+ * 
  * @func symdiff
  * @param {iterable} list1 The first iterable
  * @param {iterable} list2 The second iterable
