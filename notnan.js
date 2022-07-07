@@ -11,5 +11,5 @@
  * @returns {boolean}
  */
 module.exports = function notnan(value) {
-    return ! Number.isNaN(value);
+    return (value === value);
 }
