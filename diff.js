@@ -9,6 +9,12 @@
  * 
  * `diff()` is curried by default with binary arity.
  * 
+ * @example
+ * 
+ * const diff = require('functionish/diff');
+ * 
+ * Array.from( diff( [1,2,3], [3,4,5] ) ); // returns [1,2]
+ *  
  * @func diff
  * @param {iterable} list2 The first iterable
  * @param {iterable} list2 The second iterable
