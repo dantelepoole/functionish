@@ -10,14 +10,8 @@ const countargs = spy(
     }
 )
 
-const sum_variadic = spy(
-    function sum_variadic(...numbers) {
-        return numbers.reduce( (a,b)=>(a+b), 0 );
-    }
-)
-
-const sum_uniadic = spy(
-    function sum_uniadic(numbers) {
+const sum = spy(
+    function sum(...numbers) {
         return numbers.reduce( (a,b)=>(a+b), 0 );
     }
 )
@@ -32,7 +26,7 @@ describe('uniadic()', function() {
 
     it(`should return a function`,
         function() {
-            const result = uniadic(sum_variadic);
+            const result = uniadic(sum);
         }
     )
 
@@ -47,15 +41,15 @@ describe('uniadic()', function() {
 
         it(`should have the same name as the target function, but tagged as 'uniadic'`,
             function() {
-                const result = uniadic(sum_variadic);
-                expect( result.name ).to.equal('uniadic sum_variadic');
+                const result = uniadic(sum);
+                expect( result.name ).to.equal('uniadic sum');
             }
         )
 
     
         it(`should throw if its sole argument is not an iterable object`,
             function() {
-                const result = uniadic(sum_variadic);
+                const result = uniadic(sum);
                 expect( ()=>result({}) ).to.throw();
             }
         )
