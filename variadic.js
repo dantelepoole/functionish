@@ -33,7 +33,7 @@ const typeorclass = require('./typeorclass');
  * @param {function} func The function to apply
  * @returns {function}
  */
-module.exports = function variadic(func) {
+module.exports = function variadic(func, ...partialargs) {
 
     if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
 
@@ -42,6 +42,9 @@ module.exports = function variadic(func) {
     return {
 
         [variadicname] : function (...args) {
+
+            if(partialargs.length > 0) args = partialargs.concat(args);
+            
             return func.call(this, args);
         }
 

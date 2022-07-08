@@ -26,7 +26,7 @@ describe('uniadic()', function() {
 
     it(`should return a function`,
         function() {
-            const result = uniadic(sum);
+            expect( uniadic(sum) ).to.be.a('function');
         }
     )
 
