@@ -25,16 +25,17 @@ const typeorclass = require('./typeorclass');
  * 
  * const uniadic = require('functionish/uniadic');
  * 
- * const max_uniadic = uniadic(Math.max);
+ * const max = uniadic(Math.max);
  * 
- * max_uniadic( [1,2,3] ); // returns 3
+ * max( [1,2,3] ); // returns 3
  * 
  * @func uniadic
  * @see {@link module:variadic variadic()}
  * @param {function} func The function to apply
+ * @param {...any[]} partialargs One or more arguments to partially apply *func* to before passing the uniadic argument list
  * @returns {function}
  */
-module.exports = function uniadic(func) {
+module.exports = function uniadic(func, ...partialargs) {
 
     if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
 
@@ -46,7 +47,7 @@ module.exports = function uniadic(func) {
 
             if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
 
-            return func.call(this, ...list);
+            return func.call(this, ...partialargs, ...list);
         }
 
     }[uniadicname]
