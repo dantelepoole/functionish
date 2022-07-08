@@ -25,9 +25,6 @@ const typeorclass = require('./typeorclass');
 module.exports = require('./curry2')(
 
     function split(separator, source) {
-
-        if(typeof source !== 'string') fail(ERR_BAD_SOURCE, typeorclass(source));
-
-        return source.split(separator);
+        return (typeof source === 'string') ? source.split(separator) : fail(ERR_BAD_SOURCE, typeorclass(source));
     }
 )
