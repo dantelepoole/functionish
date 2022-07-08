@@ -3,9 +3,6 @@ const split = require('../split');
 
 describe(`split()`, function() {
 
-
-    it(`should be tested`);
-    
     it(`should be curried with binary arity`,
         function () {
             const curried = split('a');
