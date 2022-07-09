@@ -25,12 +25,11 @@ module.exports = require('./curry2') (
 
     function diff(list1, list2) {
 
-        const itemcache = new Set(list2);
-        const isuniq = item => (itemcache.size < itemcache.add(item).size);
+        const uniqitems = new Set(list2);
 
         return {
             [Symbol.iterator] : function* () {
-                for(const item of list1) if( isuniq(item) ) yield item;
+                for(const item of list1) if(uniqitems.size < uniqitems.add(item).size) yield item;
             }
         }
     }
