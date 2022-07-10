@@ -26,7 +26,8 @@ const typeorclass = require('./typeorclass');
  * const islessthan5 = x => (x < 5);
  * const sum = (x,y) => (x+y);
  * 
- * const reducer = transduce( pass(iseven, islessthan5), sum );
+ * const transducer = transduce( pass(iseven, islessthan5) );
+ * const reducer = transducer(sum);
  * 
  * [1,2,3,4,5,6,7,8,9,10].reduce(reducer, 0); // returns 12
  * 
