@@ -25,6 +25,10 @@ const typeorclass = require('./typeorclass');
  * See also {@link module:pass pass()} and {@link module:drop drop()}, two helper functions that work like `predicate()`
  * but they can combine multiple input *filter*s to a single positive or negative predicate respectively.
  * 
+ * The transformation function returned by `predicate()` will have the name '_filtertransformation_'. This name is
+ * used by `transduce()` to recognize the transformation as a filter transformation so you should not do anything to
+ * to change the name (e.g. calling its `bind()` method, though you shouldn't need to, anyway).
+ * 
  * @function predicate
  * @see {@link module:transduce transduce()}
  * @see {@link module:transform transform()}

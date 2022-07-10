@@ -35,6 +35,13 @@ const composetransducers = (transducers, reducer) => transducers.reduceRight(tra
  * The reducer returned by the transducer function is suitable for passing to any function that knows how to apply a
  * reducer to reduce a list of values, e.g. {@link external:Array.prototype.reduce Array.prototype.reduce()}.
  * 
+ * The transducer function returned by `transduce()` will have its name set to *_transducer_*. This name is used to
+ * recognize the function as a transducer function, so you should not do anything that could change its name (e.g.
+ * calling its `bind()` method, though you shouldn't need to, anyway).
+ * 
+ * A transformation may also be an existing transducer function, allowing you to compose transformations with
+ * transducers.
+ * 
  * @example
  * 
  * const transduce = require('functionish/transduce');
