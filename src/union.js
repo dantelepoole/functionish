@@ -13,7 +13,10 @@ const typeorclass = require('./typeorclass');
 /**
  * Return an iterable producing the items from *list1* followed by the items in *list2*, with duplicate items removed.
  * 
- * `union()` is curried by default with binary arity.
+ * The returned iterable maintains a cache of all values passed through the iterator, allowing it to remove any
+ * duplicate values it encounters. So you should never keep a union iterable around indefinitely, that would cause a
+ * memory leak. Instead, call `union()` to create a new iterable each time you need one and let the garbage collector
+ * collect it as soon as you are finished with it.
  * 
  * @func union
  * @param {iterable} list1 The first iterable of items to combine

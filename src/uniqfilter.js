@@ -16,6 +16,9 @@
  * Nevertheless, you can call the `clearcache()` method of the returned filter function to explicitly clear its cache
  * of all entries.
  * 
+ * For the same reason, a uniqfilter-instance is not reusable, since on subsequent runs it will recognize the values
+ * from earlier runs as being duplicates (unless you call `clearcache()` inbetween runs).
+ * 
  * @example
  * 
  * const uniqfilter = require('functionish/uniqfilter');
