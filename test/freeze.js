@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const freeze = require('../freeze');
+const freeze = require('../src/freeze');
 
 describe(`freeze()`, function() {
 

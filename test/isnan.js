@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isnan = require('../isnan');
+const isnan = require('../src/isnan');
 
 describe(`isnan()`, function() {
 

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const iserror = require('../iserror');
+const iserror = require('../src/iserror');
 const iserror_native = require('util').types.isNativeError;
 
 describe(`iserror()`, function() {

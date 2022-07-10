@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const variadic = require('../variadic');
+const variadic = require('../src/variadic');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

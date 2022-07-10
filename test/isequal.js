@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isequal = require('../isequal');
+const isequal = require('../src/isequal');
 
 const sentinel = {};
 const sentinelarray = [];

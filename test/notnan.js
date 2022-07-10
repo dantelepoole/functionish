@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notnan = require('../notnan');
+const notnan = require('../src/notnan');
 
 describe(`notnan()`, function() {
 

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const tap = require('../tap');
+const tap = require('../src/tap');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

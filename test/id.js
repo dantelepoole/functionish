@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const id = require('../id');
+const id = require('../src/id');
 
 describe(`id()`, function() {
 

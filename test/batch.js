@@ -1,7 +1,7 @@
-const batch = require('../batch');
+const batch = require('../src/batch');
 const expect = require('chai').expect;
-const isiterable = require('../isiterable');
-const range = require('../range');
+const isiterable = require('../src/isiterable');
+const range = require('../src/range');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

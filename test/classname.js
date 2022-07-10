@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const classname = require('../classname');
+const classname = require('../src/classname');
 
 class WithTag { get [Symbol.toStringTag] () { return 'WithTag'; } }
 class WithTag2 extends WithTag {}

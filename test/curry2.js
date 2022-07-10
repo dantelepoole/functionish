@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const curry2 = require('../curry2');
+const curry2 = require('../src/curry2');
 
 function countargs(...args) {
     return args.length;

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const last = require('../last');
+const last = require('../src/last');
 
 describe(`last()`, function() {
 

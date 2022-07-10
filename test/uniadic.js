@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const uniadic = require('../uniadic');
+const uniadic = require('../src/uniadic');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

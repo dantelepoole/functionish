@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isprimitive = require('../isprimitive');
+const isprimitive = require('../src/isprimitive');
 
 describe(`isprimitive()`, function() {
 

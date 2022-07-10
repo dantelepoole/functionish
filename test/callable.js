@@ -1,4 +1,4 @@
-const callable = require('../callable');
+const callable = require('../src/callable');
 const expect = require('chai').expect;
 
 const sentinel = Object.freeze({});

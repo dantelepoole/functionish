@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 const spy = require('sinon').spy;
-const AbortController = require('../AbortController');
-const AbortSignal = require('../AbortSignal');
+const AbortController = require('../src/AbortController');
+const AbortSignal = require('../src/AbortSignal');
 
 describe(`AbortController`, function() {
 

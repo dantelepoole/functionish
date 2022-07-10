@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isinteger = require('../isinteger');
+const isinteger = require('../src/isinteger');
 
 describe(`isinteger()`, function() {
 

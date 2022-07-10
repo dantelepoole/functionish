@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const queuemicrotask = require('../queuemicrotask');
+const queuemicrotask = require('../src/queuemicrotask');
 
 let presult = undefined;
 let wasinvoked = false;

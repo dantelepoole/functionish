@@ -1,4 +1,4 @@
-const constrain = require('../constrain');
+const constrain = require('../src/constrain');
 const expect = require('chai').expect;
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

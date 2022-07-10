@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isempty = require('../isempty');
+const isempty = require('../src/isempty');
 
 describe(`isempty()`, function() {
 

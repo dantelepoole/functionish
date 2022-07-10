@@ -1,4 +1,4 @@
-const compose = require('../compose');
+const compose = require('../src/compose');
 const expect = require('chai').expect;
 
 const sandbox = require('sinon').createSandbox();

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const not = require('../not');
+const not = require('../src/not');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

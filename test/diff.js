@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const diff = require('../diff');
-const isiterable = require('../isiterable');
+const diff = require('../src/diff');
+const isiterable = require('../src/isiterable');
 
 const list1 = [1,2,3,4,2];
 const list2 = [3,4,5,6,6];

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isvoid = require('../isvoid');
+const isvoid = require('../src/isvoid');
 
 describe(`isvoid()`, function() {
 

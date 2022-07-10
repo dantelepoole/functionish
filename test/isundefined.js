@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isundefined = require('../isundefined');
+const isundefined = require('../src/isundefined');
 
 describe(`isundefined()`, function() {
 

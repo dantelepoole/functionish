@@ -1,4 +1,4 @@
-const always = require('../always');
+const always = require('../src/always');
 const expect = require('chai').expect;
 
 const sentinel = Object.freeze({});

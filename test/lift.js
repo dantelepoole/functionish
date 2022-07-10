@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const lift = require('../lift');
+const lift = require('../src/lift');
 
 describe(`lift()`, function() {
 

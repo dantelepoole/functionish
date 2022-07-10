@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const stack = require('../stack');
+const stack = require('../src/stack');
 
 describe(`stack()`, function() {
 

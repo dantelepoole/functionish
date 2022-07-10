@@ -1,12 +1,12 @@
 const expect = require('chai').expect;
-const concatlist = require('../concatlist');
-const isiterable = require('../isiterable');
-const range = require('../range');
+const concatlist = require('../src/concatlist');
+const isiterable = require('../src/isiterable');
+const range = require('../src/range');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);
 
-const array = spy( require('../array') );
+const array = spy( require('../src/array') );
 
 const sentinel = Object.freeze({});
 

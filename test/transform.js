@@ -1,10 +1,10 @@
-const array = require('../array');
+const array = require('../src/array');
 const expect = require('chai').expect;
-const isiterable = require('../isiterable');
-const predicate = require('../predicate');
-const range = require('../range');
-const transform = require('../transform');
-const transduce = require('../transduce');
+const isiterable = require('../src/isiterable');
+const predicate = require('../src/predicate');
+const range = require('../src/range');
+const transform = require('../src/transform');
+const transduce = require('../src/transduce');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

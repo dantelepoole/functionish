@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const head = require('../head');
+const head = require('../src/head');
 
 const indexable = Object.freeze(
     {

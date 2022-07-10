@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const tail = require('../tail');
-const isiterable = require('../isiterable');
+const tail = require('../src/tail');
+const isiterable = require('../src/isiterable');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

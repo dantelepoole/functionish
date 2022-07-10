@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const or = require('../or');
+const or = require('../src/or');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

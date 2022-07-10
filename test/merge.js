@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const merge = require('../merge');
+const merge = require('../src/merge');
 
 describe(`merge()`, function() {
 

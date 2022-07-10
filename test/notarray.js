@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notarray = require('../notarray');
+const notarray = require('../src/notarray');
 
 describe(`notarray()`, function() {
 

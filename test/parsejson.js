@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const parsejson = require('../parsejson');
+const parsejson = require('../src/parsejson');
 
 describe(`parsejson()`, function() {
 

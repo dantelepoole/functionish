@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isarray = require('../isarray');
+const isarray = require('../src/isarray');
 
 describe(`isarray()`, function() {
 

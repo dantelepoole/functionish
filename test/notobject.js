@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notobject = require('../notobject');
+const notobject = require('../src/notobject');
 
 describe(`notobject()`, function() {
 

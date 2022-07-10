@@ -1,6 +1,6 @@
-const uniq = require('../uniq');
+const uniq = require('../src/uniq');
 const expect = require('chai').expect;
-const isiterable = require('../isiterable');
+const isiterable = require('../src/isiterable');
 
 function uniqarray(iterable) {
     expect( isiterable(iterable) ).to.be.true;

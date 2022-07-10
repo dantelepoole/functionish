@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isinstanceof = require('../isinstanceof');
+const isinstanceof = require('../src/isinstanceof');
 
 class Foobar {}
 class SubFoobar extends Foobar {}

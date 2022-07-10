@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const predicate = require('../predicate');
+const predicate = require('../src/predicate');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

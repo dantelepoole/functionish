@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
-const isiterable = require('../isiterable');
-const range = require('../range');
-const take = require('../take');
+const isiterable = require('../src/isiterable');
+const range = require('../src/range');
+const take = require('../src/take');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

@@ -2,7 +2,7 @@
   "name": "functionish",
   "version": "1.0.0",
   "description": "A Node library of utility functions for functionish programming: the more better programming paradigm.",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "mocha",
     "doc": "jsdoc -c ./jsdoc.conf.json -d ./doc -R README.md *.js"

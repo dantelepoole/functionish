@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const copy = require('../copy');
+const copy = require('../src/copy');
 
 const sourceprototype = { type: 'sourceproto' };
 const sourceobject = Object.create(sourceprototype);

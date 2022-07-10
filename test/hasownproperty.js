@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const hasownproperty = require('../hasownproperty');
+const hasownproperty = require('../src/hasownproperty');
 
 const sentinel = Symbol();
 

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const iswithinbounds = require('../iswithinbounds');
+const iswithinbounds = require('../src/iswithinbounds');
 
 const teststring = 'Hari Seldon';
 const testarray = [1,2,3,4,5];
