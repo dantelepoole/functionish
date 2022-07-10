@@ -53,5 +53,21 @@ describe(`uniqfilter()`, function() {
                 expect( filter(uniqfilter) ).to.be.false;
             }
         )
+
+        it(`should have a clearcache() method that clears the filters cache of duplicate values`,
+            function () {
+                const filter = uniqfilter();
+
+                let result = [1,1,2,2,3,3,4,4,5,5].filter(filter);
+                expect(result).to.deep.equal([1,2,3,4,5]);
+
+                result = [1,1,2,2,3,3,4,4,5,5].filter(filter);
+                expect(result).to.be.an('array').with.length(0);
+
+                filter.clearcache();
+                result = [1,1,2,2,3,3,4,4,5,5].filter(filter);
+                expect(result).to.deep.equal([1,2,3,4,5]);
+            }
+        )
     })
 })
