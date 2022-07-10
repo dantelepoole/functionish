@@ -17,10 +17,9 @@ const typeorclass = require('./typeorclass');
  * Contrary to its sister function {@link module:pass pass()}, a `drop()` transformation returns `true` if its value
  * should be ignored and `false` if its value should be accepted.
  * 
- * When passed multiple filter functions, the filter transformation will drop any value for which one or more filter
- * functions return `true`. If all filter functions return `false`, the value is accepted and the filter transformation
- * will return `false` as well. If any filter function returns `true`, the filter transformation also returns `true`,
- * signalling that the value should be dropped.
+ * When passed multiple filter functions, the filter transformation will return `false` for any value that matches all
+ * filter functions, signalling that the value should be dropped. If any filter function rejects the value, the value
+ * is accepted and the filter transformation will return `true`.
  * 
  * If no filter functions are passed, the transformation will alwayrs return `false` (so each value will be accepted).
  * 
