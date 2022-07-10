@@ -6,8 +6,8 @@
 
 const ERR_BAD_FILTER = `DropError~The filter at index %d has type %s. Expected a function.`;
 
-const fail = require('../fail');
-const typeorclass = require('../typeorclass');
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
 
 /**
  * A convenience function that serves the same purpose as {@link module:predicate predicate()} but that accepts and

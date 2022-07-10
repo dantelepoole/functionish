@@ -6,8 +6,8 @@
 
 const ERR_BAD_FILTER = `PredicateError~The filter has type %x. Expected a function.`;
 
-const fail = require('../fail');
-const typeorclass = require('../typeorclass');
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
 
 /**
  * Return a function that is recognized by {@link module:transduce transduce()} and {@link module:transform transform()}
