@@ -9,24 +9,22 @@ const ERR_BAD_LIST = `TransformError~The list has type %s. Expected an iterable 
 const TRANSFORM_REJECT = Symbol.for('functionish/transduce/transform/reject');
 
 const fail = require('./fail');
-const isarray = require('./isarray');
 const notiterable = require('./notiterable');
 const transduce = require('./transduce');
 const typeorclass = require('./typeorclass');
 
-const nottransducer = transducer => (typeof transducer !== 'function' || transducer.name !== '_transducer_');
 const idreducer = (_,x) => x;
 
 /**
- * Return an iterable object that use the *transducer* function to transform the items produced by *list*.
+ * Return a function that accepts an iterable object and returns an iterable object that transforms its items by
+ * applying the *transformations*.
  * 
- * The *transducer* may either be a transducer function as returned by {@link module:transduce transduce()} or an
- * array of transformation functions, i.e. the types of functions accepted by {@link module:transduce transduce()}.
+ * The *transformations* may be any transformation functions accepted by {@link module:transduce transduce()}. See
+ * {@link module:transduce transduce()} for further details.
  * 
- * The *list* must be an iterable object producing the items to transform. The returned iterable will transform the
- * items produced by *list* and will ignore any item that the *transducer* rejects (i.e. filters out).
- * 
- * `transform()` is curried by default with binary arity.
+ * The returned function takes an iterable object as its only argument. The iterable it returns applies the
+ * *transformations* in order to each item produced by the argument iterable, dropping any values that any of the
+ * *transformations* rejects.
  * 
  * @example
  * 
@@ -37,33 +35,33 @@ const idreducer = (_,x) => x;
  * const iseven = x => (x%2) === 0;
  * const sum = (x,y) => (x+y);
  * 
- * const transformer = transform( [predicate(iseven), double], [1,2,3,4,5] )
+ * const transformer = transform(predicate(iseven), double);
  * 
- * Array.from(transformer); // returns [4,8]
+ * Array.from( transformer([1,2,3,4,5]) ); // returns [4,8]
  * 
  * @func transform
  * @see {@link module:transduce transduce()}
- * @param {function} transducer The transducer function that transforms the items produced by *list*
- * @param {iterable} list An iterable object that produces the items to transform
- * @returns {iterable}
+ * @param {...function[]} transformations The transformation functions to apply
+ * @returns {function}
  */
-module.exports = require('./curry2') (transform);
+module.exports = function transform(...transformations) {
 
-function transform(transducer, list) {
+    const transducer = transduce(...transformations);
+    const transformer = transducer(idreducer);
 
-    if( nottransducer(transducer) ) transducer = isarray(transducer) ? transduce(...transducer) : transduce(transducer);
-    if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+    return function _transformer_(list) {
 
-    const transform = transducer(idreducer);
+        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
 
-    return {
-        [Symbol.iterator] : function* () {
-
-            for(const item of list) {
-
-                const transformeditem = transform(TRANSFORM_REJECT, item);
-
-                if(transformeditem !== TRANSFORM_REJECT) yield transformeditem;
+        return {
+            [Symbol.iterator] : function* () {
+    
+                for(const item of list) {
+    
+                    const transformeditem = transformer(TRANSFORM_REJECT, item);
+    
+                    if(transformeditem !== TRANSFORM_REJECT) yield transformeditem;
+                }
             }
         }
     }

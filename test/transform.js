@@ -41,39 +41,38 @@ describe(`transform`, function() {
     
     beforeEach(function() {})
 
-    it(`should be curried`,
-        function() {
-
-            const curried = transform(double);
-            expect(curried).to.be.a('function');
-            expect( array( curried( range(3) ) ) ).to.deep.equal([2,4,6]);
-        }
-    )
-
-    it(`should throw if the transducer is neither a transducer function nor an array of transformations`,
+    it(`should throw if any transformation is not a function`,
         function() {
             expect( ()=>transform(double,{}) ).to.throw();
-            expect( ()=>transform([double], range(3)) ).not.to.throw();
-
-            const transducer = transduce( predicate(iseven) );
-            expect( ()=>transform(transducer,range(3)) ).not.to.throw();
         }
     )
 
-    it(`should throw if the list is not an iterable object`,
+    it(`should return a function`,
         function() {
-            expect( ()=>transform([double],{}) ).to.throw();
-            expect( ()=>transform([double],null) ).to.throw();
-        }
-    )
-
-    it(`should return an iterable object`,
-        function() {
-            expect( isiterable( transform([double],range(3)) ) ).to.be.true;
+            expect( transform(double) ).to.be.a('function');
         }
     )
     
-    describe(`the iterable returned by transform()`, function() {
+    describe(`the function returned by transform()`, function() {
+
+        it(`should throw if its argument is not an iterable object`,
+            function() {
+                const transformer = transform(double);
+                expect( ()=>transformer({}) ).to.throw();
+                expect( ()=>transformer(null) ).to.throw();
+                expect( ()=>transformer() ).to.throw();
+            }
+        )
+
+        it(`should return an iterable object`,
+            function() {
+                const transformer = transform(double);
+                expect( isiterable( transformer([1,2,3]) ) ).to.be.true;
+            }
+        )
+    })
+
+    describe(`the iterable returned by the transformer`, function() {
 
         afterEach(function() {
             sandbox.resetHistory();
@@ -81,9 +80,10 @@ describe(`transform`, function() {
             
         beforeEach(function() {})
 
-        it(`should apply the transducer's transformations in order`,
+        it(`should apply the transformations in order`,
             function() {
-                const iterable = transform( [predicate(iseven), double], [2,4,6] );
+                const transformer = transform( predicate(iseven), double );
+                const iterable = transformer( [2,4,6] );
                 const result = array(iterable);
 
                 expect(result).to.deep.equal([4,8,12]);
@@ -92,9 +92,10 @@ describe(`transform`, function() {
             }
         )
 
-        it(`should apply the transducer's transformations in a short circuited manner`,
+        it(`should apply the transformations in a short circuited manner`,
             function() {
-                const iterable = transform( [predicate(iseven), double], range(3) );
+                const transformer = transform( predicate(iseven), double );
+                const iterable = transformer( range(3) );
                 const result = array(iterable);
 
                 expect(result).to.deep.equal([4]);
