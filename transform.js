@@ -52,7 +52,7 @@ module.exports = require('./curry2') (transform);
 function transform(transducer, list) {
 
     if( nottransducer(transducer) ) transducer = isarray(transducer) ? transduce(...transducer) : transduce(transducer);
-    else if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+    if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
 
     const transform = transducer(idreducer);
 
