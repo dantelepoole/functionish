@@ -9,8 +9,12 @@
  * can be passed to {@link module:predicate predicate()} to be used in a transducer, or can be used anywhere a filter
  * function is expected (e.g. {@link external:Array.prototype.filter Array.prototype.filter()}).
  * 
- * The returned filter function maintains a cache of all values passed through the filter. You can call the
- * `clearcache()` method of the returned filter function to explicitly clear its cache.
+ * The returned filter function maintains a cache of all values passed through the filter. So you should never keep
+ * a uniqfilter-instance around indefinitely, that would cause a memory leak. Instead, call `uniqfilter()` to create a
+ * new filter each time you need one and let the garbage collector collect it as soon as you are finished with it.
+ * 
+ * Nevertheless, you can call the `clearcache()` method of the returned filter function to explicitly clear its cache
+ * of all entries.
  * 
  * @example
  * 
