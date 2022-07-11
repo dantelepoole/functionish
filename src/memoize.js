@@ -21,16 +21,16 @@ const typeorclass = require('./typeorclass');
  * 2. If called with a single argument, it will be an array of the arguments pass to the *targetfunc*.
  * The *cachefunc* should return a cached result associated with those arguments or `null` if no such
  * result has been cached.
- * 3. If called with two arguments, the first will be an array of the argument passed to the *targetfunc* and the
- * second will be the result that the *cachefunc* should associate with those arguments. Note that the value will not
+ * 3. If called with two arguments, the first will be an array of the arguments passed to the *targetfunc* and the
+ * second will be the result that the *cachefunc* should associate with those arguments. Note that the result will not
  * be the actual return value of the *targetfunc*. Instead, it will be an object that holds *targetfunc*'s actual
  * return value as a property.
  * 
  * If *cachefunc* is `null` or `undefined`, `memoize()` will use its default cache function. The default cache function
  * is very simplistic and simply converts the arguments to strings to construct the key with which a return value is
- * cached. Therefore, the default cache function is only appropriate for arguments of primitive types only. If one or
- * more arguments have a non-primitive type (e.g. type `'object'`), the default cache function will produce incorrect
- * results*. Provide your own cache function to customize the caching for the types of arguments you expect your 
+ * cached. Therefore, the default cache function is appropriate for primitive type arguments only.If one or
+ * more arguments have a non-primitive type, *the default cache function will produce incorrect
+ * results*. Provide your own cache function to customize the caching for the types of arguments you expect your
  * function to receive. *Use the default cache function at your own risk.*
  * 
  * The returned function will have a `clearcache()` method that clears the internal cache of return values.
@@ -62,7 +62,7 @@ module.exports = require('./curry2') (
 
     function memoize(cachefunc, targetfunc) {
 
-        if( isvoid(cachefunc) ) cachefunc = cachefuncfactory();
+        if( isvoid(cachefunc) ) cachefunc = defaultcachefunc();
         else if(typeof cachefunc !== 'function') fail(ERR_BAD_CACHEFUNC, typeorclass(cachefunc));
 
         if(typeof targetfunc !== 'function') fail(ERR_BAD_TARGETFUNC, typeorclass(targetfunc));
@@ -90,7 +90,7 @@ module.exports = require('./curry2') (
     }
 )
 
-function cachefuncfactory() {
+function defaultcachefunc() {
 
     const resultmap = new Map();
 
