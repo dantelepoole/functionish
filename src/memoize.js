@@ -29,7 +29,7 @@ const typeorclass = require('./typeorclass');
  * If *cachefunc* is `null` or `undefined`, `memoize()` will use its default cache function. The default cache function
  * is very simplistic and simply converts the arguments to strings to construct the key with which a return value is
  * cached. Therefore, the default cache function is only appropriate for arguments of primitive types only. If one or
- * more arguments have a non-primitive type (e.g. type `'object'`), *the default cache function will produce incorrect
+ * more arguments have a non-primitive type (e.g. type `'object'`), the default cache function will produce incorrect
  * results*. Provide your own cache function to customize the caching for the types of arguments you expect your 
  * function to receive. *Use the default cache function at your own risk.*
  * 
