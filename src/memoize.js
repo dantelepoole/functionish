@@ -4,9 +4,9 @@
 
 'use strict';
 
+const CACHE_ENTRY_EMPTY = null;
 const ERR_BAD_CACHEFUNC = `MemoizeError~The cache function has type %s. Expected a function.`;
 const ERR_BAD_TARGETFUNC = `MemoizeError~The target function has type %s. Expected a function.`;
-const CACHE_ENTRY_EMPTY = null;
 
 const fail = require('./fail');
 const isvoid = require('./isvoid');
@@ -48,45 +48,18 @@ module.exports = require('./curry2') (
 
 function cachefuncfactory() {
 
-    const cache = new CacheEntry();
+    const cache = new Map();
 
     return function cachefunc(args, result) {
 
         if(arguments.length === 0) return cache.clear();
 
-        const entry = lookupcacheentry(cache, args);
+        const key = args.join(':');
 
-        return (arguments.length === 1) ? entry.value : (entry.value = result);
-    }
-}
+        if(arguments.length === 1) return (cache.get(key) ?? CACHE_ENTRY_EMPTY);
 
-function lookupcacheentry(cacheentry, args) {
+        cache.set(key, result);
 
-    for(const arg of args) cacheentry = cacheentry.lookup(arg);
-
-    return cacheentry;
-}
-
-class CacheEntry {
-
-    #cache = new Map();
-
-    value = CACHE_ENTRY_EMPTY;
-
-    lookup(arg) {
-
-        const entry = this.#cache.get(arg);
-
-        if(entry !== undefined) return entry;
-
-        const newentry = createcacheentry();
-        this.#cache.set(arg, newentry);
-
-        return newentry;
-    }
-
-    clear() {
-        this.#cache.clear();
-        this.value = CACHE_ENTRY_EMPTY;
+        return result;
     }
 }
