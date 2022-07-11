@@ -84,7 +84,7 @@ module.exports = require('./curry2') (
 
         } [memoizename];
 
-        memoized.clearcache = () => cachefunc();
+        memoized.clearcache = () => void( cachefunc() );
 
         return memoized;
     }
