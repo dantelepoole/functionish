@@ -54,8 +54,8 @@ const typeorclass = require('./typeorclass');
  * loaduserdata.clearcache(); // clear the cached data
  * 
  * @func memoize
- * @param {function} cachefunc A function that can cache the *targetfunc*'s results
- * @param {function} targetfunc The target function to cache the results of
+ * @param {function} cachefunc A function that can cache *targetfunc*'s arguments and results
+ * @param {function} targetfunc The target function to cache the arguments and results of
  * @return {function} The memoized function
  */
 module.exports = require('./curry2') (
@@ -71,7 +71,7 @@ module.exports = require('./curry2') (
 
         const memoized = {
 
-            [memoizename] : function (...args) {
+            [memoizename] (...args) {
 
                 const cachedresult = cachefunc(args);
                 if(cachedresult !== CACHE_NONE) return cachedresult.value;
