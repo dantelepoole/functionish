@@ -1,7 +1,7 @@
 {
   "name": "functionish",
   "version": "1.0.0",
-  "description": "A Node library of utility functions for functionish programming: the more better programming paradigm.",
+  "description": "A set of utility functions for functional-ish programming in Node",
   "main": "./src/index.js",
   "scripts": {
     "test": "mocha",
