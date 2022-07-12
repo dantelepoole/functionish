@@ -1,4 +1,4 @@
-const unless = require('../src/unless');
+const unless = require('../unless');
 const expect = require('chai').expect;
 
 function iseven(x) {

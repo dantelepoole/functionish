@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
-const reverse = require('../src/reverse');
+const reverse = require('../reverse');
 
-const isiterable = require('../src/isiterable');
+const isiterable = require('../isiterable');
 
 describe(`reverse()`, function() {
 

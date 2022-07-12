@@ -1,4 +1,4 @@
-const when = require('../src/when');
+const when = require('../when');
 const expect = require('chai').expect;
 
 function iseven(x) {

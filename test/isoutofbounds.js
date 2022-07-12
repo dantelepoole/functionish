@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isoutofbounds = require('../src/isoutofbounds');
+const isoutofbounds = require('../isoutofbounds');
 
 const testarray = Object.freeze( [1,2,3,4,5] );
 const teststring = 'foobar';

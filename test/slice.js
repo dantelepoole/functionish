@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const slice = require('../src/slice');
+const slice = require('../slice');
 
 const numbers1to10 = [1,2,3,4,5,6,7,8,9,10];
 const numbers1to10_typed = new Uint8Array(numbers1to10);

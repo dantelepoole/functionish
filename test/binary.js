@@ -1,4 +1,4 @@
-const binary = require('../src/binary');
+const binary = require('../binary');
 const expect = require('chai').expect;
 
 function returnargs(...args) { return args }

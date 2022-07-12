@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notstring = require('../src/notstring');
+const notstring = require('../notstring');
 
 describe(`notstring()`, function() {
 

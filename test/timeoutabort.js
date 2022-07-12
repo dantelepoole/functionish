@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const timeoutabort = require('../src/timeoutabort');
-const AbortController = require('../src/AbortController');
+const timeoutabort = require('../timeoutabort');
+const AbortController = require('../AbortController');
 
 const OPTIONS_ONCE = Object.freeze( { once:true } );
 

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notinteger = require('../src/notinteger');
+const notinteger = require('../notinteger');
 
 describe(`notinteger()`, function() {
 

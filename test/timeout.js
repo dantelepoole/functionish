@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const timeout = require('../src/timeout');
+const timeout = require('../timeout');
 
 function waitfor(callback, ...expectedargs) {
 

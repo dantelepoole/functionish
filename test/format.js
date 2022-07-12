@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const format = require('../src/format');
+const format = require('../format');
 
 describe(`format()`, function() {
 

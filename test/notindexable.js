@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notindexable = require('../src/notindexable');
+const notindexable = require('../notindexable');
 
 describe(`notindexable()`, function() {
 

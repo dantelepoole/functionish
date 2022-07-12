@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notempty = require('../src/notempty');
+const notempty = require('../notempty');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

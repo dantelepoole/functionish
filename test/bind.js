@@ -1,4 +1,4 @@
-const bind = require('../src/bind');
+const bind = require('../bind');
 const expect = require('chai').expect;
 
 const sentinel = Object.freeze({});

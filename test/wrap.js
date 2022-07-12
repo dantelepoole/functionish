@@ -1,4 +1,4 @@
-const wrap = require('../src/wrap');
+const wrap = require('../wrap');
 const expect = require('chai').expect;
 
 let wasinvokedwith = [];

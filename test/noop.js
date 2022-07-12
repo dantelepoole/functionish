@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const noop = require('../src/noop');
+const noop = require('../noop');
 
 describe(`noop()`, function() {
 

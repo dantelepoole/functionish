@@ -1,4 +1,4 @@
-const where = require('../src/where');
+const where = require('../where');
 const expect = require('chai').expect;
 
 const personspec = {

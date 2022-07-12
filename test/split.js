@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const split = require('../src/split');
+const split = require('../split');
 
 describe(`split()`, function() {
 

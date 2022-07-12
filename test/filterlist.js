@@ -1,7 +1,7 @@
-const array = require('../src/array');
+const array = require('../array');
 const expect = require('chai').expect;
-const filterlist = require('../src/filterlist');
-const isiterable = require('../src/isiterable');
+const filterlist = require('../filterlist');
+const isiterable = require('../isiterable');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

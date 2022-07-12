@@ -1,4 +1,4 @@
-const pipe = require('../src/pipe');
+const pipe = require('../pipe');
 const expect = require('chai').expect;
 
 const sandbox = require('sinon').createSandbox();

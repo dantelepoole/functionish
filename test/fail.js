@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const fail = require('../src/fail');
-const format = require('../src/format');
+const fail = require('../fail');
+const format = require('../format');
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);
 

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const withdefault = require('../src/withdefault');
+const withdefault = require('../withdefault');
 
 const sentinelobject = {};
 const sentinelarray = [];

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const hasitems = require('../src/hasitems');
+const hasitems = require('../hasitems');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

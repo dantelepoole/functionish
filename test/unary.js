@@ -1,4 +1,4 @@
-const unary = require('../src/unary');
+const unary = require('../unary');
 const expect = require('chai').expect;
 
 function returnargs(...args) { return args }

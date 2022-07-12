@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notiterable = require('../src/notiterable');
+const notiterable = require('../notiterable');
 
 describe(`notiterable()`, function() {
 

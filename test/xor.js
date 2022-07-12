@@ -1,4 +1,4 @@
-const xor = require('../src/xor');
+const xor = require('../xor');
 const expect = require('chai').expect;
 
 const isodd = x => (Math.abs(x%2) === 1);

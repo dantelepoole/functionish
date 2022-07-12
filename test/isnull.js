@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isnull = require('../src/isnull');
+const isnull = require('../isnull');
 
 describe(`isnull`, function() {
 

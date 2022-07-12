@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isdeepequal = require('../src/isdeepequal');
+const isdeepequal = require('../isdeepequal');
 
 const sentinel = { name:'Foobar', age:42 }
 const clone = { age:42, name:'Foobar' }

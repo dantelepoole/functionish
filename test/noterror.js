@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const noterror = require('../src/noterror');
+const noterror = require('../noterror');
 
 class FoobarError extends Error {}
 

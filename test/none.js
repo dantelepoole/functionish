@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const none = require('../src/none');
-const range = require('../src/range');
+const none = require('../none');
+const range = require('../range');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

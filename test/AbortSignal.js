@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const spy = require('sinon').spy;
-const AbortSignal = require('../src/AbortSignal');
+const AbortSignal = require('../AbortSignal');
 
 describe(`AbortSignal`, function() {
 

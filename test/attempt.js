@@ -1,4 +1,4 @@
-const attempt = require('../src/attempt');
+const attempt = require('../attempt');
 const expect = require('chai').expect;
 const sandbox = require('sinon').createSandbox();
 

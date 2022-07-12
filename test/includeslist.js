@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const includeslist = require('../src/includeslist');
+const includeslist = require('../includeslist');
 
 const sentinel = {};
 

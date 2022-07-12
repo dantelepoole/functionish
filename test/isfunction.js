@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isfunction = require('../src/isfunction');
+const isfunction = require('../isfunction');
 
 class FoobarClass {}
 

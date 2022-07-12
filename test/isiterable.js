@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isiterable = require('../src/isiterable');
+const isiterable = require('../isiterable');
 
 describe(`isiterable()`, function() {
 

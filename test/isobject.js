@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isobject = require('../src/isobject');
+const isobject = require('../isobject');
 
 describe(`isobject()`, function() {
 

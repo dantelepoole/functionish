@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const length = require('../src/length');
+const length = require('../length');
 
 describe(`length()`, function() {
 

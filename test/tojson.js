@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const tojson = require('../src/tojson');
+const tojson = require('../tojson');
 
 describe(`tojson()`, function() {
 

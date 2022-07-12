@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isdefined = require('../src/isdefined');
+const isdefined = require('../isdefined');
 
 describe(`isdefined()`, function() {
 

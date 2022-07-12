@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notnull = require('../src/notnull');
+const notnull = require('../notnull');
 
 describe(`notnull`, function() {
 

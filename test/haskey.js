@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const haskey = require('../src/haskey');
+const haskey = require('../haskey');
 
 describe(`haskey()`, function() {
 

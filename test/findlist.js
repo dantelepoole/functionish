@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const findlist = require('../src/findlist');
+const findlist = require('../findlist');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

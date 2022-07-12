@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const trim = require('../src/trim');
+const trim = require('../trim');
 
 describe(`trim()`, function() {
 

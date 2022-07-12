@@ -1,6 +1,6 @@
-const array = require('../src/array');
+const array = require('../array');
 const expect = require('chai').expect;
-const range = require('../src/range');
+const range = require('../range');
 
 describe('array()', function() {
 

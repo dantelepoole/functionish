@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const uniqfilter = require('../src/uniqfilter');
+const uniqfilter = require('../uniqfilter');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

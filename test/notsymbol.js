@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notsymbol = require('../src/notsymbol');
+const notsymbol = require('../notsymbol');
 
 describe(`notsymbol()`, function() {
 

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const evaluate = require('../src/evaluate');
+const evaluate = require('../evaluate');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

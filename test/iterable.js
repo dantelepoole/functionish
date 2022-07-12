@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
-const isiterable = require('../src/isiterable');
-const iterable = require('../src/iterable');
-const range = require('../src/range');
+const isiterable = require('../isiterable');
+const iterable = require('../iterable');
+const range = require('../range');
 
 describe('iterable()', function() {
 

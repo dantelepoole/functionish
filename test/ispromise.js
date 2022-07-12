@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const ispromise = require('../src/ispromise');
+const ispromise = require('../ispromise');
 
 describe(`ispromise()`, function() {
 

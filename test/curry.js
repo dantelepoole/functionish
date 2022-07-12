@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const curry = require('../src/curry');
+const curry = require('../curry');
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);
 

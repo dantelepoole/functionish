@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const isgreaterthan = require('../src/isgreaterthan');
+const isgreaterthan = require('../isgreaterthan');
 
 describe(`isgreaterthan()`, function() {
 

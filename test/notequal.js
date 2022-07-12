@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notequal = require('../src/notequal');
+const notequal = require('../notequal');
 
 const sentinel = {};
 const sentinelarray = [];

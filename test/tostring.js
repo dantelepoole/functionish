@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const tostring = require('../src/tostring');
+const tostring = require('../tostring');
 
 describe(`tostring()`, function() {
 

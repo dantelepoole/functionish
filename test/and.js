@@ -1,4 +1,4 @@
-const and = require('../src/and');
+const and = require('../and');
 const expect = require('chai').expect;
 const spy = require('sinon').spy;
 

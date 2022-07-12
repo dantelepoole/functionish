@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const notinstanceof = require('../src/notinstanceof');
+const notinstanceof = require('../notinstanceof');
 
 class Foobar {}
 class SubFoobar extends Foobar {}

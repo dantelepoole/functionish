@@ -1,9 +1,9 @@
-const array = require('../src/array');
+const array = require('../array');
 const expect = require('chai').expect;
-const flatlist = require('../src/flatlist');
-const isiterable = require('../src/isiterable');
-const list = require('../src/list');
-const range = require('../src/range');
+const flatlist = require('../flatlist');
+const isiterable = require('../isiterable');
+const list = require('../list');
+const range = require('../range');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
-const groupby = require('../src/groupby');
-const isdefined = require('../src/isdefined');
-const isvoid = require('../src/isvoid');
+const groupby = require('../groupby');
+const isdefined = require('../isdefined');
+const isvoid = require('../isvoid');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

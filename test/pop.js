@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const pop = require('../src/pop');
+const pop = require('../pop');
 
 const sentinel = {};
 

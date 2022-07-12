@@ -1,4 +1,4 @@
-const at = require('../src/at');
+const at = require('../at');
 const expect = require('chai').expect;
 
 const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);

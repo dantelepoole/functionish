@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const predicate = require('../src/predicate');
-const transduce = require('../src/transduce');
+const predicate = require('../predicate');
+const transduce = require('../transduce');
 
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);

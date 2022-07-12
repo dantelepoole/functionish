@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const typeorclass = require('../src/typeorclass');
+const typeorclass = require('../typeorclass');
 
 class Foobar {}
 class SubFoobar extends Foobar {}

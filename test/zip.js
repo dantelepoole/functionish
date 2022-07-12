@@ -1,6 +1,6 @@
-const zip = require('../src/zip');
+const zip = require('../zip');
 const expect = require('chai').expect;
-const isiterable = require('../src/isiterable');
+const isiterable = require('../isiterable');
 
 const abc = ['a','b','c'];
 const onetwothree = [1,2,3];

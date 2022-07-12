@@ -1,4 +1,4 @@
-const applicable = require('../src/applicable');
+const applicable = require('../applicable');
 const expect = require('chai').expect;
 
 function sum(...numbers) {

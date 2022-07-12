@@ -1,6 +1,6 @@
-const union = require('../src/union');
+const union = require('../union');
 const expect = require('chai').expect;
-const isiterable = require('../src/isiterable');
+const isiterable = require('../isiterable');
 
 const listnumbers1to10 = {
     [Symbol.iterator] : function* () {

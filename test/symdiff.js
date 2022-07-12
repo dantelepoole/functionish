@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const symdiff = require('../src/symdiff');
-const isiterable = require('../src/isiterable');
+const symdiff = require('../symdiff');
+const isiterable = require('../isiterable');
 
 function array(iterable) {
     expect( isiterable(iterable) ).to.be.true;

@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const pluck = require('../src/pluck');
+const pluck = require('../pluck');
 
 const foundation = {
     title : 'Foundation',
