@@ -97,11 +97,10 @@ function defaultcachefunc() {
     return function cachefunc(args, result) {
 
         const argumentcount = arguments.length;
-        const cachekey = args.join();
 
         return (argumentcount === 0) ? resultmap.clear()
-             : (argumentcount === 1) ? (resultmap.get(cachekey) ?? CACHE_NONE)
-             : void( resultmap.set(cachekey, result) );
+             : (argumentcount === 1) ? (resultmap.get( args.join() ) ?? CACHE_NONE)
+             : void( resultmap.set( args.join(), result ) );
 
     }
 }
