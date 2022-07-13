@@ -48,6 +48,12 @@ describe(`witharity()`, function() {
             sandbox.resetHistory();
         })
             
+        it(`should have the same name as the target function, but tagged with the arity`,
+            function() {
+                expect( witharity(3, countargs).name ).to.equal('arity[3] countargs');
+            }
+        )
+
         it(`should have a length property equal to the arity if arity is less than 5`,
             function() {
 
