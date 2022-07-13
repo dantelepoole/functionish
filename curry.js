@@ -29,6 +29,9 @@ const typeorclass = require('./typeorclass');
  * followed by a key, in which case the key is first resolved against the loaded module object to obtain the function to
  * curry. See the example below.
  * 
+ * If the path is not to a package but to a file module, it must be an absolute path. `curry()` cannot handle relative
+ * paths. To load file modules from relative paths, prepend `__dirname` to the relative path before calling `curry()`. 
+ * 
  * To add in debugging, `curry()` preserves the name of the target function. On subsequent invocations of the curried
  * function itself, the returned function will also be tagged `bound`.
  * 
