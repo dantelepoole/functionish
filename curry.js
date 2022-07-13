@@ -5,6 +5,7 @@
 'use strict';
 
 const ARITY_NONE = undefined;
+const EOL = require('os').EOL;
 const ERR_BAD_ARITY = "CurryError~The arity has type %s. Expected a number.";
 const ERR_BAD_FUNCTION = "CurryError~The value at '%s' has type %s. Expected a function.";
 
@@ -115,11 +116,12 @@ function loadmodule(path, key) {
 
         if( error?.code === 'MODULE_NOT_FOUND' && path.startsWith('.') ) {
 
-            const message = `It seem you are using curry to load a file module with a relative path. ` +
+            const message = `It seems you are using curry to load a file module with a relative path. ` +
                             `Curry can only load file modules from abolute paths. ` +
-                            `Prepend '__dirname' to the relative path and try again.`;
+                            `Prepend '__dirname' to the relative path and try again.` + 
+                            EOL + EOL;
 
-            error.message += ' ' + message;
+            error.message = message + error.message;
 
         }
 
