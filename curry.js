@@ -113,9 +113,7 @@ function loadmodule(path, key) {
         return (key === undefined) ? require(targetpath) : require(targetpath?.[key]);
     } catch (error) {
 
-        if( error?.code !== 'MODULE_NOT_FOUND' ) throw error;
-
-        if( path.startsWith('.') ) {
+        if( error?.code === 'MODULE_NOT_FOUND' && path.startsWith('.') ) {
 
             const message = `It seem you are using curry to load a file module with a relative path. ` +
                             `Curry can only load file modules from abolute paths. ` +
@@ -123,7 +121,8 @@ function loadmodule(path, key) {
 
             error.message += ' ' + message;
 
-            throw error;
         }
+
+        throw error;
     }
 }
