@@ -110,7 +110,7 @@ function resolvefunction(path) {
 function loadmodule(path, key) {
 
     try {
-        return (key === undefined) ? require(targetpath) : require(targetpath?.[key]);
+        return (key === undefined) ? require(path) : require(path?.[key]);
     } catch (error) {
 
         if( error?.code === 'MODULE_NOT_FOUND' && path.startsWith('.') ) {
