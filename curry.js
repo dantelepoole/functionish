@@ -99,9 +99,31 @@ function resolvefunction(path) {
 
     const [targetpath, key] = String(path).split('#');
 
-    const func = (key === undefined) ? require(targetpath) : require(targetpath)?.[key];
+    // const func = (key === undefined) ? require(targetpath) : require(targetpath)?.[key];
+    const func = loadmodule(targetpath, key);
 
     if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, String(path), typeorclass(func));
 
     return func;
+}
+
+function loadmodule(path, key) {
+
+    try {
+        return (key === undefined) ? require(targetpath) : require(targetpath?.[key]);
+    } catch (error) {
+
+        if( error?.code !== 'MODULE_NOT_FOUND' ) throw error;
+
+        if( path.startsWith('.') ) {
+
+            const message = `It seem you are using curry to load a file module with a relative path. ` +
+                            `Curry can only load file modules from abolute paths. ` +
+                            `Prepend '__dirname' to the relative path and try again.`;
+
+            error.message += ' ' + message;
+
+            throw error;
+        }
+    }
 }
