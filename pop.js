@@ -4,12 +4,21 @@
 
 'use strict';
 
+const ERR_BAD_POPPABLE = `PopError~The argument has type %s. Expected an object with a pop() method.`;
+
+const fail = require('./fail');
+const typeorclass = require('./typeorclass');
+
 /**
- * Function variant of {@link external:Array.prototype.pop Array.prototype.pop()}.
+ * Call *poppable*'s `pop()` method and return the result.
  * 
- * @param {any[]} array The array to pop the last item from
- * @returns {any}
+ * @func pop
+ * @param {poppable} poppable The array to pop the last item from
+ * @returns {any} *poppable*.pop()'s return value
  */
-module.exports = function pop(array) {
-    return array.pop();
+module.exports = function pop(poppable) {
+
+    if(typeof poppable?.pop !== 'function') fail(ERR_BAD_POPPABLE, typeorclass(poppable));
+
+    return poppable.pop();
 }

@@ -1,29 +1,40 @@
 const expect = require('chai').expect;
 const pop = require('../pop');
 
+const sandbox = require('sinon').createSandbox();
+const spy = sandbox.spy.bind(sandbox);
+
+function createpoppable(poppable) {
+
+    const object = {
+        pop : () => poppable.pop()
+    }
+
+    spy(object, 'pop');
+
+    return object;
+}
+
 const sentinel = {};
 
 describe(`pop()`, function() {
 
-    it(`should return the last item in the array`,
-        function() {
-            expect( pop([1,2,sentinel]) ).to.equal(sentinel);
+    beforeEach(
+        function () {
+            sandbox.resetHistory();
         }
     )
 
-    it(`should remove the last item from the array`,
+    it(`should invoke its argument's pop() method and return the result`,
         function() {
-            const array = [sentinel];
+            const poppable = createpoppable([sentinel]);
+            const item = pop(poppable);
 
-            expect( array.length ).to.equal(1);
-            expect( pop(array) ).to.equal(sentinel);
-            expect( array.length ).to.equal(0);
-        }
-    )
+            expect(item).to.equal(sentinel);
+            expect(poppable.pop.callCount).to.equal(1);
 
-    it(`should return undefined if the array is empty`,
-        function() {
-            expect( pop([]) ).to.be.undefined;
+            expect( pop(poppable) ).to.be.undefined;
+            expect(poppable.pop.callCount).to.equal(2);
         }
     )
 
