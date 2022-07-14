@@ -49,11 +49,11 @@ describe(`defer()`, function() {
             }
         )
 
-        it(`should append its own arguments to the original arguments before calling the target function`,
+        it(`should ignore any arguments passed to it`,
             function() {
                 const dsum = defer(sum,1,2);
-                expect( dsum(3) ).to.equal(6);
-                expect( sum.calledOnceWith(1,2,3) ).to.be.true;
+                expect( dsum(42) ).to.equal(3);
+                expect( sum.calledOnceWith(1,2) ).to.be.true;
             }
         )
     })
