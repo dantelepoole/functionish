@@ -9,6 +9,19 @@ describe(`merge()`, function() {
         }
     )
 
+    it(`should be curried`,
+        function () {
+
+            const obj1 = { a:'a', b:'b' };
+            const obj2 = { c:'c', d:'d' };
+            
+            const curried = merge(obj1);
+            expect(curried).to.be.a('function');
+            expect(curried(obj2)).to.be.an('object');
+        }
+    )
+
+
     it(`should return a new object that contains copies of all own, enumerable properties of each source`,
         function () {
             const obj1 = { a:'a', b:'b' };
@@ -54,26 +67,13 @@ describe(`merge()`, function() {
         }
     )
 
-    it(`if passed a single source, it should return a shallow copy of it`,
-        function () {
-            const sentinel = {};
-            const obj1 = { a:'a', b:sentinel };
-            const merged = merge(obj1);
-
-            expect( obj1 ).to.deep.equal( merged );
-            expect(obj1.a).to.equal(merged.a);
-            expect( obj1.b).to.equal(merged.b );
-            
-        }
-    )
-
     it(`should only copy own properties from the sources`,
         function () {
             const proto = { a:'a'};
             const obj = Object.create(proto);
             obj.b = 'b';
 
-            const merged = merge(obj);
+            const merged = merge(obj, {});
 
             expect( 1 ).to.equal( Object.keys(merged).length );
             expect( merged.a ).to.be.undefined;
@@ -85,7 +85,7 @@ describe(`merge()`, function() {
         function () {
             obj = { a:'a' };
             Object.defineProperty(obj, 'b', {value:'b', enumerable:false});
-            const merged = merge(obj);
+            const merged = merge(obj, {});
 
             expect( 1 ).to.equal( Object.keys(merged).length );
             expect( merged.b ).to.be.undefined;
@@ -94,16 +94,10 @@ describe(`merge()`, function() {
         }
     )
 
-    it(`should return an empty object if no sources are passed`,
+    it(`should treat null or undefined arguments as empty objects`,
         function () {
-            expect( merge() ).to.deep.equal({});
-        }
-    )
-
-    it(`should return an empty object if null or undefined is passed`,
-        function () {
-            expect( merge(null) ).to.deep.equal({});
-            expect( merge(undefined) ).to.deep.equal({});
+            expect( merge(null, {foo:'bar'}) ).to.deep.equal({foo:'bar'});
+            expect( merge({foo:'bar'}, null) ).to.deep.equal({foo:'bar'});
         }
     )
 })
