@@ -12,6 +12,12 @@ const curry2 = require('./curry2');
  * 
  * `merge()` is curried by default with binary arity.
  * 
+ * @example
+ * 
+ * const merge = require('functionish/merge');
+ * 
+ * merge( { firstname:'Hari' }, { lastname:'Seldon' }); // returns { firstname:'Hari', lastname:'Seldon' }
+ * 
  * @func merge
  * @param {...obj[]} sources Two or more objects to merge
  * @returns {object} A new object 
