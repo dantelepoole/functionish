@@ -4,7 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_SOURCE = `SplitError~The source has type %s. Expected a string.`;
+const ERR_BAD_SOURCE = `SplitError~The source argument has type %s. Expected a string.`;
 
 const fail = require('./fail');
 const typeorclass = require('./typeorclass');
