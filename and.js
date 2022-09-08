@@ -4,18 +4,21 @@
 
 'use strict';
 
-const callable = require('./callable');
+const callable_ = require('./callable');
+const map = require('./map');
+
+const callable = map(callable_);
 
 /**
- * Return a function that passes its arguments to each *clause* and returns `true` if and only if each *clause*
+ * Return a function that passes its arguments to each *predicate* and returns `true` if and only if each *predicate*
  * returns a truthy false. Otherwise, it returns `false`.
  * 
- * The function is short-circuited, so it returns as soon as a *clause* returns a falsy value, without evaluating any
- * remaining *clauses*.
+ * The function is short-circuited, so it returns as soon as a *predicate* returns a falsy value, without evaluating any
+ * remaining *predicates*.
  * 
- * If any clause is not a function, its value is evaluated directly instead.
+ * If any predicate is not a function, its value is evaluated directly instead.
  * 
- * If the *clauses* array is empty, the function returns `true`.
+ * If the *predicates* array is empty, the function returns `true`.
  * 
  * @example
  * 
@@ -33,25 +36,21 @@ const callable = require('./callable');
  * @see {@link module:or or()}
  * @see {@link module:not not()}
  * @see {@link module:xor xor()}
- * @param {...function} clauses One or more predicate functions to test
+ * @param {...function} predicates One or more predicate functions to test
  * @returns {boolean}
  */
-module.exports = function and(...clauses) {
+module.exports = function and(...predicates) {
 
-    callableclauses(clauses);
+    predicates = callable(predicates);
 
     return function _and(...args) {
 
-        for( let index = 0; index < clauses.length; index++ ) {
+        for( let index = 0; index < predicates.length; index++ ) {
 
-            const clause = clauses[index];
-            if( ! clause(...args) ) return false;
+            const predicate = predicates[index];
+            if( ! predicate(...args) ) return false;
         }
 
         return true;
     }
-}
-
-function callableclauses(clauses) {
-    for(let i = 0; i < clauses.length; i += 1) if(typeof clauses[i] !== 'function') clauses[i] = callable(clauses[i]);
 }
