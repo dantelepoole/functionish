@@ -81,13 +81,14 @@ describe(`curry()`, function() {
         }
     )
 
-    it(`should throw if the arity is neither a number nor undefined`,
+    it(`should throw if the arity is neither a number nor null or undefined`,
         function () {
 
             expect( ()=>curry(null, countargs) ).to.throw();
+            expect( ()=>curry(undefined, countargs) ).to.throw();
+            
             expect( ()=>curry('foobar', countargs) ).to.throw();
             expect( ()=>curry(42n, countargs) ).to.throw();
-            expect( ()=>curry(undefined, countargs) ).not.to.throw();
         }
     )
 
@@ -107,40 +108,7 @@ describe(`curry()`, function() {
         }
     )
 
-    describe(`the curried function`, function() {
+    // describe(`the curried function`, function() {
 
-        it(`should preserve the target function's name`,
-            function () {
-
-                let curried = curry(2, countargs);
-                expect( curried.name ).to.be.equal(`countargs`);
-
-                curried = curry(2, (a,b)=>(a+b));
-                expect( curried.name ).to.be.equal(``);
-            }
-        )
-
-        it(`should be tagged as 'bound' on subsequent invocations`,
-            function () {
-
-                let curried = curry(2, countargs);
-                expect( curried(1).name ).to.be.equal(`bound countargs`);
-
-                curried = curry(2, (a,b)=>(a+b));
-                expect( curried(1).name ).to.be.equal(`bound `);
-            }
-        )
-
-        it(`should have a partial() method that returns the partially applied target function`,
-            function () {
-
-                const curried = curry(2, countargs);
-                const partialcountargs = curried.partial(1);
-
-                expect( partialcountargs.name ).to.equal(`partial countargs`);
-
-                expect( partialcountargs(2,3) ).to.equal(3);
-            }
-        )
-    })
+    // })
 })

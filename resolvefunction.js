@@ -11,12 +11,12 @@ const HASHMARK = '#';
 
 const fail = require('./fail');
 const isfunction = require('./isfunction');
-const split = require('./split');
-const startswith = require('./startswith');
+const isvoid = require('./isvoid');
 const typeorclass = require('./typeorclass');
 
-const isrelative = startswith(DOT);
-const tokenize = split(HASHMARK);
+const ismodulenotfound = code => (code === ERRORCODE_MODULE_NOT_FOUND);
+const isrelative = path => path.startsWith(DOT);
+const tokenize = path => path.split(HASHMARK);
 
 /**
  * If *path* is a function, return it. Otherwise, attempt to load the module or package specified by *path* and return
@@ -43,42 +43,35 @@ const tokenize = split(HASHMARK);
  *                                             // in the 'utils'-subdirectory below the directory of the
  *                                             // current module1
  * 
- * @param {(string|function)} path The function or file path of the function to return
+ * @param {(string|function)} func The function or the module or package path to the function to return
  * @returns {function}
  */
-module.exports = function resolvefunction(path) {
-
-    if( isfunction(path) ) return path;
-
-    const [modulepath, key] = tokenize(path);
-    const targetfunction = loadfunction(modulepath, key);
-
-    return isfunction(targetfunction) ? targetfunction
-         : fail(ERR_BAD_FUNCTION, String(path), typeorclass(targetfunction));
-
+module.exports = function resolvefunction(func) {
+    return isfunction(func) ? func : loadfunctionfrommodule(func);
 }
 
-function loadfunction(path, key) {
+function loadfunctionfrommodule(modulepath) {
 
+    modulepath = String(modulepath);
+    const [path, key] = tokenize(modulepath);
+    
+    let target = undefined;
+    
     try {
 
-        const target = require(path);
-
-        return (key === undefined) ? target : target?.[key];
+        target = isvoid(key) ? require(path) : require(path)?.[key];
 
     } catch (error) {
 
-        if( error?.code === ERRORCODE_MODULE_NOT_FOUND && isrelative(path) ) {
-
-            const message = `It looks like you are trying to resolve a file module with a relative path. ` +
+        ismodulenotfound(error.code)
+        && isrelative(path)
+        && (error.message = `It looks like you are trying to resolve a file module with a relative path. ` +
                             `resolvefunction() requires abolute paths to load file modules. ` +
                             `Prepend '__dirname' to the relative path and try again. ` + 
-                            `Otherwise, make sure the file or package exists at the specified path.`
-
-            error.message = message;
-
-        }
+                            `Otherwise, make sure the file or package exists at the specified path.`);
 
         throw error;
     }
+
+    return isfunction(target) ? target : fail(ERR_BAD_FUNCTION, modulepath, typeorclass(target));
 }
