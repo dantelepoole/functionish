@@ -35,7 +35,6 @@ describe(`memoize()`, function() {
         function() {
             const curried = memoize( createcachefunc() );
             expect(curried).to.be.a('function');
-            expect(curried.name).to.equal('bound memoize');
             
             const func = curried(sum);
             expect(func).to.be.a('function');

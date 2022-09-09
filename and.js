@@ -4,10 +4,11 @@
 
 'use strict';
 
-const callable_ = require('./callable');
+const PATH_CALLABLE = __dirname + '/callable';
+
 const map = require('./map');
 
-const callable = map(callable_);
+const callable = map(PATH_CALLABLE);
 
 /**
  * Return a function that passes its arguments to each *predicate* and returns `true` if and only if each *predicate*

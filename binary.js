@@ -7,6 +7,7 @@
 const ERR_BAD_FUNCTION = `BinaryError~The function has type %s. Expected a function.`;
 
 const fail = require('./fail');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -34,15 +35,9 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function binary(func) {
 
-    if( typeof func !== 'function' ) fail(ERR_BAD_FUNCTION, typeorclass(func));
+    func = resolvefunction(func);
 
-    const binaryname = `binary ${func.name}`;
-
-    return {
-
-        [binaryname] : function (a,b) {
-            return func.call(this, a, b);
-        }
-        
-    }[binaryname]
+    return function binaryfunction(a,b) {
+        return func.call(this, a, b);
+    }
 }

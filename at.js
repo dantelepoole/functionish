@@ -4,9 +4,14 @@
 
 'use strict';
 
-const ERR_BAD_INDEX = `AtError~The index has type %s. Expected a number.`
+const ERR_BAD_INDEX = `AtError~The index has type %s. Expected a number.`;
+
 const fail = require('./fail');
+const islessthan = require('./islessthan');
+const notnumber = require('./notnumber');
 const typeorclass = require('./typeorclass');
+
+const isnegative = islessthan(0);
 
 /**
  * Retrieve the item from *list* at index *index* or `undefined` if the index is invalid. If *index* is negative,
@@ -29,9 +34,9 @@ const typeorclass = require('./typeorclass');
 
 module.exports = function at(list, index) {
 
-    if( typeof index !== 'number' ) fail(ERR_BAD_INDEX, typeorclass(index));
+    notnumber(index) && fail(ERR_BAD_INDEX, typeorclass(index));
 
-    if( index < 0 ) index += list.length;
+    isnegative(index) && (index += list.length);
 
     return list[index];
 }

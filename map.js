@@ -5,14 +5,15 @@
 'use strict';
 
 const ERR_BAD_MAPPABLE = `MapError~The mappable has type %s. Expected an object with a map() method or an iterable object.`;
-const ERR_BAD_MAPPING_FUNCTION = `MapError~The mapping function has type %s. Expected a function.`;
 
 const unary = require('./unary');
 
 const fail = require('./fail');
 const isiterable = require('./isiterable');
-const ismappable = obj => (typeof obj?.map === 'function');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
+
+const ismappable = obj => (typeof obj?.map === 'function');
 
 /**
  * Pass the *map* function to the `map()` method of *mappable* and return the result. If *mappable* has
@@ -44,7 +45,7 @@ module.exports = require('./curry2')(
 
     function map(mapfunc, mappable) {
         
-        if(typeof mapfunc !== 'function') fail(ERR_BAD_MAPPING_FUNCTION, typeorclass(mapfunc));
+        mapfunc = resolvefunction(mapfunc);
 
         return ismappable(mappable) ? mappable.map( unary(mapfunc) )
              : isiterable(mappable) ? maplist(mapfunc, mappable)

@@ -7,16 +7,17 @@
 const ERR_BAD_FUNCTION = `ComposeError~The function at index %d has type %s. Expected a function.`;
 
 const fail = require('./fail');
+const hasitems = require('./hasitems');
+const head = require('./head');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
-const id = function composition(x) { return x }
-
 const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
-const validatefunc = (index, func) => { if( typeof func !== 'function') raisebadfunction(index, func) };
+const validatefunc = (index, func) => notfunction(func) && raisebadfunction(index, func);
 const validatefuncs = funcs => { for(let i = 0; i < funcs.length; i += 1) validatefunc(i, funcs[i]) };
 
 /**
- * Compose is implemented in terms of {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
+ * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
  * from right to left. See {@link module:pipe pipe()} for further details.
  * 
  * @example
@@ -39,15 +40,13 @@ const validatefuncs = funcs => { for(let i = 0; i < funcs.length; i += 1) valida
 
 module.exports = function compose(...funcs) {
     
-    if(funcs.length === 0) return id;
-
     validatefuncs(funcs);
 
     funcs.reverse();
 
-    return function composition(...args) {
+    return function composedfunctions(...args) {
 
-        let result = funcs[0](...args);
+        let result = hasitems(funcs) ? funcs[0](...args) : head(args);
 
         for(let i = 1; i < funcs.length; i += 1) result = funcs[i](result);
         

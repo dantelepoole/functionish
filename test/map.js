@@ -88,4 +88,6 @@ describe(`map()`, function() {
             expect(result).to.deep.equal([2,4,6,8,10]);
         }
     )
+
+    it.skip(`should accept a string path for the map function argument`);
 })
