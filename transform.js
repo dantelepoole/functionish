@@ -51,7 +51,7 @@ module.exports = function transform(...transformations) {
 
     return function _transformer_(list) {
 
-        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
         return {
             [Symbol.iterator] : function* () {
