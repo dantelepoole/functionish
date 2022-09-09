@@ -4,17 +4,30 @@
 
 'use strict';
 
+const BRANCH_FUNCTION_NAME = '_branch_';
+const DEFAULTBRANCH_FUNCTION_NAME = '_defaultbranch_';
+
 const ERR_BAD_BRANCH = `SelectError~The branch at index %d has type %s. Expected a branch function or a default branch function.`;
 const ERR_MULTIPLE_DEFAULT_BRANCHES = `SelectError~Only a single default branch may be passed to select().`;
 
-const id = require('./id');
+const bind = require('./bind');
 const fail = require('./fail');
+const id = require('./id');
+const isundefined = require('./isundefined');
+const isdefined = require('./isdefined');
+const isequal = require('./isequal');
+const isfunction = require('./isfunction');
+const notequal = require('./notequal');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 const selectreducer = (onreject, branch) => branch(onreject);
 
-const isbranch = branch => (typeof branch === 'function' && (branch.name === '_branch_'));
-const notdefaultbranch = branch => (typeof branch !== 'function' || (branch.name !== '_defaultbranch_'));
+const isbranchname = isequal(BRANCH_FUNCTION_NAME);
+const isbranch = branch => isfunction(branch) && isbranchname(branch.name);
+
+const notdefaultbranchname = notequal(DEFAULTBRANCH_FUNCTION_NAME);
+const notdefaultbranch = branch => notfunction(branch) || notdefaultbranchname(DEFAULTBRANCH_FUNCTION_NAME);
 
 /**
  * This function emulates the Javascript `switch` statement (but without the fall through).
@@ -75,18 +88,19 @@ function compile(branches) {
 
     let defaultbranch = undefined;
     const orderedbranches = [];
+    const addbranch = bind('push', orderedbranches);
 
     for(let index = 0; index < branches.length; index += 1) {
 
         const branch = branches[index];
 
-        if( isbranch(branch) ) orderedbranches.push(branch);
-        else if( notdefaultbranch(branch) ) fail(ERR_BAD_BRANCH, index, typeorclass(branch));
-        else if (defaultbranch === undefined) defaultbranch = branch;
-        else fail(ERR_MULTIPLE_DEFAULT_BRANCHES);
+        isbranch(branch) ? addbranch(branch)
+        : notdefaultbranch(branch) ? fail(ERR_BAD_BRANCH, index, typeorclass(branch))
+        : isundefined(defaultbranch) ? (defaultbranch = branch)
+        : fail(ERR_MULTIPLE_DEFAULT_BRANCHES);
     }
 
-    if(defaultbranch !== undefined) orderedbranches.push(defaultbranch);
+    isdefined(defaultbranch) && addbranch(defaultbranch);
 
     return orderedbranches.reduceRight(selectreducer, id);
 }

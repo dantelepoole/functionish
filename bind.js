@@ -7,6 +7,7 @@
 const ERR_BAD_METHOD = `BindError~Cannot bind to method '%s' of the context because it has type %s. Expected a function.`;
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -35,10 +36,10 @@ const typeorclass = require('./typeorclass');
 
 module.exports = function bind(func, context, ...args) {
 
-    if( typeof func === 'function' ) return func.bind(context, ...args);
+    if( isfunction(func) ) return func.bind(context, ...args);
 
     const method = context?.[func];
-    if( typeof method !== 'function' ) fail(ERR_BAD_METHOD, func, typeorclass(method) );
-    
-    return method.bind(context, ...args);
+
+    return isfunction(method) ? method.bind(context, ...args)
+         : fail(ERR_BAD_METHOD, func, typeorclass(method) );
 }
