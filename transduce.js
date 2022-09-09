@@ -7,10 +7,16 @@
 const ERR_BAD_REDUCER = `TransduceError~The reducer has type %s. Expected a function.`;
 const ERR_BAD_TRANSFORMATION = `TransduceError~The transformation at index %d has type %s. Expected a function.`;
 
+const PUSH_METHOD = 'push';
+
+const bind = require('./bind');
+const compose = require('./compose');
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
+const ispredicate = transformation => (transformation.name === '_filtertransformation_');
 const istransducer = transformation => (transformation.name === '_transducer_');
 const notpredicate = transformation => (transformation.name !== '_filtertransformation_');
 const transformreducer = (reducer, transducer) => transducer(reducer);
@@ -69,9 +75,8 @@ module.exports = function transduce(...transformations) {
 
     return function _transducer_(reducer) {
 
-        if( notfunction(reducer) ) fail(ERR_BAD_REDUCER, typeorclass(reducer));
-
-        return composetransducers(transducers, reducer);
+        return isfunction(reducer) ? composetransducers(transducers, reducer)
+                                   : fail(ERR_BAD_REDUCER, typeorclass(reducer));
     }
 
 }
@@ -79,14 +84,16 @@ module.exports = function transduce(...transformations) {
 function createtransducers(transformations) {
 
     const transducers = [];
+    const addtransducer = bind(PUSH_METHOD, transducers);
+    const addtransformation = compose(addtransducer, transducerfactory);
 
     for(let i = 0; i < transformations.length; i += 1) {
 
         const transformation = transformations[i];
 
-        if(typeof transformation !== 'function') fail(ERR_BAD_TRANSFORMATION, i, typeorclass(transformation));
+        isfunction(transformation) ? addtransformation(transformation)
+                                   : fail(ERR_BAD_TRANSFORMATION, i, typeorclass(transformation));
 
-        transducers.push( transducerfactory(transformation) );
     }
 
     return transducers;
@@ -94,13 +101,12 @@ function createtransducers(transformations) {
 
 function transducerfactory(transformation) {
 
-    if( istransducer(transformation) ) return transformation;
+    return istransducer(transformation) ? transformation : _transducer_;
 
-    return function _transducer_(reducer) {
+    function _transducer_(reducer) {
 
-        if( notpredicate(transformation) ) return (a,b) => reducer(a, transformation(b));
+        return ispredicate(transformation) ? (a,b) => transformation(b) ? reducer(a,b) : a
+                                           : (a,b) => reducer(a, transformation(b));
 
-        const filter = transformation();
-        return (a,b) => filter(b) ? reducer(a,b) : a;
     }
 }

@@ -39,12 +39,6 @@ describe(`predicate()`, function() {
             
         beforeEach(function() {})
 
-        it(`should return the filter function passed to to predicate()`,
-            function () {
-                expect( predicate(iseven)() ).to.equal(iseven);
-            }
-        )
-
         it(`should be named '_filtertransformation_' so that transduce() can distinguish it from regular transformations`,
             function () {
                 expect( predicate(iseven).name ).to.equal('_filtertransformation_');

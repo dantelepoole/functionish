@@ -9,11 +9,13 @@ const ERR_BAD_LIST = `TransformError~The list has type %s. Expected an iterable 
 const TRANSFORM_REJECT = Symbol.for('functionish/transduce/transform/reject');
 
 const fail = require('./fail');
+const isequal = require('./isequal');
 const notiterable = require('./notiterable');
 const transduce = require('./transduce');
 const typeorclass = require('./typeorclass');
 
 const idreducer = (_,x) => x;
+const isrejected = isequal(TRANSFORM_REJECT);
 
 /**
  * Return a function that accepts an iterable object and returns an iterable object that transforms its items by
@@ -59,8 +61,10 @@ module.exports = function transform(...transformations) {
                 for(const item of list) {
     
                     const transformeditem = transformer(TRANSFORM_REJECT, item);
-    
-                    if(transformeditem !== TRANSFORM_REJECT) yield transformeditem;
+
+                    if( isrejected(transformeditem) ) continue;
+                    
+                    yield transformeditem;
                 }
             }
         }

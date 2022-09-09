@@ -5,8 +5,11 @@
 'use strict';
 
 const ERR_BAD_FILTER = `PredicateError~The filter has type %x. Expected a function.`;
+const FILTERTRANSFORMATION_NAME = '_filtertransformation_';
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
+const renamefunction = require('./renamefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -39,10 +42,7 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function predicate(filter) {
 
-    if(typeof filter !== 'function') fail(ERR_BAD_FILTER, typeorclass(filter));
-
-    return function _filtertransformation_() {
-        return filter;
-    }
+    return isfunction(filter) ? renamefunction(FILTERTRANSFORMATION_NAME, filter)
+                              : fail(ERR_BAD_FILTER, typeorclass(filter));
 
 }
