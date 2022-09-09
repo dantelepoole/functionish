@@ -19,6 +19,7 @@ const isequal = require('./isequal');
 const isfunction = require('./isfunction');
 const notequal = require('./notequal');
 const notfunction = require('./notfunction');
+const reduceright = require('./reduceright');
 const typeorclass = require('./typeorclass');
 
 const selectreducer = (onreject, branch) => branch(onreject);
@@ -93,5 +94,5 @@ module.exports = function select(...branches) {
 
     isdefined(defaultbranch) && addbranch(defaultbranch);
 
-    return orderedbranches.reduceRight(selectreducer, id);
+    return reduceright(selectreducer, id, orderedbranches);
 }
