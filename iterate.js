@@ -7,9 +7,13 @@
 const ERR_BAD_LIST = `IterateError~The list has type %s. Expected an object with a forEach() method or an iterable object.`;
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const isiterable = require('./isiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 const unary = require('./unary');
+
+const iterateiterable = (func, iterable) => { for(const item of iterable) func(item) }
 
 /**
  * Functional variant of {@link external:Array.prototype.forEach Array.prototype.forEach()}. If *list* has a
@@ -37,10 +41,10 @@ module.exports = require('./curry2')(
 
     function iterate(func, list) {
 
-        if(typeof list?.forEach === 'function') list.forEach( unary(func) );
+        func = resolvefunction(func);
 
-        else if( isiterable(list) ) for(const item of list) func(item);
-
-        else fail(ERR_BAD_LIST, typeorclass(list));
+        return isfunction(list?.forEach) ? list.forEach( unary(func) )
+             : isiterable(list) ? iterateiterable(func, list)
+             : fail(ERR_BAD_LIST, typeorclass(list));
     }
 )

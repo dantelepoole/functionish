@@ -5,11 +5,10 @@
 'use strict';
 
 const ERR_BAD_LIST = `FindListError~The list has type %s. Expected an iterable object.`;
-const ERR_BAD_PREDICATE = `FindListError~The predicate has type %s. Expected a function.`;
-const ITEM_NOT_FOUND = undefined;
 
 const fail = require('./fail');
 const notiterable = require('./notiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -36,11 +35,10 @@ module.exports = require('./curry2')(
 
     function findlist(predicate, list) {
         
-        if(typeof predicate !== 'function') fail(ERR_BAD_PREDICATE, typeorclass(predicate));
-        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+        predicate = resolvefunction(predicate);
+
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
         for(const item of list) if( predicate(item) ) return item;
-
-        return ITEM_NOT_FOUND;
     }
 )

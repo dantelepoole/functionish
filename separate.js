@@ -4,6 +4,8 @@
 
 'use strict';
 
+const resolvefunction = require('./resolvefunction');
+
 /**
  * Separate the items in *list* depending on whether or not *predicate* accepts or rejects an
  * item. The return value is a two-item array with the first array containing an array of items for which *predicate*
@@ -30,6 +32,8 @@ module.exports = require('./curry2') (
 
     function separate(predicate, list) {
 
+        predicate = resolvefunction(predicate);
+        
         const buffertrue = [];
         const bufferfalse = [];
         

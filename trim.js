@@ -4,7 +4,10 @@
 
 'use strict';
 
+
 const EMPTY_STRING = '';
+
+const isstring = require("./isstring");
 
 const isnullorundefined = value => (value === null || value === undefined);
 
@@ -18,7 +21,7 @@ const isnullorundefined = value => (value === null || value === undefined);
  */
 module.exports = function trim(value) {
 
-    return (typeof value === 'string') ? value.trim()
+    return isstring(value) ? value.trim()
          : isnullorundefined(value) ? EMPTY_STRING
          : String(value).trim();
 }

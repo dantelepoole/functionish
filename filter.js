@@ -4,13 +4,13 @@
 
 'use strict';
 
-const ERR_BAD_PREDICATE = `FilterError~The predicate has type %s. Expected a function.`
 const ERR_BAD_FILTERABLE = `FilterError~The filterable has type %s. Expected an object with a filter() method or an iterable object`;
 
 const unary = require('./unary');
 
 const fail = require('./fail');
 const isiterable = require('./isiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 const isfilterable = obj => (typeof obj?.filter === 'function');
@@ -44,7 +44,7 @@ module.exports = require('./curry2')(
 
     function filter(predicate, filterable) {
 
-        if(typeof predicate !== 'function') fail(ERR_BAD_PREDICATE, typeorclass(predicate));
+        predicate = resolvefunction(predicate);
 
         return isfilterable(filterable) ? filterable.filter( unary(predicate) )
              : isiterable(filterable) ? filterlist(predicate, filterable)

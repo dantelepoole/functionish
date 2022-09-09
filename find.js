@@ -4,12 +4,11 @@
 
 'use strict';
 
-const ERR_BAD_PREDICATE = `FindError~The predicate has type %s. Expected a function.`
 const ERR_BAD_FINDABLE = `FindError~The findable has type %s. Expected an object with a find() method or an iterable object`;
-const ITEM_NOT_FOUND = undefined;
 
 const fail = require('./fail');
 const isiterable = require('./isiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 const unary = require('./unary');
 
@@ -45,10 +44,10 @@ module.exports = require('./curry2')(
 
     function find(predicate, findable) {
 
-        if(typeof predicate !== 'function') fail(ERR_BAD_PREDICATE, typeorclass(predicate));
+        predicate = resolvefunction(predicate);
         
         return isfindable(findable) ? findable.find( unary(predicate) )
-             : isiterable(findable) ? (finditerable(predicate, findable) ?? ITEM_NOT_FOUND)
+             : isiterable(findable) ? finditerable(predicate, findable)
              : fail(ERR_BAD_FINDABLE, typeorclass(findable));
     }
 )

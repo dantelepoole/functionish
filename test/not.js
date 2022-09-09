@@ -22,14 +22,12 @@ describe(`not()`, function() {
         function () {
 
             expect( not(true) ).to.be.false;
-            expect( not('false') ).to.be.false;
             expect( not([]) ).to.be.false;
             expect( not({}) ).to.be.false;
             expect( not(42) ).to.be.false;
             expect( not(42n) ).to.be.false;
             
             expect( not(false) ).to.be.true;
-            expect( not('') ).to.be.true;
             expect( not(null) ).to.be.true;
             expect( not(undefined) ).to.be.true;
             expect( not(NaN) ).to.be.true;

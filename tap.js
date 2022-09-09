@@ -4,10 +4,8 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `TapError~The function has type %s. Expected a function.`;
-
-const fail = require('./fail');
-const typeorclass = require('./typeorclass');
+const head = require('./head');
+const resolvefunction = require('./resolvefunction');
 
 /**
  * Return a function that passes its arguments to *func*, but ignores *func*'s return value and instead returns the
@@ -19,18 +17,11 @@ const typeorclass = require('./typeorclass');
  */
  module.exports = function tap(func) {
 
-    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+    func = resolvefunction(func);
 
-    const tapname = `tap ${func.name}`;
+    return function tappedfunction(...args) {
 
-    return {
-
-        [tapname] : function(...args) {
-
-            func.call(this, ...args);
-            
-            return args[0];
-        }
-
-    }[tapname]
+        func.call(this, ...args);
+        return head(args);
+    }
 }

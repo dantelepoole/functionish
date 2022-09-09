@@ -4,6 +4,12 @@
 
 'use strict';
 
+const ERR_BAD_LIST = `DiffError~The %s list has type %s. Expected an iterable object.`;
+
+const fail = require('./fail');
+const notiterable = require('./notiterable');
+const typeorclass = require('./typeorclass');
+
 /**
  * Return an iterable producing only those items from *list1* that are not present in *list2*, but without duplicates.
  * 
@@ -24,6 +30,9 @@
 module.exports = require('./curry2') (
 
     function diff(list1, list2) {
+
+        notiterable(list1) && fail(ERR_BAD_LIST, 'first', typeorclass(list1));
+        notiterable(list2) && fail(ERR_BAD_LIST, 'second', typeorclass(list2));
 
         return {
             [Symbol.iterator] : function* () {

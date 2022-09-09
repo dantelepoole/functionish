@@ -4,18 +4,22 @@
 
 'use strict';
 
-const callable = require('./callable');
+const PATH_CALLABLE = __dirname + '/callable';
+
+const map = require('./map');
+
+const callable = map(PATH_CALLABLE);
 
 /**
- * Return a function that passes its arguments to each *clause* and returns `true` if any *clause*
+ * Return a function that passes its arguments to each *predicate* and returns `true` if any *predicate*
  * returns a truthy false. Otherwise, it returns `false`.
  * 
- * The function is short-circuited, so it returns as soon as a *clause* returns a truthy value, without evaluating any
- * remaining *clauses*.
+ * The function is short-circuited, so it returns as soon as a *predicate* returns a truthy value, without evaluating any
+ * remaining *predicates*.
  * 
- * If any clause is not a function, its value is evaluated directly instead.
+ * If any *predicate* is not a function, its value is evaluated directly instead.
  * 
- * If the *clauses* array is empty, the function returns `false`.
+ * If the *predicates* array is empty, the function returns `false`.
  * 
  * @example
  * 
@@ -34,26 +38,22 @@ const callable = require('./callable');
  * @see {@link module:and and()}
  * @see {@link module:not not()}
  * @see {@link module:xor xor()}
- * @param {...any} clauses One or more clauses to test
+ * @param {...any} predicates One or more clauses to test
  * @returns {boolean}
  */
 
-module.exports = function or(...clauses) {
+module.exports = function or(...predicates) {
 
-    callableclauses(clauses);
+    predicates = callable(predicates);
 
     return function _or(...args) {
 
-        for( let index = 0; index < clauses.length; index++ ) {
+        for( let index = 0; index < predicates.length; index++ ) {
 
-            const clause = clauses[index];
+            const clause = predicates[index];
             if( clause(...args) ) return true;
         }
 
         return false;
     }
-}
-
-function callableclauses(clauses) {
-    for(let i = 0; i < clauses.length; i += 1) if(typeof clauses[i] !== 'function') clauses[i] = callable(clauses[i]);
 }

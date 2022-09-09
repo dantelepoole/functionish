@@ -4,16 +4,15 @@
 
 'use strict';
 
+const isfunction = require('./isfunction');
+const isstring = require('./isstring');
+const notfunction = require('./notfunction');
+const resolvefunction = require('./resolvefunction');
+
 /**
  * If *expression* is a function, return a function that passes its arguments to *expression* and returns the logical
  * complement of the result. Otherwise, return the logical complement of *expression* itself.
  * 
- * @func not
- * @see {@link module:and and()}
- * @see {@link module:or or()}
- * @see {@link module:xor xor()}
- * @param {any} expression The expression to negate
- * @returns {(function|boolean)}
  * @example
  *    
  * const not = require('functionish/not');
@@ -27,20 +26,20 @@
  * not(true); // returns false
  * not(false); // returns true
  * 
+ * @func not
+ * @see {@link module:and and()}
+ * @see {@link module:or or()}
+ * @see {@link module:xor xor()}
+ * @param {any} expression The expression to negate
+ * @returns {(function|boolean)}
  */
-module.exports = not;
+module.exports = function not(expression) {
 
-function not(expression) {
-
-    if(typeof expression !== 'function') return (! expression);
-
-    const complementname = `complement ${expression.name}`;
-
-    return {
-
-        [complementname] : function(...args) {
-            return ! expression.call(this, ...args);
-        }
-
-    }[complementname]
+    return isstring(expression) ? not( resolvefunction(expression) )
+         : notfunction(expression) ? ( ! expression )
+         : complementfunction;
+         
+    function complementfunction(...args) {
+        return ! expression.call(this, ...args)
+    }
 }

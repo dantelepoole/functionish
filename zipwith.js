@@ -9,6 +9,7 @@ const ERR_BAD_LIST = `ZipwithError~The %s list has type %s. Expected an iterable
 
 const fail = require('./fail');
 const notiterable = require('./notiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -44,9 +45,10 @@ module.exports = require('./curry3')(
 
     function zipwith(func, list1, list2) {
 
-        if(typeof func !== 'function') fail(ERR_BAD_FUNC, typeorclass(func));
-        if( notiterable(list1) ) fail(ERR_BAD_LIST, 'first', typeorclass(list1));
-        if( notiterable(list2) ) fail(ERR_BAD_LIST, 'second', typeorclass(list2));
+        func = resolvefunction(func);
+
+        notiterable(list1) && fail(ERR_BAD_LIST, 'first', typeorclass(list1));
+        notiterable(list2) && fail(ERR_BAD_LIST, 'second', typeorclass(list2));
 
         return {
             [Symbol.iterator]() {

@@ -10,6 +10,7 @@ const binary = require('./binary');
 
 const fail = require('./fail');
 const isiterable = require('./isiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -44,6 +45,8 @@ module.exports = require('./curry3')(
 
     function reduce(reducer, initialvalue, reducable) {
 
+        reducer = resolvefunction(reducer);
+        
         return (typeof reducable?.reduce === 'function') ? reducable.reduce( binary(reducer), initialvalue )
              : isiterable(reducable) ? reduceiterable( reducer, initialvalue, reducable )
              : fail(ERR_BAD_REDUCABLE, typeorclass(reducable));

@@ -4,6 +4,8 @@
 
 'use strict';
 
+const resolvefunction = require('./resolvefunction');
+
 /**
  * Functional variant of {@link external:Array.prototype.every() Array.prototype.every()}. Apply the *predicate*
  * function to each item in *list* and return `true` if and only if *predicate* returns `true` each time. Otherwise,
@@ -34,6 +36,8 @@ module.exports = require('./curry2')(
 
     function all(predicate, list) {
 
+        predicate = resolvefunction(predicate);
+        
         for( const item of list ) if ( ! predicate(item) ) return false;
 
         return true;

@@ -5,10 +5,10 @@
  'use strict';
 
 const ERR_BAD_LIST = `FilterListError~The list has type %s. Expected an iterable object.`;
-const ERR_BAD_PREDICATE = `FilterListError~The predicate has type %s. Expected a function.`;
 
 const fail = require('./fail');
 const notiterable = require('./notiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -35,8 +35,9 @@ module.exports = require('./curry2')(
 
     function filterlist(predicate, list) {
 
-        if(typeof predicate !== 'function') fail(ERR_BAD_PREDICATE, typeorclass(predicate));
-        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+        predicate = resolvefunction(predicate);
+
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
         return {
 

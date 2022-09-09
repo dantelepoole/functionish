@@ -4,7 +4,11 @@
 
 'use strict';
 
-const callable = require('./callable');
+const PATH_CALLABLE = __dirname + '/callable';
+
+const map = require('./map');
+
+const callable = map(PATH_CALLABLE);
 
 /**
  * Return a function that passes its arguments to both *clause* and *clause2* returns `false` if both return the
@@ -42,11 +46,11 @@ module.exports = require('./curry2')(
 
     function xor(clause, clause2) {
 
-        if(typeof clause !== 'function') clause = callable(clause);
-        if(typeof clause2 !== 'function') clause2 = callable(clause2);
+        [clause, clause2] = callable( [clause, clause2] );
 
         return function xor_(...args) {
-            return clause(...args) ? !clause2(...args) : !!clause2(...args);
+
+            return clause(...args) ? ! clause2(...args) : !! clause2(...args);
         }
     }
 )

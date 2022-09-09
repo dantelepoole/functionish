@@ -4,6 +4,7 @@
 
 'use strict';
 
+const hasitems = require('./hasitems');
 const partial = require('./partial');
 
 /**
@@ -12,9 +13,11 @@ const partial = require('./partial');
  * 
  * @func queuemicrotask
  * @param {function} func The function to run from the microtask queue
- * @param  {...any} args The arguments to pass to *func*
+ * @param  {...any} boundargs The arguments to pass to *func*
  */
-module.exports = function queuemicrotask(func, ...args) {
+module.exports = function queuemicrotask(func, ...boundargs) {
 
-    queueMicrotask( partial(func, ...args) )
+    hasitems(boundargs) && (func = partial(func, ...boundargs));
+
+    queueMicrotask(func);
 }

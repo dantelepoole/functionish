@@ -39,13 +39,6 @@ describe('variadic()', function() {
 
     describe('the function returned by variadic()', function() {
 
-        it(`should have the same name as the target function, but tagged as 'variadic'`,
-            function() {
-                const result = variadic(sum);
-                expect( result.name ).to.equal('variadic sum');
-            }
-        )
-
         it(`should pass its arguments to the target function as a single array argument`,
             function() {
                 const countargs_variadic = variadic(countargs);

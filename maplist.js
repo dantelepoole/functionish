@@ -5,10 +5,10 @@
  'use strict';
 
 const ERR_BAD_LIST = `MapListError~The list has type %s. Expected an iterable object.`;
-const ERR_BAD_MAPPINGFUNC = `MapListError~The mapping function has type %s. Expected a function.`;
 
 const fail = require('./fail');
 const notiterable = require('./notiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -34,8 +34,9 @@ module.exports = require('./curry2')(
 
     function maplist(mapfunc, list) {
 
-        if(typeof mapfunc !== 'function') fail(ERR_BAD_MAPPINGFUNC, typeorclass(mapfunc));
-        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+        mapfunc = resolvefunction(mapfunc);
+
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
         return {
 

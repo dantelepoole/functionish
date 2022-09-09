@@ -33,8 +33,8 @@ module.exports = require('./curry2') (
 
     function symdiff(list1, list2) {
     
-        if( notiterable(list1) ) fail(ERR_BAD_LIST, 'first', typeorclass(list1));
-        else if ( notiterable(list2) ) fail(ERR_BAD_LIST, 'second', typeorclass(list2));
+        notiterable(list1) && fail(ERR_BAD_LIST, 'first', typeorclass(list1));
+        notiterable(list2) && fail(ERR_BAD_LIST, 'second', typeorclass(list2));
 
         return {
             [Symbol.iterator] : function* () {

@@ -47,29 +47,6 @@ describe(`witharity()`, function() {
         afterEach(function() {
             sandbox.resetHistory();
         })
-            
-        it(`should have the same name as the target function, but tagged with the arity`,
-            function() {
-                expect( witharity(3, countargs).name ).to.equal('arity[3] countargs');
-            }
-        )
-
-        it(`should have a length property equal to the arity if arity is less than 5`,
-            function() {
-
-                expect( witharity(0, countargs) ).to.be.a('function').with.length(0);
-                expect( witharity(1, countargs) ).to.be.a('function').with.length(1);
-                expect( witharity(2, countargs) ).to.be.a('function').with.length(2);
-                expect( witharity(3, countargs) ).to.be.a('function').with.length(3);
-                expect( witharity(4, countargs) ).to.be.a('function').with.length(4);
-            }
-        )
-
-        it(`should have a length property equal to 0 if arity is greater than or equal to 5`,
-            function() {
-                expect( witharity(5, countargs) ).to.be.a('function').with.length(0);
-            }
-        )
 
         it(`should lways receive arity number of arguments, regardless of the number of arguments actually passed`,
             function() {

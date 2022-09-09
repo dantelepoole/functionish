@@ -39,14 +39,6 @@ describe('uniadic()', function() {
 
     describe('the function returned by uniadic()', function() {
 
-        it(`should have the same name as the target function, but tagged as 'uniadic'`,
-            function() {
-                const result = uniadic(sum);
-                expect( result.name ).to.equal('uniadic sum');
-            }
-        )
-
-    
         it(`should throw if its sole argument is not an iterable object`,
             function() {
                 const result = uniadic(sum);

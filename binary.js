@@ -4,11 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `BinaryError~The function has type %s. Expected a function.`;
-
-const fail = require('./fail');
 const resolvefunction = require('./resolvefunction');
-const typeorclass = require('./typeorclass');
 
 /**
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters

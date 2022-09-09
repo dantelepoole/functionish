@@ -20,7 +20,7 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function reverse(list) {
 
-    if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
+    notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
     return {
         [Symbol.iterator] : function* () {

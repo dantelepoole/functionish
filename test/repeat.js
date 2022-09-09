@@ -49,13 +49,12 @@ describe(`repeat()`, function() {
         }
     )
 
-    it(`should not call the function if the count is less than 1 or NaN`,
+    it(`should not call the function if the count is less than 1`,
         function () {
             repeat(-1, returnargs);
             expect(returnargs.callCount).to.equal(0);
             repeat(0, returnargs);
             expect(returnargs.callCount).to.equal(0);
-            repeat(NaN, returnargs);
             expect(returnargs.callCount).to.equal(0);
         }
     )

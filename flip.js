@@ -4,10 +4,8 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `FlipError~The function has type %s. Expected a function.`;
-
-const fail = require('./fail');
-const typeorclass = require('./typeorclass');
+const isempty = require('./isempty');
+const resolvefunction = require('./resolvefunction');
 
 /**
  * Return a function that calls the *func* function with the order of the first two parameters reversed.
@@ -34,15 +32,9 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function flip(func) {
 
-    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+    func = resolvefunction(func);
 
-    const flippedname = `flip ${func.name}`;
-
-    return {
-
-        [flippedname] : function(a,b,...args) {
-            return (arguments.length === 0) ? func.call(this) : func.call(this, b, a, ...args);
-        }
-
-    }[flippedname]
+    return function flippedfunction(a,b,...args) {
+        return isempty(arguments) ? func.call(this) : func.call(this, b, a, ...args);
+    }
 }

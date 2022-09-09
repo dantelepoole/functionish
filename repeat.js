@@ -4,11 +4,20 @@
 
 'use strict';
 
-const ERR_BAD_COUNT = `RepeatError~The count has type %s. Expected a number.`;
+const ERR_BAD_COUNT = `RepeatError~The count %s. Expected a positive integer.`;
 const ERR_BAD_FUNCTION = `RepeatError~The function has type %s. Expected a function.`;
 
 const fail = require('./fail');
-const typeorclass = require('./fail');
+const islessthan = require('./islessthan');
+const isnan = require('./isnan');
+const or = require('./or');
+const notfunction = require('./notfunction');
+const notinteger = require('./notinteger');
+const typeorclass = require('./typeorclass');
+const notnumber = require('./notnumber');
+
+const islessthanzero = islessthan(0);
+const notpositiveinteger = or(notinteger, islessthanzero);
 
 /**
  * Invoke *func* *count* number of times, passing *args* at each invocation. The *func* function wil be called
@@ -21,11 +30,15 @@ const typeorclass = require('./fail');
  */
 module.exports = function repeat(count, func, ...args) {
 
-    if(typeof count !== 'number') fail(ERR_BAD_COUNT, typeorclass(count));
-    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+    notnumber(count) && failbadcount(count);
+    notfunction(func) && fail(ERR_BAD_FUNCTION, typeorclass(func));
 
-    while( count > 0 ) {
+    while(count > 0) {
         func.call(this, ...args);
         count -= 1;
     }
+}
+
+function failbadcount(count) {
+    isnan(count) ? fail(ERR_BAD_COUNT, 'is NaN') : fail(ERR_BAD_COUNT, `has type ${typeorclass(count)}`)
 }

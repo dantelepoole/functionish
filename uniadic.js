@@ -4,11 +4,11 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `UniadicError~The function has type %s. Expected a function.`;
 const ERR_BAD_LIST = `UniadicError~The argument has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');
 const notiterable = require('./notiterable');
+const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -37,18 +37,12 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function uniadic(func, ...partialargs) {
 
-    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+    func = resolvefunction(func);
 
-    const uniadicname = `uniadic ${func.name}`;
+    return function uniadicfunction(list=[]) {
 
-    return {
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        [uniadicname] : function (list=[]) {
-
-            if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
-
-            return func.call(this, ...partialargs, ...list);
-        }
-
-    }[uniadicname]
+        return func.call(this, ...partialargs, ...list);
+    }
 }

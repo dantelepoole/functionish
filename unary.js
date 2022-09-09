@@ -4,10 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `UnaryError~The function has type %s. Expected a function.`;
-
-const fail = require('./fail');
-const typeorclass = require('./typeorclass');
+const resolvefunction = require('./resolvefunction');
 
 /**
  * Coerce *func* to have have unary arity. More specifically, return a function that accepts exactly one parameter
@@ -26,15 +23,9 @@ const typeorclass = require('./typeorclass');
 
 module.exports = function unary(func) {
 
-    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+    func = resolvefunction(func);
 
-    const unaryname = `unary ${func.name}`;
-
-    return {
-
-        [unaryname] : function(x) {
-            return func.call(this, x);
-        }
-
-    }[unaryname]
+    return function unaryfunction(x) {
+        return func.call(this, x);
+    }
 }

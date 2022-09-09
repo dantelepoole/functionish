@@ -4,6 +4,8 @@
 
 'use strict';
 
+const resolvefunction = require('./resolvefunction');
+
 /**
  * Apply the *predicate* function to each item in *list* and return `true` when *predicate* returns a truthy value. If
  * *predicate* returns a falsy value for each item, return `false`.
@@ -33,6 +35,8 @@ module.exports = require('./curry2')(
 
     function any(predicate, list) {
 
+        predicate = resolvefunction(predicate);
+        
         for( const item of list ) if( predicate(item) ) return true;
 
         return false;

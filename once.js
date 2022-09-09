@@ -6,6 +6,8 @@
 
 const EMPTY = Symbol();
 
+const resolvefunction = require('./resolvefunction');
+
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
  * invocations, the cached result is returned without calling *func* again.
@@ -19,14 +21,11 @@ const EMPTY = Symbol();
  */
 module.exports = function once(func) {
 
+    func = resolvefunction(func);
+
     let returnvalue = EMPTY;
 
-    const oncename = `once ${func.name}`;
-
-    return {
-
-        [oncename] : function(...args) {
-            return (returnvalue !== EMPTY) ? returnvalue : (returnvalue = func.call(this, ...args));
-        }
-    }[oncename]
+    return function oncefunction(...args) {
+        return (returnvalue !== EMPTY) ? returnvalue : (returnvalue = func.call(this, ...args));
+    }
 }
