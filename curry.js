@@ -5,15 +5,19 @@
 'use strict';
 
 const ARITY_NONE = Symbol();
-const ERR_BAD_ARITY = "CurryError~The arity has type %s. Expected a number.";
+const ERR_BAD_ARITY = "CurryError~The arity %s. Expected a positive integer.";
 
 const fail = require('./fail');
+const isnan = require('./isnan');
+const notinteger = require('./notinteger');
 const notnumber = require('./notnumber');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
 const hassoleargument = args => (args.length === 1);
 const isaritynone = arity => (arity === ARITY_NONE);
+const islessthanone = x => (x < 1);
+const notpositiveinteger = x => notinteger(x) || islessthanone(x);
 
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
@@ -75,9 +79,16 @@ module.exports = function curry(arity, func) {
 
     func = resolvefunction(func);
 
-    isaritynone(arity) ? (arity = func.length) : notnumber(arity) && fail(ERR_BAD_ARITY, typeorclass(arity));
+    isaritynone(arity) ? (arity = func.length) : notpositiveinteger(arity) && failbadarity(arity);
 
     return curryfunction(arity, func);
+}
+
+function failbadarity(arity) {
+
+    isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
+    : notnumber(arity) ? fail(ERR_BAD_ARITY, `has type ${ typeorclass(arity) }`)
+    : fail(ERR_BAD_ARITY, `is ${arity}`);
 }
 
 function curryfunction(arity, func, boundargs=[]) {
