@@ -4,7 +4,6 @@
 
 'use strict';
 
-const ERR_BAD_FUNC = `ZipwithError~The function has type %x.Expected a function.`;
 const ERR_BAD_LIST = `ZipwithError~The %s list has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');

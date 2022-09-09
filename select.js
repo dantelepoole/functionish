@@ -77,15 +77,6 @@ const notdefaultbranch = branch => notfunction(branch) || notdefaultbranchname(D
  */
 module.exports = function select(...branches) {
 
-    const branchselector = compile(branches);
-
-    return function _select_(...args) {
-        return branchselector(...args);
-    }
-}
-
-function compile(branches) {
-
     let defaultbranch = undefined;
     const orderedbranches = [];
     const addbranch = bind('push', orderedbranches);
