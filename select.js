@@ -10,6 +10,8 @@ const DEFAULTBRANCH_FUNCTION_NAME = '_defaultbranch_';
 const ERR_BAD_BRANCH = `SelectError~The branch at index %d has type %s. Expected a branch function or a default branch function.`;
 const ERR_MULTIPLE_DEFAULT_BRANCHES = `SelectError~Only a single default branch may be passed to select().`;
 
+const PUSH_METHOD = 'push';
+
 const bind = require('./bind');
 const fail = require('./fail');
 const id = require('./id');
@@ -79,8 +81,9 @@ const notdefaultbranch = branch => notfunction(branch) || notdefaultbranchname(D
 module.exports = function select(...branches) {
 
     let defaultbranch = undefined;
+    
     const orderedbranches = [];
-    const addbranch = bind('push', orderedbranches);
+    const addbranch = bind(PUSH_METHOD, orderedbranches);
 
     for(let index = 0; index < branches.length; index += 1) {
 
