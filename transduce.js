@@ -6,22 +6,26 @@
 
 const ERR_BAD_REDUCER = `TransduceError~The reducer has type %s. Expected a function.`;
 const ERR_BAD_TRANSFORMATION = `TransduceError~The transformation at index %d has type %s. Expected a function.`;
-
+const FILTERTRANSFORMATION_NAME = '_filtertransformation_';
 const PUSH_METHOD = 'push';
+const TRANSDUCER_NAME = '_transducer_';
 
 const bind = require('./bind');
 const compose = require('./compose');
 const fail = require('./fail');
+const isequal = require('./isequal');
 const isfunction = require('./isfunction');
-const notfunction = require('./notfunction');
+const reduceright = require('./reduceright');
 const typeorclass = require('./typeorclass');
 
-const ispredicate = transformation => (transformation.name === '_filtertransformation_');
-const istransducer = transformation => (transformation.name === '_transducer_');
-const notpredicate = transformation => (transformation.name !== '_filtertransformation_');
-const transformreducer = (reducer, transducer) => transducer(reducer);
+const ispredicatename = isequal(FILTERTRANSFORMATION_NAME);
+const istransducername = isequal(TRANSDUCER_NAME);
 
-const composetransducers = (transducers, reducer) => transducers.reduceRight(transformreducer, reducer);
+const ispredicate = transformation => ispredicatename(transformation?.name);
+const istransducer = transformation => istransducername(transformation?.name);
+
+const transformreducer = (reducer, transducer) => transducer(reducer);
+const composetransducers = (transducers, reducer) => reduceright(transformreducer, reducer, transducers);
 
 /**
  * Return a transducer function that accept a reducer function and returns a reducer function that applies the

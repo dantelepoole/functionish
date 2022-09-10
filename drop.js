@@ -7,6 +7,7 @@
 const ERR_BAD_FILTER = `DropError~The filter at index %d has type %s. Expected a function.`;
 
 const fail = require('./fail');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -43,10 +44,10 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function drop(...filters) {
 
-    const filter = composefilters(filters);
+    const compositefilter = composefilters(filters);
 
     return function _filtertransformation_() {
-        return filter;
+        return compositefilter;
     }
 }
 
@@ -64,7 +65,7 @@ function composefilters(filters) {
 
 function validatefilters(filters) {
 
-    for(let i = 0; i < filters.length; i += 1) {
-        if(typeof filters[i] !== 'function') fail(ERR_BAD_FILTER, i, typeorclass(filters[i]));
-    }
+    for(let i = 0; i < filters.length; i += 1) notfunction(filters[i])
+                                                 &&
+                                               fail(ERR_BAD_FILTER, i, typeorclass(filters[i]));
 }
