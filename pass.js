@@ -4,11 +4,15 @@
 
 'use strict';
 
-const ERR_BAD_FILTER = `PassError~The filter at index %d has type %s. Expected a function.`;
+const ERR_BAD_FILTER = `PassError~The filter has type %s. Expected a function.`;
 
 const fail = require('./fail');
+const map = require('./map');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
+
+const validatefilter = filter => notfunction(filter) && fail(ERR_BAD_FILTER, typeorclass(filter));
+const validatefilters = map(validatefilter);
 
 /**
  * A convenience function that serves the same purpose as {@link module:predicate predicate()} but that accepts and
@@ -56,11 +60,4 @@ function composefilters(filters) {
         return true;
 
     }
-}
-
-function validatefilters(filters) {
-
-    for(let i = 0; i < filters.length; i += 1) notfunction(filters[i])
-                                                 &&
-                                               fail(ERR_BAD_FILTER, i, typeorclass(filters[i]));
 }
