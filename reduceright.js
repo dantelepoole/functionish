@@ -59,11 +59,9 @@ module.exports = require('./curry3')(
 
 function reducerightiterable(reducer, initialvalue, iterable) {
 
-    iterable = reverse(iterable);
-
     let accumulator = initialvalue;
 
-    for(const item of iterable) accumulator = reducer(accumulator, item);
+    for(const item of reverse(iterable)) accumulator = reducer(accumulator, item);
 
     return accumulator;
 }
