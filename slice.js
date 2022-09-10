@@ -14,6 +14,9 @@ const istypedarray = require('util').types.isTypedArray;
 
 const isslicable = x => (typeof x === 'string' || isarray(x) || istypedarray(x));
 
+const hassoleargument = args => (args.length === 1);
+const hastwoarguments = args => (args.length === 2);
+
 /**
  * Functional variant of the `slice()` method of Javascript strings, arrays and TypedArrays.
  * 
@@ -42,10 +45,8 @@ const isslicable = x => (typeof x === 'string' || isarray(x) || istypedarray(x))
  */
 module.exports = function slice(start, end, slicable) {
 
-    if(arguments.length === 1) [start,end,slicable] = [0, Infinity, start];
-    else if(arguments.length === 2) [start,end,slicable] = [start, Infinity, end];
+    hassoleargument(arguments) ? ([start, end, slicable] = [0, Infinity, start])
+    : hastwoarguments(arguments) && ([start, end, slicable] = [start, Infinity, end]);
 
-    if( isslicable(slicable) ) return slicable.slice(start, end);
-
-    fail(ERR_BAD_SLICABLE, typeorclass(slicable));
+    return isslicable(slicable) ? slicable.slice(start, end) : fail(ERR_BAD_SLICABLE, typeorclass(slicable));
 }

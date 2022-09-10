@@ -4,7 +4,6 @@
 
 'use strict';
 
-const isempty = require('./isempty');
 const resolvefunction = require('./resolvefunction');
 
 /**
@@ -24,16 +23,14 @@ const resolvefunction = require('./resolvefunction');
  * 
  * @func partial
  * @param {function} func The function to partially apply
- * @param  {...any} boundargs One or more arguments to partially apply *func* with
+ * @param  {...any} boundargs Zero or more arguments to partially apply *func* with
  * @returns {function}
  */
 module.exports = function partial(func, ...boundargs) {
     
     func = resolvefunction(func);
 
-    return isempty(boundargs) ? func : partialfunction;
-         
-    function partialfunction(...args) {
+    return function partialfunction(...args) {
         return func.call(this, ...boundargs, ...args)
     }
 }

@@ -37,7 +37,7 @@ module.exports = require('./curry2') (
         const buffertrue = [];
         const bufferfalse = [];
         
-        for( const item of list ) predicate(item) ? buffertrue.push(item) : bufferfalse.push(item);
+        for(const item of list) predicate(item) ? buffertrue.push(item) : bufferfalse.push(item);
 
         return [buffertrue, bufferfalse];
     }

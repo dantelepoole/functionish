@@ -4,6 +4,7 @@
 
 'use strict';
 
+const not = require('./not');
 const resolvefunction = require('./resolvefunction');
 
 /**
@@ -37,8 +38,9 @@ module.exports = require('./curry2')(
     function all(predicate, list) {
 
         predicate = resolvefunction(predicate);
+        const notpredicate = not(predicate);
         
-        for( const item of list ) if ( ! predicate(item) ) return false;
+        for(const item of list) if ( notpredicate(item) ) return false;
 
         return true;
     }

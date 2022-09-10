@@ -7,15 +7,16 @@
 const PATH_CALLABLE = __dirname + '/callable';
 
 const map = require('./map');
+const not = require('./not');
 
 const callable = map(PATH_CALLABLE);
 
 /**
- * Return a function that passes its arguments to both *clause* and *clause2* returns `false` if both return the
- * same boolish value (i.e. either both truthy or both falsy). If the clauses return different boolish values, the
- * function returns `true`. In short, `xor()` returns `true` if *clause* and *clause2* each other's complement.
+ * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `false` if both return the
+ * same boolish value (i.e. either both truthy or both falsy). If the predicates return different boolish values, the
+ * function returns `true`. In short, `xor()` returns `true` if *predicate1* and *predicate2* each other's complement.
  * 
- * If either clause is not a function, its value is evaluated directly instead.
+ * If either predicate is not a function, its value is evaluated directly instead.
  * 
  * `xor()` is curried by default with binary arity.
  * 
@@ -38,19 +39,20 @@ const callable = map(PATH_CALLABLE);
  * @see {@link module:and and()}
  * @see {@link module:not not()}
  * @see {@link module:or or()}
- * @param {(function|any)} clause The first clause to evaluate
- * @param {(function|any)} clause2 The second clause to evaluate
+ * @param {(function|any)} predicate1 The first predicate to evaluate
+ * @param {(function|any)} predicate2 The second predicate to evaluate
  * @returns {boolean}
  */
 module.exports = require('./curry2')(
 
-    function xor(clause, clause2) {
+    function xor(predicate1, predicate2) {
 
-        [clause, clause2] = callable( [clause, clause2] );
+        [predicate1, predicate2] = callable( [predicate1, predicate2] );
+
+        const notpredicate2 = not(predicate2);
 
         return function xor_(...args) {
-
-            return clause(...args) ? ! clause2(...args) : !! clause2(...args);
+            return predicate1(...args) ? notpredicate2(...args) : !! predicate2(...args);
         }
     }
 )

@@ -19,9 +19,7 @@ module.exports = curry2(
 
     function objectof(key, value) {
 
-        return {
-            [key] : value
-        }
+        return { [key]:value }
     }
 
 )

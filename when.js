@@ -7,6 +7,7 @@
 const callable = require('./callable');
 const evaluate = require('./evaluate');
 const id = require('./id');
+const notfunction = require('./notfunction');
 
 /**
  * Return a function that passes its arguments to *predicate*. If *predicate* returns a truthy value, the function
@@ -42,9 +43,9 @@ module.exports = require('./curry2')(
 
     function when(predicate, mainbranch, alternativebranch=id) {
 
-        if(typeof predicate !== 'function') predicate = callable(predicate);
+        predicate = callable(predicate);
 
-        return function conditional(...args) {
+        return function conditionalfunction(...args) {
 
             const selectedbranch = predicate(...args) ? mainbranch : alternativebranch;
             

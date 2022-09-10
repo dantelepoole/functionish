@@ -22,6 +22,7 @@ const resolvefunction = require('./resolvefunction');
     return function tappedfunction(...args) {
 
         func.call(this, ...args);
+        
         return head(args);
     }
 }

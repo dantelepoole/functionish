@@ -35,6 +35,7 @@ function tailiterable(list) {
         [Symbol.iterator] : function () {
 
             const iterator = list[Symbol.iterator]();
+            
             iterator.next();
 
             return iterator;

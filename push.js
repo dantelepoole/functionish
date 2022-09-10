@@ -7,7 +7,10 @@
 const ERR_BAD_PUSHABLE = `PushError~The argument has type %s. Expected an object with a push() method.`;
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const typeorclass = require('./typeorclass');
+
+const ispushable = pushable => isfunction(pushable?.push);
 
 /**
  * Pass *items* to *pushable*'s `push()` method and return the result.
@@ -18,8 +21,5 @@ const typeorclass = require('./typeorclass');
  * @returns {any} *pushable*.push()'s return value
  */
 module.exports = function push(pushable, ...items) {
-
-    if(typeof pushable?.push !== 'function') fail(ERR_BAD_PUSHABLE, typeorclass(pushable));
-
-    return pushable.push(...items);
+    return ispushable(pushable) ? pushable.push(...items) : fail(ERR_BAD_PUSHABLE, typeorclass(pushable));
 }

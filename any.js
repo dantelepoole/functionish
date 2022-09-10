@@ -37,7 +37,7 @@ module.exports = require('./curry2')(
 
         predicate = resolvefunction(predicate);
         
-        for( const item of list ) if( predicate(item) ) return true;
+        for(const item of list) if( predicate(item) ) return true;
 
         return false;
     }

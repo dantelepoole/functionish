@@ -7,7 +7,10 @@
 const ERR_BAD_POPPABLE = `PopError~The argument has type %s. Expected an object with a pop() method.`;
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const typeorclass = require('./typeorclass');
+
+const ispoppable = poppable => isfunction(poppable?.pop);
 
 /**
  * Call *poppable*'s `pop()` method and return the result.
@@ -17,8 +20,5 @@ const typeorclass = require('./typeorclass');
  * @returns {any} *poppable*.pop()'s return value
  */
 module.exports = function pop(poppable) {
-
-    if(typeof poppable?.pop !== 'function') fail(ERR_BAD_POPPABLE, typeorclass(poppable));
-
-    return poppable.pop();
+    return ispoppable(poppable) ? poppable.pop() : fail(ERR_BAD_POPPABLE, typeorclass(poppable));
 }

@@ -4,6 +4,8 @@
 
 'use strict';
 
+const AbortSignal = require('./AbortSignal');
+
 const ABORTEVENT_TYPE = 'abort';
 const OPTIONS_ONCE = Object.freeze( { once:true } );
 
@@ -11,12 +13,22 @@ const ERR_BAD_DELAY = `TimeoutAbortError~The delay %s. Expected a positive integ
 const ERR_BAD_ABORTSIGNAL = `TimeoutAbortError~The abortsignal has type %s. Expected an AbortSignal.`;
 const ERR_BAD_DISPATCHEVENT = `TimeoutAbortError~The abortsignal has no dispatchEvent() method.`;
 
+const bind = require('./bind');
 const fail = require('./fail');
+const islessthan = require('./islessthan');
+const isnumber = require('./isnumber');
+const notfunction = require('./notfunction');
+const notinstanceof = require('./notinstanceof');
 const notinteger = require('./notinteger');
+const or = require('./or');
 const typeorclass = require('./typeorclass');
 const timeout = require('./timeout');
 
+const isaborted = abortsignal => abortsignal.aborted;
+const isnegative = islessthan(0);
 const noop = ()=>{}
+const notabortsignal = notinstanceof(AbortSignal);
+const notpositiveinteger = or(notinteger, isnegative);
 
 /**
  * A variant of {@link module:timeout timeout()} that triggers an `'abort'` event instead of calling a function when
@@ -49,13 +61,10 @@ module.exports = function timeoutabort(delay, abortsignal) {
 
     validateinput(delay, abortsignal);
 
-    if( abortsignal.aborted ) return noop;
+    if( isaborted(abortsignal) ) return noop;
 
-
-    const canceltimeout = timeout(
-        delay, 
-        () => abortsignal.dispatchEvent(ABORTEVENT_TYPE)
-    )
+    const ontimeout = bind('dispatchEvent', abortsignal, ABORTEVENT_TYPE);
+    const canceltimeout = timeout(delay, ontimeout)
 
     abortsignal.addEventListener(ABORTEVENT_TYPE, canceltimeout, OPTIONS_ONCE);
     
@@ -64,13 +73,8 @@ module.exports = function timeoutabort(delay, abortsignal) {
 
 function validateinput(delay, abortsignal) {
 
-    if( notinteger(delay) || delay < 0 ) {
-        fail(ERR_BAD_DELAY, (typeof delay === 'number') ? `is ${delay}` : `has type ${typeof delay}`);
-    }
-
-    const signalclass = typeorclass(abortsignal);
-    if(signalclass !== 'AbortSignal') fail(ERR_BAD_ABORTSIGNAL, signalclass);
-
-    if(typeof abortsignal.dispatchEvent !== 'function') fail(ERR_BAD_DISPATCHEVENT);
+    notpositiveinteger(delay) ? fail(ERR_BAD_DELAY, isnumber(delay) ? `is ${delay}` : `has type ${typeof delay}`)
+    : notabortsignal(abortsignal) ? fail(ERR_BAD_ABORTSIGNAL, typeorclass(abortsignal))
+    : notfunction(abortsignal.dispatchEvent) && fail(ERR_BAD_DISPATCHEVENT);
 
 }

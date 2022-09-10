@@ -7,9 +7,15 @@
 const ERR_BAD_DELAY = `TimeoutError~The delay %s. Expected a positive integer.`;
 const ERR_BAD_FUNCTION = `TimeoutError~The function has type %s. Expected a function.`;
 
+const and = require('./and');
 const fail = require('./fail');
+const isgreaterthanorequal = require('./isgreaterthanorequal');
 const isinteger = require('./isinteger');
+const isnumber = require('./isnumber');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
+
+const ispositiveinteger = and(isinteger, isgreaterthanorequal(0));
 
 /**
  * Call *func* with the specified *args* after at least *delay* milliseconds have passed and return a function that
@@ -26,7 +32,7 @@ module.exports = function timeout(delayms, func, ...args) {
 
     checkdelay(delayms);
 
-    if(typeof func !== 'function') fail(ERR_BAD_FUNCTION, typeorclass(func));
+    notfunction(func) && fail(ERR_BAD_FUNCTION, typeorclass(func));
 
     const timeoutid = setTimeout(func, delayms, ...args);
 
@@ -37,8 +43,6 @@ module.exports = function timeout(delayms, func, ...args) {
 
 function checkdelay(delay) {
 
-    if( isinteger(delay) && delay >= 0 ) return delay;
-
-    const message = (typeof delay === 'number') ? `is ${delay}` : `has type ${typeof delay}`;
-    fail(ERR_BAD_DELAY, message);
+    return ispositiveinteger(delay) ? delay
+         : fail(ERR_BAD_DELAY, isnumber(delay) ? `is ${delay}` : `has type ${typeof delay}`);
 }

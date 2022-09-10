@@ -5,11 +5,19 @@
 'use strict';
 
 const ERR_BAD_SPEC = `WhereError~The specification object as type %s. Expected an object.`;
+const PUSHMETHOD_NAME = 'push';
 
+const bind = require('./bind');
 const fail = require('./fail');
+const isequal = require('./isequal');
+const isfunction = require('./isfunction');
+const not = require('./not');
 const notobject = require('./notobject');
 const typeorclass = require('./typeorclass');
 
+const testproperty = (predicate, subject, key) => isfunction(predicate)
+                                                  ? !! predicate(subject[key])
+                                                  : isequal(predicate, subject[key]);
 /**
  * Match the *subject* object to the rules specified by the *specification* object and return an object reporting
  * the failed rules.
@@ -52,7 +60,7 @@ module.exports = require('./curry2')(
 
     function where(specification, subject) {
 
-        if( notobject(specification) ) fail(ERR_BAD_SPEC, typeorclass(specification));
+        notobject(specification) && fail(ERR_BAD_SPEC, typeorclass(specification));
 
         subject = Object(subject);
 
@@ -68,17 +76,14 @@ module.exports = require('./curry2')(
 function testspec(specification, subject) {
 
     const errors = [];
+    const adderror = bind(PUSHMETHOD_NAME, errors);
 
-    for( const key in specification )  {
+    for(const key in specification)  {
 
         const result = testproperty(specification[key], subject, key);
 
-        if( ! result ) errors.push( [ key, subject[key] ]);
+        not(result) && adderror( [key, subject[key]] );
     }
 
     return errors;
-}
-
-function testproperty(predicate, subject, key) {
-    return (typeof predicate === 'function') ? !! predicate(subject[key]) : (predicate === subject[key]);
 }

@@ -7,11 +7,15 @@
 const ERR_BAD_COUNT = `TakeError~The count %s. Expected a positive integer number.`;
 const ERR_BAD_LIST = `TakeError~The list has type %s. Expected an object with a slice() method or an iterable object.`;
 
+const and = require('./and');
 const fail = require('./fail');
+const isgreaterthanorequal = require('./isgreaterthanorequal');
 const isinteger = require('./isinteger');
 const isiterable = require('./isiterable');
+const isnumber = require('./isnumber');
 const typeorclass = require('./typeorclass');
 
+const ispositiveinteger = and(isinteger, isgreaterthanorequal(0));
 const issliceable = x => (typeof x?.slice === 'function');
 
 /**
@@ -42,10 +46,8 @@ module.exports = require('./curry2')(
 
 function checkcount(count) {
 
-    if( isinteger(count) && count >= 0 ) return count;
-
-    const message = (typeof count === 'number') ? `is ${count}` : `has type ${typeorclass(count)}`;
-    fail(ERR_BAD_COUNT, message);
+    return ispositiveinteger(count) ? count
+         : fail(ERR_BAD_COUNT, isnumber(count) ? `is ${count}` : `has type ${typeorclass(count)}`);
 }
 
 function takeiterable(itemcount, list) {

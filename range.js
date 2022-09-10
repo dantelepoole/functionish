@@ -55,7 +55,7 @@ const notpositiveinteger = x => notinteger(x) || (x < 0);
     
         if(start === 0) return EMPTY_ITERABLE;
 
-        if( notpositiveinteger(start) ) fail(ERR_BAD_RANGECOUNT, getrangeissue(start));
+        notpositiveinteger(start) && fail(ERR_BAD_RANGECOUNT, getrangeissue(start));
         
         [start, end] = [1, start];
     }

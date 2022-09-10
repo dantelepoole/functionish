@@ -37,20 +37,16 @@ const callable = map(PATH_CALLABLE);
  * @see {@link module:or or()}
  * @see {@link module:not not()}
  * @see {@link module:xor xor()}
- * @param {...function} predicates One or more predicate functions to test
+ * @param {...function} predicates Zero or more predicate functions to test
  * @returns {boolean}
  */
 module.exports = function and(...predicates) {
 
     predicates = callable(predicates);
 
-    return function _and(...args) {
+    return function and_(...args) {
 
-        for( let index = 0; index < predicates.length; index++ ) {
-
-            const predicate = predicates[index];
-            if( ! predicate(...args) ) return false;
-        }
+        for(const predicate of predicates) if( ! predicate.call(this, ...args) ) return false;
 
         return true;
     }

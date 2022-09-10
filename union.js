@@ -30,15 +30,17 @@ module.exports = require('./curry2')(
         notiterable(list1) && fail(ERR_BAD_LIST, 'first', typeorclass(list1));
         notiterable(list2) && fail(ERR_BAD_LIST, 'second', typeorclass(list2));
 
+        const listconcatenator = concat(list1, list2);
+
         return {
             [Symbol.iterator] : function* () {
-                yield* uniq( concatlists(list1, list2) );
+                yield* uniq(listconcatenator);
             }
         }
     }
 )
 
-function concatlists(list1, list2) {
+function concat(list1, list2) {
 
     return {
         [Symbol.iterator] : function* () {

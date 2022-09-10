@@ -4,7 +4,6 @@
 
 'use strict';
 
-const hasitems = require('./hasitems');
 const partial = require('./partial');
 
 /**
@@ -17,7 +16,7 @@ const partial = require('./partial');
  */
 module.exports = function queuemicrotask(func, ...boundargs) {
 
-    hasitems(boundargs) && (func = partial(func, ...boundargs));
-
-    queueMicrotask(func);
+    queueMicrotask(
+        partial(func, ...boundargs)
+    )
 }

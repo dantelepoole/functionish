@@ -22,11 +22,11 @@ module.exports = function reverse(list) {
 
     notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
+    const items = Array.from(list);
+    
     return {
         [Symbol.iterator] : function* () {
-
-            const items = Array.from(list);
-            for( let index = items.length - 1; index >= 0; index -= 1) yield items[index];
+            for( let index = items.length - 1; index >= 0; index -= 1 ) yield items[index];
         }
    }
 }

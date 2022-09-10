@@ -4,7 +4,7 @@
 
 'use strict';
 
-const EMPTY = Symbol();
+const VIRGIN_RESULT = Symbol();
 
 const resolvefunction = require('./resolvefunction');
 
@@ -23,9 +23,9 @@ module.exports = function once(func) {
 
     func = resolvefunction(func);
 
-    let returnvalue = EMPTY;
+    let returnvalue = VIRGIN_RESULT;
 
     return function oncefunction(...args) {
-        return (returnvalue !== EMPTY) ? returnvalue : (returnvalue = func.call(this, ...args));
+        return (returnvalue !== VIRGIN_RESULT) ? returnvalue : (returnvalue = func.call(this, ...args));
     }
 }

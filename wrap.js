@@ -8,6 +8,7 @@ const ERR_BAD_TARGETFUNC = `WrapError~The target function has type $s. Expected 
 const ERR_BAD_WRAPPERFUNC = `WrapError~The wrapper function has type %s. Expected a function.`;
 
 const fail = require('./fail');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -54,16 +55,11 @@ module.exports = require('./curry2')(wrap);
 
 function wrap(wrapperfunc, func) {
 
-    if(typeof wrapperfunc !== 'function') fail(ERR_BAD_WRAPPERFUNC, typeorclass(wrapperfunc));
-    if(typeof func !== 'function') fail(ERR_BAD_TARGETFUNC, typeorclass(func));
+    return notfunction(wrapperfunc) ? fail(ERR_BAD_WRAPPERFUNC, typeorclass(wrapperfunc))
+         : notfunction(func) ? fail(ERR_BAD_TARGETFUNC, typeorclass(func))
+         : wrappedfunction;
 
-    const wrapname = `wrap[${wrapperfunc.name}] ${func.name}`;
-
-    return {
-
-        [wrapname] : function(...args) {
-            return wrapperfunc.call(this, func, ...args);
-        }
-
-    }[wrapname]
+    function wrappedfunction(...args) {
+        return wrapperfunc.call(this, func, ...args);
+    }
 }
