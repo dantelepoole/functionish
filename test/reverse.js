@@ -21,10 +21,15 @@ describe(`reverse()`, function() {
         }
     )
 
+    it(`should reverse strings`,
+        function () {
+            expect( reverse('foobar') ).to.equal('raboof');
+        }
+    )
+
     it(`should throw if the list is not iterable`,
         function () {
             expect( ()=>reverse({}) ).to.throw();
-            expect( ()=>reverse('foobar') ).to.throw();
             expect( ()=>reverse() ).to.throw();
         }
     )

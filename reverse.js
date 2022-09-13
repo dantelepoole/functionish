@@ -4,10 +4,13 @@
 
 'use strict';
 
+const EMPTY_STRING = '';
 const ERR_BAD_LIST = `ReverseError~The list has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');
-const notiterable = require('./notiterable');
+const isarray = require('./isarray');
+const isstring = require('./isstring');
+const isiterable = require('./isiterable');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -20,9 +23,15 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function reverse(list) {
 
-    notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+    return isarray(list) ? list.slice().reverse()
+         : isstring(list) ? list.split(EMPTY_STRING).reverse().join(EMPTY_STRING)
+         : isiterable(list) ? reverseiterable(list)
+         : fail(ERR_BAD_LIST, typeorclass(list));
+}
 
-    const items = Array.from(list);
+function reverseiterable(iterable) {
+
+    const items = Array.from(iterable);
     
     return {
         [Symbol.iterator] : function* () {
