@@ -8,12 +8,11 @@ const ERR_BAD_FUNCTION = `ComposeError~The function at index %d has type %s. Exp
 
 const fail = require('./fail');
 const head = require('./head');
+const iterate = require('./iterate');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
-const validatefunc = (index, func) => notfunction(func) && raisebadfunction(index, func);
-const validatefuncs = funcs => { for(let i = 0; i < funcs.length; i += 1) validatefunc(i, funcs[i]) };
 
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
@@ -39,7 +38,7 @@ const validatefuncs = funcs => { for(let i = 0; i < funcs.length; i += 1) valida
 
 module.exports = function compose(...funcs) {
     
-    validatefuncs(funcs);
+    validatefunctions(funcs);
 
     funcs.reverse();
 
@@ -53,3 +52,17 @@ module.exports = function compose(...funcs) {
     }
 }
 
+function validatefunctions(funcs) {
+
+    iterate(
+        functionvalidatorfactory(),
+        funcs
+    )
+}
+
+function functionvalidatorfactory() {
+
+    let index = -1;
+
+    return func => (index += 1, notfunction(func) && raisebadfunction(index, func)); 
+}

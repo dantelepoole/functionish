@@ -8,12 +8,11 @@ const ERR_BAD_FUNCTION = `PipeError~The function at index %d has type %s. Expect
 
 const fail = require('./fail');
 const head = require('./head');
+const iterate = require('./iterate');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
-const validatefunc = (index, func) => notfunction(func) && raisebadfunction(index, func);
-const validatefuncs = funcs => { for(let i = 0; i < funcs.length; i += 1) validatefunc(i, funcs[i]) };
 
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
@@ -40,7 +39,7 @@ const validatefuncs = funcs => { for(let i = 0; i < funcs.length; i += 1) valida
 
 module.exports = function pipe(...funcs) {
 
-    validatefuncs(funcs);
+    validatefunctions(funcs);
 
     return function pipedfunctions(...args) {
 
@@ -51,4 +50,19 @@ module.exports = function pipe(...funcs) {
         return head(result);
 
     }
+}
+
+function validatefunctions(funcs) {
+
+    iterate(
+        functionvalidatorfactory(),
+        funcs
+    )
+}
+
+function functionvalidatorfactory() {
+
+    let index = -1;
+
+    return func => (index += 1, notfunction(func) && raisebadfunction(index, func)); 
 }
