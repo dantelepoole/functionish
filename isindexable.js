@@ -5,6 +5,16 @@
 'use strict';
 
 const hasownproperty = require('./hasownproperty');
+const isarray = require('./isarray');
+const isnumber = require('./isnumber');
+const isstring = require('./isstring');
+
+const haslength0 = value => (value.length === 0);
+const haslength1 = value => (value.length === 1 && hasownproperty(0, value))
+const haslengthX = value => (value.length > 1 && hasownproperty(0, value) && hasownproperty(value.length - 1, value))
+const hasnumericlength = value => isnumber(value?.length);
+const validatelength = value => haslength0(value) || haslength1(value) || haslengthX(value);
+const iscustomindexabletype = value => hasnumericlength(value) && validatelength(value);
 
 /**
  * Return `true` if *value* is an indexable object, i.e. an array or a string or an non-null object that has a numeric
@@ -43,15 +53,9 @@ const hasownproperty = require('./hasownproperty');
 
 module.exports = function isindexable(value) {
 
-    return (typeof value?.length !== 'number') ? false 
-         : (typeof value === 'array')
+    return isarray(value)
             ||
-           (typeof value === 'string')
+           isstring(value)
             ||
-           (value.length === 0)
-            ||
-           (value.length === 1 && hasownproperty(0, value))
-            ||
-           (hasownproperty(0, value) && hasownproperty(value.length-1, value));
-
+           iscustomindexabletype(value);
 }
