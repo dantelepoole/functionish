@@ -7,7 +7,6 @@
 const ERR_BAD_FUNCTION = `PipeError~The function at index %d has type %s. Expected a function.`;
 
 const fail = require('./fail');
-const hasitems = require('./hasitems');
 const head = require('./head');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
@@ -45,11 +44,11 @@ module.exports = function pipe(...funcs) {
 
     return function pipedfunctions(...args) {
 
-        let result = hasitems(funcs) ? funcs[0](...args) : head(args);
+        let result = args;
 
-        for(let i = 1; i < funcs.length; i += 1) result = funcs[i](result);
-        
-        return result;
+        for(const func of funcs) result = [ func(...result) ];
+
+        return head(result);
 
     }
 }
