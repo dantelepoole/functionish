@@ -12,7 +12,7 @@ const callable = map(PATH_CALLABLE);
 
 /**
  * Return a function that passes its arguments to each *predicate* and returns `true` if any *predicate*
- * returns a truthy false. Otherwise, it returns `false`.
+ * returns a truthy value. Otherwise, it returns `false`.
  * 
  * The function is short-circuited, so it returns as soon as a *predicate* returns a truthy value, without evaluating any
  * remaining *predicates*.

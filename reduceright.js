@@ -15,7 +15,7 @@ const resolvefunction = require('./resolvefunction');
 const reverse = require('./reverse');
 const typeorclass = require('./typeorclass');
 
-const isreducable = reducable => isfunction(reducable?.reduceRight);
+const isrightreducable = reducable => isfunction(reducable?.reduceRight);
 
 /**
  * Functional variant of {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}. If *reducable* has a
@@ -51,7 +51,7 @@ module.exports = require('./curry3')(
 
         reducer = resolvefunction(reducer);
         
-        return isreducable(reducable) ? reducable.reduceRight( binary(reducer), initialvalue )
+        return isrightreducable(reducable) ? reducable.reduceRight( binary(reducer), initialvalue )
              : isiterable(reducable) ? reducerightiterable( reducer, initialvalue, reducable )
              : fail(ERR_BAD_REDUCABLE, typeorclass(reducable));
     }

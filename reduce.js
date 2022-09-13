@@ -9,9 +9,12 @@ const ERR_BAD_REDUCABLE = `ReduceError~The reducable has type %s. Expected an ob
 const binary = require('./binary');
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const isiterable = require('./isiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
+
+const isreducable = reducable => isfunction(reducable?.reduce);
 
 /**
  * Functional variant of {@link external:Array.prototype.reduce Array.prototype.reduce()}. If *reducable* has a
@@ -47,7 +50,7 @@ module.exports = require('./curry3')(
 
         reducer = resolvefunction(reducer);
         
-        return (typeof reducable?.reduce === 'function') ? reducable.reduce( binary(reducer), initialvalue )
+        return isreducable(reducable) ? reducable.reduce( binary(reducer), initialvalue )
              : isiterable(reducable) ? reduceiterable( reducer, initialvalue, reducable )
              : fail(ERR_BAD_REDUCABLE, typeorclass(reducable));
     }
