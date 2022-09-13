@@ -29,9 +29,16 @@ module.exports = function uniq(list) {
     return {
         [Symbol.iterator] : function* () {
 
-            const uniqitems = new Set();
+            const isuniq = isuniqfactory();
 
-            for(const item of list) if(uniqitems.size !== uniqitems.add(item).size) yield item;
+            for(const item of list) if( isuniq(item) ) yield item;
         }
     }
+}
+
+function isuniqfactory() {
+
+    const uniqitems = new Set();
+
+    return item => (uniqitems.size !== uniqitems.add(item).size);
 }
