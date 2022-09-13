@@ -30,6 +30,6 @@
 module.exports = require('./curry2')(
 
     function apply(func, args) {
-        return func.apply(null, args);
+        return func.apply(this, args);
     }
 )

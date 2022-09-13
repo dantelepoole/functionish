@@ -25,5 +25,5 @@
   */
  
  module.exports = function call(func, ...args) {
-     return func.call(null, ...args);
+     return func.call(this, ...args);
  }
