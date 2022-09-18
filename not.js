@@ -4,7 +4,6 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
 const isstring = require('./isstring');
 const notfunction = require('./notfunction');
 const resolvefunction = require('./resolvefunction');

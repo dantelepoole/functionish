@@ -18,7 +18,6 @@ const curry2 = require('./curry2');
 module.exports = curry2(
 
     function objectof(key, value) {
-
         return { [key]:value }
     }
 

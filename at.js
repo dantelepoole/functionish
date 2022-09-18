@@ -34,9 +34,8 @@ const isnegative = islessthan(0);
 
 module.exports = function at(list, index) {
 
-    notnumber(index) && fail(ERR_BAD_INDEX, typeorclass(index));
+    return notnumber(index) ? fail(ERR_BAD_INDEX, typeorclass(index))
+         : isnegative(index) ? list[index + list.length]
+         : list[index];
 
-    isnegative(index) && (index += list.length);
-
-    return list[index];
 }

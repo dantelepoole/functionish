@@ -4,6 +4,9 @@
 
 'use strict';
 
+const notfunction = require('./notfunction');
+const notobject = require('./notobject');
+
 /**
  * Return `true` if *value* is `null` or has one of the Javascript primitive types: bigint, boolean, number,
  * string, symbol or undefined
@@ -13,5 +16,5 @@
  * @returns {boolean}
  */
 module.exports = function isprimitive(value) {
-    return (typeof value !== 'object' && typeof value !== 'function') || value === null
+    return notfunction(value) && notobject(value);
 }

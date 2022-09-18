@@ -2,7 +2,12 @@
  * @module iswithinbounds
  */
 
-const UPPERBOUND_REJECT = -1;
+ const ERR_BAD_INDEXABLE = `IsWithinBoundsError~The indexable argument %s. Expected a number.`;
+
+ const fail = require('./fail');
+ const isnan = require('./isnan');
+ const isnumber = require('./isnumber');
+ const typeorclass = require('./typeorclass');
 
 /**
  * Return `true` if *index* is greater than or equal to 0 AND less than *indexable*'s length. Otherwise, return `false`.
@@ -23,11 +28,20 @@ module.exports = require('./curry2') (
 
     function iswithinbounds(indexable, index) {
 
-        const upperbound = (typeof indexable?.length === 'number') ? indexable.length
-                         : (typeof indexable === 'number') ? indexable
-                         : UPPERBOUND_REJECT;
+        const upperbound = isnumber(indexable?.length) ? indexable.length
+                         : isnumber(indexable) ? indexable
+                         : failbadindexable(indexable);
 
-        return (index >= 0 && index < upperbound);
+        return (index >= 0 && index < upperbound && isnumber(index));
     }
 
 )
+
+function failbadindexable(indexable) {
+
+    const message = isnan(indexable) ? `is NaN`
+                  : isnumber(indexable) ? `is ${indexable}`
+                  : `has type ${typeorclass(indexable)}`;
+
+    fail(ERR_BAD_INDEXABLE, message);
+}

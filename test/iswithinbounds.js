@@ -63,14 +63,9 @@ describe(`iswithinbounds()`, function() {
         }
     )
 
-    it(`should return false for an object that does not have a 'length'-property`,
+    it(`should throw for an object that does not have a 'length'-property`,
         function () {
-            const indexable = {};
-
-            expect( iswithinbounds(indexable, -1) ).to.be.false;
-            expect( iswithinbounds(indexable, indexable.length) ).to.be.false;
-            expect( iswithinbounds(indexable, 0) ).to.be.false;
-            expect( iswithinbounds(indexable, indexable.length - 1) ).to.be.false;
+            expect( ()=>iswithinbounds({}, 0) ).to.throw();
         }
     )
 
@@ -83,10 +78,11 @@ describe(`iswithinbounds()`, function() {
         }
     )
 
-    it(`should return false if the argument is null or undefined`,
+    it(`should throw if the argument is null or undefined or NaN`,
         function () {
-            expect( iswithinbounds(null, 3) ).to.be.false;
-            expect( iswithinbounds(undefined, 3) ).to.be.false;
+            expect( ()=>iswithinbounds(null, 3) ).to.throw();
+            expect( ()=>iswithinbounds(undefined, 3) ).to.throw();
+            expect( ()=>iswithinbounds(NaN, 3) ).to.throw();
         }
     )
 })

@@ -2,7 +2,13 @@
  * @module isoutofbounds
  */
 
-const UPPERBOUND_REJECT = -1;
+const ERR_BAD_INDEXABLE = `IsOutOfBoundsError~The indexable argument %s. Expected a number.`;
+
+const fail = require('./fail');
+const isnan = require('./isnan');
+const isnumber = require('./isnumber');
+const notnumber = require('./notnumber');
+const typeorclass = require('./typeorclass');
 
 /**
  * Return `true` if *index* is less than 0 OR is greater than or equal to *indexable*'s length.
@@ -14,7 +20,7 @@ const UPPERBOUND_REJECT = -1;
  * If *indexable* is not a number and has no numeric `length` property, or if *index* is not a number, this function
  * returns `true`.
  * 
- * `isoutofbounds` is curried by default with binary arity.
+ * `isoutofbounds()` is curried by default with binary arity.
  * 
  * @param {(indexable|number)} indexable The indexable object or length to check against
  * @param {number} index The index to check
@@ -24,11 +30,19 @@ module.exports = require('./curry2') (
 
     function isoutofbounds(indexable, index) {
 
-        const upperbound = (typeof indexable?.length === 'number') ? indexable.length
-                         : (typeof indexable === 'number') ? indexable
-                         : UPPERBOUND_REJECT;
+        const upperbound = isnumber(indexable?.length) ? indexable.length
+                         : isnumber(indexable) ? indexable
+                         : failbadindexable(indexable);
 
-        return ! (index >= 0 && index < upperbound);
+        return (index < 0) || (index >= upperbound) || notnumber(index);
     }
-
 )
+
+function failbadindexable(indexable) {
+
+    const message = isnan(indexable) ? `is NaN`
+                  : isnumber(indexable) ? `is ${indexable}`
+                  : `has type ${typeorclass(indexable)}`;
+
+    fail(ERR_BAD_INDEXABLE, message);
+}

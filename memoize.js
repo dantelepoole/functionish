@@ -55,6 +55,7 @@ const hassoleargument = args => (args.length === 1);
 module.exports = function memoize(cachefunc, targetfunc) {
 
     hassoleargument(arguments) && ([cachefunc, targetfunc] = [defaultcachefunc(), cachefunc]);
+    
     targetfunc = resolvefunction(targetfunc);
 
     notfunction(cachefunc) && fail(ERR_BAD_CACHEFUNC, typeorclass(cachefunc));

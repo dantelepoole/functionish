@@ -4,6 +4,13 @@
 
 'use strict';
 
+const and = require('./and');
+const isnumber = require('./isnumber');
+const isgreaterthan = require('./isgreaterthan');
+
+const ispositive = isgreaterthan(0);
+const ispositivenumber = and(isnumber, ispositive);
+
 /**
  * Return `true` if *value* has a numeric `length` or `size` property that is greater than `0`. This function is the
  * counterpart of {@link module:isempty isempty()} and an alias for {@link module:notempty notempty()}.
@@ -35,7 +42,5 @@
  * @returns {boolean}
  */
 module.exports = function hasitems(value) {
-    
-    const itemcount = (value?.length ?? value?.size);
-    return (typeof itemcount === 'number' && itemcount > 0);
+    return ispositivenumber(value?.length ?? value?.size);
 }

@@ -63,29 +63,19 @@ describe(`isoutofbounds()`, function() {
         }
     )
 
-    it(`should return true if the indexable not have a 'length'-property`,
+    it(`should throw if the indexable not have a 'length'-property`,
         function () {
-            const indexable = {};
-
-            expect( isoutofbounds(indexable, -1) ).to.be.true;
-            expect( isoutofbounds(indexable, indexable.length) ).to.be.true;
-            expect( isoutofbounds(indexable, 0) ).to.be.true;
-            expect( isoutofbounds(indexable, indexable.length - 1) ).to.be.true;
+            expect( () => isoutofbounds({}, 0) ).to.throw();
         }
     )
 
-    it(`should return true if the indexable's 'length'-property is not numeric`,
+    it(`should throw if the indexable's 'length'-property is not numeric`,
         function () {
-            const indexable = { length:'foobar' };
-
-            expect( isoutofbounds(indexable, -1) ).to.be.true;
-            expect( isoutofbounds(indexable, indexable.length) ).to.be.true;
-            expect( isoutofbounds(indexable, 0) ).to.be.true;
-            expect( isoutofbounds(indexable, indexable.length - 1) ).to.be.true;
+            expect( () => isoutofbounds({ length:'foobar'} , 0) ).to.throw();
         }
     )
 
-    it(`should return true if the index is not a number`,
+    it(`should throw if the index is not a number or if it is NaN`,
         function () {
             expect( isoutofbounds(testarray, 'foobar') ).to.be.true;
             expect( isoutofbounds(teststring, 'foobar') ).to.be.true;

@@ -13,8 +13,6 @@ const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 const unary = require('./unary');
 
-const iterateiterable = (func, iterable) => { for(const item of iterable) func(item) }
-
 /**
  * Functional variant of {@link external:Array.prototype.forEach Array.prototype.forEach()}. If *list* has a
  * `forEach()` method, invoke it with *func*. Otherwise, assume *list* is an iterable object and invoke *func* with
@@ -43,8 +41,11 @@ module.exports = require('./curry2')(
 
         func = resolvefunction(func);
 
+        const iterateiterable = () => { for(const item of list) func.call(this, item) }
+
         return isfunction(list?.forEach) ? list.forEach( unary(func) )
-             : isiterable(list) ? iterateiterable(func, list)
+             : isiterable(list) ? iterateiterable()
              : fail(ERR_BAD_LIST, typeorclass(list));
+             
     }
 )

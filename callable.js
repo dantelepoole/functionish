@@ -4,6 +4,8 @@
 
 'use strict';
 
+const isfunction = require('./isfunction');
+
 /**
  * If *value* is a function, return it. Otherwise, return a function that always returns *value* regardless of its
  * arguments.
@@ -25,5 +27,5 @@
  */
 
 module.exports = function callable(value) {
-    return (typeof value === 'function') ? value : () => value;
+    return isfunction(value) ? value : () => value;
 }

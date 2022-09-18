@@ -4,6 +4,9 @@
 
 'use strict';
 
+const isstring = require('./isstring');
+const notfunction = require('./notfunction');
+
 /**
  * Return `false` if *value* is recognized as an iterable object, meaning that *value* has a `[Symbol.iterator]`
  * property that is a function. Otherwise, return `true`.
@@ -17,5 +20,5 @@
  * @returns {boolean}
  */
 module.exports = function notiterable(value) {
-    return (typeof value?.[Symbol.iterator] !== 'function') || (typeof value === 'string');
+    return notfunction(value?.[Symbol.iterator]) || isstring(value);
 }

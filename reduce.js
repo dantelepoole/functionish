@@ -60,7 +60,7 @@ function reduceiterable(reducer, initialvalue, iterable) {
 
     let accumulator = initialvalue;
 
-    for( const item of iterable ) accumulator = reducer(accumulator, item);
+    for(const item of iterable) accumulator = reducer(accumulator, item);
 
     return accumulator;
 }

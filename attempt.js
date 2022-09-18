@@ -21,7 +21,7 @@ const evaluate = require('./evaluate');
 module.exports = function attempt(errorhandler, func, ...args) {
 
     try {
-        return func(...args);
+        return func.call(this, ...args);
     } catch(error) {
         return evaluate(errorhandler, error, args);
     }

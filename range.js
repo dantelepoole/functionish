@@ -13,9 +13,13 @@ const ERR_BAD_RANGE = `RangeError~The range %s %s. Expected an integer number.`;
 const ERR_BAD_RANGECOUNT = `RangeError~The range count %s. Expected a positive integer number.`;
 
 const fail = require('./fail');
+const isequal = require('./isequal');
+const isgreaterthan = require('./isgreaterthan');
 const notinteger = require('./notinteger');
 const typeorclass = require('./typeorclass');
 
+const isnumberornan = x => (typeof x === 'number');
+const iszero = isequal(0);
 const notpositiveinteger = x => notinteger(x) || (x < 0);
 
 
@@ -53,14 +57,15 @@ const notpositiveinteger = x => notinteger(x) || (x < 0);
     if(arguments.length > 1) validaterange(start, end);
     else {
     
-        if(start === 0) return EMPTY_ITERABLE;
+        if( iszero(start) ) return EMPTY_ITERABLE;
 
         notpositiveinteger(start) && fail(ERR_BAD_RANGECOUNT, getrangeissue(start));
         
         [start, end] = [1, start];
     }
 
-    const increment = (start <= end) ? STEP_INCREMENT : STEP_DECREMENT;
+    // const increment = (start <= end) ? STEP_INCREMENT : STEP_DECREMENT;
+    const increment = isgreaterthan(end, start) ?  STEP_DECREMENT : STEP_INCREMENT;
     end += increment;
 
     return {
@@ -72,11 +77,11 @@ const notpositiveinteger = x => notinteger(x) || (x < 0);
 }
 
 function getrangeissue(range) {
-    return (typeof range === 'number') ? `is ${range}` : `has type ${typeorclass(range)}`;
+    return isnumberornan(range) ? `is ${range}` : `has type ${typeorclass(range)}`;
 }
 
 function validaterange(start, end) {
 
-    if( notinteger(start) ) fail(ERR_BAD_RANGE, 'start', getrangeissue(start));
-    else if( notinteger(end) ) fail(ERR_BAD_RANGE, 'end', getrangeissue(end));
+    notinteger(start) && fail(ERR_BAD_RANGE, 'start', getrangeissue(start));
+    notinteger(end) && fail(ERR_BAD_RANGE, 'end', getrangeissue(end));
 }

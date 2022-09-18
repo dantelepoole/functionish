@@ -7,6 +7,7 @@
 const ERR_BAD_SOURCE = `StartsWithError~The source argument has type %s. Expected a string.`;
 
 const fail = require('./fail');
+const isstring = require('./isstring');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -25,6 +26,6 @@ const typeorclass = require('./typeorclass');
 module.exports = require('./curry2')(
 
     function startswith(target, source) {
-        return (typeof source === 'string') ? source.startsWith(target) : fail(ERR_BAD_SOURCE, typeorclass(source));
+        return isstring(source) ? source.startsWith(target) : fail(ERR_BAD_SOURCE, typeorclass(source));
     }
 )

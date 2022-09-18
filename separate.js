@@ -4,6 +4,8 @@
 
 'use strict';
 
+const curry2 = require('./curry2');
+const push = curry2('./push');
 const resolvefunction = require('./resolvefunction');
 
 /**
@@ -36,8 +38,11 @@ module.exports = require('./curry2') (
         
         const buffertrue = [];
         const bufferfalse = [];
+
+        const pushtrue = push(buffertrue);
+        const pushfalse = push(bufferfalse);
         
-        for(const item of list) predicate(item) ? buffertrue.push(item) : bufferfalse.push(item);
+        for(const item of list) predicate(item) ? pushtrue(item) : pushfalse(item);
 
         return [buffertrue, bufferfalse];
     }

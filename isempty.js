@@ -4,6 +4,10 @@
 
 'use strict';
 
+const isequal = require('./isequal');
+
+const iszero = isequal(0);
+
 /**
  * Return `true` if and only if *value* has a `length` or `size` property that is strictly equal to `0`. 
  * 
@@ -29,5 +33,5 @@
  * 
  */
 module.exports = function isempty(value) {
-    return (value?.length ?? value?.size) === 0;
+    return iszero(value?.length ?? value?.size);
 }

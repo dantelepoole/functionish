@@ -4,12 +4,16 @@
 
 'use strict';
 
-const EMPTY_STRING = '';
 const INDEX_NOT_FOUND = -1;
 const KEY_SEPARATOR_CHAR = '.';
-const TARGET_NOT_FOUND = undefined;
+const TARGET_UNDEFINED = undefined;
 
-const notobject = value => (typeof value !== 'object' || value === null);
+const isempty = require('./isempty');
+const isequal = require('./isequal');
+const notobject = require('./notobject');
+const notstring = require('./notstring');
+
+const notfound = isequal(INDEX_NOT_FOUND);
 
 /**
  * Return the value of the property of *source* identified by *path*. The *path* argument may be a compound path, i.e.
@@ -51,18 +55,17 @@ module.exports = require('./curry2')(
 
     function pluck(path, source) {
 
-        if( typeof path !== 'string') return source?.[path];
+        if( notstring(path) ) return source?.[path];
 
         const index = path.indexOf(KEY_SEPARATOR_CHAR);
 
-        if( index === INDEX_NOT_FOUND ) return source?.[path];
+        if( notfound(index) ) return source?.[path];
 
-        const [key, nextpath] = [path.slice(0,index), path.slice(index+1)]
+        const [key, nextpath] = [path.slice(0, index), path.slice(index+1)]
         const target = source?.[key];
         
-        return (nextpath === EMPTY_STRING) ? target
-             : (target === null) ? TARGET_NOT_FOUND
-             : (typeof target !== 'object') ? TARGET_NOT_FOUND
+        return isempty(nextpath) ? target
+             : notobject(target) ? TARGET_UNDEFINED
              : pluck(nextpath, target);
     }
 

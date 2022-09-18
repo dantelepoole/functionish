@@ -6,15 +6,17 @@
 
 const ERR_BAD_ITERABLE = `BatchError~The iterable has type %s. Expected an iterable object.`;
 const ERR_BAD_BATCHSIZE = `BatchError~The batchsize has type %s. Expected a number.`;
+const MINIMUM_BATCHSIZE = 1;
 
-const maximumvalue = Math.max;
+const maximum = Math.max;
 
 const fail = require('./fail');
-const format = require('./format');
+const isnan = require('./isnan');
 const notiterable = require('./notiterable');
 const notnumber = require('./notnumber');
 const typeorclass = require('./typeorclass');
 
+const getbatchsizetype = batchsize => isnan(batchsize) ? 'NaN' : typeorclass(batchsize);
 /**
  * Return an iterable of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
  * a batch size of `1` will be used.
@@ -39,14 +41,10 @@ module.exports = require('./curry2')(
     
     function batch(batchsize, iterable) {
 
-        if( notiterable(iterable) ) fail(ERR_BAD_ITERABLE, typeorclass(iterable));
+        notiterable(iterable) && fail(ERR_BAD_ITERABLE, typeorclass(iterable));
+        notnumber(batchsize) && fail(ERR_BAD_BATCHSIZE, getbatchsizetype(batchsize));
 
-        if( notnumber(batchsize) ) {
-            const batchsizetype = (typeof batchsize === 'number') ? 'NaN' : typeorclass(batchsize);
-            fail(ERR_BAD_BATCHSIZE, batchsizetype);
-        }
-
-        batchsize = maximumvalue(batchsize, 1);
+        batchsize = maximum(batchsize, MINIMUM_BATCHSIZE);
 
         return {
         

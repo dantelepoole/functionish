@@ -4,6 +4,8 @@
 
 'use strict';
 
+const isfunction = require('./isfunction');
+
 /**
  * If *expression* is a function, pass *args* to it and return the result. Otherwise, ignore *args* and just return
  * *expression*.
@@ -26,5 +28,5 @@
  * @returns {function}
  */
 module.exports = function evaluate(expression, ...args) {
-    return (typeof expression === 'function') ? expression(...args) : expression;
+    return isfunction(expression) ? expression.call(this, ...args) : expression;
 }

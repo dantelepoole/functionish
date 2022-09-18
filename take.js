@@ -9,6 +9,7 @@ const ERR_BAD_LIST = `TakeError~The list has type %s. Expected an object with a 
 
 const and = require('./and');
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const isgreaterthanorequal = require('./isgreaterthanorequal');
 const isinteger = require('./isinteger');
 const isiterable = require('./isiterable');
@@ -16,7 +17,7 @@ const isnumber = require('./isnumber');
 const typeorclass = require('./typeorclass');
 
 const ispositiveinteger = and(isinteger, isgreaterthanorequal(0));
-const issliceable = x => (typeof x?.slice === 'function');
+const issliceable = x => isfunction(x?.slice);
 
 /**
  * If *list* has a `slice()`, invoke it as `slice(0, *count*)` and return the result. If *list* is an iterable object,

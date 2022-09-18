@@ -4,8 +4,11 @@
 
 'use strict';
 
+const compose = require('./compose');
 const not = require('./not');
 const resolvefunction = require('./resolvefunction');
+
+const complement = compose(not, resolvefunction);
 
 /**
  * Functional variant of {@link external:Array.prototype.every() Array.prototype.every()}. Apply the *predicate*
@@ -37,8 +40,7 @@ module.exports = require('./curry2')(
 
     function all(predicate, list) {
 
-        predicate = resolvefunction(predicate);
-        const notpredicate = not(predicate);
+        const notpredicate = complement(predicate);
         
         for(const item of list) if ( notpredicate(item) ) return false;
 
