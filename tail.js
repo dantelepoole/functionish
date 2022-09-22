@@ -10,6 +10,7 @@ const fail = require('./fail');
 const isiterable = require('./isiterable');
 const typeorclass = require('./typeorclass');
 
+const getiterator = iterable => iterable[Symbol.iterator]();
 const issliceable = x => (typeof x?.slice === 'function');
 
 /**
@@ -34,7 +35,7 @@ function tailiterable(list) {
     return {
         [Symbol.iterator] : function () {
 
-            const iterator = list[Symbol.iterator]();
+            const iterator = getiterator(list);
             
             iterator.next();
 

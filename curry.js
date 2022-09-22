@@ -79,7 +79,8 @@ module.exports = function curry(arity, func) {
 
     func = resolvefunction(func);
 
-    isaritynone(arity) ? (arity = func.length) : notpositiveinteger(arity) && failbadarity(arity);
+    isaritynone(arity) ? (arity = func.length)
+    : notpositiveinteger(arity) && failbadarity(arity);
 
     return curryfunction(arity, func);
 }

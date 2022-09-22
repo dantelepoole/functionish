@@ -60,7 +60,7 @@ function takeiterable(itemcount, list) {
 
             for(const item of list) {
                 
-                if(counter >= itemcount) break;
+                if( isgreaterthanorequal(itemcount, counter) ) break;
 
                 counter += 1;
 
