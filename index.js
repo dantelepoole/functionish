@@ -40,8 +40,7 @@ const functionish = {
      * 
      * The main functionish module seeks to alleviate this annoyance by exporting an object that offers only a single
      * `load()` method when first required. The `load()` method accepts one or more module names (function names) to
-     * load and return, and simultaneously stores them as methods of the functionish module itself. This allows you to
-     * load only the modules you need and to load them in a single statement (well, two statements, actually).
+     * load as methods of the functionish module and returns the functionish module itself.
      * 
      * @param  {...string} modules The names of one or more modules to load
      * @returns {object} The functionish object with the specified modules loaded
