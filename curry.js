@@ -98,7 +98,7 @@ function curryfunction(arity, func, boundargs=[]) {
 
         const curriedargs = [...boundargs, ...args];
 
-        return (curriedargs.length >= arity) ? func.call(this, ...curriedargs)
-             : curryfunction(arity, func, curriedargs);
+        return (curriedargs.length < arity) ? curryfunction(arity, func, curriedargs)
+             : func.call(this, ...curriedargs);
     }
 }
