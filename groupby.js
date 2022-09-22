@@ -66,7 +66,7 @@ module.exports = require('./curry2') (
             const key = keyselector(item);
             const group = getgroup(target, key);
             
-            if( isdefined(group) ) group.push(item);
+            isdefined(group) && group.push(item);
         }
 
         return target;

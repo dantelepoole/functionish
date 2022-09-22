@@ -41,11 +41,13 @@ module.exports = require('./curry2')(
 
         func = resolvefunction(func);
 
-        const iterateiterable = () => { for(const item of list) func.call(this, item) }
-
         return isfunction(list?.forEach) ? list.forEach( unary(func) )
-             : isiterable(list) ? iterateiterable()
+             : isiterable(list) ? iterateiterable(func, list)
              : fail(ERR_BAD_LIST, typeorclass(list));
              
     }
 )
+
+function iterateiterable(func, iterable) {
+    for(const item of iterable) func(item);
+}

@@ -11,12 +11,15 @@ const MINIMUM_BATCHSIZE = 1;
 const maximum = Math.max;
 
 const fail = require('./fail');
+const hasitems = require('./hasitems');
+const islessthan = require('./islessthan');
 const isnan = require('./isnan');
 const notiterable = require('./notiterable');
 const notnumber = require('./notnumber');
 const typeorclass = require('./typeorclass');
 
 const getbatchsizetype = batchsize => isnan(batchsize) ? 'NaN' : typeorclass(batchsize);
+
 /**
  * Return an iterable of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
  * a batch size of `1` will be used.
@@ -56,13 +59,13 @@ module.exports = require('./curry2')(
             
                     batch.push(item);
             
-                    if(batch.length >= batchsize) {
-                        yield batch;
-                        batch = [];
-                    }
+                    if( islessthan(batchsize, batch.length) ) continue;
+
+                    yield batch;
+                    batch = [];
                 }
             
-                if(batch.length > 0) yield batch;
+                if( hasitems(batch) ) yield batch;
             }
         }
     }

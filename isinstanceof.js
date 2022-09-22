@@ -7,7 +7,6 @@
 const ERR_BAD_CLASS = `IsInstanceOfError~The class has type %s. Expected a function.`;
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
@@ -24,7 +23,10 @@ const typeorclass = require('./typeorclass');
 module.exports = require('./curry2') (
 
     function isinstanceof(theclass, anobject) {
-        return isfunction(theclass) ? (anobject instanceof theclass) : fail(ERR_BAD_CLASS, typeorclass(theclass));
+
+        notfunction(theclass) && fail(ERR_BAD_CLASS, typeorclass(theclass));
+
+        return (anobject instanceof theclass);
     }
 
 )

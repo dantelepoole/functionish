@@ -26,13 +26,12 @@ module.exports = require('./curry2') (
 
     function intersection(list1, list2) {
 
-        if( notiterable(list1) ) fail(ERR_BAD_LIST, 'first', typeorclass(list1));
-        if( notiterable(list2) ) fail(ERR_BAD_LIST, 'second', typeorclass(list2));
+        notiterable(list1) && fail(ERR_BAD_LIST, 'first', typeorclass(list1));
+        notiterable(list2) && fail(ERR_BAD_LIST, 'second', typeorclass(list2));
 
         const intersectionfilter = bind('has', new Set(list1));
 
-        const uniqitems = new Set();
-        const isuniq = item => (uniqitems.size !== uniqitems.add(item).size);
+        const isuniq = isuniqfactory();
     
         return {
     
@@ -42,3 +41,10 @@ module.exports = require('./curry2') (
         }
     }
 )
+
+function isuniqfactory() {
+
+    const uniqitems = new Set();
+
+    return item => (uniqitems.size !== uniqitems.add(item).size);
+}

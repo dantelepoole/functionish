@@ -6,7 +6,10 @@
 
 const VIRGIN_RESULT = Symbol();
 
+const isequal = require('./isequal');
 const resolvefunction = require('./resolvefunction');
+
+const isvirgin = isequal(VIRGIN_RESULT);
 
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
@@ -26,6 +29,6 @@ module.exports = function once(func) {
     let returnvalue = VIRGIN_RESULT;
 
     return function oncefunction(...args) {
-        return (returnvalue !== VIRGIN_RESULT) ? returnvalue : (returnvalue = func.call(this, ...args));
+        return isvirgin(returnvalue) ? (returnvalue = func.call(this, ...args)) : returnvalue;
     }
 }

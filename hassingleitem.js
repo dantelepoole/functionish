@@ -4,6 +4,11 @@
 
 'use strict';
 
+const isequal = require('./isequal');
+const isundefined = require('./isundefined');
+
+const isone = isequal(1);
+
 /**
  * Return `true` if *value* has a `length` or `size` property that is equal to `1`.
  * 
@@ -12,5 +17,5 @@
  * @returns {boolean}
  */
 module.exports = function hassingleitem(value) {
-    return (value?.length === 1) || (value?.length === undefined && value?.size === 1);
+    return isone(value?.length) || ( isundefined(value?.length) && isone(value?.size) );
 }

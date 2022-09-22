@@ -8,6 +8,7 @@ const ERR_BAD_LIST = `IncludesError~The list has type %s. Expected an object wit
 
 const fail = require('./fail');
 const includeslist = require('./includeslist');
+const isfunction = require('./isfunction');
 const isiterable = require('./isiterable');
 const typeorclass = require('./typeorclass');
 
@@ -30,7 +31,7 @@ module.exports = require('./curry2')(
     
     function includes(value, list) {
 
-        return (typeof list?.includes === 'function') ? list.includes(value) 
+        return isfunction(list?.includes) ? list.includes(value) 
              : isiterable(list) ? includeslist(value, list)
              : fail(ERR_BAD_LIST, typeorclass(list));
     }
