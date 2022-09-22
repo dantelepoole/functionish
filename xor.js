@@ -4,12 +4,8 @@
 
 'use strict';
 
-const PATH_CALLABLE = __dirname + '/callable';
-
-const map = require('./map');
+const callable = require('./callable');
 const not = require('./not');
-
-const callable = map(PATH_CALLABLE);
 
 /**
  * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `false` if both return the
@@ -47,12 +43,15 @@ module.exports = require('./curry2')(
 
     function xor(predicate1, predicate2) {
 
-        [predicate1, predicate2] = callable( [predicate1, predicate2] );
-
-        const notpredicate2 = not(predicate2);
+        predicate1 = callable(predicate1);
+        predicate2 = callable(predicate2);
 
         return function xor_(...args) {
-            return predicate1(...args) ? notpredicate2(...args) : !! predicate2(...args);
+
+            const result1 = !! predicate1.call(this, ...args);
+            const result2 = !! predicate2.call(this, ...args);
+
+            return result1 ? not(result2) : result2;
         }
     }
 )

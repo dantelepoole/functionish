@@ -80,8 +80,9 @@ module.exports = function transduce(...transformations) {
 
     return function _transducer_(reducer) {
 
-        return isfunction(reducer) ? composetransducers(transducers, reducer)
-                                   : fail(ERR_BAD_REDUCER, typeorclass(reducer));
+        notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
+
+        return composetransducers(transducers, reducer);
     }
 
 }

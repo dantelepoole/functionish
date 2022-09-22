@@ -52,7 +52,14 @@ function concat(list1, list2) {
 
 function* uniq(list) {
 
+    const isuniq = isuniqfactory();
+
+    for(const item of list) if( isuniq(item) ) yield item;
+}
+
+function isuniqfactory() {
+
     const uniqitems = new Set();
 
-    for(const item of list) if(uniqitems.size !== uniqitems.add(item).size) yield item;
+    return item => (uniqitems.size !== uniqitems.add(item).size);
 }

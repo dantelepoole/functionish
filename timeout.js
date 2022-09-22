@@ -35,14 +35,15 @@ module.exports = function timeout(delayms, func, ...args) {
     notfunction(func) && fail(ERR_BAD_FUNCTION, typeorclass(func));
 
     const timeoutid = setTimeout(func, delayms, ...args);
+    const canceltimeout = () => clearTimeout(timeoutid);
 
-    return function canceltimeout() {
-        clearTimeout(timeoutid);
-    }
+    return canceltimeout;
 }
 
 function checkdelay(delay) {
 
-    return ispositiveinteger(delay) ? delay
-         : fail(ERR_BAD_DELAY, isnumber(delay) ? `is ${delay}` : `has type ${typeof delay}`);
+    if( ispositiveinteger(delay) ) return delay;
+
+    const messagepart = isnumber(delay) ? `is ${delay}` : `has type ${typeof delay}`;
+    fail(ERR_BAD_DELAY, messagepart);
 }

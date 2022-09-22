@@ -5,7 +5,6 @@
 'use strict';
 
 const ERR_BAD_ARITY = `WithArityError~The arity %s. Expected a positive integer.`;
-const ERR_BAD_FUNCTION = `WithArityError~The function has type %s. Expected a function.`;
 
 const curry2 = require('./curry2');
 const fail = require('./fail');

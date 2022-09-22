@@ -4,6 +4,9 @@
 
 'use strict';
 
+const TYPE_NULL = 'null';
+const TYPE_OBJECT = 'object';
+
 const classname = require('./classname');
 
 /**
@@ -38,7 +41,7 @@ module.exports = function typeorclass(value) {
 
     const type = typeof value;
 
-    return (type !== 'object') ? type
-         : (value ===  null) ? 'null'
+    return (type !== TYPE_OBJECT) ? type
+         : (value ===  null) ? TYPE_NULL
          : classname(value);
 }

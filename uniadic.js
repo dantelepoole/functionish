@@ -7,7 +7,6 @@
 const ERR_BAD_LIST = `UniadicError~The argument has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');
-const isiterable = require('./isiterable');
 const notiterable = require('./notiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
@@ -41,6 +40,9 @@ module.exports = function uniadic(func, ...partialargs) {
     func = resolvefunction(func);
 
     return function uniadicfunction(list=[]) {
-        return isiterable(list) ? func.call(this, ...partialargs, ...list) : fail(ERR_BAD_LIST, typeorclass(list));
+
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+
+        return func.call(this, ...partialargs, ...list);
     }
 }

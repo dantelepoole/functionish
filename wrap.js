@@ -55,11 +55,10 @@ module.exports = require('./curry2')(wrap);
 
 function wrap(wrapperfunc, func) {
 
-    return notfunction(wrapperfunc) ? fail(ERR_BAD_WRAPPERFUNC, typeorclass(wrapperfunc))
-         : notfunction(func) ? fail(ERR_BAD_TARGETFUNC, typeorclass(func))
-         : wrappedfunction;
+    notfunction(wrapperfunc) && fail(ERR_BAD_WRAPPERFUNC, typeorclass(wrapperfunc));
+    notfunction(func) && fail(ERR_BAD_TARGETFUNC, typeorclass(func));
 
-    function wrappedfunction(...args) {
+    return function wrappedfunction(...args) {
         return wrapperfunc.call(this, func, ...args);
     }
 }

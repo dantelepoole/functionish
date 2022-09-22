@@ -12,6 +12,7 @@ const HASHMARK = '#';
 const fail = require('./fail');
 const isfunction = require('./isfunction');
 const isvoid = require('./isvoid');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 const ismodulenotfound = code => (code === ERRORCODE_MODULE_NOT_FOUND);
@@ -73,5 +74,7 @@ function loadfunctionfrommodule(modulepath) {
         throw error;
     }
 
-    return isfunction(target) ? target : fail(ERR_BAD_FUNCTION, modulepath, typeorclass(target));
+    notfunction(target) && fail(ERR_BAD_FUNCTION, modulepath, typeorclass(target));
+    
+    return target;
 }
