@@ -4,7 +4,7 @@
 
 'use strict';
 
-const MARKER_SYMBOL = Symbol();
+const UNIQUE_SYMBOL = Symbol();
 
 /**
  * Return `true` if *value* is `null`, `undefined` or `NaN`, otherwise return `false`.
@@ -14,5 +14,5 @@ const MARKER_SYMBOL = Symbol();
  * @returns {boolean}
  */
 module.exports = function isvoid(value) {
-    return (value ?? MARKER_SYMBOL) !== value;
+    return (value ?? UNIQUE_SYMBOL) !== value;
 }

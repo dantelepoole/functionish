@@ -7,6 +7,7 @@
 const ERR_BAD_SOURCE = `EndsWithError~The source argument has type %s. Expected a string.`;
 
 const fail = require('./fail');
+const notstring = require('./notstring');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -25,6 +26,9 @@ const typeorclass = require('./typeorclass');
 module.exports = require('./curry2')(
 
     function endswith(target, source) {
-        return (typeof source === 'string') ? source.endsWith(target) : fail(ERR_BAD_SOURCE, typeorclass(source));
+
+        notstring(source) && fail(ERR_BAD_SOURCE, typeorclass(source));
+
+        return source.endsWith(target);
     }
 )

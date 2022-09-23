@@ -92,13 +92,13 @@ function failbadarity(arity) {
     : fail(ERR_BAD_ARITY, `is ${arity}`);
 }
 
-function curryfunction(arity, func, boundargs=[]) {
+function curryfunction(arity, func, ...boundargs) {
 
     return function curriedfunction(...args) {
 
-        const curriedargs = [...boundargs, ...args];
+        const argumentcount = boundargs.length + args.length;
 
-        return (curriedargs.length < arity) ? curryfunction(arity, func, curriedargs)
-             : func.call(this, ...curriedargs);
+        return (argumentcount < arity) ? curryfunction(arity, func, ...boundargs, ...args)
+             : func.call(this, ...boundargs, ...args);
     }
 }

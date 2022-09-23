@@ -61,8 +61,8 @@ function composefilters(filters) {
 
     return function filter(value) {
 
-        for(let i = 0; i < filters.length; i += 1) if( ! filters[i](value) ) return true;
+        const predicate = filter => ! filter(value);
 
-        return false;
+        return filters.some(predicate);
     }
 }

@@ -7,7 +7,7 @@
 const ERR_BAD_FUNCTION = `DeferError~The function has type %s. Expected a function.`;
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -34,6 +34,9 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function defer(func, ...args) {
 
-    return isfunction(func) ? function deferredfunction() { return func.call(this, ...args) }
-         : fail(ERR_BAD_FUNCTION, typeorclass(func));
+    notfunction(func) && fail(ERR_BAD_FUNCTION, typeorclass(func));
+
+    return function deferredfunction() {
+        return func.call(this, ...args);
+    }
 }
