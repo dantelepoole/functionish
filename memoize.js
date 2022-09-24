@@ -8,11 +8,12 @@ const CACHE_NONE = null;
 const ERR_BAD_CACHEFUNC = `MemoizeError~The cache function has type %s. Expected a function.`;
 
 const fail = require('./fail');
+const notequal = require('./notequal');
 const notfunction = require('./notfunction');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
-const hassoleargument = args => (args.length === 1);
+const iscached = notequal(CACHE_NONE);
 
 /**
  * Return a function that cache's *targetfunc*'s return values based on its argument list.
@@ -54,7 +55,7 @@ const hassoleargument = args => (args.length === 1);
  */
 module.exports = function memoize(cachefunc, targetfunc) {
 
-    hassoleargument(arguments) && ([cachefunc, targetfunc] = [defaultcachefunc(), cachefunc]);
+    if(arguments.length === 1) [cachefunc, targetfunc] = [defaultcachefunc(), cachefunc];
     
     targetfunc = resolvefunction(targetfunc);
 
@@ -65,7 +66,7 @@ module.exports = function memoize(cachefunc, targetfunc) {
     function memoizedfunction(...args) {
 
         const cachedresult = cachefunc(args);
-        if(cachedresult !== CACHE_NONE) return cachedresult.value;
+        if( iscached(cachedresult) ) return cachedresult.value;
 
         const result = targetfunc.call(this, ...args);
         cachefunc(args, { value:result });
@@ -82,7 +83,7 @@ function defaultcachefunc() {
 
         const cachekey = args.join();
 
-        if( hassoleargument(arguments) ) return (resultmap.get(cachekey) ?? CACHE_NONE);
+        if(arguments.length === 1) return (resultmap.get(cachekey) ?? CACHE_NONE);
 
         resultmap.set(cachekey, result);
     }

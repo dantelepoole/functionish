@@ -7,12 +7,13 @@
 const ERR_BAD_FINDABLE = `FindError~The findable has type %s. Expected an object with a find() method or an iterable object`;
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const isiterable = require('./isiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 const unary = require('./unary');
 
-const isfindable = obj => (typeof obj?.find === 'function');
+const isfindable = obj => isfunction(obj?.find);
 
 /**
  * Pass the *predicate* function to the `find()` method of *findable* and return the result. If *findable* has

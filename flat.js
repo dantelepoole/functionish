@@ -4,9 +4,12 @@
 
 'use strict';
 
-const flatlist = require('./flatlist');
+const DEFAULT_DEPTH = 1;
 
-const isflattenable = obj => (typeof obj?.flat === 'function');
+const flatlist = require('./flatlist');
+const isfunction = require('./isfunction');
+
+const isflattenable = obj => isfunction(obj?.flat);
 
 /**
  * Pass the *depth* to *flattenable*'s `flat()` method and return the result. If *flattenable* has no such method but
@@ -25,6 +28,9 @@ const isflattenable = obj => (typeof obj?.flat === 'function');
 module.exports = require('./curry2')(
 
     function flat(depth, flattenable) {
+
+        if(arguments.length === 1) [depth, flattenable] = DEFAULT_DEPTH, depth;
+        
         return isflattenable(flattenable) ? flattenable.flat(depth) : flatlist(depth, flattenable)
     }
 )

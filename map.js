@@ -9,11 +9,12 @@ const ERR_BAD_MAPPABLE = `MapError~The mappable has type %s. Expected an object 
 const unary = require('./unary');
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const isiterable = require('./isiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
-const ismappable = obj => (typeof obj?.map === 'function');
+const ismappable = obj => isfunction(obj?.map);
 
 /**
  * Pass the *map* function to the `map()` method of *mappable* and return the result. If *mappable* has
@@ -58,7 +59,7 @@ function maplist(mapfunc, list) {
     return {
 
         [Symbol.iterator] : function* () {
-            for( const item of list ) yield mapfunc(item);
+            for(const item of list) yield mapfunc(item);
         }
     }
 }

@@ -9,9 +9,8 @@ describe(`isprimitive()`, function() {
         }
     )
 
-    it(`should return true if its argument is null, undefined, a boolean, a string, a number, a symbol or a bigint`,
+    it(`should return true if its argument is undefined, a boolean, a string, a number, a symbol or a bigint`,
         function () {
-            expect( isprimitive(null) ).to.be.true;
             expect( isprimitive(undefined) ).to.be.true;
             expect( isprimitive(false) ).to.be.true;
             expect( isprimitive('foobar') ).to.be.true;

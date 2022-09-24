@@ -7,12 +7,18 @@ const ERR_BAD_LIST = `FlatListError~The list has type %s. Expected an iterable o
 const ERR_BAD_DEPTH = `FlatListError~The depth is %s. Expected a positive integer number.`;
 
 const fail = require('./fail');
-const isinteger = require('./isinteger');
+const islessthan = require('./islessthan');
+const islessthanorequal = require('./islessthanorequal');
 const isnumber = require('./isnumber');
+const notequal = require('./notequal');
+const notinteger = require('./notinteger');
 const notiterable = require('./notiterable');
 const typeorclass = require('./typeorclass');
 
-const isvaliddepth = depth => (isinteger(depth) && (depth >= 0)) || (depth === Infinity);
+const notinfinity = notequal(Infinity);
+const isnegative = islessthan(0);
+const ismaxdepth = islessthanorequal(0);
+const isbaddepth = depth => notinfinity(depth) && (notinteger(depth) || isnegative(depth));
 
 /**
  * Recursively flatten the (iterable) items in the *list* to the specified *depth*. 
@@ -28,8 +34,10 @@ module.exports = require('./curry2')(
 
     function flatlist(depth, list) {
 
-        if( notiterable(list) ) fail(ERR_BAD_LIST, typeorclass(list));
-        if( ! isvaliddepth(depth) ) failbaddepth(depth);
+        if(arguments.length === 1) [depth, flattenable] = DEFAULT_DEPTH, depth;
+
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+        isbaddepth(depth) && failbaddepth(depth);
         
         return {
             [Symbol.iterator] : () => recursiveflat(depth, list)
@@ -39,19 +47,16 @@ module.exports = require('./curry2')(
 
 function failbaddepth(depth) {
 
-    fail(
-        ERR_BAD_DEPTH,
-        isnumber(depth) ? String(depth) : `a ${typeorclass(depth)}`
-    )
+    const messagepart = isnumber(depth) ? String(depth) : `a ${typeorclass(depth)}`;
+
+    fail(ERR_BAD_DEPTH, messagepart);
 }
 
 function* recursiveflat(depth, iterable) {
 
-    const maxdepth = (depth <= 0);
-
     for(const item of iterable) {
 
-        if(maxdepth || notiterable(item)) yield item;
+        if(ismaxdepth(depth) || notiterable(item)) yield item;
         else yield* recursiveflat(depth-1, item);
 
     }

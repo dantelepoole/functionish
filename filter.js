@@ -9,11 +9,12 @@ const ERR_BAD_FILTERABLE = `FilterError~The filterable has type %s. Expected an 
 const unary = require('./unary');
 
 const fail = require('./fail');
+const isfunction = require('./isfunction');
 const isiterable = require('./isiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
-const isfilterable = obj => (typeof obj?.filter === 'function');
+const isfilterable = obj => isfunction(obj?.filter);
 
 /**
  * Pass the *predicate* function to the `filter()` method of *filterable* and return the result. If *filterable* has
