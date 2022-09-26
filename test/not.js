@@ -18,7 +18,7 @@ describe(`not()`, function() {
         }
     )
 
-    it(`should return the logical complement of the expression if it is not a function`,
+    it(`should return the logical complement of its argument`,
         function () {
 
             expect( not(true) ).to.be.false;
@@ -35,37 +35,4 @@ describe(`not()`, function() {
             expect( not(-0) ).to.be.true;
         }
     )
-
-    it(`should return a function if the expression is a function`,
-        function () {
-            expect( not(iseven) ).to.be.a('function');
-        }
-    )
-
-    describe(`the function returned by not()`, function() {
-
-        beforeEach(
-            function() {
-                sandbox.resetHistory();
-            }
-        )
-
-        it(`return pass the arguments to the target function`,
-            function () {
-                const isodd = not(iseven);
-                isodd(42);
-
-                expect(iseven.calledOnceWith(42)).to.be.true;
-            }
-        )
-
-        it(`return the logical complement of the target function's return value`,
-            function () {
-                const isodd = not(iseven);
-
-                expect( isodd(42) ).to.equal( ! iseven(42) );
-                expect( isodd(43) ).to.equal( ! iseven(43) );
-            }
-        )
-    })
 })

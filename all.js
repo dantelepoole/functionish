@@ -5,10 +5,10 @@
 'use strict';
 
 const compose = require('./compose');
-const not = require('./not');
+const negate = require('./negate');
 const resolvefunction = require('./resolvefunction');
 
-const complement = compose(not, resolvefunction);
+const complement = compose(negate, resolvefunction);
 
 /**
  * Functional variant of {@link external:Array.prototype.every() Array.prototype.every()}. Apply the *predicate*
