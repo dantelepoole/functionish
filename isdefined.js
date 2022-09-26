@@ -4,6 +4,8 @@
 
 'use strict';
 
+const notvoid = require('./notvoid');
+
 /**
  * Return `true` if value is neither `null`, `undefined` nor `NaN`, otherwise return `false`.
  * 
@@ -17,5 +19,5 @@
  * @returns {boolean}
  */
 module.exports = function isdefined(value) {
-    return (value !== null && value !== undefined && value === value);
+    return notvoid(value);
 }
