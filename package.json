@@ -1,6 +1,6 @@
 {
   "name": "functionish",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "A set of utility functions for functional-ish programming in Node",
   "main": "./src/index.js",
   "scripts": {
