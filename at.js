@@ -17,6 +17,8 @@ const isnegative = islessthan(0);
  * Retrieve the item from *list* at index *index* or `undefined` if the index is invalid. If *index* is negative,
  * it represents the index counting down from the end of *list* (so -1 represents the last item in *list*).
  * 
+ * `at()` is curried by default with binary arity.
+ * 
  * @example
  * 
  * const at = require('functionish/at');
@@ -32,7 +34,9 @@ const isnegative = islessthan(0);
  * @throws {Error} Error if *index* is not a number
  */
 
-module.exports = function at(list, index) {
+module.exports = require('./curry2')(at);
+
+function at(list, index) {
 
     notnumber(index) && fail(ERR_BAD_INDEX, typeorclass(index));
 

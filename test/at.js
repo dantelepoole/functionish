@@ -10,6 +10,8 @@ describe('at()', function() {
         }
     )
 
+    it('should be curried');
+
     it('should return the item at the specified index of the list',
         function () {
             let result = at(numbers1to10, 0);
