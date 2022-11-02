@@ -5,44 +5,52 @@
 'use strict';
 
 const ERR_BAD_REDUCER = `TransducerError~The reducer has type %s. Expected a function.`;
-const ERR_BAD_TRANSFORMER = `TransducerError~The transformer has type %s. Expected a function or an array of functions.`;
+const ERR_BAD_TRANSFORMATION = `TransducerError~The transformation at index %i has type %s. Expected a function.`;
 
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
-const TRANSFORMER_NAME = '_transformer_';
 
-const curry2 = require('../curry2');
 const fail = require('../fail');
-const isarray = require("../isarray");
-const isfunction = require("../isfunction");
+const isfunction = require('../isfunction');
+const map = require('../map');
+const notboolean = require('../notboolean');
 const notfunction = require('../notfunction');
-const _transformer = require('./transformer');
 const typeorclass = require('./typeorclass');
 
-const istransformer = func => isfunction(func) && (func.name === TRANSFORMER_NAME);
+const transducerreducer = (reducer, transducer) => transducer(reducer);
 
-module.exports = curry2(
+module.exports = function transducer(...transformations) {
 
-    function transducer(transformer, reducer) {
+    const transducers = map(transformationtransducerfactory(), transformations);
 
-        transformer = validatetransformer(transformer);
+    return reducer => isfunction(reducer) ? transducers.reduceRight(transducerreducer, reducer)
+                                          : fail(ERR_BAD_REDUCER, typeorclass(reducer));
+}
+
+function transformationtransducerfactory() {
+
+    let index = 0; 
+
+    return function transformationtransducer(transformation) {
         
-        notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
+        notfunction(transformation) && fail(ERR_BAD_TRANSFORMATION, index, typeorclass(transformation));
 
-        return function _transducereducer_(currentvalue, nextvalue) {
+        index += 1;
 
-            nextvalue = transformer(nextvalue);
-
-            return (nextvalue === TRANSFORM_REJECT) ? currentvalue : reducer(currentvalue, nextvalue);
-        }
-
+        return createtransformationtransducer(transformation);
     }
-    
-)
+}
 
-function validatetransformer(transformer) {
+function createtransformationtransducer(transformation) {
 
-    return istransformer(transformer) ? transformer
-         : isfunction(transformer) ? _transformer(transformer)
-         : isarray(transformer) ? _transformer(...transformer)
-         : fail(ERR_BAD_TRANSFORMER, typeorclass(transformer));
+    return function transformationtransducer(reducer) {
+
+        return function transformationreducer(currentvalue, nextvalue) {
+
+            const transformationresult = transformation(nextvalue);
+
+            return notboolean(transformationresult) ? reducer(currentvalue, transformationresult)
+                 : transformationresult ? reducer(currentvalue, nextvalue)
+                 : currentvalue;
+        }
+    }
 }
