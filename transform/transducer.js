@@ -12,8 +12,6 @@ const TRANSFORMATION_NAME = '_functionish_transformation_';
 
 const fail = require('../fail');
 const isfunction = require('../isfunction');
-const map = require('../map');
-const notboolean = require('../notboolean');
 const notfunction = require('../notfunction');
 const typeorclass = require('./typeorclass');
 
