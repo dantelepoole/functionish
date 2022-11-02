@@ -14,7 +14,7 @@ const curry2 = require('../curry2');
 const fail = require('../fail');
 const isarray = require("../isarray");
 const isfunction = require("../isfunction");
-const isiterable = require('../isiterable');
+const notiterable = require('../notiterable');
 const _transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
@@ -27,42 +27,23 @@ module.exports = curry2(
 
         transformation = validatetransformation(transformation);
 
-        return isarray(list) ? transformarray(transformation, list)
-             : isiterable(list) ? transformiterable(transformation, list)
-             : fail(ERR_BAD_LIST, typeorclass(list));
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+
+        return {
+            [Symbol.iterator]: function* () {
+    
+                for(const value of list) {
+    
+                    const transformationresult = transformation(value);
+    
+                    if( notrejected(transformationresult) ) yield transformationresult;
+                }
+            }
+        }
 
     }
     
 )
-
-function transformarray(transformation, array){
-
-    const results = [];
-
-    for(let index = 0; index < array.length; index += 1) {
-
-        const transformationresult = transformation(array[index]);
-
-        notrejected(transformationresult) && results.push(transformationresult);
-    }
-
-    return results;
-}
-
-function transformiterable(transformation, iterable) {
-
-    return {
-        [Symbol.iterator]: function* () {
-
-            for(const value of iterable) {
-
-                const transformationresult = transformation(value);
-
-                if( notrejected(transformationresult) ) yield transformationresult;
-            }
-        }
-    }
-}
 
 function validatetransformation(transformation) {
 

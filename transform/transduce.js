@@ -13,7 +13,7 @@ const curry4 = require('../curry4');
 const fail = require('../fail');
 const isarray = require('../isarray');
 const isfunction = require('../isfunction');
-const isiterable = require('../isiterable');
+const notiterable = require('../notiterable');
 const transducer = require('./transducer');
 const typeorclass = require('./typeorclass');
 
@@ -24,23 +24,16 @@ module.exports = curry4(
     function transduce(transformation, reducer, initialvalue, list) {
 
         transformation = validatetransformation(transformation);
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
         const transformreducer = transducer(transformation)(reducer);
+        let accumulator = initialvalue;
 
-        return isarray(list) ? list.reduce(transformreducer, initialvalue)
-             : isiterable(list) ? reduceiterable(transformreducer, initialvalue, list)
-             : fail(ERR_BAD_LIST, typeorclass(list));
+        for(const nextvalue of list) accumulator = transformreducer(accumulator, nextvalue);
+
+        return accumulator;
     }
 )
-
-function reduceiterable(reducer, initialvalue, iterable) {
-
-    let accumulator = initialvalue;
-
-    for(const nextvalue of iterable) accumulator = reducer(accumulator, nextvalue);
-
-    return accumulator;
-}
 
 function validatetransformation(transformation) {
 
