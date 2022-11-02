@@ -35,7 +35,7 @@ module.exports = curry4(
 
 function reduceiterable(reducer, initialvalue, iterable) {
 
-    const accumulator = initialvalue;
+    let accumulator = initialvalue;
 
     for(const nextvalue of iterable) accumulator = reducer(accumulator, nextvalue);
 
