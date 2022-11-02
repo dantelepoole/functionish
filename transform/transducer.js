@@ -26,15 +26,15 @@ module.exports = function transducer(transformation) {
 
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
 
-        return (currentvalue, nextvalue) => transducevalue(transformation, reducer, currentvalue, nextvalue);
+        return (accumulator, nextvalue) => transducevalue(transformation, reducer, accumulator, nextvalue);
     }
 }
 
-function transducevalue(transformation, reducer, currentvalue, nextvalue) {
+function transducevalue(transformation, reducer, accumulator, nextvalue) {
 
     const transformationresult = transformation(nextvalue);
 
-    return isrejected(transformationresult) ? currentvalue : reducer(currentvalue, transformationresult);
+    return isrejected(transformationresult) ? accumulator : reducer(accumulator, transformationresult);
 }
 
 function validatetransformation(transformation) {
