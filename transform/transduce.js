@@ -5,31 +5,46 @@
 'use strict';
 
 const ERR_BAD_LIST = `TransduceError~The list has type %s. Expected an iterable object.`;
+const ERR_BAD_TRANSFORMATION = `TransduceError~The transformation has type %s. Expected a transformation function or an array of functions.`;
+
+const TRANSFORMATION_NAME = '_functionish_transformation_';
 
 const curry4 = require('../curry4');
 const fail = require('../fail');
 const isarray = require('../isarray');
+const isfunction = require('../isfunction');
 const isiterable = require('../isiterable');
-const transducer = require('./transducer');
+const _transducer = require('./transducer');
 const typeorclass = require('./typeorclass');
+
+const istransformation = func => isfunction(func) && (func.name === TRANSFORMATION_NAME);
 
 module.exports = curry4(
 
-    function transduce(transformer, reducer, initialvalue, list) {
+    function transduce(transformation, reducer, initialvalue, list) {
 
-        const transducereducer = transducer(transformer, reducer);
+        transformation = validatetransformation(transformation);
 
-        return isarray(list) ? list.reduce(reducer, initialvalue)
-             : isiterable(list) ? transduceiterable(transducereducer, initialvalue, list)
+        const transducer = _transducer(transformation);
+        const transformreducer = transducer(reducer);
+
+        return isarray(list) ? list.reduce(transformreducer, initialvalue)
+             : isiterable(list) ? transduceiterable(transformreducer, initialvalue, list)
              : fail(ERR_BAD_LIST, typeorclass(list));
     }
 )
 
-function transduceiterable(reducer, initialvalue, iterable) {
+function transduceiterable(reducer, accumulator, iterable) {
 
-    let result = initialvalue;
+    for(const nextvalue of iterable) accumulator = reducer(accumulator, nextvalue);
 
-    for(const nextvalue of iterable) result = reducer(result, nextvalue);
+    return accumulator;
+}
 
-    return result;
+function validatetransformation(transformation) {
+
+    return istransformation(transformation) ? transformation
+         : isarray(transformation) ? _transformation(...transformation)
+         : isfunction(transformation) ? _transformation(transformation)
+         : fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
 }

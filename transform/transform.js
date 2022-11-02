@@ -5,73 +5,69 @@
 'use strict';
 
 const ERR_BAD_LIST = `TransformError~The list has type %s. Expected an iterable object.`;
-const ERR_BAD_TRANSFORMER = `TransformError~The transformer has type %s. Expected a function or an array of functions.`;
+const ERR_BAD_TRANSFORMATION = `TransformError~The transformation has type %s. Expected a transformation function or an array of functions.`;
 
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
-const TRANSFORMER_NAME = '_transformer_';
+const TRANSFORMATION_NAME = '_functionish_transformation_';
 
 const curry2 = require('../curry2');
 const fail = require('../fail');
 const isarray = require("../isarray");
 const isfunction = require("../isfunction");
 const isiterable = require('../isiterable');
-const _transformer = require('./transformer');
+const _transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
-const istransformer = func => isfunction(func) && (func.name === TRANSFORMER_NAME);
+const istransformation = func => isfunction(func) && (func.name === TRANSFORMATION_NAME);
+const notrejected = transformationresult => (transformationresult !== TRANSFORM_REJECT);
 
 module.exports = curry2(
 
-    function transform(transformer, list) {
+    function transform(transformation, list) {
 
-        transformer = validatetransformer(transformer);
+        transformation = validatetransformation(transformation);
 
-        return isarray(list) ? transformarray(transformer, list)
-             : isiterable(list) ? transformiterable(transformer, list)
+        return isarray(list) ? transformarray(transformation, list)
+             : isiterable(list) ? transformiterable(transformation, list)
              : fail(ERR_BAD_LIST, typeorclass(list));
 
     }
     
 )
 
-function transformarray(transformer, array){
+function transformarray(transformation, array){
 
-    const arrayreducer = arrayreducerfactory(transformer);
+    const results = [];
 
-    return array.reduce(arrayreducer, []);
+    for(let index = 0; index < array.length; index += 1) {
+
+        const transformationresult = transformation(array[index]);
+
+        notrejected(transformationresult) && results.push(transformationresult);
+    }
+
+    return results;
 }
 
-function transformiterable(transformer, iterable) {
+function transformiterable(transformation, iterable) {
 
     return {
         [Symbol.iterator]: function* () {
 
             for(const value of iterable) {
 
-                const transformedvalue = transformer(value);
+                const transformationresult = transformation(value);
 
-                if(transformedvalue !== TRANSFORM_REJECT) yield transformedvalue;
+                if( notrejected(transformationresult) ) yield transformationresult;
             }
         }
     }
 }
 
-function arrayreducerfactory(transformer) {
-    
-    return function arrayreducer(array, nextvalue) {
-        
-        const transformedvalue = transformer(nextvalue);
-        
-        if(transformedvalue !== TRANSFORM_REJECT) array.push(transformedvalue);
-        
-        return array;
-    }
-}
+function validatetransformation(transformation) {
 
-function validatetransformer(transformer) {
-
-    return istransformer(transformer) ? transformer
-         : isfunction(transformer) ? _transformer(transformer)
-         : isarray(transformer) ? _transformer(...transformer)
-         : fail(ERR_BAD_TRANSFORMER, typeorclass(transformer));
+    return istransformation(transformation) ? transformation
+         : isarray(transformation) ? _transformation(...transformation)
+         : isfunction(transformation) ? _transformation(transformation)
+         : fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
 }
