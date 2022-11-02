@@ -28,12 +28,12 @@ module.exports = curry4(
         const transformreducer = transducer(transformation)(reducer);
 
         return isarray(list) ? list.reduce(transformreducer, initialvalue)
-             : isiterable(list) ? transduceiterable(transformreducer, initialvalue, list)
+             : isiterable(list) ? reduceiterable(transformreducer, initialvalue, list)
              : fail(ERR_BAD_LIST, typeorclass(list));
     }
 )
 
-function transduceiterable(reducer, accumulator, iterable) {
+function reduceiterable(reducer, accumulator, iterable) {
 
     for(const nextvalue of iterable) accumulator = reducer(accumulator, nextvalue);
 
