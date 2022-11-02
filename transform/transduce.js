@@ -14,7 +14,7 @@ const fail = require('../fail');
 const isarray = require('../isarray');
 const isfunction = require('../isfunction');
 const isiterable = require('../isiterable');
-const _transducer = require('./transducer');
+const transducer = require('./transducer');
 const typeorclass = require('./typeorclass');
 
 const istransformation = func => isfunction(func) && (func.name === TRANSFORMATION_NAME);
@@ -25,8 +25,7 @@ module.exports = curry4(
 
         transformation = validatetransformation(transformation);
 
-        const transducer = _transducer(transformation);
-        const transformreducer = transducer(reducer);
+        const transformreducer = transducer(transformation)(reducer);
 
         return isarray(list) ? list.reduce(transformreducer, initialvalue)
              : isiterable(list) ? transduceiterable(transformreducer, initialvalue, list)
