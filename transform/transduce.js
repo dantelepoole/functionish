@@ -1,5 +1,5 @@
 /**
- * @module transduce
+ * @module transform/transduce
  */
 
 'use strict';

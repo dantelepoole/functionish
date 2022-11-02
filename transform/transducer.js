@@ -1,5 +1,5 @@
 /**
- * @module transducer
+ * @module transform/transducer
  */
 
 'use strict';

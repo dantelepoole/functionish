@@ -27,10 +27,10 @@ function applytransformers(transformers, value) {
 
     for(let index = 0; index < transformers.length; index += 1) {
 
-        const result = transformers[index](value);
+        const transformerresult = transformers[index](value);
 
-        value = notboolean(result) ? result
-              : result ? value
+        value = notboolean(transformerresult) ? transformerresult
+              : transformerresult ? value
               : TRANSFORM_REJECT;
 
         if(value === TRANSFORM_REJECT) break;

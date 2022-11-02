@@ -1,5 +1,5 @@
 /**
- * @module transform
+ * @module transform/transform
  */
 
 'use strict';
