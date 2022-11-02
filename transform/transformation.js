@@ -18,9 +18,9 @@ module.exports = function transformation(...transformers) {
 
     transformers = map( transformervalidatorfactory(), transformers );
 
-    const _functionish_transformation_ = value => applytransformers(transformers, value);
-    
-    return _functionish_transformation_;
+    return function _functionish_transformation_(value) {
+        return applytransformers(transformers, value);
+    }
 }
 
 function applytransformers(transformers, value) {
