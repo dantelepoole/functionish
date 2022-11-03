@@ -11,34 +11,34 @@ const TRANSFORMATION_NAME = '_functionish_transformation_';
 
 const curry4 = require('../curry4');
 const fail = require('../fail');
-const isarray = require('../isarray');
-const isfunction = require('../isfunction');
+const notarray = require('../notarray');
 const notiterable = require('../notiterable');
 const transducer = require('./transducer');
 const typeorclass = require('./typeorclass');
 
-const istransformation = func => isfunction(func) && (func.name === TRANSFORMATION_NAME);
+const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
 module.exports = curry4(
 
     function transduce(transformation, reducer, initialvalue, list) {
 
-        transformation = validatetransformation(transformation);
+        nottransformation(transformation) && (transformation = constructtransformation(transformation));
+
         notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
         const transformreducer = transducer(transformation)(reducer);
-        let accumulator = initialvalue;
 
-        for(const nextvalue of list) accumulator = transformreducer(accumulator, nextvalue);
+        let currentvalue = initialvalue;
 
-        return accumulator;
+        for(const nextvalue of list) currentvalue = transformreducer(currentvalue, nextvalue);
+
+        return currentvalue;
     }
 )
 
-function validatetransformation(transformation) {
+function constructtransformation(transformation) {
 
-    return istransformation(transformation) ? transformation
-         : isarray(transformation) ? _transformation(...transformation)
-         : isfunction(transformation) ? _transformation(transformation)
-         : fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+    notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+
+    return _transformation(...transformation);
 }

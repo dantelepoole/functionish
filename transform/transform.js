@@ -12,20 +12,20 @@ const TRANSFORMATION_NAME = '_functionish_transformation_';
 
 const curry2 = require('../curry2');
 const fail = require('../fail');
-const isarray = require("../isarray");
-const isfunction = require("../isfunction");
+const notarray = require('../notarray');
+const notfunction = require('../notfunction');
 const notiterable = require('../notiterable');
 const _transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
-const istransformation = func => isfunction(func) && (func.name === TRANSFORMATION_NAME);
-const notrejected = transformationresult => (transformationresult !== TRANSFORM_REJECT);
+const istransformsuccess = transformationresult => (transformationresult !== TRANSFORM_REJECT);
+const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
 module.exports = curry2(
 
     function transform(transformation, list) {
 
-        transformation = validatetransformation(transformation);
+        nottransformation(transformation) && (transformation = constructtransformation(transformation));
 
         notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
@@ -34,9 +34,9 @@ module.exports = curry2(
     
                 for(const value of list) {
     
-                    const transformationresult = transformation(value);
+                    const transformedvalue = transformation(value);
     
-                    if( notrejected(transformationresult) ) yield transformationresult;
+                    if( istransformsuccess(transformedvalue) ) yield transformedvalue;
                 }
             }
         }
@@ -45,10 +45,9 @@ module.exports = curry2(
     
 )
 
-function validatetransformation(transformation) {
+function constructtransformation(transformation) {
 
-    return istransformation(transformation) ? transformation
-         : isarray(transformation) ? _transformation(...transformation)
-         : isfunction(transformation) ? _transformation(transformation)
-         : fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+    notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+
+    return _transformation(...transformation);
 }

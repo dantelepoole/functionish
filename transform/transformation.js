@@ -9,14 +9,14 @@ const ERR_BAD_TRANSFORMER = `TransformationError~The transformer at index %i has
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 
 const fail = require('../fail');
-const map = require('../map');
+const iterate = require('../iterate');
 const notboolean = require('../notboolean');
 const notfunction = require('../notfunction');
 const typeorclass = require('./typeorclass');
 
 module.exports = function transformation(...transformers) {
 
-    transformers = map( transformervalidatorfactory(), transformers );
+    iterate( transformervalidatorfactory(), transformers );
 
     return function _functionish_transformation_(value) {
         return applytransformers(transformers, value);
@@ -43,12 +43,8 @@ function transformervalidatorfactory() {
 
     let index = 0; 
 
-    return function transformervalidator(transformation) {
-        
-        notfunction(transformation) && fail(ERR_BAD_TRANSFORMER, index, typeorclass(transformation));
-
-        index += 1;
-
-        return transformation;
-    }
+    return transformation => (
+        notfunction(transformation) && fail(ERR_BAD_TRANSFORMER, index, typeorclass(transformation)),
+        index += 1
+    )
 }

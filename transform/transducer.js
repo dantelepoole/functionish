@@ -11,36 +11,36 @@ const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 const TRANSFORMATION_NAME = '_functionish_transformation_';
 
 const fail = require('../fail');
-const isfunction = require('../isfunction');
+const notarray = require('../notarray');
 const notfunction = require('../notfunction');
 const typeorclass = require('./typeorclass');
 
-const istransformation = func => isfunction(func) && (func.name === TRANSFORMATION_NAME);
-const isrejected = transformationresult => (transformationresult === TRANSFORM_REJECT);
+const istransformsuccess = transformationresult => (transformationresult !== TRANSFORM_REJECT);
+const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
 module.exports = function transducer(transformation) {
 
-    transformation = validatetransformation(transformation);
+    nottransformation(transformation) && (transformation = constructtransformation(transformation));
 
     return function _functionish_transducer_(reducer) {
 
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
 
-        return (accumulator, nextvalue) => transducevalue(transformation, reducer, accumulator, nextvalue);
+        return (currentvalue, nextvalue) => transducevalue(transformation, reducer, currentvalue, nextvalue);
     }
 }
 
-function transducevalue(transformation, reducer, accumulator, nextvalue) {
+function transducevalue(transformation, reducer, currentvalue, nextvalue) {
 
-    const transformationresult = transformation(nextvalue);
+    const transformedvalue = transformation(nextvalue);
 
-    return isrejected(transformationresult) ? accumulator : reducer(accumulator, transformationresult);
+    return istransformsuccess(transformedvalue) ? reducer(currentvalue, transformedvalue)
+                                                : currentvalue;
 }
 
-function validatetransformation(transformation) {
+function constructtransformation(transformation) {
 
-    return istransformation(transformation) ? transformation
-         : isarray(transformation) ? _transformation(...transformation)
-         : isfunction(transformation) ? _transformation(transformation)
-         : fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+    notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+
+    return _transformation(...transformation);
 }
