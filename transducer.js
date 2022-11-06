@@ -1,5 +1,5 @@
 /**
- * @module transform/transducer
+ * @module transducer
  */
 
 'use strict';
@@ -10,9 +10,9 @@ const ERR_BAD_TRANSFORMATION = `TransducerError~The transformation has type %s. 
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 const TRANSFORMATION_NAME = '_functionish_transformation_';
 
-const fail = require('../fail');
-const notarray = require('../notarray');
-const notfunction = require('../notfunction');
+const fail = require('./fail');
+const notarray = require('./notarray');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 const istransformsuccess = transformationresult => (transformationresult !== TRANSFORM_REJECT);
@@ -25,8 +25,8 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * A reducer function is any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}.
  * 
  * The *transformation* argument may either be the function returned by
- * {@link module:transform/transformation transformation()} or an array of transformer functions. See
- * {@link module:transform/transformation transformation()}for more information on transformer functions.
+ * {@link module:transformation transformation()} or an array of transformer functions. See
+ * {@link module:transformation transformation()}for more information on transformer functions.
  * 
  * @example
  * 
@@ -47,7 +47,7 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * console.log(result); // prints '12'
  * 
  * @func transducer
- * @see {@link module:transform/transformation transformation()}
+ * @see {@link module:transformation transformation()}
  * @param {(function|function[])} transformation The transformation or array of transformers to apply
  * @returns {function} A transducer function
  */

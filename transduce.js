@@ -1,5 +1,5 @@
 /**
- * @module transform/transduce
+ * @module transduce
  */
 
 'use strict';
@@ -9,10 +9,10 @@ const ERR_BAD_TRANSFORMATION = `TransduceError~The transformation has type %s. E
 
 const TRANSFORMATION_NAME = '_functionish_transformation_';
 
-const curry4 = require('../curry4');
-const fail = require('../fail');
-const notarray = require('../notarray');
-const notiterable = require('../notiterable');
+const curry4 = require('./curry4');
+const fail = require('./fail');
+const notarray = require('./notarray');
+const notiterable = require('./notiterable');
 const transducer = require('./transducer');
 const typeorclass = require('./typeorclass');
 
@@ -28,8 +28,8 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * A reducer function is any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}.
  * 
  * The *transformation* argument may either be the function returned by
- * {@link module:transform/transformation transformation()} or an array of transformer functions. See
- * {@link module:transform/transformation transformation()}for more information on transformer functions.
+ * {@link module:transformation transformation()} or an array of transformer functions. See
+ * {@link module:transformation transformation()}for more information on transformer functions.
  * 
  * `transduce()` is curried by default with a quaternary arity (4).
  * 
@@ -50,8 +50,8 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * console.log(result); // prints '12'
  * 
  * @func transduce
- * @see {@link module:transform/transformation transformation()}
- * @see {@link module:transform/transducer transducer()}
+ * @see {@link module:transformation transformation()}
+ * @see {@link module:transducer transducer()}
  * @param {(function|function[])} transformation The transformation or array of transformers to apply
  * @param {function} reducer Any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}
  * @param {any} initialvalue The initial value to use for reducing the *list*

@@ -1,5 +1,5 @@
 /**
- * @module transform/transformation
+ * @module transformation
  */
 
 'use strict';
@@ -8,10 +8,10 @@ const ERR_BAD_TRANSFORMER = `TransformationError~The transformer at index %i has
 
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 
-const fail = require('../fail');
-const iterate = require('../iterate');
-const notboolean = require('../notboolean');
-const notfunction = require('../notfunction');
+const fail = require('./fail');
+const iterate = require('./iterate');
+const notboolean = require('./notboolean');
+const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
 const validatetransformers = transformers => iterate( transformervalidatorfactory(), transformers );
@@ -19,8 +19,8 @@ const validatetransformers = transformers => iterate( transformervalidatorfactor
 /**
  * Return a transformation function that accepts a single value, applies each *transformer* function to that value in
  * order and returns the result. The returned function is suitable to be passed to
- * {@link module:transform/transform transform()}, {@link module:transform/transduce transduce()} or
- * {@link module:transform/transducer transducer()}. It is *not* appropriate for direct use in user code, in which case
+ * {@link module:transform transform()}, {@link module:transduce transduce()} or
+ * {@link module:transducer transducer()}. It is *not* appropriate for direct use in user code, in which case
  * it would produce incorrect results.
  * 
  * A *transformer* is any function that accepts a single value and returns a single value. If the *transformer*'s
@@ -29,9 +29,9 @@ const validatetransformers = transformers => iterate( transformervalidatorfactor
  * included or excluded by the transformation.
  * 
  * @func transformation
- * @see {@link module:transform/transform transform()}
- * @see {@link module:transform/transduce transduce()}
- * @see {@link module:transform/transducer transducer()}
+ * @see {@link module:transform transform()}
+ * @see {@link module:transduce transduce()}
+ * @see {@link module:transducer transducer()}
  * @param  {...function} transformers 
  * @returns {function}
  */

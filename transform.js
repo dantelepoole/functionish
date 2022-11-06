@@ -1,5 +1,5 @@
 /**
- * @module transform/transform
+ * @module transform
  */
 
 'use strict';
@@ -10,11 +10,11 @@ const ERR_BAD_TRANSFORMATION = `TransformError~The transformation has type %s. E
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 const TRANSFORMATION_NAME = '_functionish_transformation_';
 
-const curry2 = require('../curry2');
-const fail = require('../fail');
-const notarray = require('../notarray');
-const notfunction = require('../notfunction');
-const notiterable = require('../notiterable');
+const curry2 = require('./curry2');
+const fail = require('./fail');
+const notarray = require('./notarray');
+const notfunction = require('./notfunction');
+const notiterable = require('./notiterable');
 const _transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
@@ -26,8 +26,8 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * returns an iterable object producing the transformed values.
  * 
  * The *transformation* argument may either be the function returned by
- * {@link module:transform/transformation transformation()} or an array of transformer functions. See
- * {@link module:transform/transformation transformation()}for more information on transformer functions.
+ * {@link module:transformation transformation()} or an array of transformer functions. See
+ * {@link module:transformation transformation()}for more information on transformer functions.
  * 
  * `transform()` is curried by default with binary arity.
  * 
@@ -47,7 +47,7 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * Array.from( transformednumbers ); // returns [4,8]
  * 
  * @func transform
- * @see {@link module:transform/transformation transformation()}
+ * @see {@link module:transformation transformation()}
  * @param {(function|function[])} transformation The transformation or array of transformers to apply
  * @param {iterable} list An iterable object producing the values to transform
  * @returns {iterable} An iterable object producing the transformed values
