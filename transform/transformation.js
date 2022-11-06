@@ -14,9 +14,11 @@ const notboolean = require('../notboolean');
 const notfunction = require('../notfunction');
 const typeorclass = require('./typeorclass');
 
+const validatetransformers = transformers => iterate( transformervalidatorfactory(), transformers );
+
 module.exports = function transformation(...transformers) {
 
-    iterate( transformervalidatorfactory(), transformers );
+    validatetransformers(transformers);
 
     return function _functionish_transformation_(value) {
         return applytransformers(transformers, value);
@@ -45,6 +47,7 @@ function transformervalidatorfactory() {
 
     return transformation => (
         notfunction(transformation) && fail(ERR_BAD_TRANSFORMER, index, typeorclass(transformation)),
-        index += 1
+        index += 1,
+        void(0)
     )
 }
