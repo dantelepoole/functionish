@@ -21,6 +21,37 @@ const typeorclass = require('./typeorclass');
 const istransformsuccess = transformationresult => (transformationresult !== TRANSFORM_REJECT);
 const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
+/**
+ * Return a function that applies the argument *transformation* to each value produced by the iterable *list* and
+ * returns an iterable object producing the transformed values.
+ * 
+ * The *transformation* argument may either be the function returned by
+ * {@link module:transform/transformation transformation()} or an array of transformer functions. See
+ * {@link module:transform/transformation transformation()}for more information on transformer functions.
+ * 
+ * `transform()` is curried by default with binary arity.
+ * 
+ * @example
+ * 
+ * const transform = require('functionish/transform');
+ * const transformation = require('functionish/transformation');
+ * 
+ * const double = x => (x*2);
+ * const iseven = x => (x%2) === 0;
+ * 
+ * const xformation = transformation(iseven, double);
+ * 
+ * const numbers = [1,2,3,4,5];
+ * const transformednumbers = transform(xformation, numbers);
+ * 
+ * Array.from( transformednumbers ); // returns [4,8]
+ * 
+ * @func transform
+ * @see {@link module:transform/transformation transformation()}
+ * @param {(function|function[])} transformation The transformation or array of transformers to apply
+ * @param {iterable} list An iterable object producing the values to transform
+ * @returns {iterable} An iterable object producing the transformed values
+ */
 module.exports = curry2(
 
     function transform(transformation, list) {

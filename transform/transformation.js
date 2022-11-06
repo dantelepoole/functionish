@@ -16,6 +16,25 @@ const typeorclass = require('./typeorclass');
 
 const validatetransformers = transformers => iterate( transformervalidatorfactory(), transformers );
 
+/**
+ * Return a transformation function that accepts a single value, applies each *transformer* function to that value in
+ * order and returns the result. The returned function is suitable to be passed to
+ * {@link module:transform/transform transform()}, {@link module:transform/transduce transduce()} or
+ * {@link module:transform/transducer transducer()}. It is *not* appropriate for direct use in user code, in which case
+ * it would produce incorrect results.
+ * 
+ * A *transformer* is any function that accepts a single value and returns a single value. If the *transformer*'s
+ * return value has any type other than `boolean`, the return value is used as the result of the transformer. If the
+ * *transformer* returns a value of type `boolean`, the return value indicates whether the input value should be
+ * included or excluded by the transformation.
+ * 
+ * @func transformation
+ * @see {@link module:transform/transform transform()}
+ * @see {@link module:transform/transduce transduce()}
+ * @see {@link module:transform/transducer transducer()}
+ * @param  {...function} transformers 
+ * @returns {function}
+ */
 module.exports = function transformation(...transformers) {
 
     validatetransformers(transformers);
