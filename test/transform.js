@@ -1,4 +1,4 @@
-const array = require('../array');
+const collect = require('../collect');
 const expect = require('chai').expect;
 const isiterable = require('../isiterable');
 const predicate = require('../predicate');
@@ -84,7 +84,7 @@ describe(`transform`, function() {
             function() {
                 const transformer = transform( predicate(iseven), double );
                 const iterable = transformer( [2,4,6] );
-                const result = array(iterable);
+                const result = collect(iterable);
 
                 expect(result).to.deep.equal([4,8,12]);
                 expect(iseven.callCount).to.equal(3);
@@ -96,7 +96,7 @@ describe(`transform`, function() {
             function() {
                 const transformer = transform( predicate(iseven), double );
                 const iterable = transformer( range(3) );
-                const result = array(iterable);
+                const result = collect(iterable);
 
                 expect(result).to.deep.equal([4]);
                 expect(iseven.callCount).to.equal(3);

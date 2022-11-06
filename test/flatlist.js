@@ -1,4 +1,4 @@
-const array = require('../array');
+const collect = require('../collect');
 const expect = require('chai').expect;
 const flatlist = require('../flatlist');
 const isiterable = require('../isiterable');
@@ -28,7 +28,7 @@ describe(`flatlist()`, function() {
         function () {
             const curried = flatlist(1);
             expect(curried).to.be.a('function');
-            expect( array( curried(list1dimension) ) ).to.deep.equal(array1dimension);
+            expect( collect( curried(list1dimension) ) ).to.deep.equal(array1dimension);
         }
     )
 
@@ -36,7 +36,7 @@ describe(`flatlist()`, function() {
         function () {
             const result = flatlist(1, range(10));
             expect( isiterable(result) ).to.be.true;
-            expect( array(result) ).to.deep.equal(array1dimension);
+            expect( collect(result) ).to.deep.equal(array1dimension);
         }
     )
 
@@ -60,21 +60,21 @@ describe(`flatlist()`, function() {
 
     it(`should flatten to the specified number of dimensions`,
         function () {
-            expect( array( flatlist(1, list2dimensions) ) ).to.deep.equal(array1dimension);
-            expect( array( flatlist(1, list3dimensions) ) ).to.deep.equal(array2dimensions);
-            expect( array( flatlist(2, list3dimensions) ) ).to.deep.equal(array1dimension);
+            expect( collect( flatlist(1, list2dimensions) ) ).to.deep.equal(array1dimension);
+            expect( collect( flatlist(1, list3dimensions) ) ).to.deep.equal(array2dimensions);
+            expect( collect( flatlist(2, list3dimensions) ) ).to.deep.equal(array1dimension);
         }
     )
 
     it(`should accept Infinity for the depth argument`,
         function () {
-            expect( array( flatlist(Infinity, list(list3dimensions)) ) ).to.deep.equal(array1dimension);
+            expect( collect( flatlist(Infinity, list(list3dimensions)) ) ).to.deep.equal(array1dimension);
         }
     )
 
     it(`should not flatten strings to individual characters`,
         function () {
-            expect( array( flatlist(Infinity, ['foo','bar']) ) ).to.deep.equal(['foo','bar']);
+            expect( collect( flatlist(Infinity, ['foo','bar']) ) ).to.deep.equal(['foo','bar']);
         }
     )
 })
