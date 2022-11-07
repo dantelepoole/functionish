@@ -64,9 +64,8 @@ function transformervalidatorfactory() {
 
     let index = 0; 
 
-    return transformation => (
+    return transformation => void(
         notfunction(transformation) && fail(ERR_BAD_TRANSFORMER, index, typeorclass(transformation)),
-        index += 1,
-        void(0)
+        index += 1
     )
 }
