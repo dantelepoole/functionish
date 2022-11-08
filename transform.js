@@ -7,6 +7,7 @@
 const ERR_BAD_LIST = `TransformError~The list has type %s. Expected an iterable object.`;
 const ERR_BAD_TRANSFORMATION = `TransformError~The transformation has type %s. Expected a transformation function or an array of functions.`;
 
+const TRANSFORM_INJECT = Symbol.for('functionish/transform/TRANSFORM_INJECT');
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 const TRANSFORMATION_NAME = '_functionish_transformation_';
 
@@ -18,7 +19,8 @@ const notiterable = require('./notiterable');
 const _transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
-const istransformsuccess = transformationresult => (transformationresult !== TRANSFORM_REJECT);
+const istransforminject = transformationresult => (transformationresult?.[TRANSFORM_INJECT] === TRANSFORM_INJECT);
+const istransformreject = transformationresult => (transformationresult === TRANSFORM_REJECT);
 const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
 /**
@@ -67,7 +69,9 @@ module.exports = curry2(
     
                     const transformedvalue = transformation(value);
     
-                    if( istransformsuccess(transformedvalue) ) yield transformedvalue;
+                    if( istransformreject(transformedvalue) ) continue;
+                    else if( istransforminject(transformedvalue) ) yield* transformedvalue.data;
+                    else yield transformedvalue;
                 }
             }
         }
