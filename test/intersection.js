@@ -1,4 +1,4 @@
-const array = require('../array');
+const collect = require('../collect');
 const expect = require('chai').expect;
 const intersection = require('../intersection');
 const isiterable = require('../isiterable');
@@ -45,10 +45,10 @@ describe(`intersection()`, function() {
 
     it(`should return the intersection of its two arguments`,
         function () {
-            let result = array( intersection(numbers1to10, evennumbers1to10) );
+            let result = collect( intersection(numbers1to10, evennumbers1to10) );
             expect(result).to.deep.equal(evennumbers1to10);
 
-            result = array( intersection(oddnumbers1to10, numbers1to10) );
+            result = collect( intersection(oddnumbers1to10, numbers1to10) );
             expect(result).to.deep.equal(oddnumbers1to10);
         }
     )
@@ -56,10 +56,10 @@ describe(`intersection()`, function() {
     it(`should return an iterable without duplicate elements`,
         function () {
             let result = intersection([...numbers1to10, ...numbers1to10], [...evennumbers1to10, ...evennumbers1to10]);
-            expect( array(result) ).to.deep.equal(evennumbers1to10);
+            expect( collect(result) ).to.deep.equal(evennumbers1to10);
 
             result = intersection([...numbers1to10, ...numbers1to10], [...oddnumbers1to10, ...oddnumbers1to10]);
-            expect( array(result) ).to.deep.equal(oddnumbers1to10);
+            expect( collect(result) ).to.deep.equal(oddnumbers1to10);
         }
     )
 

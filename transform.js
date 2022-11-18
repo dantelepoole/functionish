@@ -5,68 +5,84 @@
 'use strict';
 
 const ERR_BAD_LIST = `TransformError~The list has type %s. Expected an iterable object.`;
+const ERR_BAD_TRANSFORMATION = `TransformError~The transformation has type %s. Expected a transformation function or an array of functions.`;
 
-const TRANSFORM_REJECT = Symbol.for('functionish/transduce/transform/reject');
+const TRANSFORM_INJECT = Symbol.for('functionish/transform/TRANSFORM_INJECT');
+const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
+const TRANSFORMATION_NAME = '_functionish_transformation_';
 
+const curry2 = require('./curry2');
 const fail = require('./fail');
-const isequal = require('./isequal');
+const notarray = require('./notarray');
+const notfunction = require('./notfunction');
 const notiterable = require('./notiterable');
-const transduce = require('./transduce');
+const _transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
-const idreducer = (_,x) => x;
-const isrejected = isequal(TRANSFORM_REJECT);
+const istransforminject = transformationresult => (transformationresult?.[TRANSFORM_INJECT] === TRANSFORM_INJECT);
+const istransformreject = transformationresult => (transformationresult === TRANSFORM_REJECT);
+const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
 /**
- * Return a function that accepts an iterable object and returns an iterable object that transforms its items by
- * applying the *transformations*.
+ * Return a function that applies the argument *transformation* to each value produced by the iterable *list* and
+ * returns an iterable object producing the transformed values.
  * 
- * The *transformations* may be any transformation functions accepted by {@link module:transduce transduce()}. See
- * {@link module:transduce transduce()} for further details.
+ * The *transformation* argument may either be the function returned by
+ * {@link module:transformation transformation()} or an array of transformer functions. See
+ * {@link module:transformation transformation()}for more information on transformer functions.
  * 
- * The returned function takes an iterable object as its only argument. The iterable it returns applies the
- * *transformations* in order to each item produced by the argument iterable, dropping any values that any of the
- * *transformations* rejects.
+ * `transform()` is curried by default with binary arity.
  * 
  * @example
  * 
  * const transform = require('functionish/transform');
- * const predicate = require('functionish/predicate');
+ * const transformation = require('functionish/transformation');
  * 
  * const double = x => (x*2);
  * const iseven = x => (x%2) === 0;
- * const sum = (x,y) => (x+y);
  * 
- * const transformer = transform(predicate(iseven), double);
+ * const xformation = transformation(iseven, double);
  * 
- * Array.from( transformer([1,2,3,4,5]) ); // returns [4,8]
+ * const numbers = [1,2,3,4,5];
+ * const transformednumbers = transform(xformation, numbers);
+ * 
+ * Array.from( transformednumbers ); // returns [4,8]
  * 
  * @func transform
- * @see {@link module:transduce transduce()}
- * @param {...function[]} transformations The transformation functions to apply
- * @returns {function}
+ * @see {@link module:transformation transformation()}
+ * @param {(function|function[])} transformation The transformation or array of transformers to apply
+ * @param {iterable} list An iterable object producing the values to transform
+ * @returns {iterable} An iterable object producing the transformed values
  */
-module.exports = function transform(...transformations) {
+module.exports = curry2(
 
-    const transducer = transduce(...transformations);
-    const transformer = transducer(idreducer);
+    function transform(transformation, list) {
 
-    return function _transformer_(list) {
+        nottransformation(transformation) && (transformation = constructtransformation(transformation));
 
         notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
         return {
-            [Symbol.iterator] : function* () {
+            [Symbol.iterator]: function* () {
     
-                for(const item of list) {
+                for(const value of list) {
     
-                    const transformeditem = transformer(TRANSFORM_REJECT, item);
-
-                    if( isrejected(transformeditem) ) continue;
-                    
-                    yield transformeditem;
+                    const transformedvalue = transformation(value);
+    
+                    if( istransformreject(transformedvalue) ) continue;
+                    else if( istransforminject(transformedvalue) ) yield* transformedvalue.data;
+                    else yield transformedvalue;
                 }
             }
         }
+
     }
+    
+)
+
+function constructtransformation(transformation) {
+
+    notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+
+    return _transformation(...transformation);
 }

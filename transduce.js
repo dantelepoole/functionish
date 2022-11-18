@@ -4,99 +4,81 @@
 
 'use strict';
 
-const ERR_BAD_REDUCER = `TransduceError~The reducer has type %s. Expected a function.`;
-const ERR_BAD_TRANSFORMATION = `TransduceError~The transformation has type %s. Expected a function.`;
-const FILTERTRANSFORMATION_NAME = '_filtertransformation_';
-const TRANSDUCER_NAME = '_transducer_';
+const ERR_BAD_LIST = `TransduceError~The list has type %s. Expected an iterable object.`;
+const ERR_BAD_TRANSFORMATION = `TransduceError~The transformation has type %s. Expected a transformation function or an array of functions.`;
 
+const TRANSFORMATION_NAME = '_functionish_transformation_';
+
+const curry4 = require('./curry4');
 const fail = require('./fail');
-const isequal = require('./isequal');
-const isfunction = require('./isfunction');
-const map = require('./map');
-const notfunction = require('./notfunction');
-const reduceright = require('./reduceright');
+const notarray = require('./notarray');
+const notiterable = require('./notiterable');
+const transducer = require('./transducer');
 const typeorclass = require('./typeorclass');
 
-const ispredicatename = isequal(FILTERTRANSFORMATION_NAME);
-const istransducername = isequal(TRANSDUCER_NAME);
-
-const ispredicate = transformation => ispredicatename(transformation?.name);
-const istransducer = transformation => istransducername(transformation?.name);
-
-const transformreducer = (reducer, transducer) => transducer(reducer);
-const composetransducers = (transducers, reducer) => reduceright(transformreducer, reducer, transducers);
-
-const createtransducers = map(transducerfactory);
+const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
 /**
- * Return a transducer function that accept a reducer function and returns a reducer function that applies the
- * *transformation* function in order before applying the reducer.
+ * Convenience function that transduces the iterable *list* argument by applying the *transformation* to each
+ * value produced by *list* before reducing the value with the *reducer* argument.
  * 
- * A *transformation* may be a regular function that accepts a single value and returns a new value to replace it. 
- * Alternatively, a *transformation* may be filter function that accept a single value and return a boolean
- * to indicate whether or not that value should be accepted or ignored. Such a filter function *must* be passed
- * to {@link module:predicate predicate()} (or its helper functions {@link module:pass pass()}
- * or {@link module:drop drop()}) before passing it to `transduce()`. If this step is skipped, `transduce()`
- * will not work properly.
+ * If the transduction is to be repeated, it will generally be more performant to first create a *transducer* yourself
+ * and then pass it {@link module:reduce reduce()} yourself.
  * 
- * `transducer()` returns a transducer function, i.e. a function that accepts a reducer function and returns a reducer
- * function that applies the *transformation* function in order to each value before passing the result to the
- * argument reducer. If any filter *transformation* rejects a certain value, that values is ignored altogether.
+ * A reducer function is any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}.
  * 
- * The reducer returned by the transducer function is suitable for passing to any function that knows how to apply a
- * reducer to reduce a list of values, e.g. {@link external:Array.prototype.reduce Array.prototype.reduce()}.
+ * The *transformation* argument may either be the function returned by
+ * {@link module:transformation transformation()} or an array of transformer functions. See
+ * {@link module:transformation transformation()}for more information on transformer functions.
  * 
- * The transducer function returned by `transduce()` will have its name set to *_transducer_*. This name is used to
- * recognize the function as a transducer function, so you should not do anything that could change its name (e.g.
- * calling its `bind()` method, though you shouldn't need to, anyway).
- * 
- * A transformation may also be an existing transducer function, allowing you to compose transformations with
- * transducers.
+ * `transduce()` is curried by default with a quaternary arity (4).
  * 
  * @example
  * 
  * const transduce = require('functionish/transduce');
- * const predicate = require('functionish/predicate');
+ * const transformation = require('functionish/transformation');
  * 
  * const double = x => (x*2);
  * const iseven = x => (x%2) === 0;
- * const sum = (x,y) => (x+y);
+ * const sum = (a,b) => (a+b);
  * 
- * const transducer = transduce( predicate(iseven), double );
- * const reducer = transducer(sum);
+ * const xformation = transformation(iseven, double);
  * 
- * [1,2,3,4,5].reduce(reducer, 0); // returns 12
+ * const numbers = [1,2,3,4,5];
+ * const result = transduce(xformation, sum, 0, numbers);
+ * 
+ * console.log(result); // prints '12'
  * 
  * @func transduce
- * @see {@link module:predicate predicate()}
- * @see {@link module:pass pass()}
- * @see {@link module:drop drop()}
- * @param  {...any} transformations One or more transformation functions
- * @returns {function} A transducer function
+ * @see {@link module:transformation transformation()}
+ * @see {@link module:transducer transducer()}
+ * @param {(function|function[])} transformation The transformation or array of transformers to apply
+ * @param {function} reducer Any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}
+ * @param {any} initialvalue The initial value to use for reducing the *list*
+ * @param {iterable} iterable An iterable object producing the values to transduce
+ * @returns {function} The transduced value
  */
-module.exports = function transduce(...transformations) {
+module.exports = curry4(
 
-    const transducers = createtransducers(transformations);
+    function transduce(transformation, reducer, initialvalue, list) {
 
-    return function _transducer_(reducer) {
+        nottransformation(transformation) && (transformation = constructtransformation(transformation));
 
-        notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        return composetransducers(transducers, reducer);
+        const transformreducer = transducer(transformation)(reducer);
+
+        let currentvalue = initialvalue;
+
+        for(const nextvalue of list) currentvalue = transformreducer(currentvalue, nextvalue);
+
+        return currentvalue;
     }
+)
 
-}
+function constructtransformation(transformation) {
 
-function transducerfactory(transformation) {
+    notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
 
-    return notfunction(transformation) ? fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation))
-         : istransducer(transformation) ? transformation
-         : _transducer_;
-
-    function _transducer_(reducer) {
-
-        return ispredicate(transformation) ? (a,b) => transformation(b) ? reducer(a,b) : a
-                                           : (a,b) => reducer(a, transformation(b));
-
-    }
+    return _transformation(...transformation);
 }

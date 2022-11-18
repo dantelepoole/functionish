@@ -1,4 +1,4 @@
-const array = require('../array');
+const collect = require('../collect');
 const expect = require('chai').expect;
 const isiterable = require('../isiterable');
 const list = require('../list');
@@ -23,20 +23,20 @@ describe('list()', function() {
     
         it(`should produce the arguments to list()`, 
             function() {
-                expect( array( list(1,2,3) ) ).to.deep.equal([1,2,3]);
+                expect( collect( list(1,2,3) ) ).to.deep.equal([1,2,3]);
             }
         )
 
         it(`should include the items produced by any nested iterable objects, one level deep`, 
             function() {
-                expect( array( list(1,[2,3],4) ) ).to.deep.equal([1,2,3,4]);
-                expect( array( list(1,[2,[3,4]],5) ) ).to.deep.equal([1,2,[3,4],5]);
+                expect( collect( list(1,[2,3],4) ) ).to.deep.equal([1,2,3,4]);
+                expect( collect( list(1,[2,[3,4]],5) ) ).to.deep.equal([1,2,[3,4],5]);
             }
         )
 
         it(`should produce no items if no arguments were passed to list()`, 
             function() {
-                expect( array( list() ) ).to.deep.equal([]);
+                expect( collect( list() ) ).to.deep.equal([]);
             }
         )
 

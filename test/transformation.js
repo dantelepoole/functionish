@@ -1,9 +1,9 @@
-const transform = require('../transform');
+const transformation = require('../transformation');
 const expect = require('chai').expect;
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);
 
-describe('transform()', function() {
+describe('transformation()', function() {
 
     afterEach(function() {
         sandbox.resetHistory();

@@ -6,7 +6,7 @@ const range = require('../range');
 const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);
 
-const array = spy( require('../array') );
+const collect = spy( require('../collect') );
 
 const sentinel = Object.freeze({});
 
@@ -38,14 +38,14 @@ describe('concatlist()', function() {
 
         it('should produce the items of the first list followed by those of the second list',
             function () {
-                const result = array( concatlist([1,2,3], [4,5,6]) );
+                const result = collect( concatlist([1,2,3], [4,5,6]) );
                 expect(result).to.be.deep.equal( [1,2,3,4,5,6] );
             }
         )
 
         it('should return an empty iterable if both lists are empty',
             function () {
-                expect( array( concatlist([], []) ) ).to.be.deep.equal( [] );
+                expect( collect( concatlist([], []) ) ).to.be.deep.equal( [] );
             }
         )
 

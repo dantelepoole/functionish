@@ -1,4 +1,4 @@
-const array = require('../array');
+const collect = require('../collect');
 const range = require('../range');
 const expect = require('chai').expect;
 const isiterable = require('../isiterable');
@@ -42,24 +42,24 @@ describe('range()', function() {
 
         it('should, if passed one argument, return an iterable producing the numbers from 1 to the specified number', 
             function() {
-                expect( array(range(5)) ).to.deep.equal([1,2,3,4,5]);
+                expect( collect(range(5)) ).to.deep.equal([1,2,3,4,5]);
             }
         )
 
         it('should, if passed 0 as the sole argument, return an empty iterable', 
             function() {
-                expect( array(range(0)) ).to.be.an('array').with.length(0);
+                expect( collect(range(0)) ).to.be.an('array').with.length(0);
             }
         )
 
         it('should, if passed two arguments, return an iterable producing the numbers from the lowest argument to the highest argument', 
             function() {
-                expect( array(range(1,5)) ).to.deep.equal([1,2,3,4,5]);
-                expect( array(range(5,1)) ).to.deep.equal([5,4,3,2,1]);
-                expect( array(range(-1,-5)) ).to.deep.equal([-1,-2,-3,-4,-5]);
-                expect( array(range(-5,-1)) ).to.deep.equal([-5,-4,-3,-2,-1]);
-                expect( array(range(1,-3)) ).to.deep.equal([1,0,-1,-2,-3]);
-                expect( array(range(-3,1)) ).to.deep.equal([-3,-2,-1,0,1]);
+                expect( collect(range(1,5)) ).to.deep.equal([1,2,3,4,5]);
+                expect( collect(range(5,1)) ).to.deep.equal([5,4,3,2,1]);
+                expect( collect(range(-1,-5)) ).to.deep.equal([-1,-2,-3,-4,-5]);
+                expect( collect(range(-5,-1)) ).to.deep.equal([-5,-4,-3,-2,-1]);
+                expect( collect(range(1,-3)) ).to.deep.equal([1,0,-1,-2,-3]);
+                expect( collect(range(-3,1)) ).to.deep.equal([-3,-2,-1,0,1]);
             }
         )
 

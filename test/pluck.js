@@ -67,4 +67,8 @@ describe(`pluck()`, function() {
             expect(countryname).to.be.equal('Russia');
         }
     )
+
+    it(`should test array path arguments`);
+
+    it(`should test non-string path arguments`);
 })

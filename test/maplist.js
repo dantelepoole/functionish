@@ -1,4 +1,4 @@
-const array = require('../array');
+const collect = require('../collect');
 const expect = require('chai').expect;
 const maplist = require('../maplist');
 const isiterable = require('../isiterable');
@@ -47,21 +47,21 @@ describe(`maplist()`, function() {
 
         it(`should apply the mapping function to each item in the list`,
             function() {
-                const result = array( maplist(double, number1to5) );
+                const result = collect( maplist(double, number1to5) );
                 expect(result).to.be.deep.equal([2,4,6,8,10]);
             }
         )
 
         it(`should call the mapping function once for each item in the list`,
             function() {
-                const result = array( maplist(double, number1to5) );
+                const result = collect( maplist(double, number1to5) );
                 expect(double.callCount).to.equal(number1to5.length);
             }
         )
 
         it(`should produce no items if the list is empty`,
             function() {
-                const result = array( maplist(double, []) );
+                const result = collect( maplist(double, []) );
                 expect(result).to.be.an('array').with.length(0);
             }
         )

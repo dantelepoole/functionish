@@ -1,4 +1,4 @@
-const array = require('../array');
+const collect = require('../collect');
 const expect = require('chai').expect;
 const filterlist = require('../filterlist');
 const isiterable = require('../isiterable');
@@ -49,28 +49,28 @@ describe(`filterlist()`, function() {
 
         it(`should only produce the items from the list for which the predicate returns a truthy value`,
             function() {
-                let result = array( filterlist(iseven, numbers1to10) );
+                let result = collect( filterlist(iseven, numbers1to10) );
                 expect(result).to.be.deep.equal([2,4,6,8,10]);
 
-                result = array( filterlist(alwaystrue, numbers1to10) );
+                result = collect( filterlist(alwaystrue, numbers1to10) );
                 expect(result).to.be.deep.equal([1,2,3,4,5,6,7,8,9,10]);
                 expect(result).to.not.equal(numbers1to10);
 
-                result = array( filterlist(alwaysfalse, numbers1to10) );
+                result = collect( filterlist(alwaysfalse, numbers1to10) );
                 expect(result).to.be.an('array').with.length(0);
             }
         )
 
         it(`should call the predicate once for each item in the list`,
             function() {
-                const result = array( filterlist(iseven, numbers1to10) );
+                const result = collect( filterlist(iseven, numbers1to10) );
                 expect(iseven.callCount).to.equal(numbers1to10.length);
             }
         )
 
         it(`should produce no items if the list is empty`,
             function() {
-                const result = array( filterlist(iseven, []) );
+                const result = collect( filterlist(iseven, []) );
                 expect(result).to.be.an('array').with.length(0);
             }
         )
