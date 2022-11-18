@@ -29,7 +29,7 @@ const resolvefunction = require('./resolvefunction');
  */
 module.exports = function negate(func) {
 
-    notfunction(func) && (func = resolvefunction(func));
+    func = resolvefunction(func);
          
     return function negatedfunction(...args) {
         return ! func.call(this, ...args)
