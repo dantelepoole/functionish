@@ -10,6 +10,16 @@ const resolvefunction = require('./resolvefunction');
 
 const shouldrecurse = result => (result?.recurse === RECURSE_SYMBOL);
 
+/**
+ * Return a function that allows *func* to emulate tail recursion by calling
+ * {@link module:recurse recurse()}. See {@link module:recurse recurse()} for
+ * more information.
+ * 
+ * @func recursive
+ * @see {@link module:recurse recurse()}
+ * @param {function} func The function to make recursive
+ * @returns {function}
+ */
 module.exports = function recursive(func) {
 
     func = resolvefunction(func);
