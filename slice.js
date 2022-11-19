@@ -10,7 +10,7 @@ const fail = require('./fail');
 const isiterable = require('./isiterable');
 const typeorclass = require('./typeorclass');
 
-const isslicable = slicable => (typeof slicabe?.slice === 'function');
+const isslicable = slicable => (typeof slicable?.slice === 'function');
 
 /**
  * Functional variant of the Javascript `slice()` method for strings, array and TypedArrays. This function works
