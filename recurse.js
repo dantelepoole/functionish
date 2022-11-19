@@ -33,8 +33,9 @@ const _recurse = (...args) => ({ args, recurse:RECURSE_SYMBOL });
  * 
  *     function (f, x) {
  *      
- *         return (arguments.length === 1) ? this(1, f)
- *              : (x < 2) ? f
+ *         return (x === undefined) ? this(1, f)
+ *              : (x === 0) ? 1
+ *              : (x === 1) ? f
  *              : this(f*x, x-1);
  *     }
  * )
