@@ -5,19 +5,18 @@
 'use strict';
 
 const ERR_BAD_TRANSFORMER = `TransformationError~The transformer at index %i has type %s. Expected a function.`;
-const ERR_BAD_TRANSFORMERS = `TransformationError~The transformers argument has type %s. Expected an array of function.`;
-
-const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
+const ERR_BAD_TRANSFORMERS = `TransformationError~The transformers argument has type %s. Expected an array of functions or a single function.`;
+const FILTER_INCLUDE = true;
+const FILTER_REJECT = false;
+const TRANSFORM_REJECT = false;
 const TRANSFORMATION_NAME = '_functionish_transformation';
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
-const notarray = require('./notarray');
-const notboolean = require('./notboolean');
+const isarray = require('./isarray');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
-const istransformation = transformation => isfunction(transformation) && (transformation.name === TRANSFORMATION_NAME);
+const istransformation = transformation => (transformation.name === TRANSFORMATION_NAME);
 
 /**
  * Return a transformation function that accepts a single value, applies the *transformer* in order and returns the
@@ -30,36 +29,55 @@ const istransformation = transformation => isfunction(transformation) && (transf
  * included or excluded by the transformation.
  * 
  * @func transformation
- * @param  {function[]} transformers One or more transform functions or a single transformaton function.
+ * @param  {(function|function[])} transformers One or more transformer functions.
  * @returns {function}
  */
 module.exports = function transformation(transformers) {
 
-    if( istransformation(transformers) ) return transformers;
+    return isarray(transformers) ? compoundtransformation( transformers.slice() )
+         : notfunction(transformers) ? fail(ERR_BAD_TRANSFORMERS, typeorclass(transformers))
+         : istransformation(transformers) ? transformers
+         : simpletransformation(transformers);
+}
 
-    notarray(transformers) && fail(ERR_BAD_TRANSFORMERS, typeorclass(transformers));
+function compoundtransformation(transformers) {
 
-    transformers.forEach( transformervalidatorfactory() );
+    validatetransformers(transformers);
+
+    const transformercount = transformers.length;
 
     return function _functionish_transformation(value) {
-        return applytransformers(transformers, value);
+
+        let index = 0;
+        
+        while(index < transformercount) {
+
+            const transformresult = transformers[index](value);
+            index += 1;
+
+            if(transformresult === FILTER_INCLUDE) continue;
+
+            if(transformresult === FILTER_REJECT) return TRANSFORM_REJECT;
+
+            value = transformresult;
+        }
+
+        return value;
     }
 }
 
-function applytransformers(transformers, value) {
+function simpletransformation(transformer) {
 
-    for(let index = 0; index < transformers.length; index += 1) {
-
-        const result = transformers[index](value);
-
-        value = notboolean(result) ? result
-              : result ? value
-              : TRANSFORM_REJECT;
-
-        if(value === TRANSFORM_REJECT) break;
+    return function _functionish_transformation(value) {
+        
+        const transformresult = transformer(value);
+        
+        return (transformresult === FILTER_INCLUDE) ? value : transformresult;
     }
+}
 
-    return value;
+function validatetransformers(transformers) {
+    transformers.forEach( transformervalidatorfactory() );
 }
 
 function transformervalidatorfactory() {

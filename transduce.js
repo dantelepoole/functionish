@@ -7,13 +7,13 @@
 const ERR_BAD_LIST = `TransduceError~The list has type %s. Expected an iterable object.`;
 const ERR_BAD_REDUCER = `TransduceError~The reducer has type %s. Expected a function.`;
 
-const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
+const TRANSFORM_REJECT = false;
 
 const buildtransformation = require('./transformation');
 const curry4 = require('./curry4');
 const fail = require('./fail');
+const notfunction = require('./notfunction');
 const notiterable = require('./notiterable');
-const transform = require('./transform');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -61,11 +61,20 @@ module.exports = curry4(
     function transduce(transformers, reducer, initialvalue, list) {
         
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        const transformedlist = transform(transformers, list);
+        const transformation = buildtransformation(transformers);
+
         let currentvalue = initialvalue;
 
-        for(const nextvalue of transformedlist) currentvalue = reducer(currentvalue, nextvalue);
+        for(const nextvalue of list) {
+         
+            const transformresult = transformation(nextvalue);
+
+            if(transformresult === TRANSFORM_REJECT) continue;
+            
+            currentvalue = reducer(currentvalue, transformresult);
+        }
 
         return currentvalue;
     }

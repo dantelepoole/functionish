@@ -6,17 +6,13 @@
 
 const ERR_BAD_LIST = `TransformError~The list has type %s. Expected an iterable object.`;
 
-const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
-const TRANSFORMATION_NAME = '_functionish_transformation';
+const TRANSFORM_REJECT = false;
 
 const curry2 = require('./curry2');
 const fail = require('./fail');
-const isfunction = require('./isfunction');
 const notiterable = require('./notiterable');
 const buildtransformation = require('./transformation');
 const typeorclass = require('./typeorclass');
-
-const istransformreject = transformresult => (transformresult === TRANSFORM_REJECT);
 
 /**
  * Return a function that applies the *transformer* functions in order to each value produced by the iterable *list* and

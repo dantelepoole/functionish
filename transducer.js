@@ -6,23 +6,12 @@
 
 const ERR_BAD_REDUCER = `TransducerError~The reducer has type %s. Expected a function.`;
 
-const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
-const TRANSFORMATION_NAME = '_functionish_transformation';
+const TRANSFORM_REJECT = false;
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
 const notfunction = require('./notfunction');
-const transformation = require('./transformation');
+const buildtransformation = require('./transformation');
 const typeorclass = require('./typeorclass');
-
-const istransformation = transformers => (transformers.length === 1) 
-                                         && isfunction(transformers[0])
-                                         && (transformers[0].name === TRANSFORMATION_NAME);
-
-const buildtransformation = transformers => istransformation(transformers) ? transformers[0] 
-                                                                           : transformation(transformers);
-
-const reduce = reducer => (currentvalue, nextvalue) => (nextvalue === TRANSFORM_REJECT) ? currentvalue : reducer(currentvalue, nextvalue);
 
 /**
  * Return a function that accepts a reducer function and returns a new reducer function that applies the 
@@ -65,9 +54,11 @@ module.exports = function transducer(...transformers) {
 
         return (currentvalue, nextvalue) => {
 
-            nextvalue = transformation(nextvalue);
+            const transformresult = transformation(nextvalue);
 
-            return (nextvalue === TRANSFORM_REJECT) ? currentvalue : reducer(currentvalue, nextvalue);
+            if(transformresult !== TRANSFORM_REJECT) currentvalue = reducer(currentvalue, transformresult);
+
+            return currentvalue;
         }
     }
 }
