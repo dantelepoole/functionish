@@ -7,8 +7,6 @@
 const ERR_BAD_FUNCTION = `ComposeError~The function at index %d has type %s. Expected a function.`;
 
 const fail = require('./fail');
-const head = require('./head');
-const iterate = require('./iterate');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
@@ -38,26 +36,14 @@ const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorcl
 
 module.exports = function compose(...funcs) {
     
-    validatefunctions(funcs);
-
-    funcs.reverse();
+    funcs.forEach( functionvalidatorfactory() );
 
     return function composedfunctions(...args) {
 
-        let result = args;
+        for(let index = funcs.length-1; index >= 0; index -= 1) args = [ funcs[index](...args) ];
 
-        for(const func of funcs) result = [ func(...result) ];
-
-        return head(result);
+        return args[0];
     }
-}
-
-function validatefunctions(funcs) {
-
-    iterate(
-        functionvalidatorfactory(),
-        funcs
-    )
 }
 
 function functionvalidatorfactory() {

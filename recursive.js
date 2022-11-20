@@ -51,7 +51,7 @@ module.exports = function recursive(func) {
         const recurse = (...nextargs) => (args = nextargs);
         const targetfunc = func.bind(recurse);
 
-        let result = targetfunc(...args);
+        let result = func.call(_recurse, ...args);
 
         while(result === args) result = targetfunc(...args);
 
