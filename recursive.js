@@ -1,10 +1,8 @@
 /**
- * @module recurse
+ * @module recursive
  */
 
 'use strict';
-
-const RECURSE_SYMBOL = Symbol.for(`functionish/recurse#RECURSE_SYMBOL`);
 
 const resolvefunction = require('./resolvefunction');
 
@@ -25,9 +23,9 @@ const resolvefunction = require('./resolvefunction');
  * be bound to specific `this`-value.
  * 
  * @example
- * const recurse = require('functionish/recurse');
+ * const recursive = require('functionish/recursive');
  * 
- * const factorial = recurse(
+ * const factorial = recursive(
  * 
  *     function (f, x) {
  *      
@@ -40,22 +38,22 @@ const resolvefunction = require('./resolvefunction');
  * 
  * factorial(8); // returns 40320
  * 
- * @func recurse
+ * @func recursive
  * @param {function} func The function (or path to a function) to make recursive
  * @returns {function}
  */
-module.exports = function recurse(func) {
+module.exports = function recursive(func) {
 
     func = resolvefunction(func);
     
     return function recursivefunction(...args) {
 
-        const _recurse = (...nextargs) => (args = nextargs, RECURSE_SYMBOL);
-        const targetfunc = func.bind(_recurse);
+        const recurse = (...nextargs) => (args = nextargs);
+        const targetfunc = func.bind(recurse);
 
         let result = targetfunc(...args);
 
-        while(result === RECURSE_SYMBOL) result = targetfunc(...args);
+        while(result === args) result = targetfunc(...args);
 
         return result;
     }
