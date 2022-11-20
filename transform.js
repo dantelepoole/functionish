@@ -5,29 +5,27 @@
 'use strict';
 
 const ERR_BAD_LIST = `TransformError~The list has type %s. Expected an iterable object.`;
-const ERR_BAD_TRANSFORMATION = `TransformError~The transformation has type %s. Expected a transformation function or an array of functions.`;
 
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
-const TRANSFORMATION_NAME = '_functionish_transformation_';
+const TRANSFORMATION_NAME = '_functionish_transformation';
 
 const curry2 = require('./curry2');
 const fail = require('./fail');
-const notarray = require('./notarray');
-const notfunction = require('./notfunction');
+const isfunction = require('./isfunction');
 const notiterable = require('./notiterable');
-const _transformation = require('./transformation');
+const buildtransformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
-const istransformsuccess = transformationresult => (transformationresult !== TRANSFORM_REJECT);
-const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
+const istransformreject = transformresult => (transformresult === TRANSFORM_REJECT);
 
 /**
- * Return a function that applies the argument *transformation* to each value produced by the iterable *list* and
+ * Return a function that applies the *transformer* functions in order to each value produced by the iterable *list* and
  * returns an iterable object producing the transformed values.
  * 
- * The *transformation* argument may either be the function returned by
- * {@link module:transformation transformation()} or an array of transformer functions. See
- * {@link module:transformation transformation()}for more information on transformer functions.
+ * A *transformer* is any function that accepts a single value and returns a single value. If the *transformer*'s
+ * return value has any type other than `boolean`, the return value is used as the result of the transformer. If the
+ * *transformer* returns a value of type `boolean`, the return value indicates whether the input value should be
+ * included or excluded by the transformation.
  * 
  * `transform()` is curried by default with binary arity.
  * 
@@ -47,18 +45,17 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * Array.from( transformednumbers ); // returns [4,8]
  * 
  * @func transform
- * @see {@link module:transformation transformation()}
- * @param {(function|function[])} transformation The transformation or array of transformers to apply
+ * @param {function[]} transformers An array of transform functions to apply
  * @param {iterable} list An iterable object producing the values to transform
  * @returns {iterable} An iterable object producing the transformed values
  */
 module.exports = curry2(
 
-    function transform(transformation, list) {
-
-        nottransformation(transformation) && (transformation = constructtransformation(transformation));
+    function transform(transformers, list) {
 
         notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+
+        const transformation = buildtransformation(transformers);
 
         return {
             [Symbol.iterator]: function* () {
@@ -66,8 +63,10 @@ module.exports = curry2(
                 for(const value of list) {
     
                     const result = transformation(value);
+
+                    if( istransformreject(result) ) continue;
     
-                    if( istransformsuccess(result) ) yield result;
+                    yield result;
                 }
             }
         }
@@ -75,10 +74,3 @@ module.exports = curry2(
     }
     
 )
-
-function constructtransformation(transformation) {
-
-    notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
-
-    return _transformation(...transformation);
-}

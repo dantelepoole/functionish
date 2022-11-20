@@ -5,31 +5,31 @@
 'use strict';
 
 const ERR_BAD_LIST = `TransduceError~The list has type %s. Expected an iterable object.`;
-const ERR_BAD_TRANSFORMATION = `TransduceError~The transformation has type %s. Expected a transformation function or an array of functions.`;
+const ERR_BAD_REDUCER = `TransduceError~The reducer has type %s. Expected a function.`;
 
-const TRANSFORMATION_NAME = '_functionish_transformation_';
+const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 
+const buildtransformation = require('./transformation');
 const curry4 = require('./curry4');
 const fail = require('./fail');
-const notarray = require('./notarray');
 const notiterable = require('./notiterable');
-const transducer = require('./transducer');
 const typeorclass = require('./typeorclass');
 
-const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
+const istransformreject = transformresult => (transformresult === TRANSFORM_REJECT);
 
 /**
- * Convenience function that transduces the iterable *list* argument by applying the *transformation* to each
- * value produced by *list* before reducing the value with the *reducer* argument.
+ * Convenience function that transduces the iterable *list* argument by applying the *transfomers* functions in order 
+ * to each value produced by *list* before reducing the value with the *reducer* argument.
  * 
  * If the transduction is to be repeated, it will generally be more performant to first create a *transducer* yourself
  * and then pass it {@link module:reduce reduce()} yourself.
  * 
- * A reducer function is any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}.
+ * A *transformer* is any function that accepts a single value and returns a single value. If the *transformer*'s
+ * return value has any type other than `boolean`, the return value is used as the result of the transformer. If the
+ * *transformer* returns a value of type `boolean`, the return value indicates whether the input value should be
+ * included or excluded by the transformation.
  * 
- * The *transformation* argument may either be the function returned by
- * {@link module:transformation transformation()} or an array of transformer functions. See
- * {@link module:transformation transformation()}for more information on transformer functions.
+ * A reducer function is any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}.
  * 
  * `transduce()` is curried by default with a quaternary arity (4).
  * 
@@ -50,9 +50,8 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  * console.log(result); // prints '12'
  * 
  * @func transduce
- * @see {@link module:transformation transformation()}
  * @see {@link module:transducer transducer()}
- * @param {(function|function[])} transformation The transformation or array of transformers to apply
+ * @param {(function|function[])} transformers An array of transform functions or a single transformation function to apply
  * @param {function} reducer Any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}
  * @param {any} initialvalue The initial value to use for reducing the *list*
  * @param {iterable} iterable An iterable object producing the values to transduce
@@ -60,13 +59,12 @@ const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMA
  */
 module.exports = curry4(
 
-    function transduce(transformation, reducer, initialvalue, list) {
-
-        nottransformation(transformation) && (transformation = constructtransformation(transformation));
-
+    function transduce(transformers, reducer, initialvalue, list) {
+        
+        notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
         notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        const transformreducer = transducer(transformation)(reducer);
+        const transformreducer = transformreducerfactory(transformers, reducer);
 
         let currentvalue = initialvalue;
 
@@ -76,9 +74,14 @@ module.exports = curry4(
     }
 )
 
-function constructtransformation(transformation) {
+function transformreducerfactory(transformers, reducer) {
 
-    notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+    const transformation = buildtransformation(transformers);
 
-    return _transformation(...transformation);
+    return (currentvalue, nextvalue) => {
+
+        nextvalue = transformation(nextvalue);
+
+        return istransformreject(nextvalue) ? currentvalue : reducer(currentvalue, nextvalue);
+    }
 }
