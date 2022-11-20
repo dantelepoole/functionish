@@ -8,8 +8,6 @@ const RECURSE_SYMBOL = Symbol.for(`functionish/recurse#RECURSE_SYMBOL`);
 
 const resolvefunction = require('./resolvefunction');
 
-const _recurse = (...args) => ({ args, recurse:RECURSE_SYMBOL });
-
 /**
  * Return a function that allows *func* to emulate tail recursion.
  * 
@@ -52,9 +50,12 @@ module.exports = function recurse(func) {
     
     return function recursivefunction(...args) {
 
-        let result = func.call(_recurse, ...args);
+        const _recurse = (...nextargs) => (args = nextargs, RECURSE_SYMBOL);
+        const targetfunc = func.bind(_recurse);
 
-        while(result?.recurse === RECURSE_SYMBOL) result = func.call(_recurse, ...result.args);
+        let result = targetfunc(...args);
+
+        while(result === RECURSE_SYMBOL) result = targetfunc(...args);
 
         return result;
     }
