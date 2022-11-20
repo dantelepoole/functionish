@@ -9,12 +9,9 @@ const ERR_BAD_TRANSFORMER = `TransformationError~The transformer at index %i has
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 
 const fail = require('./fail');
-const iterate = require('./iterate');
 const notboolean = require('./notboolean');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
-
-const validatetransformers = transformers => iterate( transformervalidatorfactory(), transformers );
 
 /**
  * Return a transformation function that accepts a single value, applies each *transformer* function to that value in
@@ -37,7 +34,7 @@ const validatetransformers = transformers => iterate( transformervalidatorfactor
  */
 module.exports = function transformation(...transformers) {
 
-    validatetransformers(transformers);
+    transformers.forEach( transformervalidatorfactory() );
 
     return function _functionish_transformation_(value) {
         return applytransformers(transformers, value);
@@ -48,10 +45,10 @@ function applytransformers(transformers, value) {
 
     for(let index = 0; index < transformers.length; index += 1) {
 
-        const transformerresult = transformers[index](value);
+        const result = transformers[index](value);
 
-        value = notboolean(transformerresult) ? transformerresult
-              : transformerresult ? value
+        value = notboolean(result) ? result
+              : result ? value
               : TRANSFORM_REJECT;
 
         if(value === TRANSFORM_REJECT) break;

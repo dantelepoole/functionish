@@ -7,17 +7,15 @@
 const ERR_BAD_REDUCER = `TransducerError~The reducer has type %s. Expected a function.`;
 const ERR_BAD_TRANSFORMATION = `TransducerError~The transformation has type %s. Expected a transformation function or an array of functions.`;
 
-const TRANSFORM_INJECT = Symbol.for('functionish/transform/TRANSFORM_INJECT');
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 const TRANSFORMATION_NAME = '_functionish_transformation_';
 
 const fail = require('./fail');
 const notarray = require('./notarray');
 const notfunction = require('./notfunction');
+const _transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
-const istransforminject = transformationresult => (transformationresult?.[TRANSFORM_INJECT] === TRANSFORM_INJECT);
-const istransformreject = transformationresult => (transformationresult === TRANSFORM_REJECT);
 const istransformsuccess = transformationresult => (transformationresult !== TRANSFORM_REJECT);
 const nottransformation = func => notfunction(func) || (func.name !== TRANSFORMATION_NAME);
 
@@ -68,11 +66,9 @@ module.exports = function transducer(transformation) {
 
 function transducevalue(transformation, reducer, currentvalue, nextvalue) {
 
-    const transformedvalue = transformation(nextvalue);
+    const result = transformation(nextvalue);
 
-    return istransformreject(transformedvalue) ? currentvalue
-         : istransforminject(transformedvalue) ? reduceiterable(reducer, currentvalue, transformedvalue.data)
-         : reducer(currentvalue, transformedvalue);
+    return istransformsuccess(result) ? reducer(currentvalue, result) : currentvalue;
 }
 
 function constructtransformation(transformation) {
@@ -80,11 +76,4 @@ function constructtransformation(transformation) {
     notarray(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
 
     return _transformation(...transformation);
-}
-
-function reduceiterable(reducer, currentvalue, list) {
-
-    for(const nextvalue of list) currentvalue = reducer(currentvalue, nextvalue);
-
-    return currentvalue;
 }
