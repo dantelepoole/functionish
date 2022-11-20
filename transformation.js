@@ -41,9 +41,9 @@ module.exports = function transformation(transformers) {
 
     transformers.forEach( transformervalidatorfactory() );
 
-    const _functionish_transformation = value => applytransformers(transformers, value);
-
-    return _functionish_transformation;
+    return function _functionish_transformation(value) {
+        return applytransformers(transformers, value);
+    }
 }
 
 function applytransformers(transformers, value) {

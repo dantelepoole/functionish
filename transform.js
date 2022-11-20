@@ -62,11 +62,9 @@ module.exports = curry2(
     
                 for(const value of list) {
     
-                    const result = transformation(value);
+                    const transformresult = transformation(value);
 
-                    if( istransformreject(result) ) continue;
-    
-                    yield result;
+                    if(transformresult !== TRANSFORM_REJECT) yield transformresult;
                 }
             }
         }

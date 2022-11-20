@@ -19,8 +19,6 @@ const istransformation = transformers => (transformers.length === 1)
                                          && isfunction(transformers[0])
                                          && (transformers[0].name === TRANSFORMATION_NAME);
 
-const istransformreject = transformresult => (transformresult === TRANSFORM_REJECT);
-
 /**
  * Return a function that accepts a reducer function and returns a new reducer function that applies the 
  * *transformer* functions in order to each value passed to the reducer.
@@ -64,7 +62,7 @@ module.exports = function transducer(...transformers) {
 
             nextvalue = transformation(nextvalue);
 
-            return istransformreject(nextvalue) ? currentvalue : reducer(currentvalue, nextvalue);
+            return (nextvalue === TRANSFORM_REJECT) ? currentvalue : reducer(currentvalue, nextvalue);
         }
     }
 }

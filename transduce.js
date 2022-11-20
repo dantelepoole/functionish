@@ -15,8 +15,6 @@ const fail = require('./fail');
 const notiterable = require('./notiterable');
 const typeorclass = require('./typeorclass');
 
-const istransformreject = transformresult => (transformresult === TRANSFORM_REJECT);
-
 /**
  * Convenience function that transduces the iterable *list* argument by applying the *transfomers* functions in order 
  * to each value produced by *list* before reducing the value with the *reducer* argument.
@@ -64,24 +62,17 @@ module.exports = curry4(
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
         notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        const transformreducer = transformreducerfactory(transformers, reducer);
+        const transformation = buildtransformation(transformers);
 
         let currentvalue = initialvalue;
 
-        for(const nextvalue of list) currentvalue = transformreducer(currentvalue, nextvalue);
+        for(const nextvalue of list) {
+
+            const transformresult = transformation(nextvalue);
+            
+            if(transformresult !== TRANSFORM_REJECT) currentvalue = reducer(currentvalue, transformresult);
+        }
 
         return currentvalue;
     }
 )
-
-function transformreducerfactory(transformers, reducer) {
-
-    const transformation = buildtransformation(transformers);
-
-    return (currentvalue, nextvalue) => {
-
-        nextvalue = transformation(nextvalue);
-
-        return istransformreject(nextvalue) ? currentvalue : reducer(currentvalue, nextvalue);
-    }
-}
