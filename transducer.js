@@ -12,12 +12,17 @@ const TRANSFORMATION_NAME = '_functionish_transformation';
 const fail = require('./fail');
 const isfunction = require('./isfunction');
 const notfunction = require('./notfunction');
-const buildtransformation = require('./transformation');
+const transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
 const istransformation = transformers => (transformers.length === 1) 
                                          && isfunction(transformers[0])
                                          && (transformers[0].name === TRANSFORMATION_NAME);
+
+const buildtransformation = transformers => istransformation(transformers) ? transformers[0] 
+                                                                           : transformation(transformers);
+
+const reduce = reducer => (currentvalue, nextvalue) => (nextvalue === TRANSFORM_REJECT) ? currentvalue : reducer(currentvalue, nextvalue);
 
 /**
  * Return a function that accepts a reducer function and returns a new reducer function that applies the 
@@ -52,7 +57,7 @@ const istransformation = transformers => (transformers.length === 1)
  */
 module.exports = function transducer(...transformers) {
 
-    const transformation = istransformation(transformers) ? transformers[0] : buildtransformation(transformers);
+    const transformation = buildtransformation(transformers);
 
     return function _functionish_transducer_(reducer) {
 

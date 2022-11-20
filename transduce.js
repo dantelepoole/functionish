@@ -13,6 +13,7 @@ const buildtransformation = require('./transformation');
 const curry4 = require('./curry4');
 const fail = require('./fail');
 const notiterable = require('./notiterable');
+const transform = require('./transform');
 const typeorclass = require('./typeorclass');
 
 /**
@@ -60,18 +61,11 @@ module.exports = curry4(
     function transduce(transformers, reducer, initialvalue, list) {
         
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
-        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        const transformation = buildtransformation(transformers);
-
+        const transformedlist = transform(transformers, list);
         let currentvalue = initialvalue;
 
-        for(const nextvalue of list) {
-
-            const transformresult = transformation(nextvalue);
-            
-            if(transformresult !== TRANSFORM_REJECT) currentvalue = reducer(currentvalue, transformresult);
-        }
+        for(const nextvalue of transformedlist) currentvalue = reducer(currentvalue, nextvalue);
 
         return currentvalue;
     }
