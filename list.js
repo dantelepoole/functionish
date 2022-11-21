@@ -7,7 +7,7 @@ const isiterable = require('./isiterable');
 
 /**
  * Return an iterable object that produces the *items* in order. If an *item* itself is iterable, its items are
- * injected individually, to a maximum recursion of 1.
+ * injected individually, one level deep.
  * 
  * @example
  * 

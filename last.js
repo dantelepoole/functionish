@@ -22,5 +22,5 @@ const isnumber = require('./isnumber');
  * 
  */
 module.exports = function last(indexable) {
-    return isnumber(indexable?.length) ? indexable[indexable.length - 1] : undefined;
+    if( isnumber(indexable?.length) ) return indexable[indexable.length - 1];
 }
