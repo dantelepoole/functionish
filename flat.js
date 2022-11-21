@@ -1,36 +1,31 @@
 /**
- * @module flatten 
+ * @module flat
  */
 
 'use strict';
 
-const DEFAULT_DEPTH = 1;
+const ERR_BAD_LIST = `FlatError~The list has type %s. Expected an iterable object.`;
 
-const flatlist = require('./flatlist');
-const isfunction = require('./isfunction');
-
-const isflattenable = obj => isfunction(obj?.flat);
+const fail = require('./fail');
+const isiterable = require('./isiterable');
+const notiterable = require('./notiterable');
+const typeorclass = require('./typeorclass');
 
 /**
- * Pass the *depth* to *flattenable*'s `flat()` method and return the result. If *flattenable* has no such method but
- * is iterable, return an iterable that flattens the *flattenable*'s items to the specified *depth*.
- * 
- * Pass `Infinity` to flatten the flattenable completely.
- * 
- * `flat()` is curried by default with binary arity.
+ * Return an iterable object that flattens the values in *list* by one level, meaning that if any
+ * value in list is iterable, that value itself is expanded.
  * 
  * @func flat
- * @see {@link external:Array.prototype.flat Array.prototype.flat()}
- * @param {number} depth The maximum recursion level for flattening the *flattenable*
- * @param {(flattenable|iterable)} flattenable An object with a `flat()` method or an iterable object
- * @returns {any}
+ * @param {iterable} list An iterable object
+ * @returns {iterable}
  */
-module.exports = require('./curry2')(
+module.exports = function flat(list) {
 
-    function flat(depth, flattenable) {
+    notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        if(arguments.length === 1) [depth, flattenable] = DEFAULT_DEPTH, depth;
-        
-        return isflattenable(flattenable) ? flattenable.flat(depth) : flatlist(depth, flattenable)
+    return {
+        [Symbol.iterator] : function* () {
+            for(const value of list) if( isiterable(value) ) yield* value; else yield value;
+        }
     }
-)
+}
