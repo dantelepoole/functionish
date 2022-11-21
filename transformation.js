@@ -53,14 +53,14 @@ function compoundtransformation(transformers) {
         while(index < transformercount) {
 
             const transformresult = transformers[index](value);
+
+            index += 1;
             
             if(transformresult === FILTER_INCLUDE) continue;
             
             if(transformresult === FILTER_REJECT) return TRANSFORM_REJECT;
             
             value = transformresult;
-            
-            index += 1;
         }
 
         return value;

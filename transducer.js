@@ -52,13 +52,15 @@ module.exports = function transducer(...transformers) {
 
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
 
-        return (currentvalue, nextvalue) => {
-
-            const transformresult = transformation(nextvalue);
-
-            if(transformresult !== TRANSFORM_REJECT) currentvalue = reducer(currentvalue, transformresult);
-
-            return currentvalue;
-        }
+        return transformingreducer.bind(null, transformation, reducer);
     }
+}
+
+function transformingreducer(transformation, reducer, currentvalue, nextvalue) {
+
+    const transformresult = transformation(nextvalue);
+
+    if(transformresult !== TRANSFORM_REJECT) currentvalue = reducer(currentvalue, transformresult);
+
+    return currentvalue;
 }
