@@ -21,7 +21,7 @@ module.exports = function iterable(list) {
 
     return {
         [Symbol.iterator] : isiterable(list) ? list[Symbol.iterator].bind(list) 
-                            : isvoid(list) ? EMPTY_ITERABLE
-                            : function*() { yield list }
+                          : isvoid(list) ? EMPTY_ITERABLE
+                          : function*() { yield list }
     }
 }
