@@ -64,7 +64,6 @@ const notpositiveinteger = x => notinteger(x) || (x < 0);
         [start, end] = [1, start];
     }
 
-    // const increment = (start <= end) ? STEP_INCREMENT : STEP_DECREMENT;
     const increment = isgreaterthan(end, start) ?  STEP_DECREMENT : STEP_INCREMENT;
     end += increment;
 
