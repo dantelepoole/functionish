@@ -4,26 +4,17 @@
 
 'use strict';
 
-const ERR_BAD_MAPPABLE = `MapError~The mappable has type %s. Expected an object with a map() method or an iterable object.`;
-
-const unary = require('./unary');
+const ERR_BAD_LIST = `MapError~The list has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');
 const isfunction = require('./isfunction');
 const isiterable = require('./isiterable');
+const notiterable = require('./notiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
-const ismappable = obj => isfunction(obj?.map);
-
 /**
- * Pass the *map* function to the `map()` method of *mappable* and return the result. If *mappable* has
- * no such method but it is iterable, return an iterable object that applies *mapfunc* to each item produced by
- * *mappable*.
- * 
- * *Important:* the *mapfunc* function is coerced to unary arity before it is passed to *mappable*'s `map()`
- * method (if it exists). This means that *mapfunc* will only ever receive a single argument (the item being
- * mapped), regardless of how many arguments *mappable*'s `map()` method actually passes.
+ * Return an iterable object that passes each value to the *mapfunc* function and produces the results.
  * 
  * `map()` is curried by default with binary arity.
  * 
@@ -36,30 +27,23 @@ const ismappable = obj => isfunction(obj?.map);
  * map(double, [1,2,3]); // returns [2,4,6]
  *     
  * @func map
- * @see {@link module:unary unary()}
- * @param {function} func The function to apply to each item in *list*
- * @param {(mappable|iterable)} list An object with a `map()` method or an iterable object
+ * @param {function} mapfunc The function to apply to each item in *list*
+ * @param {iterable} list An iterable object
  * @returns {any}
  */
 
 module.exports = require('./curry2')(
 
-    function map(mapfunc, mappable) {
+    function map(mapfunc, list) {
         
         mapfunc = resolvefunction(mapfunc);
 
-        return ismappable(mappable) ? mappable.map( unary(mapfunc) )
-             : isiterable(mappable) ? maplist(mapfunc, mappable)
-             : fail(ERR_BAD_MAPPABLE, typeorclass(mappable));
-    }
-)
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-function maplist(mapfunc, list) {
-
-    return {
-
-        [Symbol.iterator] : function* () {
-            for(const item of list) yield mapfunc(item);
+        return {
+            [Symbol.iterator] : function* () {
+                for(const value of list) yield mapfunc(value);
+            }
         }
     }
-}
+)
