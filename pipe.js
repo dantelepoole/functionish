@@ -41,7 +41,9 @@ module.exports = function pipe(...funcs) {
 
     return function pipedfunctions(...args) {
 
-        for(let index = 0; index < funcs.length; index += 1) args = [ funcs[index](...args) ];
+        let index = -1;
+
+        while( (index += 1) < funcs.length ) args = [ funcs[index](...args) ];
 
         return args[0];
     }
