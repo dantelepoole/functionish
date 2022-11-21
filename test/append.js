@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const concatlist = require('../concatlist');
+const append = require('../append');
 const isiterable = require('../isiterable');
 const range = require('../range');
 
@@ -14,7 +14,7 @@ function* emptyiterable() {
     // noop
 }
 
-describe('concatlist()', function() {
+describe('append()', function() {
 
     beforeEach(
         function() {
@@ -24,13 +24,13 @@ describe('concatlist()', function() {
 
     it('should return an iterable',
         function () {
-            expect( isiterable( concatlist( range(3), range(3) ) ) ).to.be.true;
+            expect( isiterable( append( range(3), range(3) ) ) ).to.be.true;
         }
     )
 
     it('should throw if either list is not an iterable object',
         function () {
-            expect( () => concatlist({},{}) ).to.throw();
+            expect( () => append({},{}) ).to.throw();
         }
     )
 
@@ -38,14 +38,14 @@ describe('concatlist()', function() {
 
         it('should produce the items of the first list followed by those of the second list',
             function () {
-                const result = collect( concatlist([1,2,3], [4,5,6]) );
+                const result = collect( append([1,2,3], [4,5,6]) );
                 expect(result).to.be.deep.equal( [1,2,3,4,5,6] );
             }
         )
 
         it('should return an empty iterable if both lists are empty',
             function () {
-                expect( collect( concatlist([], []) ) ).to.be.deep.equal( [] );
+                expect( collect( append([], []) ) ).to.be.deep.equal( [] );
             }
         )
 
@@ -53,7 +53,7 @@ describe('concatlist()', function() {
         it('should be curried',
             function () {
 
-                const curried = concatlist([1,2,3]);
+                const curried = append([1,2,3]);
                 expect(curried).to.be.a('function');
 
                 const result = curried([4,5,6]);
