@@ -4,26 +4,16 @@
 
 'use strict';
 
-const ERR_BAD_FINDABLE = `FindError~The findable has type %s. Expected an object with a find() method or an iterable object`;
+const ERR_BAD_LIST = `FindError~The list has type %s. Expected an iterable object`;
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
-const isiterable = require('./isiterable');
+const notiterable = require('./notiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
-const unary = require('./unary');
-
-const isfindable = obj => isfunction(obj?.find);
 
 /**
- * Pass the *predicate* function to the `find()` method of *findable* and return the result. If *findable* has
- * no such method but it is iterable, return pass each item produced by *findable* to the *predicate* function and
- * return the first item for which the *predicate* function returns a truthy value. If no such item exists, return
- * `undefined`.
- * 
- * *Important:* the *predicate* function is coerced to unary arity before it is passed to *findables*'s `find()` method
- * (if it exists). This means that *predicate* will only ever receive a single argument (the item being searched),
- * regardless of how many arguments *findable*'s `find()` method actually passes.
+ * Return the first value in *list* for which the *predicate* function returns a truthy value, or
+ * `undefined` if no such value is found.
  * 
  * `find()` is curried by default with binary arity.
  * 
@@ -38,21 +28,17 @@ const isfindable = obj => isfunction(obj?.find);
  * 
  * @func find
  * @param {function} predicate The predicate function that identifies the item being sought
- * @param {(findable|iterable)} findable An object with a `find()` method or an iterable object
+ * @param {iterable} list An iterable object
  * @returns {any}
  */
 module.exports = require('./curry2')(
 
-    function find(predicate, findable) {
+    function find(predicate, list) {
 
         predicate = resolvefunction(predicate);
         
-        return isfindable(findable) ? findable.find( unary(predicate) )
-             : isiterable(findable) ? finditerable(predicate, findable)
-             : fail(ERR_BAD_FINDABLE, typeorclass(findable));
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+
+        for(const value of list) if( predicate(value) ) return value;
     }
 )
-
-function finditerable(predicate, list) {
-    for(const item of list) if( predicate(item) ) return item;
-}

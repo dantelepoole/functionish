@@ -46,29 +46,20 @@ describe(`find()`, function() {
         }
     )
 
-    it(`should throw if the findable has no find() method and is not iterable`,
+    it(`should throw if the list is not iterable`,
         function () {
             expect( ()=>find(iseven, {}) ).to.throw();
         }
     )
 
-    it(`should pass the predicate to the findable's find() method if it has one`,
-        function () {
-            const findable = spyfindable(numbers1to10);
-            expect( find(iseven, findable) ).to.equal(2);
-            expect(findable.find.callCount).to.equal(1);
-            expect(iseven.callCount).to.equal(2);
-        }
-    )
-
-    it(`should, if the findable has no find() method, iterate findable and return the first item for which the predicate returns a truthy value`,
+    it(`should return the first value in the list for which the predicate returns a truthy value`,
         function () {
             expect( find(iseven, range(10)) ).to.equal(2);
             expect(iseven.callCount).to.equal(2);
         }
     )
 
-    it(`should return undefined if the predicate returns false for all items in the list`,
+    it(`should return undefined if the predicate fails for all values in the list`,
         function () {
             expect( find(issentinel, numbers1to10) ).to.be.undefined;
         }
