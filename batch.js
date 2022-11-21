@@ -62,6 +62,7 @@ module.exports = require('./curry2')(
                     if( islessthan(batchsize, batch.length) ) continue;
 
                     yield batch;
+                    
                     batch = [];
                 }
             

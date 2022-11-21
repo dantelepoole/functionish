@@ -4,7 +4,6 @@
 
 'use strict';
 
-const ARITY_NONE = Symbol();
 const ERR_BAD_ARITY = "CurryError~The arity %s. Expected a positive integer.";
 
 const fail = require('./fail');
@@ -14,10 +13,11 @@ const notnumber = require('./notnumber');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
-const hassoleargument = args => (args.length === 1);
-const isaritynone = arity => (arity === ARITY_NONE);
-const islessthanone = x => (x < 1);
-const notpositiveinteger = x => notinteger(x) || islessthanone(x);
+const notpositiveinteger = x => notinteger(x) || (x < 0);
+
+const failbadarity = arity => isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
+                            : notnumber(arity) ? fail(ERR_BAD_ARITY, `has type ${ typeorclass(arity) }`)
+                            : fail(ERR_BAD_ARITY, `is ${isarity}`);
 
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
@@ -75,30 +75,22 @@ const notpositiveinteger = x => notinteger(x) || islessthanone(x);
  */
 module.exports = function curry(arity, func) {
 
-    hassoleargument(arguments) && ([arity, func] = [ARITY_NONE, arity]);
+    (arguments.length === 1) && ([arity, func] = [0, arity]);
 
     func = resolvefunction(func);
 
-    isaritynone(arity) ? (arity = func.length)
-    : notpositiveinteger(arity) && failbadarity(arity);
+    (arity === 0) ? (arity = func.length) : notpositiveinteger(arity) && failbadarity(arity);
 
     return curryfunction(arity, func);
 }
 
-function failbadarity(arity) {
-
-    isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
-    : notnumber(arity) ? fail(ERR_BAD_ARITY, `has type ${ typeorclass(arity) }`)
-    : fail(ERR_BAD_ARITY, `is ${arity}`);
-}
-
-function curryfunction(arity, func, ...boundargs) {
+function curryfunction(minarity, func, ...boundargs) {
 
     return function curriedfunction(...args) {
 
-        const argumentcount = boundargs.length + args.length;
+        const arity = boundargs.length + args.length;
 
-        return (argumentcount < arity) ? curryfunction(arity, func, ...boundargs, ...args)
-             : func.call(this, ...boundargs, ...args);
+        return (arity < minarity) ? curryfunction(minarity, func, ...boundargs, ...args)
+                                  : func.call(this, ...boundargs, ...args);
     }
 }

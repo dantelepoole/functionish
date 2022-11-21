@@ -17,7 +17,7 @@ const typeorclass = require('./typeorclass');
  * 
  * If *func* is not a function, it is to be the key of the *context* method to bind.
  * 
- * See {@link module:partial partial()} for a function that does the same thing but without provinding for a *context*.
+ * See {@link module:partial partial()} for a function that does the same thing but without providing for a *context*.
  * 
  * @example
  * 
@@ -40,6 +40,7 @@ module.exports = function bind(func, context, ...args) {
     if( isfunction(func) ) return func.bind(context, ...args);
 
     const method = context?.[func];
+
     notfunction(method) && fail(ERR_BAD_METHOD, String(func), typeorclass(method));
 
     return method.bind(context, ...args);

@@ -40,7 +40,9 @@ module.exports = function compose(...funcs) {
 
     return function composedfunctions(...args) {
 
-        for(let index = funcs.length-1; index >= 0; index -= 1) args = [ funcs[index](...args) ];
+        let index = funcs.length;
+
+        while( (index -= 1) >= 0 ) args = [ funcs[index](...args) ];
 
         return args[0];
     }

@@ -35,14 +35,12 @@ module.exports = function copy(source) {
     return isarray(source) ? source.slice()
          : isprimitive(source) || isnull(source) ? source
          : copyobject(source);
-    
 }
 
 function copyobject(source) {
 
     const prototype = Object.getPrototypeOf(source);
     const clone = Object.create(prototype);
-    Object.assign(clone, source);
-
-    return clone;
+    
+    return Object.assign(clone, source);
 }
