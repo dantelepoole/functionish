@@ -8,16 +8,10 @@ const ERR_BAD_COUNT = `RepeatError~The count %s. Expected a positive integer.`;
 const ERR_BAD_FUNCTION = `RepeatError~The function has type %s. Expected a function.`;
 
 const fail = require('./fail');
-const islessthan = require('./islessthan');
 const isnan = require('./isnan');
-const or = require('./or');
 const notfunction = require('./notfunction');
-const notinteger = require('./notinteger');
 const typeorclass = require('./typeorclass');
 const notnumber = require('./notnumber');
-
-const islessthanzero = islessthan(0);
-const notpositiveinteger = or(notinteger, islessthanzero);
 
 /**
  * Invoke *func* *count* number of times, passing *args* at each invocation. The *func* function wil be called
