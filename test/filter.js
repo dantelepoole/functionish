@@ -8,24 +8,6 @@ const spy = sandbox.spy.bind(sandbox);
 
 const numbers1to10 = Object.freeze([1,2,3,4,5,6,7,8,9,10]);
 const iseven = spy( x => (x%2) === 0 );
-const alwaystrue = spy( () => true );
-const alwaysfalse = spy( () => false );
-const isunaryinvocation = spy( 
-    function isunaryinvocation() {
-        expect(arguments.length).to.equal(1)
-    }
-)
-
-function spyfilterable(filterable) {
-
-    const object = {
-        filter : filterable.filter.bind(filterable)
-    }
-
-    spy(object, 'filter');
-
-    return object;
-}
 
 describe(`filter()`, function() {
 
@@ -39,7 +21,9 @@ describe(`filter()`, function() {
         function () {
             const curried = filter(iseven);
             expect( curried ).to.be.a('function');
-            expect( curried(numbers1to10) ).to.deep.equal([2,4,6,8,10]);
+
+            const result = Array.from( curried(numbers1to10) );
+            expect(result).to.deep.equal([2,4,6,8,10]);
         }
     )
 
@@ -49,16 +33,13 @@ describe(`filter()`, function() {
         }
     )
 
-    it(`should invoke the filter()-method of the filterable, if it has one`,
+    it(`should throw if the list is not iterable`,
         function () {
-            const filterable = spyfilterable(numbers1to10);
-            const result = filter(iseven, filterable);
-            expect(result).to.deep.equal([2,4,6,8,10]);
-            expect(filterable.filter.callCount).to.equal(1);
+            expect( ()=>filter( iseven, {} ) ).to.throw();
         }
     )
 
-    it(`should return an iterable if the filterable does not have a filter()-method but is iterable`,
+    it(`should return an iterable object`,
         function () {
             const result = filter(iseven, range(10));
             expect( isiterable(result) ).to.be.true;
@@ -66,7 +47,7 @@ describe(`filter()`, function() {
         }
     )
 
-    it(`should, if it iterates the filterable, call the predicate for each item in the filterable`,
+    it(`should call the predicate for each value in the list`,
         function () {
             const result = filter(iseven, range(10));
             Array.from(result);
@@ -74,17 +55,9 @@ describe(`filter()`, function() {
         }
     )
 
-    it(`should ensure that one and only one argument is passed to the predicate function`,
+    it(`should return an iterable object that produces only those values from the list for which the predicate returns a truthy value`,
         function () {
-            const filterable = spyfilterable(numbers1to10);
-            filter(isunaryinvocation, filterable);
-            expect(isunaryinvocation.callCount).to.equal(10);
-        }
-    )
-
-    it(`if passed an array, it should return a new array with only those items for which predicate returns true`,
-        function () {
-            const result = filter(iseven, numbers1to10);
+            const result = Array.from( filter(iseven, numbers1to10) );
             expect(result).to.be.an('array').with.length(5);
             expect(result).to.deep.equal([2,4,6,8,10]);
         }
