@@ -44,17 +44,7 @@ describe(`reduce()`, function() {
         }
     )
 
-    it(`should pass reducable and the initialvalue to the reducer's reduce() method, if it has one`,
-        function () {
-            const reducable = spyreducable([1,2,3]);
-            const result = reduce(sum, 0, reducable);
-            expect(result).to.be.equal(6);
-            expect(reducable.reduce.callCount).to.equal(1);
-            expect(sum.callCount).to.equal(3);
-        }
-    )
-
-    it(`should reduce the items produced by the reducable if it has no reduce() method but it is iterable`,
+    it(`should reduce the list's values`,
         function() {
             const result = reduce(sum, 0, range(3));
             expect(result).to.be.equal(6);
@@ -62,7 +52,7 @@ describe(`reduce()`, function() {
         }
     )
 
-    it(`should throw if the reducable has no reduce() method and is not iterable`,
+    it(`should throw if the list is not iterable`,
         function () {
             expect( ()=>reduce(sum, 0, {}) ).to.throw();
         }
@@ -74,18 +64,4 @@ describe(`reduce()`, function() {
         }
     )
 
-    it(`should ensure the reducer is always called with exacty two arguments`,
-        function () {
-            const countargs = spy(
-                function(...args) {
-                    expect(args.length).to.equal(2);
-                    return args.length;
-                }
-            )
-            const result = reduce(countargs, 0, [1,2,3,4]);
-            expect(result).to.be.equal(2);
-
-            for(const args of countargs.args) expect(args.length).to.equal(2);
-        }
-    )
 })

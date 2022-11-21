@@ -4,27 +4,17 @@
 
 'use strict';
 
-const ERR_BAD_REDUCABLE = `ReduceRightError~The reducable has type %s. Expected an object with a reduceRight() method or an iterable object.`;
-
-const binary = require('./binary');
+const ERR_BAD_LIST = `ReduceRightError~The list has type %s. Expected an iterable object.`;
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
+const isarray = require('./isarray');
 const isiterable = require('./isiterable');
 const resolvefunction = require('./resolvefunction');
-const reverse = require('./reverse');
 const typeorclass = require('./typeorclass');
 
-const isrightreducable = reducable => isfunction(reducable?.reduceRight);
-
 /**
- * Functional variant of {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}. If *reducable* has a
- * `reduceRight()` method, invoke it with *reducer* and *initialvalue*. Otherwise, if *reducable* is iterable, reduce its
- * items with *reducer* and *initialvalue*, starting at the last item and working back to the first item.
- * 
- * *Important:* the *reducable* function is coerced to binary arity before it is passed to *reducable*'s `reduceRight()` 
- * method. This means that *reducer* will only ever receive two arguments (the accumulator and the next value),
- * regardless of how many arguments *reducable*'s `reduceRight()` method actually passes.
+ * Functional variant of {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}. Reduces the
+ * values in *list* in reverse order, starting with the *initialvalue* and using the *reducer* function.
  * 
  * `reduceRight()` is curried by default with ternary arity.
  * 
@@ -41,27 +31,20 @@ const isrightreducable = reducable => isfunction(reducable?.reduceRight);
  * @func reduceright
  * @param {function} reducer The reducer function
  * @param {any} initialvalue The initial value to pass to *reducer* as the accumulator
- * @param {reducable} reducable An object with a `reduce()`-method or an iterable object
+ * @param {iterable} list An iterable object
  * @returns {any} The reduced value
  */
 
 module.exports = require('./curry3')(
 
-    function reduce(reducer, initialvalue, reducable) {
+    function reduce(reducer, initialvalue, list) {
 
         reducer = resolvefunction(reducer);
         
-        return isrightreducable(reducable) ? reducable.reduceRight( binary(reducer), initialvalue )
-             : isiterable(reducable) ? reducerightiterable( reducer, initialvalue, reducable )
-             : fail(ERR_BAD_REDUCABLE, typeorclass(reducable));
+        const array = isarray(list) ? list 
+                    : isiterable(list) ? Array.from(list)
+                    : fail(ERR_BAD_LIST, typeorclass(list));
+
+        return array.reduceRight(reducer, initialvalue);
     }
 )
-
-function reducerightiterable(reducer, initialvalue, iterable) {
-
-    let currentvalue = initialvalue;
-
-    for(const item of reverse(iterable)) currentvalue = reducer(currentvalue, item);
-
-    return currentvalue;
-}
