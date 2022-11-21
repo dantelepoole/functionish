@@ -34,48 +34,22 @@ describe(`includes()`, function() {
         }
     )
 
-    it(`should pass the value to list's includes() method if it has one`,
-        function () {
-
-            let includable = spyincludable([1,2,3,sentinel]);
-            expect( includes(sentinel, includable) ).to.be.true;
-            expect( includable.includes.calledOnceWith(sentinel) ).to.be.true;
-
-            sandbox.resetHistory();
-
-            includable = spyincludable('foobar');
-            expect( includes('b', includable) ).to.be.true;
-            expect( includable.includes.calledOnceWith('b') ).to.be.true;
-        }
-    )
-
-    it(`should work if the list has no includes() method but it is iterable`,
-        function () {
-            expect( includes(3, range(5)) ).to.be.true;
-        }
-    )
-
-    it(`should return true if any item in the list is strictly equal to the argument value`,
-        function () {
-            expect( includes(sentinel, [null, undefined, NaN, 42, {}, [], includes, sentinel]) ).to.be.true; 
-        }
-    )
-
-    it(`should return false if the list contains no item that is strictly equal to the argument value`,
-        function () {
-            expect( includes(sentinel, []) ).to.be.false;
-        }
-    )
-
-    it(`should throw if the list has no includes() method and is not iterable`,
+    it(`should throw if the list is not iterable`,
         function () {
             expect( ()=>includes(42, {}) ).to.throw();
         }
     )
 
-    it(`should work properly when searching for NaN`,
+    it(`should return true if any value in the list is strictly equal to the target value`,
         function () {
-            expect( includes(NaN, [NaN]) ).to.be.true;
+            expect( includes(sentinel, [null, undefined, NaN, 42, {}, [], includes, sentinel]) ).to.be.true; 
         }
     )
+
+    it(`should return false if the list contains no value that is strictly equal to the target value`,
+        function () {
+            expect( includes(sentinel, []) ).to.be.false;
+        }
+    )
+
 })
