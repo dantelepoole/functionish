@@ -41,7 +41,7 @@ describe(`iterate()`, function() {
         }
     )
 
-    it(`should throw if the list is not iterable and has no forEach() method`,
+    it(`should throw if the list is not iterable`,
         function () {
             expect( ()=>iterate(noop, {}) ).to.throw();
         }
@@ -53,22 +53,7 @@ describe(`iterate()`, function() {
         }
     )
 
-    it(`should forward the call to the list's forEach() method if it has one`,
-        function () {
-            const list = spyforeach([1,2,3]);
-            iterate(noop, list);
-
-            expect(list.forEach.callCount).to.equal(1);
-
-            const noopcalls = noop.getCalls();
-            expect(noopcalls.length).to.equal(3);
-            expect(noopcalls[0].calledWith(1)).to.be.true;
-            expect(noopcalls[1].calledWith(2)).to.be.true;
-            expect(noopcalls[2].calledWith(3)).to.be.true;
-        }
-    )
-
-    it(`should invoke the function for each item in the list if the list has no forEach() method but it is iterable`,
+    it(`should invoke the function for each item in the list`,
         function () {
             iterate(noop, range(3));
 

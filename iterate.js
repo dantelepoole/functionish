@@ -7,20 +7,12 @@
 const ERR_BAD_LIST = `IterateError~The list has type %s. Expected an object with a forEach() method or an iterable object.`;
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
-const isiterable = require('./isiterable');
+const notiterable = require('./notiterable');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
-const unary = require('./unary');
 
 /**
- * Functional variant of {@link external:Array.prototype.forEach Array.prototype.forEach()}. If *list* has a
- * `forEach()` method, invoke it with *func*. Otherwise, assume *list* is an iterable object and invoke *func* with
- * each item that *list* produces. If *list* has no forEach() method and it is not iterable, an error is thrown.
- * 
- * *Important:* the *func* function is coerced to unary arity before it is passed to *list*'s `forEach()` method.
- * This means that *func* will only ever receive a single argument (the item being iterated), regardless of how many
- * arguments *list*'s `forEach()` method actually passes.
+ * Pass each item in *list* to the *func* function.
  * 
  * `list()` is curried by default with binary arity.
  * 
@@ -31,9 +23,8 @@ const unary = require('./unary');
  * iterate(console.log, [1,2,3]); // prints `2`, `4` and `6`
  *     
  * @func iterate
- * @see {@link external:Array.prototype.forEach Array.prototype.forEach()}
- * @param {function} func The function to apply to each item in *iterable*
- * @param {iterable} list An iterable object producing items to apply *func* to or an object with a `forEach()` method
+ * @param {function} func The function to apply to each item in *list*
+ * @param {iterable} list An iterable object
  */
 module.exports = require('./curry2')(
 
@@ -41,13 +32,8 @@ module.exports = require('./curry2')(
 
         func = resolvefunction(func);
 
-        return isfunction(list?.forEach) ? list.forEach( unary(func) )
-             : isiterable(list) ? iterateiterable(func, list)
-             : fail(ERR_BAD_LIST, typeorclass(list));
-             
+        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+
+        for(const value of list) func(value);
     }
 )
-
-function iterateiterable(func, iterable) {
-    for(const item of iterable) func(item);
-}
