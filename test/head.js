@@ -16,7 +16,7 @@ describe(`head()`, function() {
         }
     )
 
-    it(`should return the first item of an indexable object`,
+    it(`should return the first item of the list`,
         function () {
             expect( head([42]) ).to.equal(42);
             expect( head('foobar') ).to.equal('f');
@@ -24,18 +24,11 @@ describe(`head()`, function() {
         }
     )
 
-    it(`should return undefined if the indexable is empty`,
+    it(`should return undefined if the list is empty`,
         function () {
             expect( head([]) ).to.be.undefined;
             expect( head('') ).to.be.undefined;
         }
     )
 
-    it(`should return undefined if the indexable is not indexable`,
-        function () {
-            expect( head() ).to.be.undefined;
-            expect( head(null) ).to.be.undefined;
-            expect( head({}) ).to.be.undefined;
-        }
-    )
 })
