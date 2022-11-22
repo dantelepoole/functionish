@@ -30,32 +30,17 @@ module.exports = require('./curry2')(
         notiterable(list1) && fail(ERR_BAD_LIST, 'first', typeorclass(list1));
         notiterable(list2) && fail(ERR_BAD_LIST, 'second', typeorclass(list2));
 
-        const listconcatenator = concat(list1, list2);
-
         return {
             [Symbol.iterator] : function* () {
-                yield* uniq(listconcatenator);
+
+                const isuniq = isuniqfactory();
+
+                for(const item of list1) if( isuniq(item) ) yield item;
+                for(const item of list2) if( isuniq(item) ) yield item;
             }
         }
     }
 )
-
-function concat(list1, list2) {
-
-    return {
-        [Symbol.iterator] : function* () {
-            yield* list1;
-            yield* list2;
-        }
-    }
-}
-
-function* uniq(list) {
-
-    const isuniq = isuniqfactory();
-
-    for(const item of list) if( isuniq(item) ) yield item;
-}
 
 function isuniqfactory() {
 
