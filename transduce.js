@@ -71,9 +71,7 @@ module.exports = curry4(
          
             const transformresult = transformation(nextvalue);
 
-            if(transformresult === TRANSFORM_REJECT) continue;
-            
-            currentvalue = reducer(currentvalue, transformresult);
+            if(transformresult !== TRANSFORM_REJECT) currentvalue = reducer(currentvalue, transformresult);
         }
 
         return currentvalue;
