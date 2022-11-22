@@ -7,10 +7,11 @@
 const KEY_SEPARATOR_CHAR = '.';
 const PROPERTY_NOT_FOUND = undefined;
 
-const isarray = require('./isarray');
 const isobject = require('./isobject');
 const isstring = require('./isstring');
 const isundefined = require('./isundefined');
+const notarray = require('./notarray');
+const notobject = require('./notobject');
 
 const propertyreducer = (source, key) => isobject(source) ? source[key] : PROPERTY_NOT_FOUND;
 
@@ -67,12 +68,13 @@ module.exports = require('./curry2')(
 
     function pluck(path, source) {
 
-        path = isstring(path) ? path.split(KEY_SEPARATOR_CHAR)
-             : isarray(path) ? path
-             : isundefined(path) ? []
-             : [path];
+        return notobject(source) ? PROPERTY_NOT_FOUND
+             : isstring(path) ? path.split(KEY_SEPARATOR_CHAR).reduce(propertyreducer, source)
+             : isundefined(path) ? source
+             : notarray(path) ? source[path]
+             : (path.length == 1) ? source[ path[0] ]
+             : path.reduce(propertyreducer, source);
 
-        return (path.length === 1) ? source[ path[0] ] : path.reduce(propertyreducer, source);
     }
 
 )
