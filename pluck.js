@@ -72,7 +72,7 @@ module.exports = require('./curry2')(
              : isundefined(path) ? []
              : [path];
 
-        return path.reduce(propertyreducer, source);
+        return (path.length === 1) ? source[ path[0] ] : path.reduce(propertyreducer, source);
     }
 
 )
