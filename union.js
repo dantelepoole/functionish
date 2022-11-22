@@ -13,11 +13,6 @@ const typeorclass = require('./typeorclass');
 /**
  * Return an iterable producing the items from *list1* followed by the items in *list2*, with duplicate items removed.
  * 
- * The returned iterable maintains a cache of all values passed through the iterator, allowing it to remove any
- * duplicate values it encounters. So you should never keep a union iterable around indefinitely, that would cause a
- * memory leak. Instead, call `union()` to create a new iterable each time you need one and let the garbage collector
- * collect it as soon as you are finished with it.
- * 
  * @func union
  * @param {iterable} list1 The first iterable of items to combine
  * @param {iterable} list2 The second iterable of items to combine
@@ -33,18 +28,14 @@ module.exports = require('./curry2')(
         return {
             [Symbol.iterator] : function* () {
 
-                const isuniq = isuniqfactory();
+                const duplicateitems = new Set();
+                const isuniq = item => (duplicateitems.size !== duplicateitems.add(item).size);
 
                 for(const item of list1) if( isuniq(item) ) yield item;
                 for(const item of list2) if( isuniq(item) ) yield item;
+
+                duplicateitems.clear();
             }
         }
     }
 )
-
-function isuniqfactory() {
-
-    const uniqitems = new Set();
-
-    return item => (uniqitems.size !== uniqitems.add(item).size);
-}
