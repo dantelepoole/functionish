@@ -54,9 +54,8 @@ module.exports = require('./curry2')(
                         const item1 = iterator1.next();
                         const item2 = iterator2.next();
                 
-                        return (item1.done || item2.done)
-                             ? { done:true, value:undefined }
-                             : { done:false, value:[item1.value, item2.value] }
+                        return (item1.done || item2.done) ? { done:true }
+                                                          : { done:false, value:[item1.value, item2.value] }
                     }
                 }
             }
