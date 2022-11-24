@@ -11,8 +11,10 @@ const TRANSFORM_REJECT = false;
 const curry2 = require('./curry2');
 const fail = require('./fail');
 const notiterable = require('./notiterable');
-const buildtransformation = require('./transformation');
+const transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
+
+const buildtransformation = transformation;
 
 /**
  * Return a function that applies the *transformer* functions in order to each value produced by the iterable *list* and

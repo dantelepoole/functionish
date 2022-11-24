@@ -44,28 +44,31 @@ function compoundtransformation(transformers) {
 
     validatetransformers(transformers);
 
-    const transformercount = transformers.length;
-
     return function _functionish_transformation(value) {
-
-        let index = 0;
-        
-        while(index < transformercount) {
-
-            const transformresult = transformers[index](value);
-
-            index += 1;
-            
-            if(transformresult === FILTER_INCLUDE) continue;
-            
-            if(transformresult === FILTER_REJECT) return TRANSFORM_REJECT;
-            
-            value = transformresult;
-        }
-
-        return value;
+        return compoundtransform(transformers, value);
     }
 }
+
+function compoundtransform(transformers, value) {
+
+    let index = 0;
+        
+    while(index < transformers.length) {
+
+        const transformresult = transformers[index](value);
+
+        index += 1;
+        
+        if(transformresult === FILTER_INCLUDE) continue;
+        
+        if(transformresult === FILTER_REJECT) return TRANSFORM_REJECT;
+        
+        value = transformresult;
+    }
+
+    return value;
+}
+
 
 function simpletransformation(transformer) {
 

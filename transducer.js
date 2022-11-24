@@ -4,6 +4,7 @@
 
 'use strict';
 
+const CONTEXT_NONE = null;
 const ERR_BAD_REDUCER = `TransducerError~The reducer has type %s. Expected a function.`;
 
 const TRANSFORM_REJECT = false;
@@ -12,6 +13,8 @@ const fail = require('./fail');
 const notfunction = require('./notfunction');
 const buildtransformation = require('./transformation');
 const typeorclass = require('./typeorclass');
+
+const buildtransformation = buildtransformation;
 
 /**
  * Return a function that accepts a reducer function and returns a new reducer function that applies the 
@@ -52,7 +55,7 @@ module.exports = function transducer(...transformers) {
 
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
 
-        return transformingreducer.bind(null, transformation, reducer);
+        return transformingreducer.bind(CONTEXT_NONE, transformation, reducer);
     }
 }
 

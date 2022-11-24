@@ -9,12 +9,14 @@ const ERR_BAD_REDUCER = `TransduceError~The reducer has type %s. Expected a func
 
 const TRANSFORM_REJECT = false;
 
-const buildtransformation = require('./transformation');
 const curry4 = require('./curry4');
 const fail = require('./fail');
 const notfunction = require('./notfunction');
 const notiterable = require('./notiterable');
+const transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
+
+const buildtransformation = transformation;
 
 /**
  * Convenience function that transduces the iterable *list* argument by applying the *transfomers* functions in order 
