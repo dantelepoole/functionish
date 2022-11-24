@@ -29,7 +29,7 @@ const istransformation = transformation => (transformation.name === TRANSFORMATI
  * included or excluded by the transformation.
  * 
  * @func transformation
- * @param  {(function|function[])} transformers One or more transformer functions.
+ * @param  {(function|function[])} transformers A transformer functin or array of transformer functions.
  * @returns {function}
  */
 module.exports = function transformation(transformers) {
