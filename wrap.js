@@ -18,7 +18,7 @@ const typeorclass = require('./typeorclass');
  * Both *func* and *wrapperfunc* must be functions. *Wrapperfunc* should have the signature 
  * `wrapperfunc(func, ...args)` and must invoke *func* itself.
  * 
- * `wrap()` is curried by default.
+ * `wrap()` is curried by default with binary arity.
  * 
  * @example
  *     
