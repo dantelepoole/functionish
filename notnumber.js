@@ -13,7 +13,6 @@ const isnan = require('./isnan');
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function notnumber(value)
- {
+module.exports = function notnumber(value) {
     return (typeof value !== 'number') || (value !== value);
 }
