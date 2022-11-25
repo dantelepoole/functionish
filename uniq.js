@@ -29,6 +29,8 @@ module.exports = function uniq(list) {
             const isuniq = item => (duplicateitems.size !== duplicateitems.add(item).size);
 
             for(const item of list) if( isuniq(item) ) yield item;
+
+            duplicateitems.clear();
         }
     }
 }
