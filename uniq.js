@@ -27,13 +27,9 @@ module.exports = function uniq(list) {
 
             const duplicatevalues = new Set();
             
-            for(const value of list) if( isuniq(duplicatevalues, value) ) yield value;
+            for(const value of list) if( (duplicatevalues.size !== duplicatevalues.add(value).size) ) yield value;
 
             duplicatevalues.clear();
         }
     }
-}
-
-function isuniq(valueset, targetvalue) {
-    return (valueset.size !== valueset.add(targetvalue).size);
 }
