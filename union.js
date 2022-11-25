@@ -12,8 +12,13 @@ const typeorclass = require('./typeorclass');
 
 /**
  * Return an iterable producing the items from *list1* followed by the items in *list2*, with duplicate items removed.
+ * `union()` differs from {@link module:append append()} in that, unlike {@link module:append append()}, `union()`
+ * discard duplicate items.
+ * 
+ * `union()` is curried by default with binary arity.
  * 
  * @func union
+ * @see {@link module:append append()}
  * @param {iterable} list1 The first iterable of items to combine
  * @param {iterable} list2 The second iterable of items to combine
  * @returns {iterable}

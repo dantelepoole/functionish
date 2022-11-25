@@ -11,9 +11,11 @@ const notiterable = require('./notiterable');
 const typeorclass = require('./typeorclass');
 
 /**
- * Return an iterable object that produces *list1*'s items followed by *list2*'s items.
+ * Return an iterable object that produces *list1*'s items followed by *list2*'s items. `append()` differs from
+ * {@link module:union union()} in that, unlike {@link module:union union()}, `append()` does *not* discard duplicate
+ * items.
  * 
- * `append()` is curried by default.
+ * `append()` is curried by default with binary arity.
  * 
  * @example
  * 
@@ -22,6 +24,7 @@ const typeorclass = require('./typeorclass');
  * Array.from( append([1,2], [3,4]) ); // returns '[1,2,3,4]'
  * 
  * @func append
+ * @see {@link module:union union()}
  * @param {iterable} list1 The iterable object to append *list2* to
  * @param  {iterable} list2 The iterable object to append to *list1*
  * @returns {iterable}
