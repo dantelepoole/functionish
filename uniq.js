@@ -25,12 +25,15 @@ module.exports = function uniq(list) {
     return {
         [Symbol.iterator] : function* () {
 
-            const duplicateitems = new Set();
-            const isuniq = item => (duplicateitems.size !== duplicateitems.add(item).size);
+            const duplicatevalues = new Set();
+            
+            for(const value of list) if( isuniq(duplicatevalues, value) ) yield value;
 
-            for(const item of list) if( isuniq(item) ) yield item;
-
-            duplicateitems.clear();
+            duplicatevalues.clear();
         }
     }
+}
+
+function isuniq(valueset, targetvalue) {
+    return (valueset.size !== valueset.add(targetvalue).size);
 }
