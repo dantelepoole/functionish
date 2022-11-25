@@ -14,7 +14,7 @@ const resolvefunction = require('./resolvefunction');
  * will be a recursive call to the target function without risk of exhausting the stack.
  * 
  * To work correctly, the call to `this()` *must* be a tail call, i.e. `this()`'s return
- * value must be the only thing returned, without any additional intermediate operations.
+ * value must be the only thing returned, without any additional or intermediate operations.
  * 
  * The recursion ends when the target function returns anything other than the result of
  * calling `this()`.
