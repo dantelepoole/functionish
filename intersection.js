@@ -6,8 +6,6 @@
 
 const ERR_BAD_LIST = `IntersectionError~The %s list argument has type %s. Expected an iterable object.`;
 
-const bind = require('./bind');
-
 const fail = require('./fail');
 const notiterable = require('./notiterable');
 const typeorclass = require('./typeorclass');
@@ -29,22 +27,15 @@ module.exports = require('./curry2') (
         notiterable(list1) && fail(ERR_BAD_LIST, 'first', typeorclass(list1));
         notiterable(list2) && fail(ERR_BAD_LIST, 'second', typeorclass(list2));
 
-        const intersectionfilter = bind('has', new Set(list1));
-
-        const isuniq = isuniqfactory();
-    
         return {
     
             [Symbol.iterator] : function* () {
-                for(const item of list2) if( isuniq(item) && intersectionfilter(item) ) yield item;
+
+                const list1values = new Set(list1);
+                const intersectionfilter = list1values.delete.bind(list1values);
+                
+                for(const value of list2) if( intersectionfilter(value) ) yield value;
             }
         }
     }
 )
-
-function isuniqfactory() {
-
-    const uniqitems = new Set();
-
-    return item => (uniqitems.size !== uniqitems.add(item).size);
-}

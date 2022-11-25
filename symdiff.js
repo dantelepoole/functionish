@@ -6,7 +6,6 @@
 
 const ERR_BAD_LIST = `SymDiffError~The %s list has type %s. Expected an iterable object.`;
 
-const bind = require('./bind');
 const fail = require('./fail');
 const notiterable = require('./notiterable');
 const typeorclass = require('./typeorclass');
@@ -40,12 +39,12 @@ module.exports = require('./curry2') (
         return {
             [Symbol.iterator] : function* () {
     
-                const list2items = new Set(list2);
-                const deleteitem = bind('delete', list2items);
+                const list2values = new Set(list2);
+                const rejectvalue = list2values.delete.bind(list2values);
 
-                for(const item of uniq(list1)) if( ! deleteitem(item) ) yield item;
+                for(const value of uniq(list1)) if( ! rejectvalue(value) ) yield value;
 
-                yield* list2items.values();
+                yield* list2values.values();
             }
         }
     }
@@ -53,7 +52,7 @@ module.exports = require('./curry2') (
 
 function* uniq(list) {
 
-    const uniqitems = new Set();
+    const duplicatevalues = new Set();
 
-    for(const item of list) if(uniqitems.size !== uniqitems.add(item).size) yield item;
+    for(const value of list) if(duplicatevalues.size !== duplicatevalues.add(value).size) yield value;
 }

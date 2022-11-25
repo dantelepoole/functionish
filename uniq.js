@@ -25,11 +25,9 @@ module.exports = function uniq(list) {
     return {
         [Symbol.iterator] : function* () {
 
-            const duplicatevalues = new Set();
+            const rejectvalues = new Set();
             
-            for(const value of list) if(duplicatevalues.size !== duplicatevalues.add(value).size) yield value;
-
-            duplicatevalues.clear();
+            for(const value of list) if(rejectvalues.size !== rejectvalues.add(value).size) yield value;
         }
     }
 }

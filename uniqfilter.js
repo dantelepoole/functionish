@@ -31,10 +31,10 @@
  */
 module.exports = function uniqfilter() {
 
-    const duplicatevalues = new Set();
+    const rejectvalues = new Set();
 
-    const uniqfilter = value => (duplicatevalues.size !== duplicatevalues.add(value).size);
-    uniqfilter.reset = duplicatevalues.clear.bind(duplicatevalues);
+    const uniqfilter = value => (rejectvalues.size !== rejectvalues.add(value).size);
+    uniqfilter.reset = rejectvalues.clear.bind(rejectvalues);
 
     return uniqfilter;
 }

@@ -37,17 +37,10 @@ module.exports = require('./curry2') (
         return {
             [Symbol.iterator] : function* () {
 
-                const isuniq = isuniqfactory(list2);
+                const rejectvalues = new Set(list2);
 
-                for(const item of list1) if( isuniq(item) ) yield item;
+                for(const value of list1) if(rejectvalues.size !== rejectvalues.add(value).size) yield value;
             }
         }
     }
 )
-
-function isuniqfactory(list) {
-
-    const uniqitems = new Set(list);
-
-    return item => (uniqitems.size !== uniqitems.add(item).size);
-}
