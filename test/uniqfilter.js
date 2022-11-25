@@ -54,7 +54,7 @@ describe(`uniqfilter()`, function() {
             }
         )
 
-        it(`should have a clear() method that clears the filters cache of duplicate values`,
+        it(`should have a reset() method that clears the filters cache of duplicate values`,
             function () {
                 const filter = uniqfilter();
 
@@ -64,7 +64,7 @@ describe(`uniqfilter()`, function() {
                 result = [1,1,2,2,3,3,4,4,5,5].filter(filter);
                 expect(result).to.be.an('array').with.length(0);
 
-                filter.clear();
+                filter.reset();
                 result = [1,1,2,2,3,3,4,4,5,5].filter(filter);
                 expect(result).to.deep.equal([1,2,3,4,5]);
             }
