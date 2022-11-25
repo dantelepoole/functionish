@@ -33,13 +33,12 @@ module.exports = require('./curry2')(
         return {
             [Symbol.iterator] : function* () {
 
-                const duplicateitems = new Set();
-                const isuniq = item => (duplicateitems.size !== duplicateitems.add(item).size);
+                const duplicatevalues = new Set();
 
-                for(const item of list1) if( isuniq(item) ) yield item;
-                for(const item of list2) if( isuniq(item) ) yield item;
+                for(const value of list1) if(duplicatevalues.size !== duplicatevalues.add(value).size) yield value;
+                for(const value of list2) if(duplicatevalues.size !== duplicatevalues.add(value).size) yield value;
 
-                duplicateitems.clear();
+                duplicatevalues.clear();
             }
         }
     }
