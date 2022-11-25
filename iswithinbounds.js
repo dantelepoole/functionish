@@ -32,7 +32,7 @@ module.exports = require('./curry2') (
                          : isnumber(indexable) ? indexable
                          : failbadindexable(indexable);
 
-        return (index >= 0 && index < upperbound && isnumber(index));
+        return (index >= 0 && index < upperbound);
     }
 
 )
