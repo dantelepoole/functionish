@@ -4,10 +4,13 @@
 
 'use strict';
 
+const TYPE_NAN = 'NaN';
 const TYPE_NULL = 'null';
+const TYPE_NUMBER = 'number';
 const TYPE_OBJECT = 'object';
 
 const classname = require('./classname');
+const type = require('./type');
 
 /**
  * Return *value*'s Javascript type if *value* is not an object, otherwise return the name of *value*'s class.
@@ -20,6 +23,7 @@ const classname = require('./classname');
  * const typeorclass = require('functionish/typeorclass');
  * 
  * typeorclass(42); // returns 'number'
+ * typeorclass(NaN); // return 'NaN'
  * typeorclass(true); // returns 'boolean'
  * typeorclass(null); // returns 'null'
  * typeorclass({}); // returns 'Object'
@@ -39,9 +43,7 @@ const classname = require('./classname');
  */
 module.exports = function typeorclass(value) {
 
-    const type = typeof value;
+    const valuetype = type(value);
 
-    return (type !== TYPE_OBJECT) ? type
-         : (value ===  null) ? TYPE_NULL
-         : classname(value);
+    return (valuetype === 'object') ? classname(value) : valuetype;
 }

@@ -4,14 +4,16 @@
 
 'use strict';
 
+const TYPE_NAN = 'NaN';
 const TYPE_NULL = 'null';
 
 const curry2 = require('./curry2');
 
-const isnull = require('./isnull');
-
 /**
- * Return `true` if *value* has the specified *type*. Be aware that `null` values match type `null`, not type `object`.
+ * Return `true` if *value* has the specified *type*. Be aware that `null` values match type 'null', not type 'object',
+ * and that `NaN` values match type 'NaN', not type 'number'.
+ * 
+ * `istype()` is curried by default with binary arity.
  * 
  * @func istype
  * @param {string} type The type to check for
@@ -21,6 +23,9 @@ const isnull = require('./isnull');
 module.exports = curry2(
 
     function istype(type, value) {
-        return isnull(value) ? (type === TYPE_NULL) : (type === typeof value);
+        
+        return (value == null) ? (type === TYPE_NULL)
+             : (value !== value) ? (type === TYPE_NAN)
+             : (type === typeof value);
     }
 )

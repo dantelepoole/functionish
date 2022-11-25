@@ -16,7 +16,6 @@ describe(`typeorclass()`, function() {
             expect( typeorclass() ).to.equal('undefined');
             expect( typeorclass(undefined) ).to.equal('undefined');
             expect( typeorclass(1) ).to.equal('number');
-            expect( typeorclass(NaN) ).to.equal('number');
             expect( typeorclass(1n) ).to.equal('bigint');
             expect( typeorclass(true) ).to.equal('boolean');
             expect( typeorclass(Symbol()) ).to.equal('symbol');
@@ -26,6 +25,12 @@ describe(`typeorclass()`, function() {
     it(`should return 'null' if the value is null`,
         function() {
             expect( typeorclass(null) ).to.equal('null');
+        }
+    )
+
+    it(`should return 'NaN' if the value is NaN`,
+        function() {
+            expect( typeorclass(NaN) ).to.equal('NaN');
         }
     )
 

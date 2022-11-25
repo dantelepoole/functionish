@@ -11,10 +11,10 @@ const TRANSFORM_REJECT = false;
 
 const fail = require('./fail');
 const notfunction = require('./notfunction');
-const buildtransformation = require('./transformation');
+const transformation = require('./transformation');
 const typeorclass = require('./typeorclass');
 
-const buildtransformation = buildtransformation;
+const buildtransformation = transformation;
 
 /**
  * Return a function that accepts a reducer function and returns a new reducer function that applies the 

@@ -4,13 +4,21 @@
 
 'use strict';
 
-const isnumber = require('./isnumber');
+const ERR_BAD_INDEXABLE = `LastError~The indexable has type %s. Expected an indexable or iterable object.`;
+
+const fail = require('./fail');
+const isinteger = require('./isinteger');
+const isiterable = require('./isiterable');
+const isnan = require('./isnan');
+const notnumber = require('./notnumber');
+const typeorclass = require('./typeorclass');
 
 /**
- * Return the last item in *indexable* or `undefined` if *indexable* is empty or if it is not indexable.
+ * Return the last item in *indexable* or `undefined` if *indexable* is empty. If *indexable* is neither indexable
+ * nor iterable, an error is thrown. Any object with a `length`-property is considered indexable.
  * 
  * @func last
- * @param {indexable} indexable The indexable object to retrieve the last item from
+ * @param {indexable} indexable The indexable or iterable object to retrieve the last item from
  * @returns {any}
  * @example
  *     
@@ -22,5 +30,17 @@ const isnumber = require('./isnumber');
  * 
  */
 module.exports = function last(indexable) {
-    if( isnumber(indexable?.length) ) return indexable[indexable.length - 1];
+
+    return isinteger(indexable?.length) ? indexable[indexable.length - 1]
+         : isiterable(indexable) ? iterablelast(indexable)
+         : fail(ERR_BAD_INDEXABLE, typeorclass(indexable));
+}
+
+function iterablelast(iterable) {
+
+    let result = undefined;
+
+    for(const value of iterable) result = value;
+
+    return result;
 }
