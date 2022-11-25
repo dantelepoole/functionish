@@ -4,18 +4,19 @@
 
 'use strict';
 
-const ERR_BAD_INDEX = `AtError~The index has type %s. Expected a number.`;
+const ERR_BAD_INDEX = `AtError~The index %s. Expected an integer number.`;
 
 const fail = require('./fail');
-const islessthan = require('./islessthan');
+const isnan = require('./isnan');
+const notinteger = require('./notinteger');
 const notnumber = require('./notnumber');
 const typeorclass = require('./typeorclass');
 
-const isnegative = islessthan(0);
-
 /**
- * Retrieve the item from *list* at index *index* or `undefined` if the index is invalid. If *index* is negative,
- * it represents the index counting down from the end of *list* (so -1 represents the last item in *list*).
+ * Retrieve the item from *list* at index *index* or `undefined` if no such item exists or if *list* is not indexable.
+ * 
+ * If *index* is negative, it represents the index counting down from the end of *list* (so -1 represents the last
+ * item in *list*).
  * 
  * `at()` is curried by default with binary arity.
  * 
@@ -31,16 +32,23 @@ const isnegative = islessthan(0);
  * @param {any[]} list The array to retrieve the item from
  * @param {number} index The index of the item to retrieve
  * @returns {any}
- * @throws {Error} Error if *index* is not a number
+ * @throws {Error} Error if *index* is `NaN` or not an integer number.
  */
 
 module.exports = require('./curry2')(at);
 
 function at(list, index) {
 
-    notnumber(index) && fail(ERR_BAD_INDEX, typeorclass(index));
+    notinteger(index) && failbadindex(index);
 
-    isnegative(index) && (index += list.length);
+    return (index >= 0) ? list?.[index] : list?.[ index + list.length ];
+}
 
-    return list[index];
+function failbadindex(index) {
+
+    const message = isnan(index) ? `is NaN`
+                  : notnumber(index) ? `has type ${typeorclass(index)}`
+                  : `is ${index}`;
+
+    fail(ERR_BAD_INDEX, message);
 }
