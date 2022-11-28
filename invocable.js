@@ -4,25 +4,28 @@
 
 'use strict';
 
+const ERROR_NONE = undefined;
+const RESULT_NONE = undefined;
+
 const resolvefunction = require('./resolvefunction');
 
 /**
- * Return a function that passes its arguments to *func* and returns either *func*'s return
- * value or the error it throws.
+ * Return a function that passes its arguments to *func* and returns a 2-element array
+ * containing *func*'s return value as the first element and the error it throws (if any) in
+ * the second element.
  * 
  * @example
  * const invocable = require('functionish/invocable');
- * const iserror = x => (x instanceof Error);
  * 
  * const dosomething = invocable(
  *  function (...args) {
  *      //  ... do something or throw an error
  *  }
  * )
- * const result = dosomething(42);
+ * const [result, error] = dosomething(42);
  * 
  * console.log( 
- *     iserror(result) ? error.toString() : result
+ *     error ? error.toString() : result
  * ) 
  * 
  * 
@@ -39,9 +42,9 @@ module.exports = function invocable(func) {
     return function invocablefunc(...args) {
         
         try {
-            return func.call(this, ...args);
+            return [ func.call(this, ...args), ERROR_NONE ];
         } catch(error) {
-            return error;
+            return [ RESULT_NONE, error ];
         }
     }
 }
