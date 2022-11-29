@@ -4,66 +4,49 @@
 
 'use strict';
 
-const CONTEXT_NONE = null;
 const ERR_BAD_REDUCER = `TransducerError~The reducer has type %s. Expected a function.`;
+const ERR_BAD_TRANSFORMATION = `TransducerError~The transformation has type %s. Expected a function.`;
+const FILTER_INCLUDE = true;
+const FILTER_REJECT = false;
 
-const TRANSFORM_REJECT = false;
+const fail = require("./fail");
+const map = require('./map');
+const notfunction = require("./notfunction");
+const partial = require('./partial');
+const typeorclass = require("./typeorclass");
 
-const fail = require('./fail');
-const notfunction = require('./notfunction');
-const transformation = require('./transformation');
-const typeorclass = require('./typeorclass');
+const validatetransformations = map(
+    transformation => notfunction(transformation) 
+                       &&
+                      fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation))
+)
 
-const buildtransformation = transformation;
+module.exports = function transducer(...transformations) {
 
-/**
- * Return a function that accepts a reducer function and returns a new reducer function that applies the 
- * *transformer* functions in order to each value passed to the reducer.
- * 
- * A *transformer* is any function that accepts a single value and returns a single value. If the *transformer*'s
- * return value has any type other than `boolean`, the return value is used as the result of the transformer. If the
- * *transformer* returns a value of type `boolean`, the return value indicates whether the input value should be
- * included or excluded by the transformation.
- * 
- * A reducer function is any function accepted by {@link external:Array.prototype.reduce() Array.reduce()}.
- * 
- * @example
- * 
- * const transducer = require('functionish/transducer');
- * 
- * const double = x => (x*2);
- * const iseven = x => (x%2) === 0;
- * const sum = (a,b) => (a+b);
- * 
- * const doubleiseventransducer = transducer(iseven, double);
- * 
- * const numbers = [1,2,3,4,5];
- * const sumreducer = doubleiseventransducer(sum);
- * const result = numbers.reduce( sumreducer, 0 );
- * 
- * console.log(result); // prints '12'
- * 
- * @func transducer
- * @param {...function} transformers One or more transform functions to apply or a single transformation function.
- * @returns {function} A transducer function
- */
-module.exports = function transducer(...transformers) {
+    validatetransformations(transformations);
 
-    const transformation = buildtransformation(transformers);
-
-    return function _functionish_transducer_(reducer) {
+    return function functionish_transducer(reducer) {
 
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
 
-        return transformingreducer.bind(CONTEXT_NONE, transformation, reducer);
+        return partial(functionish_reducer, transformations, reducer);
     }
 }
 
-function transformingreducer(transformation, reducer, currentvalue, nextvalue) {
+function functionish_reducer(transformations, reducer, currentvalue, nextvalue) {
 
-    const transformresult = transformation(nextvalue);
+    let index = 0;
 
-    if(transformresult !== TRANSFORM_REJECT) currentvalue = reducer(currentvalue, transformresult);
+    while(index < transformations.length) {
 
-    return currentvalue;
+        const result = transformations[index](nextvalue);
+
+        if(result === FILTER_REJECT) return currentvalue;
+
+        if(result !== FILTER_INCLUDE) nextvalue = result;
+
+        index += 1;
+    }
+
+    return reducer(currentvalue, nextvalue);
 }

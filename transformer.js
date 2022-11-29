@@ -9,11 +9,11 @@ const ERR_BAD_TRANSFORMATION = `TransformerError~The transformation has type %s.
 const FILTER_INCLUDE = true;
 const FILTER_REJECT = false;
 
-const fail = require("../fail");
-const map = require('../map');
-const notfunction = require("../notfunction");
-const notiterable = require('../notiterable');
-const typeorclass = require("../typeorclass");
+const fail = require("./fail");
+const map = require('./map');
+const notfunction = require("./notfunction");
+const notiterable = require('./notiterable');
+const typeorclass = require("./typeorclass");
 
 const validatetransformations = map(
     transformation => notfunction(transformation) 
