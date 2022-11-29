@@ -33,7 +33,26 @@ module.exports = function transformer(...transformations) {
     }
 }
 
+function transform_simple(transformation, list) {
+
+    return {
+        [Symbol.iterator]: function* () {
+
+            for(let value of list) {
+
+                const result = transformation(value);
+
+                if(result === FILTER_REJECT) continue;
+                else if(result === FILTER_INCLUDE) yield value;
+                else yield result;
+            }
+        }
+    }
+}
+
 function transform(transformations, list) {
+
+    if(transformations.length === 1) return transform_simple(transformations[0], list);
 
     return {
         [Symbol.iterator]: function* () {

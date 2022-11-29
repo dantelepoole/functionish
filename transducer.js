@@ -25,12 +25,33 @@ module.exports = function transducer(...transformations) {
 
     validatetransformations(transformations);
 
+    if(transformations.length === 1) return simpletransducerfactory(transformations[0]);
+
     return function functionish_transducer(reducer) {
 
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
 
         return partial(functionish_reducer, transformations, reducer);
     }
+}
+
+function simpletransducerfactory(transformation) {
+
+    return function functionish_transducer(reducer) {
+
+        notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
+
+        return partial(functionish_reducer_simple, transformation, reducer);
+    }
+}
+
+function functionish_reducer_simple(transformation, reducer, currentvalue, nextvalue) {
+
+    const result = transformation(nextvalue);
+
+    return (result === FILTER_REJECT) ? currentvalue
+         : (result === FILTER_INCLUDE) ? reducer(currentvalue, nextvalue)
+         : reducer(currentvalue, result);
 }
 
 function functionish_reducer(transformations, reducer, currentvalue, nextvalue) {
