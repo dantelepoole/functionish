@@ -4,8 +4,13 @@
 
 'use strict';
 
-const callable = require('./callable');
-const not = require('./not');
+const isfunction = require('./isfunction');
+const partial = require('./partial');
+
+const boolify = predicate => isfunction(predicate) ? (...args) => (!! predicate(...args))
+                                                   : () => (!! predicate);
+
+const xor = (predicate1, predicate2, ...args) => (predicate1(...args) !== predicate2(...args));
 
 /**
  * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `false` if both return the
@@ -40,18 +45,5 @@ const not = require('./not');
  * @returns {boolean}
  */
 module.exports = require('./curry2')(
-
-    function xor(predicate1, predicate2) {
-
-        predicate1 = callable(predicate1);
-        predicate2 = callable(predicate2);
-
-        return function xor_(...args) {
-
-            const result1 = !! predicate1.call(this, ...args);
-            const result2 = !! predicate2.call(this, ...args);
-
-            return result1 ? not(result2) : result2;
-        }
-    }
+    (predicate1, predicate2) => partial(xor, boolify(predicate1), boolify(predicate2))
 )

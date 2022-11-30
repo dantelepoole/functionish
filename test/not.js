@@ -35,4 +35,6 @@ describe(`not()`, function() {
             expect( not(-0) ).to.be.true;
         }
     )
+
+    it(`should return a function if its argument is a function`)
 })
