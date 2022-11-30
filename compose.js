@@ -5,11 +5,15 @@
 'use strict';
 
 const ERR_BAD_FUNCTION = `ComposeError~The function at index %d has type %s. Expected a function.`;
+const FUNCTION_EMPTY = undefined;
 
 const fail = require('./fail');
+const isempty = require('./isempty');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
+const composefuncs = funcs => funcs.reduce( composereducerfactory(), FUNCTION_EMPTY );
+const id = x => x;
 const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
 
 /**
@@ -35,22 +39,19 @@ const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorcl
  */
 
 module.exports = function compose(...funcs) {
-    
-    funcs.forEach( functionvalidatorfactory() );
-
-    return function composedfunctions(...args) {
-
-        let index = funcs.length;
-
-        while( (index -= 1) >= 0 ) args = [ funcs[index](...args) ];
-
-        return args[0];
-    }
+    return isempty(funcs) ? id : composefuncs(funcs);
 }
 
-function functionvalidatorfactory() {
+function composereducerfactory() {
 
     let index = -1;
 
-    return func => (index += 1, notfunction(func) && raisebadfunction(index, func)); 
+    return function composereducer(secondfunc, firstfunc) {
+        
+        index += 1;
+
+        return notfunction(firstfunc) ? raisebadfunction(index, firstfunc)
+             : (secondfunc === FUNCTION_EMPTY) ? firstfunc
+             : (...args) => secondfunc( firstfunc(...args) );
+    }
 }

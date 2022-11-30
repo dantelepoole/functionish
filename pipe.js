@@ -5,11 +5,15 @@
 'use strict';
 
 const ERR_BAD_FUNCTION = `PipeError~The function at index %d has type %s. Expected a function.`;
+const FUNCTION_EMPTY = undefined;
 
 const fail = require('./fail');
+const isempty = require('./isempty');
 const notfunction = require('./notfunction');
 const typeorclass = require('./typeorclass');
 
+const id = x => x;
+const pipefuncs = funcs => funcs.reduce( pipereducerfactory(), FUNCTION_EMPTY );
 const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
 
 /**
@@ -36,22 +40,19 @@ const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorcl
  */
 
 module.exports = function pipe(...funcs) {
-
-    funcs.forEach( functionvalidatorfactory() );
-
-    return function pipedfunctions(...args) {
-
-        let index = -1;
-
-        while( (index += 1) < funcs.length ) args = [ funcs[index](...args) ];
-
-        return args[0];
-    }
+    return isempty(funcs) ? id : pipefuncs(funcs);
 }
 
-function functionvalidatorfactory() {
+function pipereducerfactory() {
 
     let index = -1;
 
-    return func => (index += 1, notfunction(func) && raisebadfunction(index, func)); 
+    return function pipereducer(firstfunc, secondfunc) {
+        
+        index += 1;
+
+        return notfunction(secondfunc) ? raisebadfunction(index, secondfunc)
+             : (firstfunc === FUNCTION_EMPTY) ? secondfunc
+             : (...args) => secondfunc( firstfunc(...args) );
+    }
 }

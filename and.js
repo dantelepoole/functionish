@@ -4,11 +4,13 @@
 
 'use strict';
 
-const PATH_CALLABLE = __dirname + '/callable';
+const PREDICATE_NONE = undefined;
 
-const map = require('./map');
+const always = require('./always');
+const isempty = require('./isempty');
+const notfunction = require('./notfunction');
 
-const callable = map(PATH_CALLABLE);
+const alwaystrue = always(true);
 
 /**
  * Return a function that passes its arguments to each *predicate* and returns `true` if and only if each *predicate*
@@ -41,13 +43,12 @@ const callable = map(PATH_CALLABLE);
  * @returns {boolean}
  */
 module.exports = function and(...predicates) {
+    return isempty(predicates) ? alwaystrue : predicates.reduce(conjunctreducer, PREDICATE_NONE);
+}
 
-    predicates = callable(predicates);
+function conjunctreducer(firstpredicate, secondpredicate) {
 
-    return function and_(...args) {
-
-        for(const predicate of predicates) if( ! predicate.call(this, ...args) ) return false;
-
-        return true;
-    }
+    return notfunction(secondpredicate) ? conjunctreducer(firstpredicate, always(!! secondpredicate))
+         : (firstpredicate === PREDICATE_NONE) ? secondpredicate
+         : (...args) => firstpredicate(...args) && secondpredicate(...args);
 }
