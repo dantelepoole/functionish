@@ -13,10 +13,11 @@ const notnumber = require('./notnumber');
 const typeorclass = require('./typeorclass');
 
 /**
- * Retrieve the item from *list* at index *index* or `undefined` if no such item exists or if *list* is not indexable.
+ * Retrieve the item from *indexable* at index *index* or `undefined` if no such item exists or
+ * if *indexable* is not indexable.
  * 
- * If *index* is negative, it represents the index counting down from the end of *list* (so -1 represents the last
- * item in *list*).
+ * If *index* is negative, it represents the index counting down from the end of *indexable*
+ * (so -1 represents the last item in *list*).
  * 
  * `at()` is curried by default with binary arity.
  * 
@@ -29,7 +30,7 @@ const typeorclass = require('./typeorclass');
  * console.log( item ); // prints `42`
  * 
  * @func at
- * @param {any[]} list The array to retrieve the item from
+ * @param {any[]} indexable The indexable object (e.g. Array) to retrieve the item from
  * @param {number} index The index of the item to retrieve
  * @returns {any}
  * @throws {Error} Error if *index* is `NaN` or not an integer number.
@@ -37,11 +38,11 @@ const typeorclass = require('./typeorclass');
 
 module.exports = require('./curry2')(at);
 
-function at(list, index) {
+function at(indexable, index) {
 
     notinteger(index) && failbadindex(index);
 
-    return (index >= 0) ? list?.[index] : list?.[ index + list.length ];
+    return (index >= 0) ? indexable?.[index] : indexable?.[ index + indexable.length ];
 }
 
 function failbadindex(index) {
