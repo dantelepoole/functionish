@@ -4,6 +4,7 @@
 
 'use strict';
 
+const ARITY_NONE = 0;
 const ERR_BAD_ARITY = "CurryError~The arity %s. Expected a positive integer.";
 
 const fail = require('./fail');
@@ -18,6 +19,10 @@ const notpositiveinteger = x => notinteger(x) || (x < 0);
 const failbadarity = arity => isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
                             : notnumber(arity) ? fail(ERR_BAD_ARITY, `has type ${ typeorclass(arity) }`)
                             : fail(ERR_BAD_ARITY, `is ${isarity}`);
+
+const partial = (func, ...boundargs) => function (...args) {
+    return func.call(this, ...boundargs, ...args)
+}
 
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
@@ -75,22 +80,19 @@ const failbadarity = arity => isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
  */
 module.exports = function curry(arity, func) {
 
-    (arguments.length === 1) && ([arity, func] = [0, arity]);
+    if (arguments.length === 1) [arity, func] = [ARITY_NONE, arity]
 
     func = resolvefunction(func);
 
-    (arity === 0) ? (arity = func.length) : notpositiveinteger(arity) && failbadarity(arity);
+    notpositiveinteger(arity) && failbadarity(arity);
 
-    return curryfunction(arity, func);
+    if (arity === ARITY_NONE) arity = func.length;
+
+    return partial(curriedfunction, func, arity);
 }
 
-function curryfunction(minarity, func, ...boundargs) {
+function curriedfunction(func, arity, ...args) {
 
-    return function curriedfunction(...args) {
-
-        const arity = boundargs.length + args.length;
-
-        return (arity < minarity) ? curryfunction(minarity, func, ...boundargs, ...args)
-                                  : func.call(this, ...boundargs, ...args);
-    }
+    return (args.length < arity) ? partial(curriedfunction, func, arity, ...args)
+                                 : func.call(this, ...args);
 }
