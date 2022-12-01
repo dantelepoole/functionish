@@ -4,10 +4,7 @@
 
 'use strict';
 
-const PREDICATE_NONE = undefined;
-
 const always = require('./always');
-const isempty = require('./isempty');
 const notfunction = require('./notfunction');
 
 const alwaysfalse = always(false);
@@ -45,12 +42,11 @@ const alwaysfalse = always(false);
  */
 
 module.exports = function or(...predicates) {
-    return isempty(predicates) ? alwaysfalse : predicates.reduce(disjunctreducer, PREDICATE_NONE);
+    return predicates.reduce(disjunctreducer, alwaysfalse);
 }
 
-function disjunctreducer(firstpredicate, secondpredicate) {
+function disjunctreducer(predicate1, predicate2) {
 
-    return notfunction(secondpredicate) ? disjunctreducer(firstpredicate, always(!! secondpredicate))
-         : (firstpredicate === PREDICATE_NONE) ? secondpredicate
-         : (...args) => firstpredicate(...args) || secondpredicate(...args);
+    return notfunction(predicate2) ? disjunctreducer(predicate1, always(!! predicate2))
+                                   : (...args) => predicate1(...args) || predicate2(...args);
 }
