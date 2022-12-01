@@ -83,10 +83,7 @@ describe(`curry()`, function() {
 
     it(`should throw if the arity is neither a number nor null or undefined`,
         function () {
-
-            expect( ()=>curry(null, countargs) ).to.throw();
-            expect( ()=>curry(undefined, countargs) ).to.throw();
-            
+            expect( ()=>curry(NaN, countargs) ).to.throw();
             expect( ()=>curry('foobar', countargs) ).to.throw();
             expect( ()=>curry(42n, countargs) ).to.throw();
         }
