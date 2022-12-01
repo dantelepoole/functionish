@@ -5,6 +5,7 @@
 'use strict';
 
 const always = require('./always');
+const isfunction = require('./isfunction');
 const notfunction = require('./notfunction');
 
 const alwaystrue = always(true);
@@ -46,5 +47,6 @@ module.exports = function and(...predicates) {
 function conjunctreducer(predicate1, predicate2) {
 
     return notfunction(predicate2) ? conjunctreducer(predicate1, always(!! predicate2))
-                                   : (...args) => predicate1(...args) && predicate2(...args);
+         : (predicate1 === alwaystrue) ? predicate2
+         : (...args) => predicate1(...args) && predicate2(...args);
 }
