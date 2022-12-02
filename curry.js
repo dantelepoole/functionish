@@ -21,8 +21,6 @@ const failbadarity = arity => isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
                             : notnumber(arity) ? fail(ERR_BAD_ARITY, `has type ${ typeorclass(arity) }`)
                             : fail(ERR_BAD_ARITY, `is ${isarity}`);
 
-const partial = (func, ...boundargs) => function (...args) { return func.call(this, ...boundargs, ...args) }
-
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
  * returning the result.
@@ -92,4 +90,11 @@ function curriedfunction(func, arity, ...args) {
 
     return (args.length < arity) ? partial(curriedfunction, func, arity, ...args)
                                  : func.call(this, ...args);
+}
+
+function partial(func, ...boundargs) {
+
+    return function (...args) {
+        return func.call(this, ...boundargs, ...args)
+    }
 }

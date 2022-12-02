@@ -5,6 +5,7 @@
 'use strict';
 
 const ERR_BAD_FUNCTION = `PipeError~The function at index %d has type %s. Expected a function.`;
+const FUNCTION_NONE = undefined;
 
 const fail = require('./fail');
 const id = require('./id');
@@ -37,19 +38,22 @@ const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorcl
  */
 
 module.exports = function pipe(...funcs) {
-    return funcs.reduce( pipereducerfactory(), id );
+
+    const pipedfunc = funcs.reduce( pipereducerfactory(), FUNCTION_NONE );
+
+    return (pipedfunc ?? id);
 }
 
 function pipereducerfactory() {
 
     let index = -1;
 
-    return function pipereducer(firstfunc, secondfunc) {
+    return function pipereducer(currentfunc, nextfunc) {
         
         index += 1;
 
-        return notfunction(secondfunc) ? raisebadfunction(index, secondfunc)
-             : (firstfunc === id) ? secondfunc
-             : (...args) => secondfunc( firstfunc(...args) );
+        return notfunction(nextfunc) ? raisebadfunction(index, nextfunc)
+             : (currentfunc === FUNCTION_NONE) ? nextfunc
+             : (...args) => nextfunc( currentfunc(...args) );
     }
 }

@@ -5,6 +5,7 @@
 'use strict';
 
 const ERR_BAD_FUNCTION = `ComposeError~The function at index %d has type %s. Expected a function.`;
+const FUNCTION_NONE = undefined;
 
 const fail = require('./fail');
 const id = require('./id');
@@ -36,19 +37,22 @@ const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorcl
  */
 
 module.exports = function compose(...funcs) {
-    return funcs.reduce( composereducerfactory(), id );
+    
+    const composedfunc = funcs.reduce( composereducerfactory(), FUNCTION_NONE );
+
+    return (composedfunc ?? id);
 }
 
 function composereducerfactory() {
 
     let index = -1;
 
-    return function composereducer(secondfunc, firstfunc) {
+    return function composereducer(currentfunc, nextfunc) {
         
         index += 1;
 
-        return notfunction(firstfunc) ? raisebadfunction(index, firstfunc)
-             : (secondfunc === id) ? firstfunc
-             : (...args) => secondfunc( firstfunc(...args) );
+        return notfunction(nextfunc) ? raisebadfunction(index, nextfunc)
+             : (currentfunc === FUNCTION_NONE) ? nextfunc
+             : (...args) => currentfunc( nextfunc(...args) );
     }
 }

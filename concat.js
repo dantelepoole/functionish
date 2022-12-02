@@ -37,13 +37,13 @@ module.exports = require('./curry2') (
     function concat(concatable, ...items) {
         
         return isconcatable(concatable) ? concatable.concat(...items)
-             : isiterable(concatable) ? concatlist(concatable, items)
+             : isiterable(concatable) ? concatlists(concatable, items)
              : fail(ERR_BAD_CONCATABLE, typeorclass(concatable));
 
     }
 )
 
-function concatlist(list1, list2) {
+function concatlists(list1, list2) {
 
     return {
         [Symbol.iterator] : function* () {

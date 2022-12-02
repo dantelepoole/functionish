@@ -7,7 +7,7 @@
 const isvoid = require('./isvoid');
 
 /**
- * If *value* lies between *lowerlimit* and *upperlimit* (both inclusively), return *value*. Otherwise, return
+ * If *value* lies between *lowerlimit* and *upperlimit* (both inclusive), return *value*. Otherwise, return
  * *lowerlimit* if *value* is less than *lowerlimit* or *upperlimit* if *value* is greater than *upperlimit*.
  * 
  * If *value* is `null`, `undefined` or `NaN`, *value* is returned.
