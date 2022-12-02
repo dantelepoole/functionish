@@ -4,51 +4,33 @@
 
 'use strict';
 
-const ERR_BAD_CONCATABLE = `ConcatError~The concatable has type %s. Expected an object with a concat() method or an iterable object`;
-
-const fail = require('./fail');
 const isiterable = require('./isiterable');
-const typeorclass = require('./typeorclass');
-
-const isconcatable = obj => (typeof obj?.concat === 'function');
 
 /**
- * Pass the *items* to *concatable*'s `concat()` method. If *concatable* has no such method but it is iterable, 
- * return an iterable object that produces *concatable*'s items followed by *items*' items.
- * 
- * `concat()` is curried by default.
+ * Return an iterable object that flattens each *list* in *lists* in order. If a *list* is not iterable,
+ * the returned iterable produces the *list* itself.
  * 
  * @example
  * 
  * const concat = require('functionish/concat');
  * 
- * concat([1,2], 3, 4); // returns '[1,2,3,4]'
- * concat('foo', 'bar'); // return 'foobar';
+ * concat([1,2], 3, 4, [5,6]); // returns '[1,2,3,4,5,6]'
  * 
  * @func concat
- * @param {(concatable|iterable)} concatable An object with a concat() method or an iterable object
- * @param  {...any[]} items The items to concat to *concatable*
- * @returns {any}
- * @throws {Error} Error if *concatable* has no `concat()` method and is not iterable.
+ * @param  {...iterable[]} lists One or more iterable objects to flatten and concatenate
+ * @returns {iterable}
  */
 
-module.exports = require('./curry2') (
-
-    function concat(concatable, ...items) {
-        
-        return isconcatable(concatable) ? concatable.concat(...items)
-             : isiterable(concatable) ? concatlists(concatable, items)
-             : fail(ERR_BAD_CONCATABLE, typeorclass(concatable));
-
-    }
-)
-
-function concatlists(list1, list2) {
-
+module.exports = function concat(...lists) {
+    
     return {
         [Symbol.iterator] : function* () {
-            yield* list1;
-            yield* list2;
+
+            for(const list of lists) {
+
+                if( isiterable(list) ) yield* list
+                else yield list
+            }
         }
     }
 }
