@@ -42,9 +42,9 @@ function transform_simple(transformation, list) {
 
                 const result = transformation(value);
 
-                if(result === FILTER_REJECT) continue;
-                else if(result === FILTER_INCLUDE) yield value;
-                else yield result;
+                if(result !== FILTER_REJECT) continue;
+                
+                yield (result === FILTER_INCLUDE) ? value : result;
             }
         }
     }
