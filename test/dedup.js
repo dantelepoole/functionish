@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const dedup = require('../dedup');
+const dedup = require('../lists/dedup');
 
 describe(`dedup()`, function() {
 
