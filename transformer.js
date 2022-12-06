@@ -10,16 +10,15 @@ const FILTER_INCLUDE = true;
 const FILTER_REJECT = false;
 
 const fail = require("./fail");
-const map = require('./map');
+const isempty = require('./isempty');
+const issingular = require('./issingular');
+const iterate = require('./iterate');
 const notfunction = require("./notfunction");
 const notiterable = require('./notiterable');
 const typeorclass = require("./typeorclass");
 
-const validatetransformations = map(
-    transformation => notfunction(transformation) 
-                       &&
-                      fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation))
-)
+const validatetransformation = transformation => notfunction(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+const validatetransformations = iterate(validatetransformation);
 
 module.exports = function transformer(...transformations) {
 
@@ -29,7 +28,9 @@ module.exports = function transformer(...transformations) {
 
         notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
 
-        return transform(transformations, list);
+        return isempty(transformations) ? list
+             : issingular(transformations) ? transform_simple(transformations[0], list)
+             : transform(transformations, list);
     }
 }
 
@@ -38,12 +39,12 @@ function transform_simple(transformation, list) {
     return {
         [Symbol.iterator]: function* () {
 
-            for(let value of list) {
+            for(const value of list) {
 
                 const result = transformation(value);
 
-                if(result !== FILTER_REJECT) continue;
-                
+                if(result === FILTER_REJECT) continue;
+
                 yield (result === FILTER_INCLUDE) ? value : result;
             }
         }
@@ -52,24 +53,17 @@ function transform_simple(transformation, list) {
 
 function transform(transformations, list) {
 
-    if(transformations.length === 1) return transform_simple(transformations[0], list);
-
     return {
         [Symbol.iterator]: function* () {
 
             for(let value of list) {
 
-                let index = 0;
+                for(const transformation of transformations) {
 
-                while(index < transformations.length) {
-
-                    const result = transformations[index](value);
-
-                    if(result !== FILTER_INCLUDE) value = result;
+                    const result = transformation(value);
 
                     if(value === FILTER_REJECT) break;
-
-                    index += 1;
+                    else if(result !== FILTER_INCLUDE) value = result;
                 }
 
                 if(value !== FILTER_REJECT) yield value;

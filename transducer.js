@@ -10,16 +10,15 @@ const FILTER_INCLUDE = true;
 const FILTER_REJECT = false;
 
 const fail = require("./fail");
-const map = require('./map');
+const isempty = require('./isempty');
+const issingular = require('./issingular');
+const iterate = require('./iterate');
 const notfunction = require("./notfunction");
 const partial = require('./partial');
 const typeorclass = require("./typeorclass");
 
-const validatetransformations = map(
-    transformation => notfunction(transformation) 
-                       &&
-                      fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation))
-)
+const validatetransformation = transformation => notfunction(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+const validatetransformations = iterate(validatetransformation);
 
 module.exports = function transducer(...transformations) {
 
@@ -29,11 +28,13 @@ module.exports = function transducer(...transformations) {
 
         notfunction(reducer) && fail(ERR_BAD_REDUCER, typeorclass(reducer));
 
-        return partial(functionish_reducer, transformations, reducer);
+        return isempty(transformations) ? reducer
+             : issingular(transformations) ? partial(transform_reducer_simple, transformations[0], reducer)
+             : partial(transform_reducer, transformations, reducer);
     }
 }
 
-function functionish_reducer_simple(transformation, reducer, currentvalue, nextvalue) {
+function transform_reducer_simple(transformation, reducer, currentvalue, nextvalue) {
 
     const result = transformation(nextvalue);
 
@@ -42,21 +43,16 @@ function functionish_reducer_simple(transformation, reducer, currentvalue, nextv
          : reducer(currentvalue, result);
 }
 
-function functionish_reducer(transformations, reducer, currentvalue, nextvalue) {
+function transform_reducer(transformations, reducer, currentvalue, nextvalue) {
 
-    if(transformations.length === 1) return functionish_reducer_simple(transformations[0], reducer, currentvalue, nextvalue);
-    
-    let index = 0;
+    for(const transformation of transformations) {
 
-    while(index < transformations.length) {
-
-        const result = transformations[index](nextvalue);
+        const result = transformation(nextvalue);
 
         if(result === FILTER_REJECT) return currentvalue;
+        else if(result === FILTER_INCLUDE) continue;
 
-        if(result !== FILTER_INCLUDE) nextvalue = result;
-
-        index += 1;
+        nextvalue = result;
     }
 
     return reducer(currentvalue, nextvalue);
