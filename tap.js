@@ -4,7 +4,6 @@
 
 'use strict';
 
-const head = require('./head');
 const resolvefunction = require('./resolvefunction');
 
 /**
@@ -23,6 +22,6 @@ const resolvefunction = require('./resolvefunction');
 
         func.call(this, ...args);
         
-        return head(args);
+        return args[0];
     }
 }
