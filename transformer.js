@@ -9,65 +9,77 @@ const ERR_BAD_TRANSFORMATION = `TransformerError~The transformation has type %s.
 const FILTER_INCLUDE = true;
 const FILTER_REJECT = false;
 
+const and = require('./and');
+const compose = require('./compose');
 const fail = require("./fail");
+const head = require('./head');
+const id = require('./id');
 const isempty = require('./isempty');
 const issingular = require('./issingular');
 const iterate = require('./iterate');
 const notfunction = require("./notfunction");
 const notiterable = require('./notiterable');
+const partial = require('./partial');
+const tap = require('./tap');
 const typeorclass = require("./typeorclass");
+const when = require('./when');
 
-const validatetransformation = transformation => notfunction(transformation) && fail(ERR_BAD_TRANSFORMATION, typeorclass(transformation));
+const failbadlist = compose( partial(fail, ERR_BAD_LIST), typeorclass ); 
+const validatelist = and(notiterable, failbadlist);
+
+const failbadtransformation = compose( partial(fail, ERR_BAD_TRANSFORMATION), typeorclass );
+const validatetransformation = and(notfunction, failbadtransformation);
 const validatetransformations = iterate(validatetransformation);
 
+const compoundtransformer = transformations => list => compoundtransform(transformations, list);
+const simpletransformer = transformation => list => simpletransform(transformation, list);
+const buildtransformer = when(issingular, compose(simpletransformer, head), compoundtransformer);
+
+const nooptransformer = tap(validatelist, id);
+
+const listtransform = transformer => tap(validatelist, partial(transform, transformer));
+const listtransformer = tap(validatetransformations, compose(listtransform, buildtransformer));
+
 module.exports = function transformer(...transformations) {
-
-    validatetransformations(transformations);
-
-    return function functionish_transform(list) {
-
-        notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
-
-        return isempty(transformations) ? list
-             : issingular(transformations) ? transform_simple(transformations[0], list)
-             : transform(transformations, list);
-    }
+    return isempty(transformations) ? nooptransformer : listtransformer(transformations);
 }
 
-function transform_simple(transformation, list) {
+function transform(transformer, list) {
 
     return {
         [Symbol.iterator]: function* () {
 
             for(const value of list) {
 
-                const result = transformation(value);
+                const result = transformer(value);
 
-                if(result === FILTER_REJECT) continue;
-
-                yield (result === FILTER_INCLUDE) ? value : result;
+                if(result !== FILTER_REJECT) yield result;
             }
         }
     }
 }
 
-function transform(transformations, list) {
+function simpletransform(transformation, value) {
 
-    return {
-        [Symbol.iterator]: function* () {
+    const result = transformation(value);
 
-            for(let value of list) {
+    return (result === FILTER_REJECT) ? FILTER_REJECT
+         : (result === FILTER_INCLUDE) ? value
+         : result;
+}
 
-                for(const transformation of transformations) {
+function compoundtransform(transformations, value) {
 
-                    const result = transformation(value);
+    for(const transformation of transformations) {
 
-                    if(value === FILTER_REJECT) break;
-                    else if(result !== FILTER_INCLUDE) value = result;
-                }
+        const result = transformation(value);
 
-                if(value !== FILTER_REJECT) yield value;
-            }
-        }
+        if(result === FILTER_INCLUDE) continue;
+
+        if(result === FILTER_REJECT) return FILTER_REJECT;
+
+        value = result;
     }
+
+    return value;
 }
