@@ -6,18 +6,20 @@
 
 const always = require('./always');
 const isfunction = require('./isfunction');
-const notfunction = require('./notfunction');
 
 const alwaystrue = always(true);
+const callable = value => isfunction(value) ? value : always(value);
 
 /**
- * Return a function that passes its arguments to each *predicate* and returns `true` if and only if each *predicate*
- * returns a truthy false. Otherwise, it returns `false`.
+ * Functional variant of Javascript's `&&` operator. Returns a function that passes its arguments to each
+ * *predicate* and returns the return value of the first *predicate* that returns a falsy value or, if all
+ * *predicates* return truthy values, the return value of the last *predicate*.
  * 
- * The function is short-circuited, so it returns as soon as a *predicate* returns a falsy value, without evaluating any
- * remaining *predicates*.
+ * Like the `||` operator, `or()` is short-circuited, so it aborts as soon as a *predicate* returns a falsy
+ * value, without evaluating the remaining *predicates*.
  * 
- * If any predicate is not a function, its value is evaluated directly instead.
+ * A *predicate* may be either a function to be called or any other value. In the latter case, the value
+ * is evaluated directly.
  * 
  * If the *predicates* array is empty, the function returns `true`.
  * 
@@ -46,7 +48,7 @@ module.exports = function and(...predicates) {
 
 function conjunctreducer(predicate1, predicate2) {
 
-    return notfunction(predicate2) ? conjunctreducer(predicate1, always(!! predicate2))
-         : (predicate1 === alwaystrue) ? predicate2
-         : (...args) => predicate1(...args) && predicate2(...args);
+    return (predicate1 === alwaystrue) ? callable(predicate2)
+         : isfunction(predicate2) ? (...args) => (predicate1(...args) && predicate2(...args))
+         : (...args) => (predicate1(...args) && predicate2);
 }
