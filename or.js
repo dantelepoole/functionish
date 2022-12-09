@@ -6,8 +6,12 @@
 
 const always = require('./always');
 const isfunction = require('./isfunction');
+const reduce = require('./reduce');
 
-const alwaysfalse = always(false);
+const defaultpredicate = always(false);
+const isdefaultpredicate = func => (func === defaultpredicate);
+
+const builddisjunctor = reduce(disjunctreducer, defaultpredicate);
 const callable = value => isfunction(value) ? value : always(value);
 
 /**
@@ -45,12 +49,12 @@ const callable = value => isfunction(value) ? value : always(value);
  */
 
 module.exports = function or(...predicates) {
-    return predicates.reduce(disjunctreducer, alwaysfalse);
+    return builddisjunctor(predicates);
 }
 
 function disjunctreducer(predicate1, predicate2) {
 
-    return (predicate1 === alwaysfalse) ? callable(predicate2)
+    return isdefaultpredicate(predicate1) ? callable(predicate2)
          : isfunction(predicate2) ? (...args) => (predicate1(...args) || predicate2(...args))
          : (...args) => (predicate1(...args) || predicate2);
 }

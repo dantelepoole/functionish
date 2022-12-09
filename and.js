@@ -6,9 +6,14 @@
 
 const always = require('./always');
 const isfunction = require('./isfunction');
+const reduce = require('./reduce');
 
-const alwaystrue = always(true);
+const defaultpredicate = always(true);
+const isdefaultpredicate = func => (func === defaultpredicate);
+
+const buildconjunctor = reduce(conjunctreducer, defaultpredicate);
 const callable = value => isfunction(value) ? value : always(value);
+
 
 /**
  * Functional variant of Javascript's `&&` operator. Returns a function that passes its arguments to each
@@ -43,12 +48,12 @@ const callable = value => isfunction(value) ? value : always(value);
  * @returns {boolean}
  */
 module.exports = function and(...predicates) {
-    return predicates.reduce(conjunctreducer, alwaystrue);
+    return buildconjunctor(predicates);
 }
 
 function conjunctreducer(predicate1, predicate2) {
 
-    return (predicate1 === alwaystrue) ? callable(predicate2)
+    return isdefaultpredicate(predicate1) ? callable(predicate2)
          : isfunction(predicate2) ? (...args) => (predicate1(...args) && predicate2(...args))
          : (...args) => (predicate1(...args) && predicate2);
 }
