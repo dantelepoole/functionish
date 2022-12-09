@@ -9,36 +9,36 @@ const ERR_BAD_TRANSFORMATION = `TransformerError~The transformation has type %s.
 const FILTER_INCLUDE = true;
 const FILTER_REJECT = false;
 
-const and = require('./and');
 const compose = require('./compose');
 const fail = require("./fail");
 const head = require('./head');
 const id = require('./id');
 const isempty = require('./isempty');
+const isfunction = require('./isfunction');
+const isiterable = require('./isiterable');
 const issingular = require('./issingular');
 const iterate = require('./iterate');
-const notfunction = require("./notfunction");
-const notiterable = require('./notiterable');
+const or = require('./or');
 const partial = require('./partial');
 const tap = require('./tap');
 const typeorclass = require("./typeorclass");
 const when = require('./when');
 
 const failbadlist = compose( partial(fail, ERR_BAD_LIST), typeorclass ); 
-const validatelist = and(notiterable, failbadlist);
+const validatelist = or(isiterable, failbadlist);
 
 const failbadtransformation = compose( partial(fail, ERR_BAD_TRANSFORMATION), typeorclass );
-const validatetransformation = and(notfunction, failbadtransformation);
+const validatetransformation = or(isfunction, failbadtransformation);
 const validatetransformations = iterate(validatetransformation);
 
 const compoundtransformer = transformations => list => compoundtransform(transformations, list);
 const simpletransformer = transformation => list => simpletransform(transformation, list);
 const buildtransformer = when(issingular, compose(simpletransformer, head), compoundtransformer);
 
-const nooptransformer = tap(validatelist, id);
+const nooptransformer = compose( id, tap(validatelist) );
 
-const listtransform = transformer => tap(validatelist, partial(transform, transformer));
-const listtransformer = tap(validatetransformations, compose(listtransform, buildtransformer));
+const listtransform = transformer => compose( partial(transform, transformer), tap(validatelist) );
+const listtransformer = compose( listtransform, buildtransformer, tap(validatetransformations) );
 
 module.exports = function transformer(...transformations) {
     return isempty(transformations) ? nooptransformer : listtransformer(transformations);
