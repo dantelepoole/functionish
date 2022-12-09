@@ -4,8 +4,6 @@
 
 'use strict';
 
-const callable = require('./callable');
-const evaluate = require('./evaluate');
 const id = require('./id');
 const when = require('./when');
 

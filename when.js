@@ -4,10 +4,10 @@
 
 'use strict';
 
-const callable = require('./callable');
-const evaluate = require('./evaluate');
 const id = require('./id');
-const notfunction = require('./notfunction');
+const map = require('./map');
+
+const callable = map(__dirname + '/callable');
 
 /**
  * Return a function that passes its arguments to *predicate*. If *predicate* returns a truthy value, the function
@@ -43,13 +43,13 @@ module.exports = require('./curry2')(
 
     function when(predicate, mainbranch, alternativebranch=id) {
 
-        predicate = callable(predicate);
+        [predicate, mainbranch, alternativebranch] = callable([predicate, mainbranch, alternativebranch]);
 
         return function conditionalfunction(...args) {
 
             const selectedbranch = predicate(...args) ? mainbranch : alternativebranch;
             
-            return evaluate(selectedbranch, ...args);
+            return selectedbranch(...args);
         }
     }
 )
