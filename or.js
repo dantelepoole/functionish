@@ -5,14 +5,15 @@
 'use strict';
 
 const always = require('./always');
-const isfunction = require('./isfunction');
+const callable = require('./callable');
 const reduce = require('./reduce');
 
 const defaultpredicate = always(false);
 const isdefaultpredicate = func => (func === defaultpredicate);
 
-const builddisjunctor = reduce(disjunctreducer, defaultpredicate);
-const callable = value => isfunction(value) ? value : always(value);
+const disjunctionfactory = reduce(disjunctingreducer, defaultpredicate);
+
+const disjunct = (predicate1, predicate2) => (...args) => (predicate1(...args) || predicate2(...args));
 
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
@@ -49,12 +50,19 @@ const callable = value => isfunction(value) ? value : always(value);
  */
 
 module.exports = function or(...predicates) {
-    return builddisjunctor(predicates);
+    return disjunctionfactory(predicates);
 }
 
-function disjunctreducer(predicate1, predicate2) {
+function disjunctingreducer(predicate1, predicate2) {
 
-    return isdefaultpredicate(predicate1) ? callable(predicate2)
-         : isfunction(predicate2) ? (...args) => (predicate1(...args) || predicate2(...args))
-         : (...args) => (predicate1(...args) || predicate2);
+    predicate2 = callable(predicate2);
+
+    return isdefaultpredicate(predicate1) ? predicate2 : disjunct(predicate1, predicate2);
 }
+
+// (predicate1, predicate2) => [predicate1, callable(predicate2)]
+// when(
+// compose(isdefaultpredicate, head),
+// pop,
+// disjunct,
+// )
