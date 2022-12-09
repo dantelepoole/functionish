@@ -33,6 +33,8 @@ describe(`tap()`, function() {
         }
     )
 
+    it(`should be tested with two arguments`);
+
     describe(`tap()'s returned function`, function () {
 
         it(`should invoke the target function with its arguments`,
