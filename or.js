@@ -53,7 +53,12 @@ module.exports = function or(...predicates) {
 
         let result = false;
 
-        for(const predicate of predicates) if( result = predicate(...args) ) break;
+        for(const predicate of predicates) { 
+        
+            result = predicate(...args);
+
+            if(result) break;
+        }
 
         return result;
     }
