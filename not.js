@@ -4,18 +4,19 @@
 
 'use strict';
 
+const ERR_BAD_FUNCTION = `NotError~The argument has type %s. Expected a function.`;
+
+const fail = require('./fail');
 const isfunction = require('./isfunction');
+const typeorclass = require('./typeorclass');
 
 /**
- * Return the logical complement of *value*. If *value* is a function, a function is returned that
- * passes its arguments to *value* and returns the logical complement of *value*'s return value.
+ * Return a function that passed its arguments to *func* and returns the logical 
+ * complement of *func*'s return value.
  * 
  * @example
  *    
  * const not = require('functionish/not');
- * 
- * not(true); // returns false
- * not(false); // returns true
  * 
  * const iseven = x => (x%2) === 0;
  * const isodd = not(iseven);
@@ -27,9 +28,12 @@ const isfunction = require('./isfunction');
  * @see {@link module:and and()}
  * @see {@link module:or or()}
  * @see {@link module:xor xor()}
- * @param {any} value The value to return the logical complement of.
- * @returns {boolean|function}
+ * @param {function} func The function to negate.
+ * @returns {function}
  */
-module.exports = function not(value) {
-    return isfunction(value) ? (...args) => (! value(...args)) : (! value);
+module.exports = function not(func) {
+
+    isfunction(func) || fail(ERR_BAD_FUNCTION, typeorclass(func));
+
+    return (...args) => ! func(...args);
 }
