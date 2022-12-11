@@ -5,11 +5,6 @@
 'use strict';
 
 const callable = require('./callable');
-const collect = require('./collect');
-const compose = require('./compose');
-const map = require('./map');
-
-const initpredicates = compose(collect, map(callable));
 
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
@@ -47,7 +42,7 @@ const initpredicates = compose(collect, map(callable));
 
 module.exports = function or(...predicates) {
     
-    predicates = initpredicates(predicates);
+    predicates = predicates.map(callable);
 
     return function _or(...args) {
 

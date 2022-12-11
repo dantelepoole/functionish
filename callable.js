@@ -4,6 +4,7 @@
 
 'use strict';
 
+const always = require('./always');
 const isfunction = require('./isfunction');
 
 /**
@@ -27,5 +28,5 @@ const isfunction = require('./isfunction');
  */
 
 module.exports = function callable(value) {
-    return isfunction(value) ? value : () => value;
+    return isfunction(value) ? value : always(value);
 }

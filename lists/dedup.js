@@ -7,11 +7,11 @@
 const ERR_BAD_LIST = `DeDupError~The list has type %s. Expected an iterable object.`;
 
 const fail = require('../fail');
-const notiterable = require('../notiterable');
+const isiterable = require('../isiterable');
 const typeorclass = require('../typeorclass');
 
 /**
- * Remove any duplicates items in *list*.
+ * Return an iterable object that produces the items *list* but without duplicates.
  * 
  * @func dedup
  * @param {iterable} list An iterable object producing the items to deduplicate
@@ -19,15 +19,21 @@ const typeorclass = require('../typeorclass');
  */
 module.exports = function dedup(list) {
 
-    notiterable(list) && fail(ERR_BAD_LIST, typeorclass(list));
+    isiterable(list) || fail(ERR_BAD_LIST, typeorclass(list));
 
     return {
         [Symbol.iterator] : function* () {
 
-            const dedupset = new Set();
-            const isuniq = value => (dedupset.size < dedupset.add(value).size);
+            const isuniq = isuniqfactory();
             
             for(const value of list) if( isuniq(value) ) yield value;
         }
     }
+}
+
+function isuniqfactory() {
+
+    const dedupvalues = new Set();
+
+    return value => (dedupvalues.size < dedupvalues.add(value).size);
 }
