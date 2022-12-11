@@ -11,7 +11,6 @@ const bind = require('./bind');
 const fail = require('./fail');
 const isequal = require('./isequal');
 const isfunction = require('./isfunction');
-const not = require('./not');
 const notobject = require('./notobject');
 const typeorclass = require('./typeorclass');
 
@@ -82,7 +81,7 @@ function testspec(specification, subject) {
 
         const result = testproperty(specification[key], subject, key);
 
-        not(result) && adderror( [key, subject[key]] );
+        if( ! result ) adderror( [key, subject[key]] );
     }
 
     return errors;
