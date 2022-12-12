@@ -4,15 +4,12 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `ComposeError~The function at index %d has type %s. Expected a function.`;
-const FUNCTION_NONE = undefined;
+const ERR_BAD_FUNCTION = `ComposeError~The argument has type %s. Expected a function.`;
+const COMPOSE_ID = x => x;
 
 const fail = require('./fail');
-const id = require('./id');
-const notfunction = require('./notfunction');
+const isfunction = require('./isfunction');
 const typeorclass = require('./typeorclass');
-
-const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
 
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
@@ -37,22 +34,13 @@ const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorcl
  */
 
 module.exports = function compose(...funcs) {
-    
-    const composedfunc = funcs.reduce( composereducerfactory(), FUNCTION_NONE );
-
-    return (composedfunc ?? id);
+    return funcs.reduce(composereducer, COMPOSE_ID);
 }
 
-function composereducerfactory() {
+function composereducer(currentfunc, nextfunc) {
 
-    let index = -1;
+    isfunction(nextfunc) || fail(ERR_BAD_FUNCTION, typeorclass(nextfunc));
 
-    return function composereducer(currentfunc, nextfunc) {
-        
-        index += 1;
-
-        return notfunction(nextfunc) ? raisebadfunction(index, nextfunc)
-             : (currentfunc === FUNCTION_NONE) ? nextfunc
-             : (...args) => currentfunc( nextfunc(...args) );
-    }
+    return (currentfunc === COMPOSE_ID) ? nextfunc
+         : (...args) => currentfunc( nextfunc(...args) );
 }
