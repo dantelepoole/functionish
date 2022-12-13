@@ -4,15 +4,14 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `PipeError~The function at index %d has type %s. Expected a function.`;
-const FUNCTION_NONE = undefined;
+const ERR_BAD_FUNCTION = `PipeError~The function has type %s. Expected a function.`;
+const PIPE_NONE = undefined;
 
 const fail = require('./fail');
 const id = require('./id');
-const notfunction = require('./notfunction');
+const isempty = require('./isempty');
+const isfunction = require('./isfunction');
 const typeorclass = require('./typeorclass');
-
-const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorclass(func));
 
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
@@ -38,22 +37,13 @@ const raisebadfunction = (index, func) => fail(ERR_BAD_FUNCTION, index, typeorcl
  */
 
 module.exports = function pipe(...funcs) {
-
-    const pipedfunc = funcs.reduce( pipereducerfactory(), FUNCTION_NONE );
-
-    return (pipedfunc ?? id);
+    return isempty(funcs) ? id : funcs.reduce(pipereducer, PIPE_NONE);
 }
 
-function pipereducerfactory() {
+function pipereducer(currentfunc, nextfunc) {
 
-    let index = -1;
+    isfunction(nextfunc) || fail(ERR_BAD_FUNCTION, typeorclass(nextfunc));
 
-    return function pipereducer(currentfunc, nextfunc) {
-        
-        index += 1;
-
-        return notfunction(nextfunc) ? raisebadfunction(index, nextfunc)
-             : (currentfunc === FUNCTION_NONE) ? nextfunc
-             : (...args) => nextfunc( currentfunc(...args) );
-    }
+    return (currentfunc === PIPE_NONE) ? nextfunc
+         : (...args) => nextfunc( currentfunc(...args) );
 }

@@ -4,6 +4,8 @@
 
 'use strict';
 
+const CONTEXT_NONE = null;
+
 const resolvefunction = require('./resolvefunction');
 
 /**
@@ -27,10 +29,5 @@ const resolvefunction = require('./resolvefunction');
  * @returns {function}
  */
 module.exports = function partial(func, ...boundargs) {
-    
-    func = resolvefunction(func);
-
-    return function partialfunction(...args) {
-        return func.call(this, ...boundargs, ...args)
-    }
+    return resolvefunction(func).bind(CONTEXT_NONE, ...boundargs);
 }

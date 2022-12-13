@@ -4,11 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `NotError~The argument has type %s. Expected a function.`;
-
-const fail = require('./fail');
-const isfunction = require('./isfunction');
-const typeorclass = require('./typeorclass');
+const resolvefunction = require('./resolvefunction');
 
 /**
  * Return a function that passed its arguments to *func* and returns the logical 
@@ -33,7 +29,7 @@ const typeorclass = require('./typeorclass');
  */
 module.exports = function not(func) {
 
-    isfunction(func) || fail(ERR_BAD_FUNCTION, typeorclass(func));
+    func = resolvefunction(func);
 
     return (...args) => ! func(...args);
 }

@@ -24,21 +24,23 @@ const tap = require('./tap');
 const typeorclass = require("./typeorclass");
 const when = require('./when');
 
-const failbadlist = compose( partial(fail, ERR_BAD_LIST), typeorclass ); 
-const validatelist = or(isiterable, failbadlist);
+const failbadlist = partial(fail, ERR_BAD_LIST);
+const raisebadlist = compose(failbadlist, typeorclass); 
+const validatelist = tap( or(isiterable, raisebadlist) );
 
-const failbadtransformation = compose( partial(fail, ERR_BAD_TRANSFORMATION), typeorclass );
-const validatetransformation = or(isfunction, failbadtransformation);
-const validatetransformations = iterate(validatetransformation);
+const failbadtransformation = partial(fail, ERR_BAD_TRANSFORMATION);
+const raisebadtransformation = compose(failbadtransformation, typeorclass);
+const validatetransformation = or(isfunction, raisebadtransformation);
+const validatetransformations = tap( iterate(validatetransformation) );
 
-const compoundtransformer = transformations => list => compoundtransform(transformations, list);
-const simpletransformer = transformation => list => simpletransform(transformation, list);
+const compoundtransformer = transformations => partial(compoundtransform, transformations);
+const simpletransformer = transformation => partial(simpletransform, transformation);
 const buildtransformer = when(issingular, compose(simpletransformer, head), compoundtransformer);
 
-const nooptransformer = compose( id, tap(validatelist) );
+const listtransform = transformer => compose( partial(transform, transformer), validatelist );
+const listtransformer = compose(listtransform, buildtransformer, validatetransformations);
 
-const listtransform = transformer => compose( partial(transform, transformer), tap(validatelist) );
-const listtransformer = compose( listtransform, buildtransformer, tap(validatetransformations) );
+const nooptransformer = compose(id, validatelist);
 
 module.exports = function transformer(...transformations) {
     return isempty(transformations) ? nooptransformer : listtransformer(transformations);
@@ -75,7 +77,6 @@ function compoundtransform(transformations, value) {
         const result = transformation(value);
 
         if(result === FILTER_INCLUDE) continue;
-
         if(result === FILTER_REJECT) return FILTER_REJECT;
 
         value = result;

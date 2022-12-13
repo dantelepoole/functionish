@@ -4,19 +4,17 @@
 
 'use strict';
 
-const ERR_BAD_FUNCTION = `FanoutError~The function has type %s. Expected a function.`;
+const ERR_BAD_FUNCTION = `FanoutError~The argument has type %s. Expected a function.`;
 
 const ERROR_NONE = undefined;
 const RESULT_NONE = undefined;
 
 const fail = require('./fail');
-const isempty = require('./isempty');
 const isfunction = require('./isfunction');
 const iterate = require('./iterate');
+const partial = require('./partial');
 const typeorclass = require('./typeorclass');
 
-const fanout_empty = () => [];
-const invocable = func => invoke(func, args);
 const validatefunction = func => isfunction(func) || fail(ERR_BAD_FUNCTION, typeorclass(func));
 const validatefunctions = iterate(validatefunction);
 
@@ -31,16 +29,16 @@ const validatefunctions = iterate(validatefunction);
  * 
  * @func fanout
  * @param {...function} funcs The functions to all
- * @returns {tuple[]} An array of result tuples
+ * @returns {any[][]} An array of result tuples
  */
 module.exports = function fanout(...funcs) {
 
     validatefunctions(funcs);
 
-    return isempty(funcs) ? fanout_empty : (...args) => funcs.map( invocable(args) );
+    return (...args) => funcs.map( partial(invoke, args) );
 }
 
-function invoke(func, args) {
+function invoke(args, func) {
 
     try {
         return [ func(...args), ERROR_NONE ]

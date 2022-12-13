@@ -4,7 +4,11 @@
 
 'use strict';
 
-const callable = require('./callable');
+const ALWAYS_TRUE = () => true;
+const PREDICATE_NONE = undefined;
+
+const isempty = require('./isempty');
+const isfunction = require('./isfunction');
 
 /**
  * Functional variant of Javascript's `&&` operator. Returns a function that passes its arguments to each
@@ -39,20 +43,12 @@ const callable = require('./callable');
  * @returns {boolean}
  */
 module.exports = function and(...predicates) {
+    return isempty(predicates) ? ALWAYS_TRUE : predicates.reduce(conjunctreducer, PREDICATE_NONE);
+}
 
-    predicates = predicates.map(callable);
+function conjunctreducer(currentpredicate, nextpredicate) {
 
-    return function _and(...args) {
-
-        let result = true;
-
-        for(const predicate of predicates) {
-            
-            result = predicate(...args);
-
-            if( ! result ) break;
-        }
-
-        return result;
-    }
+    return (currentpredicate === PREDICATE_NONE) ? nextpredicate
+         : isfunction(nextpredicate) ? (...args) => currentpredicate(...args) && nextpredicate(...args)
+         : (...args) => currentpredicate(...args) && nextpredicate;
 }

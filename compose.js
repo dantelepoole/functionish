@@ -5,9 +5,11 @@
 'use strict';
 
 const ERR_BAD_FUNCTION = `ComposeError~The argument has type %s. Expected a function.`;
-const COMPOSE_ID = x => x;
+const COMPOSE_NONE = undefined;
 
 const fail = require('./fail');
+const id = require('./id');
+const isempty = require('./isempty');
 const isfunction = require('./isfunction');
 const typeorclass = require('./typeorclass');
 
@@ -34,13 +36,13 @@ const typeorclass = require('./typeorclass');
  */
 
 module.exports = function compose(...funcs) {
-    return funcs.reduce(composereducer, COMPOSE_ID);
+    return isempty(funcs) ? id : funcs.reduce(composereducer, COMPOSE_NONE);
 }
 
 function composereducer(currentfunc, nextfunc) {
 
     isfunction(nextfunc) || fail(ERR_BAD_FUNCTION, typeorclass(nextfunc));
 
-    return (currentfunc === COMPOSE_ID) ? nextfunc
+    return (currentfunc === COMPOSE_NONE) ? nextfunc
          : (...args) => currentfunc( nextfunc(...args) );
 }

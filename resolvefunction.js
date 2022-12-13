@@ -55,26 +55,30 @@ function loadfunctionfrommodule(modulepath) {
 
     modulepath = String(modulepath);
     const [path, key] = tokenize(modulepath);
-    
-    let target = undefined;
-    
-    try {
-
-        target = isvoid(key) ? require(path) : require(path)?.[key];
-
-    } catch (error) {
-
-        ismodulenotfound(error.code)
-        && isrelative(path)
-        && (error.message = `It looks like you are trying to resolve a file module with a relative path. ` +
-                            `resolvefunction() requires abolute paths to load file modules. ` +
-                            `Prepend '__dirname' to the relative path and try again. ` + 
-                            `Otherwise, make sure the file or package exists at the specified path.`);
-
-        throw error;
-    }
+        
+    const target = isvoid(key) ? loadfunction(path)
+                               : loadfunction(path)?.[key];
 
     notfunction(target) && fail(ERR_BAD_FUNCTION, modulepath, typeorclass(target));
     
     return target;
+}
+
+function loadfunction(path) {
+
+    try {
+
+        return require(path);
+
+    } catch (error) {
+        
+        ismodulenotfound(error.code)
+        && isrelative(path)
+        && (error.message = `It looks like you are trying to resolve a file module with a relative path. ` +
+        `resolvefunction() requires abolute paths to load file modules. ` +
+        `Prepend '__dirname' to the relative path and try again. ` + 
+        `Otherwise, make sure the file or package exists at the specified path.`);
+        
+        throw error;
+    }
 }

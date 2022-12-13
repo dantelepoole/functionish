@@ -4,7 +4,11 @@
 
 'use strict';
 
-const callable = require('./callable');
+const ALWAYS_FALSE = () => false;
+const PREDICATE_NONE = undefined;
+
+const isempty = require('./isempty');
+const isfunction = require('./isfunction');
 
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
@@ -41,20 +45,12 @@ const callable = require('./callable');
  */
 
 module.exports = function or(...predicates) {
-    
-    predicates = predicates.map(callable);
+    return isempty(predicates) ? ALWAYS_FALSE : predicates.reduce(disjunctreducer, PREDICATE_NONE);
+}
 
-    return function _or(...args) {
+function disjunctreducer(currentpredicate, nextpredicate) {
 
-        let result = false;
-
-        for(const predicate of predicates) { 
-        
-            result = predicate(...args);
-
-            if(result) break;
-        }
-
-        return result;
-    }
+    return (currentpredicate === PREDICATE_NONE) ? nextpredicate
+         : isfunction(nextpredicate) ? (...args) => currentpredicate(...args) || nextpredicate(...args)
+         : (...args) => currentpredicate(...args) || nextpredicate;
 }

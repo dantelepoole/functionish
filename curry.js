@@ -5,21 +5,31 @@
 'use strict';
 
 const ARITY_NONE = undefined;
+const CONTEXT_NONE = null;
 const ERR_BAD_ARITY = "CurryError~The arity %s. Expected a positive integer.";
 
+const and = require('./and');
+const compose = require('./compose');
 const fail = require('./fail');
+const isinteger = require('./isinteger');
 const isnan = require('./isnan');
-const notinteger = require('./notinteger');
-const notnumber = require('./notnumber');
+const isnumber = require('./isnumber');
+const issingular = require('./issingular');
+const or = require('./or');
+const partial = require('./partial');
 const resolvefunction = require('./resolvefunction');
 const typeorclass = require('./typeorclass');
 
-const isdefined = value => (value !== null && value !== undefined);
-const notpositiveinteger = x => notinteger(x) || (x < 0);
+const ispositive = x => (x > 0);
+const ispositiveinteger = and(isinteger, ispositive);
+const notdefined = value => (value === undefined || value === null);
 
-const failbadarity = arity => isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
-                            : notnumber(arity) ? fail(ERR_BAD_ARITY, `has type ${ typeorclass(arity) }`)
-                            : fail(ERR_BAD_ARITY, `is ${isarity}`);
+const badaritymessage = arity => isnumber(arity) ? `is ${arity}`
+                               : isnan(arity) ? `is NaN`
+                               : `has type ${ typeorclass(arity) }`;
+const failbadarity = partial(fail, ERR_BAD_ARITY);
+const raisebadarity = compose(failbadarity, badaritymessage);                   
+const validatearity = or(ispositiveinteger, raisebadarity);
 
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
@@ -77,24 +87,13 @@ const failbadarity = arity => isnan(arity) ? fail(ERR_BAD_ARITY, 'is NaN')
  */
 module.exports = function curry(arity, func) {
 
-    if (arguments.length === 1) return curry(ARITY_NONE, arity);
+    issingular(arguments) && ([arity, func] = [ARITY_NONE, arity]);
 
     func = resolvefunction(func);
 
-    isdefined(arity) && notpositiveinteger(arity) && failbadarity(arity);
+    notdefined(arity) ? (arity = func.length) : validatearity(arity);
 
-    return partial(curriedfunction, func, arity ?? func.length);
-}
-
-function curriedfunction(func, arity, ...args) {
-
-    return (args.length < arity) ? partial(curriedfunction, func, arity, ...args)
-                                 : func.call(this, ...args);
-}
-
-function partial(func, ...boundargs) {
-
-    return function (...args) {
-        return func.call(this, ...boundargs, ...args)
+    return function curried(...args) {
+        return (args.length < arity) ? curried.bind(CONTEXT_NONE, ...args) : func(...args);
     }
 }
