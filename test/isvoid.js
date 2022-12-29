@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
-const isvoid = require('../isvoid');
+const isvoid = require('../src/types/isvoid');
 
 describe(`isvoid()`, function() {
 
-    beforeEach(
-        function() {
-
+    it(`should return true when called without arguments`,
+        function () {
+            expect( isvoid() ).to.be.true;
         }
     )
 
@@ -17,21 +17,16 @@ describe(`isvoid()`, function() {
         }
     )
 
-    it(`should return true if called without arguments`,
-        function () {
-            expect( isvoid() ).to.be.true;
-        }
-    )
-
     it(`should return false if its argument has any other type`,
         function () {
             expect( isvoid({}) ).to.be.false;
             expect( isvoid([]) ).to.be.false;
             expect( isvoid(42) ).to.be.false;
-            expect( isvoid('foobar') ).to.be.false;
+            expect( isvoid('null') ).to.be.false;
             expect( isvoid(true) ).to.be.false;
-            expect( isvoid(Symbol()) ).to.be.false;
-            expect( isvoid(isvoid) ).to.be.false;
+            expect( isvoid( Symbol() ) ).to.be.false;
+            expect( isvoid(x => x) ).to.be.false;
+            expect( isvoid(42n) ).to.be.false;
         }
     )
 })

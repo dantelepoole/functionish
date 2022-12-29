@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
-const issymbol = require('../issymbol');
+const issymbol = require('../src/types/issymbol');
 
 describe(`issymbol()`, function() {
 
-    beforeEach(
-        function() {
-
+    it(`should return false when called without arguments`,
+        function () {
+            expect( issymbol() ).to.be.false;
         }
     )
 
@@ -25,6 +25,8 @@ describe(`issymbol()`, function() {
             expect( issymbol(42) ).to.be.false;
             expect( issymbol('foobar') ).to.be.false;
             expect( issymbol(true) ).to.be.false;
+            expect( issymbol(x => x) ).to.be.false;
+            expect( issymbol(42n) ).to.be.false;
         }
     )
 })

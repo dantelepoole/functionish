@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
-const isundefined = require('../isundefined');
+const isundefined = require('../src/types/isundefined');
 
 describe(`isundefined()`, function() {
 
-    beforeEach(
-        function() {
-
+    it(`should return true when called without arguments`,
+        function () {
+            expect( isundefined() ).to.be.true;
         }
     )
 
@@ -21,9 +21,12 @@ describe(`isundefined()`, function() {
             expect( isundefined({}) ).to.be.false;
             expect( isundefined([]) ).to.be.false;
             expect( isundefined(42) ).to.be.false;
-            expect( isundefined('foobar') ).to.be.false;
+            expect( isundefined('undefined') ).to.be.false;
             expect( isundefined(true) ).to.be.false;
             expect( isundefined(NaN) ).to.be.false;
+            expect( isundefined(x => x) ).to.be.false;
+            expect( isundefined(42n) ).to.be.false;
+            expect( isundefined( Symbol() ) ).to.be.false;
         }
     )
 })

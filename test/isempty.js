@@ -3,12 +3,6 @@ const isempty = require('../isempty');
 
 describe(`isempty()`, function() {
 
-    beforeEach(
-        function() {
-
-        }
-    )
-
     it(`should return true if its argument has a length-property that is equal to 0`,
         function () {
             expect( isempty([]) ).to.be.true;

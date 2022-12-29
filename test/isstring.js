@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
-const isstring = require('../isstring');
+const isstring = require('../src/types/isstring');
 
 describe(`isstring()`, function() {
 
-    beforeEach(
-        function() {
-
+    it(`should return false when called without arguments`,
+        function () {
+            expect( isstring() ).to.be.false;
         }
     )
 
@@ -24,8 +24,8 @@ describe(`isstring()`, function() {
             expect( isstring(undefined) ).to.be.false;
             expect( isstring({}) ).to.be.false;
             expect( isstring([]) ).to.be.false;
-            expect( isstring( ()=>{} ) ).to.be.false;
-            expect( isstring(Symbol) ).to.be.false;
+            expect( isstring(x => x) ).to.be.false;
+            expect( isstring( Symbol() ) ).to.be.false;
             expect( isstring(true) ).to.be.false;
         }
     )

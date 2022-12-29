@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
-const isprimitive = require('../isprimitive');
+const isprimitive = require('../src/types/isprimitive');
 
 describe(`isprimitive()`, function() {
 
-    beforeEach(
-        function() {
-
+    it(`should return true when called without arguments`,
+        function () {
+            expect( isprimitive() ).to.be.true;
         }
     )
 
@@ -20,13 +20,24 @@ describe(`isprimitive()`, function() {
         }
     )
 
-    it(`should return false has type object or function`,
+    it(`should return false if its argument has type object or function`,
         function () {
             expect( isprimitive({}) ).to.be.false;
             expect( isprimitive([]) ).to.be.false;
-            expect( isprimitive( ()=>{} ) ).to.be.false;
-            expect( isprimitive( class Foobar {} ) ).to.be.false;
+            expect( isprimitive(x => x) ).to.be.false;
             expect( isprimitive( new Date() ) ).to.be.false;
+        }
+    )
+
+    it(`should return false if its argument is null`,
+        function () {
+            expect( isprimitive(null) ).to.be.false;
+        }
+    )
+
+    it(`should return true if its argument is NaN`,
+        function () {
+            expect( isprimitive(NaN) ).to.be.true;
         }
     )
 })

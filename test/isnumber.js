@@ -1,15 +1,21 @@
 const expect = require('chai').expect;
-const isnumber = require('../isnumber');
+const isnumber = require('../src/types/isnumber');
 
 describe(`isnumber()`, function() {
 
-    beforeEach(
-        function() {
-
+    it(`should return false when called without arguments`,
+        function () {
+            expect( isnumber() ).to.be.false;
         }
     )
 
-    it(`should return true if its argument has type number`,
+    it(`should return false if its argument is NaN`,
+        function () {
+            expect( isnumber(NaN) ).to.be.false;
+        }
+    )
+
+    it(`should return true if its argument has type number and is not NaN`,
         function () {
             expect( isnumber(0) ).to.be.true;
             expect( isnumber(1.33) ).to.be.true;
@@ -26,19 +32,13 @@ describe(`isnumber()`, function() {
         }
     )
 
-    it(`should return false if its argument is NaN`,
-        function () {
-            expect( isnumber(NaN) ).to.be.false;
-        }
-    )
-
     it(`should return false if its argument has a type other than number`,
         function () {
             expect( isnumber('1') ).to.be.false;
             expect( isnumber(false) ).to.be.false;
             expect( isnumber({}) ).to.be.false;
             expect( isnumber([]) ).to.be.false;
-            expect( isnumber( ()=>{} ) ).to.be.false;
+            expect( isnumber(x => x) ).to.be.false;
         }
     )
 

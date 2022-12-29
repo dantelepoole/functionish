@@ -1,12 +1,11 @@
 const expect = require('chai').expect;
-const classname = require('../classname');
+const classname = require('../src/types/classname');
 
 class WithTag { get [Symbol.toStringTag] () { return 'WithTag'; } }
 class WithTag2 extends WithTag {}
 
 class NoTag { }
 class NoTag2 extends NoTag { }
-
 
 describe(`classname()`, function() {
 
@@ -16,7 +15,7 @@ describe(`classname()`, function() {
         }
     )
 
-    it(`should return a primitive type's typename capitalized (except null)`,
+    it(`should return a primitive type's typename capitalized`,
         function () {
 
             expect( classname(true) ).to.be.equal('Boolean');
@@ -26,6 +25,7 @@ describe(`classname()`, function() {
             expect( classname(undefined) ).to.be.equal('Undefined');
             expect( classname('a') ).to.be.equal('String');
             expect( classname(42n) ).to.be.equal('BigInt');
+            expect( classname(Symbol()) ).to.be.equal('Symbol');
         }
     )
 
@@ -45,10 +45,18 @@ describe(`classname()`, function() {
         }
     )
 
-    it(`should return 'Function' for functions and classes`,
+    it(`should return 'Function' for functions`,
         function () {
             expect( classname(()=>{}) ).to.be.equal('Function');
-            expect( classname(WithTag) ).to.be.equal('Function');
+        }
+    )
+
+    it(`should return 'Function' for classes`,
+        function () {
+
+            class AClass {}
+
+            expect( classname(AClass) ).to.be.equal('Function');
         }
     )
 

@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
-const isnan = require('../isnan');
+const isnan = require('../src/types/isnan');
 
 describe(`isnan()`, function() {
 
-    beforeEach(
-        function() {
-
+    it(`should return false when called without arguments`,
+        function () {
+            expect( isnan() ).to.be.false;
         }
     )
 
@@ -20,14 +20,12 @@ describe(`isnan()`, function() {
             expect( isnan() ).to.be.false;
             expect( isnan(undefined) ).to.be.false;
             expect( isnan(null) ).to.be.false;
-            expect( isnan('') ).to.be.false;
+            expect( isnan('NaN') ).to.be.false;
             expect( isnan([]) ).to.be.false;
             expect( isnan({}) ).to.be.false;
             expect( isnan(isnan) ).to.be.false;
-            expect( isnan(0) ).to.be.false;
-            expect( isnan(-0) ).to.be.false;
-            expect( isnan(0.0) ).to.be.false;
-            expect( isnan(0n) ).to.be.false;
+            expect( isnan(42) ).to.be.false;
+            expect( isnan(42n) ).to.be.false;
             expect( isnan(Symbol()) ).to.be.false;
             expect( isnan(false) ).to.be.false;
         }

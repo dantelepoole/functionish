@@ -1,11 +1,17 @@
 const expect = require('chai').expect;
-const isobject = require('../isobject');
+const isobject = require('../src/types/isobject');
 
 describe(`isobject()`, function() {
 
-    beforeEach(
-        function() {
+    it(`should return false when called without arguments`,
+        function () {
+            expect( isobject(null) ).to.be.false;
+        }
+    )
 
+    it(`should return false if its argument is null`,
+        function () {
+            expect( isobject(null) ).to.be.false;
         }
     )
 
@@ -21,22 +27,12 @@ describe(`isobject()`, function() {
 
     it(`should return false if its argument has type other than object`,
         function () {
-            expect( isobject() ).to.be.false;
-            expect( isobject(null) ).to.be.false;
-            expect( isobject( 'foobar' ) ).to.be.false;
+            expect( isobject( 'object' ) ).to.be.false;
             expect( isobject( 42 ) ).to.be.false;
             expect( isobject( 42n ) ).to.be.false;
             expect( isobject( true ) ).to.be.false;
-            expect( isobject( false ) ).to.be.false;
-            expect( isobject( Symbol ) ).to.be.false;
-            expect( isobject( isobject ) ).to.be.false;
-            expect( isobject( class Foobar {} ) ).to.be.false;
-        }
-    )
-
-    it(`should return false if its argument is null`,
-        function () {
-            expect( isobject(null) ).to.be.false;
+            expect( isobject( Symbol() ) ).to.be.false;
+            expect( isobject( x => x ) ).to.be.false;
         }
     )
 

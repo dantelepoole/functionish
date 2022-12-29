@@ -2,10 +2,15 @@
     "opts": {
       "template" : "/home/dante/.nvm/versions/node/v14.19.1/lib/node_modules/ink-docstrap/template"
     },
+    "plugins": ["plugins/markdown"],
+    "recurseDepth": 10,
+    "source": {
+      "includePattern": ".+\\.js(doc|x)?$",
+      "excludePattern": "(^|\\/|\\\\)_"
+    },
     "tags": {
       "allowUnknownTags": true
     },
-    "plugins": ["plugins/markdown"],
     "templates": {
       "logoFile": "",
       "cleverLinks": false,
