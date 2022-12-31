@@ -4,15 +4,19 @@
 
 'use strict';
 
-const resolvefunction = require('../resolvefunction');
+const isfunction = require('../types/isfunction');
+const loadfunction = require('../loadfunction');
 
 /**
- * Return a function that passed its arguments to *func* and returns the logical 
- * complement of *func*'s return value.
+ * Coerce *func*'s return value to its boolean complement.
+ * 
+ * This function returns a function that passes it arguments to *func* and return the boolean complement
+ * of *func*'s return value.
+ * 
+ * *func* may either be a function or the path to a package or module that exports a function.
  * 
  * @example
- *    
- * const not = require('functionish/not');
+ * const not = require('functionish/logic/not');
  * 
  * const iseven = x => (x%2) === 0;
  * const isodd = not(iseven);
@@ -20,16 +24,17 @@ const resolvefunction = require('../resolvefunction');
  * isodd(1); // returns true
  * isodd(2); // returns false
  * 
- * @func not
- * @see {@link module:and and()}
- * @see {@link module:or or()}
- * @see {@link module:xor xor()}
- * @param {function} func The function to negate.
+ * @function not
+ * @see {@link module:logic/and and()}
+ * @see {@link module:logic/or or()}
+ * @see {@link module:logic/xor xor()}
+ * @see {@link module:loadfunction loadfunction()}
+ * @param {(function|string)} func The function to negate.
  * @returns {function}
  */
 module.exports = function not(func) {
 
-    isfunction(func) || (func = resolvefunction(func));
+    isfunction(func) || (func = loadfunction(func));
 
     return (...args) => ! func(...args);
 }
