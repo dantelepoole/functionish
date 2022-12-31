@@ -15,7 +15,7 @@
  * isnegative(-0); // returns false;
  * isnegative(1); // returns false;
  * 
- * @function ispositive
+ * @function isnegative
  * @param {number} value The value to check
  * @returns {boolean}
  */
