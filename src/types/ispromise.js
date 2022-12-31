@@ -5,7 +5,8 @@
 'use strict';
 
 /**
- * Return true if the argument is an instance of the Javascript native Promise class.
+ * Return `true` if the argument is an instance of the Javascript native Promise class.
+ * Otherwise, return `false`.
  * 
  * @example
  * const ispromise = require('functionish/types/ispromise');
@@ -16,6 +17,7 @@
  * ispromise(Promise); // returns false
  * 
  * @function ispromise
+ * @see {@link module:types/notpromise notpromise()}
  * @param {promise} promise The promise to check
  * @returns {boolean}
  */

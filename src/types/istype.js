@@ -26,6 +26,7 @@ const TYPE_NULL = 'null';
  * istype('function', istype); // returns true
  * 
  * @function istype
+ * @see {@link module:types/nottype nottype()}
  * @param {string} type The type to check for
  * @param {any} value The value to check
  * @returns {boolean}

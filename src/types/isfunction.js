@@ -16,6 +16,7 @@
  * isfunction('function'); // returns false
  * 
  * @function isfunction
+ * @see {@link module:types/notfunction notfunction()}
  * @param {value} value The value to check
  * @returns {boolean}
  */

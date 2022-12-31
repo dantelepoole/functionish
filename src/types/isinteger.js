@@ -22,6 +22,7 @@
  * 
  * @function isinteger
  * @see {@link external:Number.isSafeInteger Number.isSafeInteger()}
+ * @see {@link module:types/notinteger notinteger()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

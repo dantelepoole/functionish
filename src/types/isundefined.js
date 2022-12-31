@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * Return `true` if *value* is `undefined`, otherwise return `false`.
+ * Return `true` if and only if *value* is `undefined`, otherwise return `false`.
  * 
  * @example
  * const isundefined = require('functionish/types/isundefined');
@@ -18,6 +18,7 @@
  * isundefined(42); // returns false
  * 
  * @function isundefined
+ * @see {@link module:types/notundefined notundefined()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

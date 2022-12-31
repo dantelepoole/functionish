@@ -15,16 +15,16 @@
  * 
  * isindexable( [] ); // returns true
  * isindexable( '' ); // returns true
- * isindexable( {} ); // returns false
- * 
  * isindexable( { length:2, [0]:'foo', [1]:'bar' } ); // returns true
  * isindexable( { length:0 } ); // returns true
  * isindexable( { length:1, [0]:42 } ); // returns true
  * 
+ * isindexable( {} ); // returns false
  * isindexable( { length:1 } ); // returns false
  * isindexable( { length:2, [0]:42 } ); // returns false
  * 
  * @function isindexable
+ * @see {@link module:types/notindexable notindexable()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

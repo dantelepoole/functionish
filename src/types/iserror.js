@@ -5,7 +5,8 @@
 'use strict';
 
 /**
- * Return true if the argument is an instance of the Javascript native Error class.
+ * Return `true` if the argument is an instance of the Javascript native Error class. Otherwise,
+ * return `false`.
  * 
  * @example
  * const iserror = require('functionish/types/iserror');
@@ -19,6 +20,7 @@
  * iserror(Error); // returns false
  * 
  * @function iserror
+ * @see {@link module:types/noterror noterror()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

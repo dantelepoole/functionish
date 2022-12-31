@@ -7,14 +7,25 @@
 const VOID = Symbol();
 
 /**
- * Return `true` if value is `null`, `undefined` or `NaN`, otherwise return `false`.
+ * Return `true` if value is either `null`, `undefined` or `NaN`, otherwise return `false`.
  * 
- * Despite its name, this function checks for `null` and `NaN` as well as `undefined`. So it is not the counterpart
- * to {@link module:notundefined notundefined()} (which only checks for `undefined`) but in fact the counterpart to
- * {@link module:notvoid notvoid()}.
+ * Despite its name, this function checks for `null` as well as `undefined`. So it is not the counterpart
+ * to {@link module:types/notundefined notundefined()} (which only checks for `undefined`) but in fact the counterpart to
+ * {@link module:types/notvoid notvoid()}.
+ * 
+ * @example
+ * const notdefined = require('functionish/types/notdefined');
+ * 
+ * notdefined(42); // returns false
+ * notdefined(''); // returns false
+ * notdefined([]); // returns false
+ * 
+ * notdefined(undefined); // returns true
+ * notdefined(null); // returns true
+ * notdefined(NaN); // returns true
  * 
  * @func notdefined
- * @see {@link module:notvoid notvoid()}
+ * @see {@link module:types/notvoid notvoid()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

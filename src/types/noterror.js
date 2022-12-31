@@ -7,10 +7,22 @@
 const iserror = require('./iserror');
 
 /**
- * Return `true` if *value* is not a native Javascript Error-instance. If it is an Error-instance, return `false`.
+ * Return `true` if the argument is not an instance of the Javascript native Error class. Otherwise,
+ * return `false`.
+ * 
+ * @example
+ * const noterror = require('functionish/types/noterror');
+ * 
+ * noterror(new Error()); // returns false
+ * noterror(new TypeError()); // returns false
+ * 
+ * class MyError extends Error {}
+ * noterror(new MyError()); // returns false
+ * 
+ * noterror(Error); // returns true
  * 
  * @func noterror
- * @see {@link module:iserror iserror()}
+ * @see {@link module:types/iserror iserror()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

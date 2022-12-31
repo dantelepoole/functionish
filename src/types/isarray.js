@@ -15,6 +15,7 @@
  * isarray(Array); // returns false
  * 
  * @function isarray
+ * @see {@link module:types/notarray notarray()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

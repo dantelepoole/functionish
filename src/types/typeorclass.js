@@ -12,7 +12,7 @@ const type = require('./type');
 /**
  * Return *value*'s Javascript type if *value* is not an object, otherwise return the name of *value*'s class.
  * 
- * Note that if *value* is a generic object, this function returns `'Object'` (capitalized) instead of `'object'`. Also,
+ * If *value* is a generic object, this function returns `'Object'` (capitalized) instead of `'object'`. Also,
  * If *value* is `null`, this function returns `'Null'`.
  * 
  * @example

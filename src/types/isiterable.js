@@ -8,10 +8,10 @@ const isfunction = require('./isfunction');
 const notstring = require('./notstring');
 
 /**
- * Return `true` if *iterable* appears to be an iterable object. This function checks whether *iterable*
- * has a `[Symbol.iterator]`-property with type 'function'.
+ * Return `true` if *iterable* appears to be an iterable object. This function considers an object *iterable*
+ * if has a `[Symbol.iterator]`-property with type 'function'.
  * 
- * Although in Javascript strings are considered iterable, this function does *not* recognize strings as iterable, since
+ * Although in Javascript strings are iterable, this function does *not* recognize strings as iterable, since
  * in practice the intention is usually not to iterate over strings.
  * 
  * @example
@@ -25,6 +25,7 @@ const notstring = require('./notstring');
  * isiterable({}); // returns false
  * 
  * @function isiterable
+ * @see {@link module:types/notiterable notiterable()}
  * @param {any} iterable The value to check
  * @returns {boolean}
  */

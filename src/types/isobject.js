@@ -14,6 +14,7 @@
  * isobject( null ); // returns false
  * 
  * @function isobject
+ * @see {@link module:types/isobject isobject()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

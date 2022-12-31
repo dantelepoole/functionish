@@ -16,6 +16,7 @@
  * isnan(null); // returns false
  * 
  * @function isnan
+ * @see {@link module:types/notnan notnan()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

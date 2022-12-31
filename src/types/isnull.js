@@ -16,6 +16,7 @@
  * isnull({}); // returns false
  * 
  * @function isnull
+ * @see {@link module:types/notnull notnull()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

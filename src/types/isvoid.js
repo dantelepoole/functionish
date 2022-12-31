@@ -7,7 +7,9 @@
 const VOID_MARKER = Symbol();
 
 /**
- * Return `true` if *value* is `null`, `undefined` or `NaN`. Otherwise, return `false`.
+ * Return `true` if *value* is void, i.e. `null`, `undefined` or `NaN`. Otherwise, return `false`.
+ * 
+ * This function does the same as {@link module:types/notdefined notdefined()}.
  * 
  * @example
  * const isvoid = require('functionish/types/isvoid');
@@ -19,6 +21,8 @@ const VOID_MARKER = Symbol();
  * isvoid(42); // returns false
  * 
  * @function isvoid
+ * @see {@link module:types/notdefined notdefined()}
+ * @see {@link module:types/notvoid notvoid()}
  * @param {any} value The value to check
  * @returns {boolean}
  */
