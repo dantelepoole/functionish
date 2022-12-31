@@ -1,13 +1,13 @@
 'use strict';
 
 const DOT = '.';
-const ERR_BAD_FUNCTION = "LoadError~The path '%s' resolved to a value with type %s. Expected a function.";
+const ERR_BAD_FUNCTION = "LoadFunctionError~The path '%s' resolved to a value with type %s. Expected a function.";
 const ERRORCODE_MODULE_NOT_FOUND = 'MODULE_NOT_FOUND';
 const HASHMARK = '#';
 
 const fail = require('./fail');
-const isfunction = require('./isfunction');
-const typeorclass = require('./typeorclass');
+const isfunction = require('./types/isfunction');
+const typeorclass = require('./types/typeorclass');
 
 /**
  * Attempt to load the module or package specified by *targetpath* and return
@@ -20,11 +20,11 @@ const typeorclass = require('./typeorclass');
  * current module, prepend the path with `__dirname`.
  * 
  * @example
- * const load = require('functionish/load');
+ * const loadfunction = require('functionish/loadfunction');
  * 
  * function applyfunc(pathtofunc, ...args) {
  *      
- *    const func = load(pathtofunc);
+ *    const func = loadfunction(pathtofunc);
  *    return func.apply(null, args);
  * }
  * 
@@ -33,11 +33,11 @@ const typeorclass = require('./typeorclass');
  *                                             // in the 'utils'-subdirectory below the directory of the
  *                                             // current module1
  * 
- * @function load
+ * @function loadfunction
  * @param {string} targetpath The module or package path to the function to return
  * @returns {function}
  */
-function load(targetpath) {
+function loadfunction(targetpath) {
 
     targetpath = String(targetpath);
     const [path, key] = targetpath.split(HASHMARK);
@@ -69,4 +69,4 @@ function loadmodule(path) {
     }
 }
 
-module.exports = load;
+module.exports = loadfunction;
