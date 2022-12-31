@@ -5,11 +5,17 @@
 'use strict';
 
 /**
- * Return `true` if *b* is less than *a*, otherwise return `false`.
+ * Return `true` if *b* is less than *a*. Otherwise, return `false`.
  * 
- * @func islessthan
- * @param {number} a The number to compare against
- * @param {number} b The number to compare
+ * @example
+ * const islessthan = require('functionish/math/islessthan');
+ * 
+ * islessthan(42, 1); // returns true;
+ * islessthan(0, 1); // returns true;
+ * 
+ * @function islessthan
+ * @param {number} a The value to compare against
+ * @param {number} b The value to compare
  * @returns {boolean}
  */
 module.exports = function islessthan(a,b) {

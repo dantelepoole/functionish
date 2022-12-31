@@ -1,14 +1,26 @@
 /**
- * @module sum
+ * @module math/sum
  */
 
 'use strict';
 
-module.exports = function sum(numbers) {
-
+/**
+ * Return the sum of the values in the *values* list.
+ * 
+ * @example
+ * const sum = require('functionish/math/sum');
+ * 
+ * sum(30, 10, 2); // returns 42
+ * 
+ * @function sum 
+ * @param {iterable} factors The list of values to sum
+ * @returns {number}
+ */
+module.exports = function sum(values) {
+    
     let total = 0;
 
-    for(const number of numbers) total += number;
-    
+    for(const value of values) total += value;
+
     return total;
 }

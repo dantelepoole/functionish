@@ -5,12 +5,21 @@
 'use strict';
 
 /**
- * Return the lowest value in the argument *numbers* list or `Infinity` if the *numbers* list is empty.
+ * Return the lowest value in the *values* list or `Infinity` if the *values* list is empty.
  * 
- * @func minimum
- * @param {iterable} numbers An iterable object producing the numbers to check.
+ * This function is an alias for {@link external:Math.min Math.min()}.
+ * 
+ * @example
+ * const minimum = require('functionish/math/minimum');
+ * 
+ * minimum( [100, 150, 42, 366] ); // returns 42
+ * minimum(); // returns Infinity
+ * 
+ * @function minimum
+ * {@link external:Math.min Math.min()}
+ * @param {iterable} values The list of values to check.
  * @returns {number}
  */
-module.exports = function minimum(numbers) {
-    return Math.min(...numbers);
+module.exports = function minimum(values) {
+    return Math.min(...values);
 }
