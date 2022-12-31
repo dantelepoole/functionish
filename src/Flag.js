@@ -28,10 +28,8 @@ class Flag {
 
     is(value) {
         
-        const valuetype = typeof value;
-
-        return (valuetype === 'boolean') ? (value === this.#value)
-             : (valuetype === 'object' && (value instanceof Flag)) ? (value.#value === this.#value)
+        return (typeof value === 'boolean') ? (value === this.#value)
+             : (value instanceof Flag) ? (value.#value === this.#value)
              : (bool(value) === this.#value);
     }
 

@@ -7,7 +7,8 @@
 const VOID_MARKER = Symbol();
 
 /**
- * Return `true` if *value* is void, i.e. `null`, `undefined` or `NaN`. Otherwise, return `false`.
+ * Return `true` if *value* is <abbr title="null, undefined or NaN">void</abbr>, i.e. `null`, `undefined` or `NaN`.
+ * Otherwise, return `false`.
  * 
  * This function does the same as {@link module:types/notdefined notdefined()}.
  * 

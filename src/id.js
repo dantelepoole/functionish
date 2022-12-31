@@ -7,7 +7,7 @@
 /**
  * Return *value*.
  * 
- * @func id
+ * @function id
  * @param {any} value The value to return
  * @returns *value*
  */

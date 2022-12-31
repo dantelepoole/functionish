@@ -9,9 +9,9 @@ const VOID = Symbol();
 /**
  * Return `true` if value is either `null`, `undefined` or `NaN`, otherwise return `false`.
  * 
- * Despite its name, this function checks for `null` as well as `undefined`. So it is not the counterpart
- * to {@link module:types/notundefined notundefined()} (which only checks for `undefined`) but in fact the counterpart to
- * {@link module:types/notvoid notvoid()}.
+ * Despite its name, this function checks for `null` and `NaN` as well as `undefined`. So it is not the counterpart
+ * to {@link module:types/notundefined notundefined()} (which only checks for `undefined`) but in fact the counterpart
+ * to {@link module:types/notvoid notvoid()}.
  * 
  * @example
  * const notdefined = require('functionish/types/notdefined');
