@@ -1,10 +1,10 @@
 /**
- * @module logic/boolify
+ * @module types/boolify
  */
 
 'use strict';
 
-const isfunction = require('../types/isfunction');
+const isfunction = require('./isfunction');
 const loadfunction = require('../loadfunction');
 
 /**
@@ -14,6 +14,14 @@ const loadfunction = require('../loadfunction');
  * depending on whether *func* returns a truthy or falsy value respectively.
  * 
  * *func* may either be a function or the path to a package or module that exports a function.
+ * 
+ * @example
+ * const boolify = require('functionish/types/boolify');
+ * 
+ * const hasitems = boolify( array => array.length );
+ * 
+ * hasitems( [1,2,3] ); // returns true
+ * hasitems( [] ); // return false
  * 
  * @function boolify
  * @param {(function|string)} func The function to boolify
