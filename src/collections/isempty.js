@@ -5,10 +5,10 @@
 'use strict';
 
 /**
- * Return `true` if and only if *countable* has a `length` or `size` property that is strictly equal to `0`. 
+ * Return `true` if *collection* has a `length` or `size` property equal to `0` or
+ * if *collection* has no such properties at all.
  * 
  * @example
- * 
  * const isempty = require('functionish/collections/isempty');
  * 
  * isempty( [] ); //  returns true
@@ -24,10 +24,10 @@
  * 
  * @func isempty
  * @see {@link module:hasitems hasitems()}
- * @param {any} countable The value to check
+ * @param {any} collection The value to check
  * @returns {boolean}
  * 
  */
-module.exports = function isempty(countable) {
-    return ((countable.length ?? countable.size) === 0);
+module.exports = function isempty(collection) {
+    return ! (collection.length ?? collection.size ?? 0);
 }

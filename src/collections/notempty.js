@@ -4,14 +4,14 @@
 
 'use strict';
 
-const TYPE_NUMBER = 'number';
-
 /**
- * Return `true` if *countable* has a numeric `length` or `size` property that is greater than `0`. This function is the
- * counterpart of {@link module:isempty isempty()} and an alias for {@link module:hasitems hasitems()}.
+ * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. If
+ * *collection* has no such properties, `false` is returned.
+ * 
+ * This function is the counterpart of {@link module:types/isempty isempty()} and functions identically
+ * to {@link module:types/hasitems hasitems()}.
  * 
  * @example
- * 
  * const notempty = require('functionish/collections/notempty');
  * 
  * notempty( [1,2,3] ); //  returns true
@@ -30,13 +30,13 @@ const TYPE_NUMBER = 'number';
  * notempty( 0 ); // returns false
  * notempty( null ); // returns false
  * 
- * @func notempty
- * @see {@link module:isempty isempty()}
- * @see {@link module:hasitems hasitems()}
- * @param {any} countable An object with a `length` or `size` property
+ * @function notempty
+ * @see {@link module:types/isempty isempty()}
+ * @see {@link module:thypes/hasitems hasitems()}
+ * @param {collection} collection The collection to check
  * @returns {boolean}
  * 
  */
-module.exports = function notempty(countable) {
-    return ((countable.length ?? countable.size) > 0);
+module.exports = function notempty(collection) {
+    return !! (collection.length ?? collection.size ?? 0);
 }
