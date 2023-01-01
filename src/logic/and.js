@@ -28,7 +28,7 @@ const callable = require('../callable');
  * const isnumber = x => typeof x === 'number';
  * const iseven = x => (x%2) === 0;
  * 
- * const isevennumber = and(isnumber, iseven, istuesday);
+ * const isevennumber = and(isnumber, iseven);
  * 
  * isevennumber(42); // returns true
  * isevennumber(41); // returns false

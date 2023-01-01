@@ -23,7 +23,6 @@ const callable = require('../callable');
  * If the *predicates* array is empty, the function returns `false`.
  * 
  * @example
- * 
  * const or = require('functionish/logic/or');
  * 
  * const isnumber = x => typeof x === 'number';
@@ -35,7 +34,7 @@ const callable = require('../callable');
  * isstringornumber('fortytwo'); // returns true
  * isstringornumber(null) ); // returns false
  * 
- * @func or
+ * @function or
  * @see {@link module:logic/and and()}
  * @param {...any[]} predicates Zero or more predicate functions or values to test
  * @returns {any} The return value of the first predicate to return a truthy value
