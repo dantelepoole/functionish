@@ -5,11 +5,15 @@
 'use strict';
 
 const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
+const loadfunction = require('./loadfunction');
 
-module.exports = function tap(func, ...partialargs) {
+module.exports = function tap(tappedfunc, nextfunc) {
 
-    isfunction(func) || (func = resolvefunction(func));
+    isfunction(tappedfunc) || (tappedfunc = loadfunction(tappedfunc));
 
-    return (...args) => (func(...partialargs, ...args), args[0]);
+    if(arguments.length === 1) return (...args) => (tappedfunc(...args), args[0]);
+
+    isfunction(nextfunc) || (nextfunc = loadfunction(nextfunc));
+
+    return (...args) => (tappedfunc(...args), nextfunc(...args));
 }
