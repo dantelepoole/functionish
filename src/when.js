@@ -6,16 +6,17 @@
 
 const always = require('./always');
 const id = require('./id');
-const isfunction = require('./isfunction');
+const isfunction = require('./types/isfunction');
 
 /**
- * Return a function that passes its arguments to *predicate*. If *predicate* returns a truthy value, the function
- * passes its arguments to *mainbranch* and returns the result. If *predicate* returns a falsy value, the function
- * passes its arguments to *alternativebranch* and returns the result. If no *alternativebranch* is provided, the
- * function returns its first argument. `unless()` therefore operates opposite to {@link module:unless unless()}.
+ * Return a function that runs the *mainbranch* unless the *predicate* resolves to a false value, in
+ * which case it runs *alternativebranch*.
  * 
- * If *predicate* or either branch are not functions, their value is evaluated directly and any arguments passed to
- * the returned function are ignored.
+ * If *predicate* is a function, the returned function passes its arguments to it. Otherwise, *predicate*'s
+ * value is evaluated directly. The returned function subsequently passes its arguments to either *mainbranch*
+ * or *alternativebranch*, depending on the result of evaluating the *predicate*.
+ * 
+ * If no *alternativebranch* is provided, the returned function simply returns its first argument instead.
  * 
  * @example
  *     
@@ -29,18 +30,16 @@ const isfunction = require('./isfunction');
  * coercetoeven(42); // returns 42
  * coercetoeven(41); // returns 42
  * 
- * @func when
+ * @function when
  * @see {@link module:unless unless()}
- * @param {(function|any)} predicate The predicate expression
- * @param {(function|any)} mainbranch The expression to evaluate if *predicate* is truthy
- * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is falsy
- * @returns {any}
+ * @param {any} predicate The predicate expression
+ * @param {function} truebranch The function to call if *predicate* is truthy
+ * @param {function} [falsebranch] The function to call if *predicate* is falsy
+ * @returns {function}
  */
-module.exports = function when(predicate, mainbranch, alternativebranch=id) {
+module.exports = function when(predicate, truebranch, falsebranch=id) {
 
     isfunction(predicate) || (predicate = always(predicate));
-    isfunction(mainbranch) || (mainbranch = always(mainbranch));
-    isfunction(alternativebranch) || (alternativebranch = always(alternativebranch));
 
-    return (...args) => predicate(...args) ? mainbranch(...args) : alternativebranch(...args);
+    return (...args) => predicate(...args) ? truebranch(...args) : falsebranch(...args);
 }

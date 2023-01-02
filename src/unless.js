@@ -8,16 +8,16 @@ const id = require('./id');
 const when = require('./when');
 
 /**
- * Return a function that passes its arguments to *predicate*. If *predicate* returns a falsy value, the function
- * passes its arguments to *mainbranch* and returns the result. If *predicate* returns a truthy value, the function
- * passes its arguments to *alternativebranch* and returns the result. If no *alternativebranch* is provided, the
- * function returns its first argument. `unless()` therefore operates opposite to {@link module:when when()}.
+ * Return a function that runs the *mainbranch* unless the *predicate* resolves to a truthy value, in
+ * which case it runs *alternativebranch*.
  * 
- * If *predicate* or either branch are not functions, their value is evaluated directly and any arguments passed to
- * the returned function are ignored.
+ * If *predicate* is a function, the returned function passes its arguments to it. Otherwise, *predicate*'s
+ * value is evaluated directly. The returned function subsequently passes its arguments to either *mainbranch*
+ * or *alternativebranch*, depending on the result of evaluating the *predicate*.
+ * 
+ * If no *alternativebranch* is provided, the returned function simply returns its first argument instead.
  * 
  * @example
- *     
  * const unless = require('functionish/unless');
  * 
  * const iseven = x => (x%2) === 0;
@@ -30,10 +30,10 @@ const when = require('./when');
  * 
  * @func unless
  * @see {@link module:when when()}
- * @param {(function|any)} predicate The predicate expression
- * @param {(function|any)} mainbranch The expression to evaluate if *predicate* is falsy
- * @param {(function|any)} [alternativebranch] The expression to evaluate if *predicate* is truthy
- * @returns {any}
+ * @param {any} predicate The predicate expression
+ * @param {function} alternativebranch The function to call if *predicate* is falsy
+ * @param {function} [mainbranch] The function to call if *predicate* is truthy
+ * @returns {function}
  */
 module.exports = function unless(predicate, mainbranch, alternativebranch=id) {
     return when(predicate, alternativebranch, mainbranch);
