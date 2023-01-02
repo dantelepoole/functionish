@@ -5,7 +5,7 @@ const ERR_BAD_FUNCTION = "LoadFunctionError~The path '%s' resolved to a value wi
 const ERRORCODE_MODULE_NOT_FOUND = 'MODULE_NOT_FOUND';
 const HASHMARK = '#';
 
-const fail = require('./fail');
+const fail = require('./misc/fail');
 const isfunction = require('./types/isfunction');
 const typeorclass = require('./types/typeorclass');
 
@@ -20,6 +20,7 @@ const typeorclass = require('./types/typeorclass');
  * current module, prepend the path with `__dirname`.
  * 
  * @example
+ * 
  * const loadfunction = require('functionish/loadfunction');
  * 
  * function applyfunc(pathtofunc, ...args) {

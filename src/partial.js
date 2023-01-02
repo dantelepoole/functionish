@@ -6,8 +6,8 @@
 
 const CONTEXT_NONE = null;
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
+const isfunction = require('./types/isfunction');
+const loadfunction = require('./loadfunction');
 
 /**
  * Bind the *boundargs* to the *func*-function. Although `partial()` does not allow you to also pass a custom
@@ -31,7 +31,7 @@ const resolvefunction = require('./resolvefunction');
  */
 module.exports = function partial(func, ...boundargs) {
 
-    isfunction(func) || (func = resolvefunction(func));
+    isfunction(func) || (func = loadfunction(func));
 
     return func.bind(CONTEXT_NONE, ...boundargs);
 }

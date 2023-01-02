@@ -25,4 +25,6 @@ module.exports = function iterate(func, list) {
     isfunction(func) || (func = resolvefunction(func));
 
     for(const value of list) func(value);
+
+    return list;
 }

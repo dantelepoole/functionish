@@ -6,7 +6,7 @@
 
 const TYPE_OBJECT = 'object';
 
-const classname = require('./types/classname');
+const classname = require('./classname');
 const type = require('./type');
 
 /**
