@@ -7,7 +7,8 @@
 /**
  * Return a function that repeatedly returns successive items from *list*.
  * 
- * Once all items have been dispensed, the function returns `undefined`.
+ * Once all items have been dispensed, the function returns the argument passed to the returned function
+ * (default: `undefined`);
  * 
  * @example
  * const dispense = require('functionish/lists/dispense');
@@ -17,7 +18,9 @@
  * getnext(); // returns 1
  * getnext(); // returns 2
  * getnext(); // returns 3
+ * 
  * getnext(); // returns undefined
+ * getnext('nomoreitems'); // returns 'nomoreitems'
  * 
  * @function dispense
  * @param {iterable} list The list of items to dispense
@@ -27,10 +30,10 @@ module.exports = function dispense(list) {
 
     const iterator = list[Symbol.iterator]();
 
-    return function () {
+    return function (donemarker=undefined) {
 
         const { done, value } = iterator.next();
 
-        if( ! done ) return value;
+        return done ? donemarker : value;
     }
 }
