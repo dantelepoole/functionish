@@ -4,7 +4,6 @@
 
 'use strict';
 
-const always = require('./always');
 const id = require('./id');
 const isfunction = require('./types/isfunction');
 
@@ -39,7 +38,7 @@ const isfunction = require('./types/isfunction');
  */
 module.exports = function when(predicate, truebranch, falsebranch=id) {
 
-    isfunction(predicate) || (predicate = always(predicate));
-
-    return (...args) => predicate(...args) ? truebranch(...args) : falsebranch(...args);
+    return isfunction(predicate)
+         ? (...args) => predicate(...args) ? truebranch(...args) : falsebranch(...args)
+         : (...args) => predicate ? truebranch(...args) : falsebranch(...args);
 }

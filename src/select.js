@@ -6,27 +6,31 @@
 
 const always = require('./always');
 const compose = require('./compose');
-const id = require('./id');
 const isfunction = require('./types/isfunction');
 const last = require('./collections/last');
 const pop = require('./collections/pop');
 const when = require('./when');
 
-const hasdefaultclause = compose(isfunction, last);
-const getdefaultclause = when(hasdefaultclause, pop, always(id));
+const expressbranch = branch => (expression, args) => branch(...args);
+const expresspredicate = predicate => expression => predicate(expression);
 
-module.exports = function select(...clauses) {
+const hasdefaultbranch = compose(isfunction, last);
+const getdefaultbranch = when(hasdefaultbranch, pop, always(id));
+const getdefaultexpressbranch = compose(expressbranch, getdefaultbranch);
 
-    const defaultclause = getdefaultclause(clauses);
+const expressreducer = (nextclause, clause) => when(expresspredicate(clause[0]), expressbranch(clause[1]), nextclause);
+const simplereducer = (nextclause, clause) => when(clause[0], clause[1], nextclause);
 
-    return clauses.reduceRight(selectreducer, defaultclause);
+const simpleselect = clauses => clauses.reduceRight(simplereducer, getdefaultbranch(clauses));
+
+module.exports = function select(expression, ...clauses) {
+    return isvoid(expression) ? simpleselect(clauses) : expresselect(expression, clauses);
 }
 
-function selectreducer(onpredicatefail, clause) {
+function expresselect(expression, clauses) {
 
-    const [predicate, action] = clause;
+    const select = clauses.reduceRight(expressreducer, getdefaultexpressbranch(clauses));
 
-    isfunction(predicate) || (predicate = always(predicate));
+    return (...args) => select( expression(...args), args );
 
-    return (...args) => predicate(...args) ? action(...args) : onpredicatefail(...args);
 }
