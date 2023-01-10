@@ -37,7 +37,8 @@ class Flag extends EventEmitter {
 
     is(value) {
         
-        return (value instanceof Flag) ? (this.#value === value.#value)
+        return (value instanceof Flag)
+             ? (this.#value === value.#value)
              : (this.#value === !! value);
     }
 
@@ -75,7 +76,7 @@ class Flag extends EventEmitter {
     }
 
     [Symbol.toPrimitive](hint) {
-        
+
         return (hint === HINT_STRING) ? this.#value ? 'true' : 'false'
              : (hint === HINT_NUMBER) ? this.#value ? 1 : 0
              : this.#value;
