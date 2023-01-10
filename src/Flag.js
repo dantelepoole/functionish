@@ -4,49 +4,66 @@
 
 'use strict';
 
-const bool = x => !!x;
+const EVENT_FLIP = 'flip';
+const HINT_NUMBER = 'number';
+const HINT_STRING = 'string';
 
-class Flag {
+const EventEmitter = require('events');
 
-    static get FALSE() {
+class Flag extends EventEmitter {
+
+    static get OFF() {
         return new Flag(false);
     }
 
-    static get TRUE() {
+    static get ON() {
         return new Flag(true);
     }
 
     #value = false;
 
     constructor(initialvalue=false) {
-        this.#value = bool(initialvalue);
+        super();
+        this.#value = !! initialvalue;
     }
 
     flip() {
-        return (this.#value = ! this.#value);
+        this.#value = ! this.#value;
+
+        this.emit(EVENT_FLIP, this.#value);
+
+        return this.#value;
     }
 
     is(value) {
         
-        return (typeof value === 'boolean') ? (value === this.#value)
-             : (value instanceof Flag) ? (value.#value === this.#value)
-             : (bool(value) === this.#value);
+        return (value instanceof Flag) ? (this.#value === value.#value)
+             : (this.#value === !! value);
     }
 
-    isFalse() {
+    isoff() {
         return (! this.#value);
     }
 
-    isTrue() {
+    ison() {
         return this.#value;
+    }
+
+    reader() {
+        return () => this.#value;
     }
 
     set(newvalue) {
-        return (this.#value = bool(newvalue));
-    }
 
-    toBool() {
-        return this.#value;
+        newvalue = !! newvalue;
+
+        if(this.#value === newvalue) return this;
+
+        this.#value = newvalue;
+
+        this.emit(EVENT_FLIP, newvalue);
+
+        return this;
     }
 
     toString() {
@@ -56,6 +73,13 @@ class Flag {
     value() {
         return this.#value;
     }
+
+    [Symbol.toPrimitive](hint) {
+        
+        return (hint === HINT_STRING) ? this.#value ? 'true' : 'false'
+             : (hint === HINT_NUMBER) ? this.#value ? 1 : 0
+             : this.#value;
+      }
 }
 
 module.exports = Flag;
