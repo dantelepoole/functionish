@@ -4,6 +4,8 @@
 
 'use strict';
 
+const curry2 = require('./curry2');
+
 /**
  * Pass *args* to *func* and return the result.
  * 
@@ -12,24 +14,24 @@
  * 
  * `apply()` is curried by default with binary arity.
  * 
- * @example
+ * @example <caption>Example usage of `apply()`</caption>
  * 
- * const apply = require('functionish/apply');
+ * const { apply } = require('functionish');
  * 
- * function iseven(x) { return (x%2) === 0 }
+ * const iseven = x => (x%2) === 0;
+ * const isodd = x => (x%2) !== 0;
  * 
- * apply(iseven, 42); // returns true
+ * apply(iseven, [42]); // true
+ * apply(isodd, [41]);  // false
  * 
- * @func apply
+ * @function apply
  * @see {@link module:applicable applicable()}
  * @param {function} func The function to apply to *args*
- * @param {any[]} args An array with the arguments to pass to func
- * @returns {any} *func*'s return value
+ * @param {any[]} args An array with the arguments to pass to *func*
+ * @returns {any}
  */
+function apply(func, args) {
+    return func.apply(this, args);
+}
 
-module.exports = require('./curry2')(
-
-    function apply(func, args) {
-        return func.apply(this, args);
-    }
-)
+module.exports = curry2(apply);

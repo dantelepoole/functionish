@@ -7,19 +7,22 @@
 /**
  * Return a function that applies its argument function to *args* and returns the result. 
  * 
- * The returned function has the signature `apply(*func*)`..
+ * @example <caption>Example usage of `applicable()`</caption>
  * 
- * @example
- * 
- * const applicable = require('functionish/applicable')
+ * const { applicable } = require('functionish');
  * 
  * const iseven = x => (x%2) === 0;
+ * const isodd = x => (x%2) !== 0;
+ * const isnumber = x => (typeof x === 'number');
+ * 
  * const fortytwo = applicable(42);
  * 
- * fortytwo(iseven); // returns `true`;
+ * fortytwo(iseven);    // true
+ * fortytwo(isnumber);  // true
+ * fortytwo(isodd);     // false
  * 
- * @func applicable
- * @param {...any} args The arguments to apply the target function to
+ * @function applicable
+ * @param {...any} args The arguments to pass to the target function
  * @returns {function}
  */
 

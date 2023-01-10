@@ -4,35 +4,29 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
-
 /**
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
  * and passes them both *func*. Any other arguments passed to the returned function are ignored.
  * 
- * Be aware that that the returned function is *not* curried by default. If *func* is curried and you want to maintain
- * the currying, you need to curry the returned function yourself.
+ * The returned function is not curried. If *func* is curried and you want to maintain the curry, you must
+ * pass the returned function to {@link module:curry curry()} yourself.
  * 
- * @example
+ * @example <caption>Example usage of `binary()`</caption>
  * 
- * const binary = require('functionish/binary');
+ * const { binary } = require('functionish');
  * 
- * const printargs = (...args) => console.log(args);
- * const printargs_binary = binary(printargs);
+ * const printargs_binary = binary( console.log.bind.console );
  * 
- * printargs( 1,2,3,4,5 ); // prints `[1,2,3,4,5]`
+ * console.log( 1,2,3,4,5 );      // prints `[1,2,3,4,5]`
  * printargs_binary( 1,2,3,4,5 ); // prints `[1,2]`
  * 
- * @func binary
- * @see {@link module:witharity witharity()}
+ * @function binary
  * @see {@link module:unary unary()}
- * @param {function} func The function to invoke with two arguments
+ * @param {function} func The target function
  * @returns {function}
  */
-module.exports = function binary(func) {
-
-    isfunction(func) || (func = resolvefunction(func));
-
+function binary(func) {
     return (a,b) => func(a,b);
 }
+
+module.exports = binary;

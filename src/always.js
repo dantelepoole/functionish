@@ -7,17 +7,20 @@
 /** 
  * Return a function that always returns *value*, regardless of its arguments.
  * 
- * @example
+ * @example <caption>Example usage of `always()`</caption>
  * 
- * const always = require('functionish/always');
+ * const { always } = require('functionish');
  * 
  * const always42 = always(42);
+ * 
  * always42(); // returns '42'
  * 
- * @func always
+ * @function always
  * @param {any} value The value to always return
  * @returns {function}
  */
-module.exports = function always(value) {
+function always(value) {
     return () => value;
 }
+
+module.exports = always;

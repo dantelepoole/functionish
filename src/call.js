@@ -10,18 +10,19 @@
   * Functional variant of {@link external:Function.prototype.call Function.prototype.call()} except it does not provide
   * for passing a custom `this`-object.
   * 
-  * @example
+  * @example <caption>Example usage of `call()`</caption>
   * 
-  * const call = require('functionish/call');
+  * const { call } = require('functionish');
   * 
-  * function sum(...numbers) { return numbers.reduce( (a,b) => (a+b), 0 ) }
+  * const add = (a,b) => (a+b);
+  * const sum = (...numbers) => numbers.reduce(add);
   * 
   * call(sum, [1,2,3,4,5,6,7,8,9,10]); // returns 55
   * 
-  * @func call
+  * @function call
   * @param {function} func The function to call 
   * @param {...any} args The arguments to pass to func
-  * @returns {any} *func*'s return value
+  * @returns {any}
   */
  
  module.exports = function call(func, ...args) {

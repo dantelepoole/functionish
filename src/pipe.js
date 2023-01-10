@@ -4,9 +4,7 @@
 
 'use strict';
 
-const PIPE_NONE = undefined;
-
-const pipereducer = (f,g) => f ? (...args) => g( f(...args) ) : g;
+const pipereducer = (args, func) => [ func(...args) ];
 
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
@@ -32,5 +30,5 @@ const pipereducer = (f,g) => f ? (...args) => g( f(...args) ) : g;
  */
 
 module.exports = function pipe(...funcs) {
-    return funcs.reduce(pipereducer, PIPE_NONE) ?? id;
+    return (...args) => funcs.reduce(pipereducer, args)[0];
 }

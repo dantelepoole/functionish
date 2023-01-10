@@ -11,22 +11,23 @@ const isfunction = require('./isfunction');
  * If *value* is a function, return it. Otherwise, return a function that always returns *value* regardless of its
  * arguments.
  * 
- * @example
+ * @example <caption>Example usage of `callable()`</caption>
  * 
- * const callable = require('functionish/callable');
+ * const { callable } = require('functionish');
  * 
  * const fortytwo = callable(42);
- * fortytwo(); // returns '42'
+ * fortytwo(); // returns 42
  * 
  * const random = callable(Math.random);
- * random(); // returns a random number between 0 and 1
+ * random(); // call Math.random()
  * 
- * @func callable
+ * @function callable
  * @see {@link module:evaluate evaluate()}
  * @param {any} value The value to make callable
  * @returns {function}
  */
-
-module.exports = function callable(value) {
+function callable(value) {
     return isfunction(value) ? value : always(value);
 }
+
+module.exports = callable;

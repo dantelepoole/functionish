@@ -8,13 +8,17 @@ const curry = require('./curry');
 
 /**
  * Convenience function that simply passes *func* to {@link module:curry curry()} with an arity of `2`.
+ * See {@link module:curry curry()} for more details and example usage.
  * 
- * @func curry2
+ * @function curry2
  * @see {@link module:curry curry()}
  * @see {@link module:curry3 curry3()}
- * @param {function} func The function (or `require()`-like path to the function) to curry
+ * @see {@link module:curry4 curry4()}
+ * @param {(function|string)} func The function to curry
  * @returns {function}
  */
-module.exports = function curry2(func) {
+function curry2(func) {
     return curry(2, func);
 }
+
+module.exports = curry2;
