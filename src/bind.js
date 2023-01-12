@@ -4,7 +4,7 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
+const TYPE_FUNCTION = 'function';
 
 /**
  * A functional variant of {@link external:Function.prototype.bind Function.prototype.bind()}. Return a bound version
@@ -26,15 +26,16 @@ const isfunction = require('./isfunction');
  * @function bind
  * @see {@link module:partial partial()}
  * @see {@link external:Function.prototype.bind Function.prototype.bind()}
- * @param {(function|string)} func The function to bind to *context* and *args*
+ * @param {(function|string|symbol)} func The function to bind to *context* and *args*
  * @param {object} context The value to assign to *func*'s `this` value
  * @param {...any} args The optional args to bind to *func*
  * @returns {function}
  */
 function bind(func, context, ...args) {
 
-    return isfunction(func) ? func.bind(context, ...args)
-                            : context[func].bind(context, ...args);
+    if(typeof func !== TYPE_FUNCTION) func = context[func];
+
+    return func.bind(context, ...args);
 }
 
 module.exports = bind;

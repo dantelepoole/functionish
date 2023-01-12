@@ -30,4 +30,4 @@ function evaluate(expression, ...args) {
     return isfunction(expression) ? expression(...args) : expression;
 }
 
-module.exports = evaluation;
+module.exports = evaluate;
