@@ -4,9 +4,11 @@
 
 'use strict';
 
-const CONTEXT_NONE = undefined;
+const NULLARY_ARITY = 0;
+const TYPE_STRING = 'string';
+const UNARY_ARITY = 1;
 
-const isstring = require('./types/isstring');
+const callorcurry = require('../lib/callorcurry');
 const loadfunction = require('./loadfunction');
 
 /**
@@ -38,7 +40,7 @@ const loadfunction = require('./loadfunction');
  * 
  * increment(42); // returns 43
  *  
- * @example <caption>Example usage of `curry()` with a `require()`-path instead of a function</caption>
+ * @example <caption>Example usage of `curry()` with a `require()`-like path instead of a function</caption>
  * 
  * const { curry } = require('functionish');
  * 
@@ -47,9 +49,10 @@ const loadfunction = require('./loadfunction');
  * const formattederrormessage = format(`An error occurred: %s`);
  * 
  * throw new Error( formattederrormessage('foobar') );
- * // throw an error with the message: An error occurred: foobar
+ * // throws an error with the message: An error occurred: foobar
  * 
  * @function curry
+ * @see {@link module:loadfunction loadfunction()}
  * @see {@link module:curry2 curry2()}
  * @see {@link module:curry3 curry3()}
  * @see {@link module:curry4 curry4()}
@@ -59,18 +62,9 @@ const loadfunction = require('./loadfunction');
  */
 function curry(arity, func) {
 
-    if(arguments.length < 2) return curry(0, arity);
-
-    isstring(func) && (func = loadfunction(func));
-
-    (arity > 0) || (arity = func.length || 1);
-
-    return function curriedfunction(...args) {
-
-        return (args.length < arity)
-             ? curriedfunction.bind(CONTEXT_NONE, ...args)
-             : func(...args);
-    }
+    return (arguments.length < 2) ? curry(NULLARY_ARITY, arity)
+         : (typeof func === TYPE_STRING) ? curry(arity, loadfunction(func))
+         : callorcurry( (arity || func.length || UNARY_ARITY), func );
 }
 
 module.exports = curry;

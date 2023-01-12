@@ -42,11 +42,19 @@ class Flag extends EventEmitter {
              : (this.#value === !! value);
     }
 
-    isoff() {
+    disable() {
+        return this.set(false);
+    }
+
+    enable() {
+        return this.set(true);
+    }
+
+    isdisabled() {
         return (! this.#value);
     }
 
-    ison() {
+    isenabled() {
         return this.#value;
     }
 

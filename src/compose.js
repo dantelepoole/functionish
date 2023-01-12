@@ -12,15 +12,15 @@ const composereducer = (args, func) => [ func(...args) ];
  * 
  * @example
  * 
- * const compose = require('functionish/compose');
+ * const { compose } = require('functionish');
  * 
  * const increment = x => (x+1);
  * const double = x => (x*2);
  * const negate = x => -x;
  * 
- * const allthree = compose(negate, double, increment);
+ * const calculate = compose(negate, double, increment);
  * 
- * allthree(42); // returns `-86`
+ * calculate(42); // returns `-86`
  * 
  * @func compose
  * @see {@link module:pipe pipe()}

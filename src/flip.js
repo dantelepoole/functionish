@@ -4,36 +4,63 @@
 
 'use strict';
 
-const isfunction = require('../types/isfunction');
+const TYPE_STRING = 'string';
+
+const callorcurry = require('../lib/callorcurry');
+const curryarity = require('./curryarity');
 const loadfunction = require('./loadfunction');
 
 /**
- * Return a function that calls the *func* function with the order of the first two parameters reversed.
+ * Return a function that calls the *func* function with the order of the first two arguments reversed. Any further
+ * arguments are passed in their original order.
  * 
- * If the returned function receives more than two arguments, the additional arguments are passed to *func* in their
- * original order.
+ * If the *func* argument is a string, `flip()` will attempt to `require()` the function by passing *func*
+ * to {@link module:loadfunction loadfunction()}. See {@link module:loadfunction loadfunction()} for more
+ * details.
  * 
- * Be aware: if *func* is curried, the currie not work for the first two arguments, since `flip()` always
- * invokes *func* with at least two arguments, even if less were actually passed.
+ * Currying is preserved. If *func* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
+ * flipped function will be curried with the same arity.
  * 
- * *func* may either be a function or the path to a package or module that exports a function.
+ * @example <caption>Example usage of `flip()`</caption>
  * 
- * @example
  * const flip = require('functionish/flip');
  * 
  * const isgreaterthan = (x,y) => (x > y);
  * const islessthanorequal = flip(isgreaterthan);
  * 
- * isgreaterthan(1,42); // returns false
+ * isgreaterthan(1,42);     s// returns false
  * islessthanorequal(1,42); // returns true
  * 
+ * @example <caption>Example usage of `flip()` with a curried function</caption>
+ * 
+ * const { curry, flip } = require('functionish');
+ * 
+ * const isgreaterthan = curry( (x,y) => (x > y) );
+ * const islessthanorequal = flip(isgreaterthan);
+ * 
+ * const morethanzero = isgreaterthan(0);
+ * const atmostzero = islessthanorequal(0);
+ * 
+ * morethanzero(1); // returns true
+ * atmostzero(1);   // returns false
+ * 
  * @function flip
+ * @see {@link module:loadfunction loadfunction()}
  * @param {(function|string)} func The function to flip the arguments for
  * @returns {function}
  */
-module.exports = function flip(func) {
+function flip(func) {
 
-    isfunction(func) || (func = loadfunction(func));
-
-    return (a, b, ...args) => func(b, a, ...args);
+    return (typeof func === TYPE_STRING)
+         ? flip( loadfunction(func) )
+         : flipfunction( curryarity(func), func );
 }
+
+function flipfunction(arity, func) {
+
+    const flippedfunc = (a, b, ...args) => func(b, a, ...args);
+
+    return arity ? callorcurry(arity, flippedfunc) : flippedfunc;
+}
+
+module.exports = flip;

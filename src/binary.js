@@ -4,12 +4,16 @@
 
 'use strict';
 
+const TYPE_STRING = 'string';
+
+const loadfunction = require('./loadfunction');
+
 /**
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
  * and passes them both *func*. Any other arguments passed to the returned function are ignored.
  * 
- * The returned function is not curried. If *func* is curried and you want to maintain the curry, you must
- * pass the returned function to {@link module:curry curry()} yourself.
+ * `binary()` does not preserve currying, so the returned function is never curried, even if *func* has
+ * been curried.
  * 
  * @example <caption>Example usage of `binary()`</caption>
  * 
@@ -26,7 +30,12 @@
  * @returns {function}
  */
 function binary(func) {
-    return (a,b) => func(a,b);
+
+    if(typeof func === TYPE_STRING) return binary( loadfunction(func) );
+
+    const binaryfunction = (a,b) => func(a,b);
+
+    return binaryfunction;
 }
 
 module.exports = binary;
