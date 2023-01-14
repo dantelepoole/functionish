@@ -31,11 +31,11 @@ const loadfunction = require('./loadfunction');
  */
 function binary(func) {
 
-    if(typeof func === TYPE_STRING) return binary( loadfunction(func) );
+    const _binary = (typeof func === TYPE_STRING)
+                  ? binary( loadfunction(func) )
+                  : (a,b) => func(a,b);
 
-    const binaryfunction = (a,b) => func(a,b);
-
-    return binaryfunction;
+    return _binary;
 }
 
 module.exports = binary;

@@ -14,6 +14,9 @@ const TYPE_FUNCTION = 'function';
  * 
  * See {@link module:partial partial()} for a function that does the same thing but without providing for a *context*.
  * 
+ * `bind()` does not preserve currying, so the returned function is never curried, even if *func* has
+ * been curried.
+ * 
  * @example <caption>Example usage of `bind()`</caption>
  * 
  * const { bind } = require('functionish');

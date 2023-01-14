@@ -4,13 +4,19 @@
 
 'use strict';
 
-const composereducer = (args, func) => [ func(...args) ];
+const FUNCTION_NONE = undefined;
+
+const id = require('./id');
+
+const composereducer = (f, g) => f ? (...args) => f( g(...args) ) : g;
 
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
  * from right to left. See {@link module:pipe pipe()} for further details.
  * 
- * @example
+ * If the *funcs* array is empty, the returned function simply returns its first argument.
+ * 
+ * @example <caption>Example usage of `compose()`</caption>
  * 
  * const { compose } = require('functionish');
  * 
@@ -22,17 +28,13 @@ const composereducer = (args, func) => [ func(...args) ];
  * 
  * calculate(42); // returns `-86`
  * 
- * @func compose
+ * @function compose
  * @see {@link module:pipe pipe()}
- * @param  {...function} funcs One or more functions to compose to a single function
+ * @param  {...function} funcs One or more functions to compose
  * @returns {function}
  */
-
 function compose(...funcs) {
-    
-    const _compose = (...args) => funcs.reduceRight(composereducer, args)[0];
-
-    return _compose;
+    return funcs.reduce(composereducer, FUNCTION_NONE) ?? id;    
 }
 
 module.exports = compose;

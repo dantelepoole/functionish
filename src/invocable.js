@@ -4,9 +4,10 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+
 const invoke = require('./invoke');
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
+const loadfunction = require('./loadfunction');
 const partial = require('./partial');
 
 /**
@@ -14,30 +15,30 @@ const partial = require('./partial');
  * containing *func*'s return value as the first element and the error it throws (if any) in
  * the second element.
  * 
- * @example
- * const invocable = require('functionish/invocable');
+ * If `func` throws, the first element of the returned array will be `undefined`.
  * 
- * const dosomething = invocable(
- *  function (...args) {
- *      //  ... do something or throw an error
- *  }
- * )
- * const [result, error] = dosomething(42);
+ * @example <caption>Example usage of `invocable()`</caption>
  * 
- * console.log( 
- *     error ? error.toString() : result
- * ) 
+ * const { invocable } = require('functionish');
  * 
+ * function getuserfromdb(userid) { ... }
  * 
- * @func invocable
+ * const getuserfromdb_safe = invocable(getuserfromdb);
+ * 
+ * const [user, error] = getuserfromdb_safe(42);
+ * 
+ * console.log(error ?? user); // if an error is thrown, print it, otherwise print the user 
+ * 
+ * @function invocable
  * @see {@link module:invoke invoke()}
  * @param {function} func The function to invoke 
  * @returns {function}
  */
- 
-module.exports = function invocable(func) {
+function invocable(func) {
 
-    isfunction(func) || (func = resolvefunction(func));
-
-    return partial(invoke, func);
+    return (typeof func === TYPE_FUNCTION)
+         ? partial( invoke, loadfunction(func) )
+         : partial(invoke, func);
 }
+
+module.exports = invocable;

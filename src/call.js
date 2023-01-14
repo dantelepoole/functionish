@@ -24,7 +24,11 @@
   * @param {...any} args The arguments to pass to func
   * @returns {any}
   */
- 
- module.exports = function call(func, ...args) {
-     return func.call(this, ...args);
+ function call(func, ...args) {
+
+    const _call = func.call(this, ...args);
+    
+    return _call;
  }
+
+ module.exports = call;

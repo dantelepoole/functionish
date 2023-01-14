@@ -4,11 +4,11 @@
 
 'use strict';
 
+const ARITY_ZERO = 0;
 const CURRY_ARITY = Symbol.for('functionish/curry/CURRY_ARITY');
-const NULLARY_ARITY = 0;
 
 /**
- * Return the current arity of the curried function *func*. If *func* is not curried, return `0`.
+ * Return the current arity of the curried function *func* or `0` if *func* is not curried.
  * 
  * @example <caption>Example usage of `curryarity()`</caption>
  * 
@@ -26,7 +26,7 @@ const NULLARY_ARITY = 0;
  * @returns {number}
  */
 function curryarity(func) {
-    return (func[CURRY_ARITY] ?? NULLARY_ARITY);
+    return (func?.[CURRY_ARITY] ?? ARITY_ZERO);
 }
 
 module.exports = curryarity;

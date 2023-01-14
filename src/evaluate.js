@@ -4,7 +4,7 @@
 
 'use strict';
 
-const isfunction = require('./types/isfunction');
+const TYPE_FUNCTION = 'function';
 
 /**
  * If *expression* is a function, pass *args* to it and return the result. Otherwise, ignore *args* and just return
@@ -27,7 +27,10 @@ const isfunction = require('./types/isfunction');
  * @returns {function}
  */
 function evaluate(expression, ...args) {
-    return isfunction(expression) ? expression(...args) : expression;
+
+    return (typeof expression === TYPE_FUNCTION)
+         ? expression(...args)
+         : expression;
 }
 
 module.exports = evaluate;

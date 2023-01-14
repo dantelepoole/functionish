@@ -51,16 +51,16 @@ const loadfunction = require('./loadfunction');
  */
 function flip(func) {
 
-    return (typeof func === TYPE_STRING)
-         ? flip( loadfunction(func) )
-         : flipfunction( curryarity(func), func );
+    return (typeof func === TYPE_STRING) ? flipfunction( loadfunction(func) )
+         : iscurried(func) ? callorcurry( curryarity(func), flipfunction(func) )
+         : flipfunction(func);
 }
 
-function flipfunction(arity, func) {
+function flipfunction(func) {
 
-    const flippedfunc = (a, b, ...args) => func(b, a, ...args);
+    const _flip = (a, b, ...args) => func(b, a, ...args);
 
-    return arity ? callorcurry(arity, flippedfunc) : flippedfunc;
+    return _flip;
 }
 
 module.exports = flip;

@@ -4,12 +4,13 @@
 
 'use strict';
 
-const isfunction = require('../isfunction');
-const resolvefunction = require('../resolvefunction');
+const curry2 = require('../curry2');
 
 /**
  * Return the first value in *list* for which the *predicate* function returns a truthy value, or
  * `undefined` if no such value is found.
+ * 
+ * `find()` is curried by default with binary arity.
  * 
  * @example
  *     
@@ -21,13 +22,12 @@ const resolvefunction = require('../resolvefunction');
  * find(iseven, [1,3,5]); // returns `undefined`
  * 
  * @func find
- * @param {function} predicate The predicate function that identifies the item being sought
- * @param {iterable} list An iterable object
+ * @param {function} predicate The predicate function identifying the item being searched
+ * @param {iterable} list The list of items to search
  * @returns {any}
  */
-module.exports = function find(predicate, list) {
-
-    isfunction(predicate) || (predicate = resolvefunction(predicate));
-
+function find(predicate, list) {
     for(const value of list) if( predicate(value) ) return value;
 }
+
+module.exports = curry2(find);

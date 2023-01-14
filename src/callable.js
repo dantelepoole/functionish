@@ -4,8 +4,9 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+
 const always = require('./always');
-const isfunction = require('./isfunction');
 
 /**
  * If *value* is a function, return it. Otherwise, return a function that always returns *value* regardless of its
@@ -27,7 +28,10 @@ const isfunction = require('./isfunction');
  * @returns {function}
  */
 function callable(value) {
-    return isfunction(value) ? value : always(value);
+
+    return (typeof value === TYPE_FUNCTION)
+         ? value
+         : always;
 }
 
 module.exports = callable;

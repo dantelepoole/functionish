@@ -11,13 +11,12 @@ const INDEX_PREDICATE = 0;
 
 const always = require('./always');
 const compose = require('./compose');
-const find = require('./lists/find');
 const isfunction = require('./types/isfunction');
 const last = require('./collections/last');
 
 const hasdefaultbranch = compose(isfunction, last);
-const querypredicate = x => clause => clause[INDEX_PREDICATE](x);
-const queryclause = clauses => querypredicate => find(querypredicate, clauses);
+const querypredicate = arg => clause => clause[INDEX_PREDICATE](arg);
+const clausefinder = clauses => arg => clauses.find( querypredicate(arg) );
 
 module.exports = function select(expression, ...clauses) {
 
@@ -25,15 +24,14 @@ module.exports = function select(expression, ...clauses) {
 
     isfunction(expression) || (expression = always(expression));
 
-    const findtargetclause = compose(queryclause(clauses), querypredicate, expression);
+    const runselect = compose(clausefinder(clauses), expression);
 
-    return function _select(x, ...args) {
+    return function _select(...args) {
 
-        const targetclause = findtargetclause(x);
+        const selectedclause = runselect(...args);
 
-        return targetclause ? targetclause[INDEX_BRANCH](...args)
+        return selectedclause ? selectedclause[INDEX_BRANCH](...args)
              : defaultbranch ? defaultbranch(...args)
              : SELECT_NONE;
-
     }
 }

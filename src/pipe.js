@@ -4,16 +4,22 @@
 
 'use strict';
 
-const pipereducer = (args, func) => [ func(...args) ];
+const FUNCTION_NONE = undefined;
+
+const id = require('./id');
+
+const pipereducer = (f, g) => f ? (...args) => f( g(...args) ) : g;
 
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
  * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
  * function's result.
  * 
- * @example
+ * If the *funcs* array is empty, the returned function simply returns its first argument.
  * 
- * const pipe = require('functionish/pipe');
+ * @example <caption>Example usage of `pipe()`</caption>
+ * 
+ * const { pipe } = require('functionish');
  * 
  * const increment = x => (x+1);
  * const double = x => (x*2);
@@ -23,16 +29,13 @@ const pipereducer = (args, func) => [ func(...args) ];
  * 
  * allthree(42); // returns `-83`
  * 
- * @func pipe
+ * @function pipe
  * @see {@link module:compose compose()}
- * @param  {...function} funcs One or more functions to chain together
+ * @param  {...function} funcs One or more functions to pipe
  * @returns {function}
  */
 function pipe(...funcs) {
-    
-    const _pipe = (...args) => funcs.reduce(pipereducer, args)[0];
-
-    return _pipe;
+    return funcs.reduceRight(pipereducer, FUNCTION_NONE) ?? id;  
 }
 
 module.exports = pipe;

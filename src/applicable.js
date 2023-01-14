@@ -25,7 +25,11 @@
  * @param {...any} args The arguments to pass to the target function
  * @returns {function}
  */
+function applicable(...args) {
 
-module.exports = function applicable(...args) {
-    return func => func(...args);
+    const _applicable = func => func(...args);
+
+    return _applicable;
 }
+
+module.exports = applicable;

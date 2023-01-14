@@ -4,9 +4,9 @@
 
 'use strict';
 
+const DEFAULT_ARITY = 2;
 const NULLARY_ARITY = 0;
 const TYPE_STRING = 'string';
-const UNARY_ARITY = 1;
 
 const callorcurry = require('../lib/callorcurry');
 const loadfunction = require('./loadfunction');
@@ -22,6 +22,9 @@ const loadfunction = require('./loadfunction');
  * explicit *arity*. Functionish provides the convenience functions `curry2()`, `curry3()` and `curry4()`, which set the
  * appropriate arity for you.
  * 
+ * If *arity* is `0`, the `curry()` also reverts to *func*'s `length` property. If *func*'s `length`
+ * property is also `0`, `curry()` defaults to a binary arity.
+ * 
  * If the *func* argument is a string, `curry()` will attempt to `require()` the function by passing *func*
  * to {@link module:loadfunction loadfunction()}. See {@link module:loadfunction loadfunction()} for more
  * details.
@@ -30,17 +33,13 @@ const loadfunction = require('./loadfunction');
  * 
  * const { curry } = require('functionish');
  *
- * const sum = curry( 
- *     function sum(a,b) { 
- *         return (a+b)
- *     }
- * )
+ * const sum = curry( 2, (a,b) => (a+b) );
  * 
  * const increment = sum(1);
  * 
  * increment(42); // returns 43
  *  
- * @example <caption>Example usage of `curry()` with a `require()`-like path instead of a function</caption>
+ * @example <caption>Example usage of `curry()` with a string argument instead of a function</caption>
  * 
  * const { curry } = require('functionish');
  * 
@@ -52,7 +51,6 @@ const loadfunction = require('./loadfunction');
  * // throws an error with the message: An error occurred: foobar
  * 
  * @function curry
- * @see {@link module:loadfunction loadfunction()}
  * @see {@link module:curry2 curry2()}
  * @see {@link module:curry3 curry3()}
  * @see {@link module:curry4 curry4()}
@@ -64,7 +62,7 @@ function curry(arity, func) {
 
     return (arguments.length < 2) ? curry(NULLARY_ARITY, arity)
          : (typeof func === TYPE_STRING) ? curry(arity, loadfunction(func))
-         : callorcurry( (arity || func.length || UNARY_ARITY), func );
+         : callorcurry( (arity || func.length || DEFAULT_ARITY), func );
 }
 
 module.exports = curry;
