@@ -11,27 +11,23 @@ const RESULT_NONE = undefined;
  * Pass *args* to *func* and return a 2-element array containing *func*'s return value as the
  * first element and the error it throws (if any) in the second element.
  * 
- * @example
- * const invoke = require('functionish/invoke');
+ * @example <caption>Example usage of `invoke()`</caption>
  * 
- * function dosomething(value) {
- *     // ... does something or throws an error
- * }
+ * const { invoke } = require('functionish');
  * 
- * const [result, error] = invoke(dosomething, 42);
+ * function getuserfromdb(userid) { ... }
  * 
- * console.log( 
- *     error ? error.toString() : result
- * ) 
+ * const [user, error] = invoke(getuserfromdb, 42);
  * 
- * @func invoke
+ * console.log(error ?? user); // if an error is thrown, print it, otherwise print the user
+ * 
+ * @function invoke
  * @see {@link module:invocable invocable()}
  * @param {function} func The function to invoke 
  * @param {...any} args The arguments to pass to *func*
  * @returns {any[]}
  */
- 
-module.exports = function invoke(func, ...args) {
+function invoke(func, ...args) {
 
     try {
         return [ func(...args), ERROR_NONE ];
@@ -39,3 +35,5 @@ module.exports = function invoke(func, ...args) {
         return [ RESULT_NONE, error ];
     }
 }
+
+module.exports = invoke;
