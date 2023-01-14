@@ -28,6 +28,11 @@ const composereducer = (args, func) => [ func(...args) ];
  * @returns {function}
  */
 
-module.exports = function compose(...funcs) {
-    return (...args) => funcs.reduceRight(composereducer, args)[0];
+function compose(...funcs) {
+    
+    const _compose = (...args) => funcs.reduceRight(composereducer, args)[0];
+
+    return _compose;
 }
+
+module.exports = compose;
