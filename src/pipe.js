@@ -28,7 +28,11 @@ const pipereducer = (args, func) => [ func(...args) ];
  * @param  {...function} funcs One or more functions to chain together
  * @returns {function}
  */
+function pipe(...funcs) {
+    
+    const _pipe = (...args) => funcs.reduce(pipereducer, args)[0];
 
-module.exports = function pipe(...funcs) {
-    return (...args) => funcs.reduce(pipereducer, args)[0];
+    return _pipe;
 }
+
+module.exports = pipe;
