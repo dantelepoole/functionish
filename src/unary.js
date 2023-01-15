@@ -4,29 +4,39 @@
 
 'use strict';
 
-const CONTEXT_NONE = undefined;
+const TYPE_STRING = 'string';
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
+const loadfunction = require('./loadfunction');
 
 /**
- * Coerce *func* to have have unary arity. More specifically, return a function that accepts exactly one parameter
- * and passes it to *func*. Any other arguments passed to the returned function are ignored.
+ * Return a function that accepts exactly one parameter and passes it to *func*. Any other arguments
+ * passed to the returned function are ignored.
  * 
- * Be aware that that the returned function is *not* curried by default. If *func* is curried and you want to maintain
- * the currying, you need to curry the returned function yourself.
+ * `unary()` does not preserve currying, so the returned function is never curried, even if *func* has
+ * been curried.
  * 
- * @func unary
+ * @example <caption>Example usage of `unary()`</caption>
+ * 
+ * const { unary } = require('functionish');
+ * 
+ * const unarylog = unary(console.log);
+ * 
+ * unarylog('foobar', 'foobar2'); // prints only 'foobar' to the screen
+ * 
+ * @function unary
  * @see {@link module:witharity witharity()}
  * @see {@link module:unary unary()}
  * @see {@link module:binary binary()}
  * @param {function} func The function to invoke with a single argument
  * @returns {function}
  */
+function unary(func) {
 
-module.exports = function unary(func) {
+    if(typeof func === TYPE_STRING) return unary( loadfunction(func) );
 
-    isfunction(func) || (func = resolvefunction(func));
+    const _unary = x => func(x);
 
-    return x => func.call(CONTEXT_NONE, x);
+    return _unary;
 }
+
+module.exports = unary;

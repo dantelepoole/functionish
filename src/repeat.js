@@ -5,14 +5,28 @@
 'use strict';
 
 /**
- * Invoke *func* *count* number of times, passing *args* at each invocation. The *func* function wil be called
- * with `repeat()`'s `this`-object on each invocation.
+ * Invoke *func* *count* number of times, passing *args* at each invocation, and return the result of
+ * the last invocation or `undefined` is *func* is never called.
  * 
- * @func repeat
- * @param {number} count The number of times to repeat *func*
- * @param {function} func The function to repeat
- * @param {...any} args The arguments to pass to *func* at each invocation
+ * @example <caption>Example usage of `repeat()`</caption>
+ * 
+ * const { repeat } = require('functionish');
+ * 
+ * repeat(3, console.log, 'foobar'); // prints 'foobar' to the screen three times in a row
+ * 
+ * @function repeat
+ * @param {number} count The number of times to call *func*
+ * @param {function} func The function to invoke
+ * @param {...any} args The arguments to pass to *func*
+ * @returns {any}
  */
-module.exports = function repeat(count, func, ...args) {
-    while(0 < count--) func(...args);
+function repeat(count, func, ...args) {
+
+    let result = undefined;
+
+    while(0 < count--) result = func(...args);
+
+    return result;
 }
+
+module.exports = repeat;

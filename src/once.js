@@ -4,9 +4,15 @@
 
 'use strict';
 
+const TYPE_STRING = 'string';
+const VIRGIN_RESULT = Symbol();
+
+const callorcurry = require('../lib/callorcurry');
+const curryarity = require('./curryarity');
+const iscurried = require('./iscurried');
+
 const always = require('./always');
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
+const loadfunction = require('./loadfunction');
 
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
@@ -15,22 +21,23 @@ const resolvefunction = require('./resolvefunction');
  * This is not the same as a memoize-function, because `once()` always returns the cached result on subsequent
  * invocations, even if passed different arguments.
  * 
- * @func once
+ * @function once
  * @param {function} func The function to run
  * @returns {function}
  */
-module.exports = function once(func) {
+function once(func) {
 
-    isfunction(func) || (func = resolvefunction(func));
+    if(typeof func === TYPE_STRING) func = loadfunction(func);
 
-    let oncefunc = function (...args) {
+    let result = VIRGIN_RESULT;
 
-        const result = func(...args);
+    const _once = (...args) => (result === VIRGIN_RESULT)
+                             ? (result = func(...args))
+                             : result;
 
-        oncefunc = always(result);
-
-        return result;
-    }
-
-    return (...args) => oncefunc(...args);
+    return iscurried(func)
+         ? callorcurry( curryarity(func), _once )
+         : _once;
 }
+
+module.exports = once;

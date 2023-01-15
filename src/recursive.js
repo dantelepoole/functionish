@@ -4,8 +4,9 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
+const callorcurry = require('../lib/callorcurry');
+const curryarity = require('./curryarity');
+const iscurried = require('./iscurried');
 
 /**
  * Return a function that allows *func* to emulate tail recursion.
@@ -20,41 +21,47 @@ const resolvefunction = require('./resolvefunction');
  * The recursion ends when the target function returns anything other than the result of
  * calling `this()`.
  * 
- * Because `recurse()` relies on `this`, *func* may not be an arrow function, nor may it
+ * Because `recurse()` relies on `this`, *func* may not be an arrow function, nor may it already
  * be bound to specific `this`-value.
  * 
- * @example
- * const recursive = require('functionish/recursive');
+ * Currying is preserved. If *func* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
+ * recursive function will be curried with the same arity.
+ * 
+ * @example <caption>Example usage of `recursive()`</caption>
+ * 
+ * const { recursive } = require('functionish');
  * 
  * const factorial = recursive(
  * 
- *     function (f, x) {
- *      
- *         return (x === undefined) ? this(1, f)
- *              : (x === 0) ? 1
- *              : (x === 1) ? f
- *              : this(f*x, x-1);
- *     }
+ *     (f, x) => (x === 0) ? 1
+ *             : (x === 1) ? f
+ *             : (x === undefined) ? this(1, f)
+ *             : this(f*x, x-1);
  * )
  * 
  * factorial(8); // returns 40320
  * 
- * @func recursive
- * @param {function} func The function (or path to a function) to make recursive
+ * @function recursive
+ * @param {function} func The recursive function
  * @returns {function}
  */
-module.exports = function recursive(func) {
+function recursive(func) {
 
-    isfunction(func) && (func = resolvefunction(func));
-    
-    return function _recursive(...args) {
+    return iscurried(func)
+         ? callorcurry( curryarity(func), _recursive )
+         : _recursive;
+
+    function _recursive(...args) {
 
         const recurse = (...nextargs) => (args = nextargs);
+        const recursivefunc = func.bind(recurse);
 
-        let result = func.call(recurse, ...args);
+        let result = recursivefunc(...args);
 
-        while(result === args) result = func.call(recurse, ...args);
+        while(result === args) result = recursivefunc(...args);
 
         return result;
     }
 }
+
+module.exports = recursive;

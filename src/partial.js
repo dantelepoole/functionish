@@ -6,14 +6,18 @@
 
 const CONTEXT_NONE = null;
 
-const isfunction = require('./types/isfunction');
-const loadfunction = require('./loadfunction');
+const callorcurry = require('../lib/callorcurry');
+const curryarity = require('./curryarity');
+const notcurried = require('./notcurried');
 
 /**
- * Bind the *boundargs* to the *func*-function. Although `partial()` does not allow you to also pass a custom
- * `this`-object, the returned function itself may still be called with (or bound to) a custom `this`.
- *  
- * @example
+ * Partial apply the *func*-function by binding to *boundargs*.  
+ * 
+ * Currying is preserved. If *func* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
+ * partial function will be curried with an arity equal to *func*'s curried arity minus the number of
+ * *boundargs* passed to `partial()`.
+ * 
+ * @example <caption>Example usage of `partial()`</caption>
  * 
  * const partial = require('functionish/partial')
  * 
@@ -24,14 +28,22 @@ const loadfunction = require('./loadfunction');
  * const increment = partial(sum, 1);
  * increment(42); // returns 43
  * 
- * @func partial
+ * @function partial
  * @param {function} func The function to partially apply
  * @param  {...any} boundargs Zero or more arguments to partially apply *func* with
  * @returns {function}
  */
-module.exports = function partial(func, ...boundargs) {
+function partial(func, ...boundargs) {
 
-    isfunction(func) || (func = loadfunction(func));
+    const partialfunc = func.bind(CONTEXT_NONE, ...boundargs);
 
-    return func.bind(CONTEXT_NONE, ...boundargs);
+    if( notcurried(partialfunc) ) return partialfunc;
+
+    const partialarity = curryarity(func) - boundargs.length;
+
+    return (partialarity > 0)
+         ? callorcurry(partialarity, partialfunc)
+         : partialfunc;
 }
+
+module.exports = partial;

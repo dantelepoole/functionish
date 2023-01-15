@@ -24,6 +24,7 @@ const CURRY_ARITY = Symbol.for('functionish/curry/CURRY_ARITY');
  * iscurried(increment); // returns true
  * 
  * @function iscurried
+ * @see {@link module:notcurried notcurried()}
  * @see {@link module:curry curry()}
  * @param {function} func The function to check
  * @returns {boolean}
