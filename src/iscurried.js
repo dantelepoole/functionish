@@ -4,7 +4,7 @@
 
 'use strict';
 
-const CURRY_ARITY = Symbol.for('functionish/curry/CURRY_ARITY');
+const CURRY_ARITY = Symbol.for('functionish/curryfunction/CURRY_ARITY');
 
 /**
  * Return `true` if *func* has been curried by passing it to {@link module:curry curry()}.

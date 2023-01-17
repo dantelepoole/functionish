@@ -4,10 +4,6 @@
 
 'use strict';
 
-const TYPE_STRING = 'string';
-
-const loadfunction = require('./loadfunction');
-
 /**
  * Return a function that accepts exactly one parameter and passes it to *func*. Any other arguments
  * passed to the returned function are ignored.
@@ -31,12 +27,7 @@ const loadfunction = require('./loadfunction');
  * @returns {function}
  */
 function unary(func) {
-
-    if(typeof func === TYPE_STRING) return unary( loadfunction(func) );
-
-    const _unary = x => func(x);
-
-    return _unary;
+    return x => func(x);
 }
 
 module.exports = unary;

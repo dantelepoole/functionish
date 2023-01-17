@@ -4,9 +4,6 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
-
 /**
  * Set the arity (number of parameters) for *func*. This function returns a new function that always passes *arity*
  * number of arguments to *func*, regardless of the number of arguments it actually receives. 
@@ -19,11 +16,11 @@ const resolvefunction = require('./resolvefunction');
  * 
  * `witharity()` is curried by default with binary arity.
  * 
- * @example
+ * @example <caption>Example usage of `witharity()`</caption>
  * 
- * const witharity = require('functionish/witharity');
+ * const { witharity } = require('functionish');
  * 
- * function returnargs(...args) { return args }
+ * const returnargs = (...args) => args;
  * 
  * const ternary = witharity(3, returnargs);
  * 
@@ -31,14 +28,13 @@ const resolvefunction = require('./resolvefunction');
  * ternary(1,2); // returns [1,2,undefined]
  * ternary(1,2,3,4,5); // returns [1,2,3]
  * 
- * @func witharity
+ * @function witharity
  * @param {number} arity A positive integer specifying the desired arity
  * @param {function} func The target function
  * @returns {function}
  */
-module.exports = function witharity(arity, func) {
-
-    isfunction(func) || (func = resolvefunction(func));
-
+function witharity(arity, func) {
     return (...args) => ( (args.length = arity), func(...args) );
 }
+
+module.exports = witharity;

@@ -29,10 +29,7 @@
  * @returns {function}
  */
 function defer(func, ...args) {
-
-    const _defer = () => func(...args);
-    
-    return _defer;
+    return () => func(...args);
 }
 
 module.exports = defer;

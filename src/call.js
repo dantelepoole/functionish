@@ -25,10 +25,7 @@
   * @returns {any}
   */
  function call(func, ...args) {
-
-    const _call = func.call(this, ...args);
-    
-    return _call;
+    return func(...args);
  }
 
  module.exports = call;

@@ -4,12 +4,9 @@
 
 'use strict';
 
-const TYPE_STRING = 'string';
-
-const callorcurry = require('../lib/callorcurry');
+const curryfunction = require('../lib/curryfunction');
 const curryarity = require('./curryarity');
 const iscurried = require('./iscurried');
-const loadfunction = require('./loadfunction');
 
 /**
  * Return a function that passes its arguments to *tappedfunc* and returns its own first
@@ -39,13 +36,13 @@ const loadfunction = require('./loadfunction');
  * loggeddouble(42); // prints 42 to the screen and returns 84
  * 
  * @param {function} tappedfunc The function to tap
- * @param {function} [primaryfunc] The function to invoke after tapping *tappedfunc*
+ * @param {function} [targetfunc] The function to invoke after tapping *tappedfunc*
  * @returns {function}
  */
-function tap(tappedfunc, primaryfunc) {
+function tap(tappedfunc, targetfunc) {
 
-    return (typeof tappedfunc === TYPE_STRING) ? tap( loadfunction(tappedfunc), primaryfunc )
-         : primaryfunc ? tapcompose(tappedfunc, primaryfunc)
+    return targetfunc
+         ? tapcompose(tappedfunc, targetfunc)
          : tapsimple(tappedfunc);
 }
 
@@ -54,16 +51,16 @@ function tapsimple(tappedfunc) {
     const _tap = (...args) => (tappedfunc(...args), args[0]);
 
     return iscurried(tappedfunc)
-         ? callorcurry( curryarity(tappedfunc), _tap )
+         ? curryfunction( curryarity(tappedfunc), _tap )
          : _tap;
 }
 
-function tapcompose(tappedfunc, nextfunc) {
+function tapcompose(tappedfunc, targetfunc) {
 
-    const _tap = (...args) => (tappedfunc(...args), nextfunc(...args));
+    const _tap = (...args) => (tappedfunc(...args), targetfunc(...args));
 
-    return iscurried(nextfunc)
-         ? callorcurry( curryarity(nextfunc), _tap )
+    return iscurried(targetfunc)
+         ? curryfunction( curryarity(targetfunc), _tap )
          : _tap;
 }
 

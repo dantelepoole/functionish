@@ -4,11 +4,9 @@
 
 'use strict';
 
-const TYPE_STRING = 'string';
-
-const callorcurry = require('../lib/callorcurry');
+const curryfunction = require('../lib/curryfunction');
 const curryarity = require('./curryarity');
-const loadfunction = require('./loadfunction');
+const iscurried = require('./iscurried');
 
 /**
  * Return a function that calls the *func* function with the order of the first two arguments reversed. Any further
@@ -51,16 +49,11 @@ const loadfunction = require('./loadfunction');
  */
 function flip(func) {
 
-    return (typeof func === TYPE_STRING) ? flipfunction( loadfunction(func) )
-         : iscurried(func) ? callorcurry( curryarity(func), flipfunction(func) )
-         : flipfunction(func);
-}
-
-function flipfunction(func) {
-
     const _flip = (a, b, ...args) => func(b, a, ...args);
 
-    return _flip;
+    return iscurried(func)
+         ? curryfunction( curryarity(func), _flip )
+         : _flip;
 }
 
 module.exports = flip;

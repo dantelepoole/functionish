@@ -17,8 +17,9 @@ const when = require('./when');
  * 
  * If no *alternativebranch* is provided, the returned function simply returns its first argument instead.
  * 
- * @example
- * const unless = require('functionish/unless');
+ * @example <caption>Example usage of `unless()`</caption> 
+ * 
+ * const { unless } = require('functionish');
  * 
  * const iseven = x => (x%2) === 0;
  * const increment = x => (x+1);
@@ -28,13 +29,16 @@ const when = require('./when');
  * coercetoeven(42); // returns 42
  * coercetoeven(41); // returns 42
  * 
- * @func unless
+ * @function unless
+ * @see {@link module:unlessx unlessx()}
  * @see {@link module:when when()}
  * @param {any} predicate The predicate expression
- * @param {function} alternativebranch The function to call if *predicate* is falsy
- * @param {function} [mainbranch] The function to call if *predicate* is truthy
+ * @param {function} mainbranch The function to call if *predicate* is falsy
+ * @param {function} [alternativebranch] The function to call if *predicate* is truthy
  * @returns {function}
  */
-module.exports = function unless(predicate, mainbranch, alternativebranch=id) {
+function unless(predicate, mainbranch, alternativebranch=id) {
     return when(predicate, alternativebranch, mainbranch);
 }
+
+module.exports = unless;

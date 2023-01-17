@@ -4,12 +4,10 @@
 
 'use strict';
 
-const DEFAULT_ARITY = 2;
+const DEFAULT_ARITY = 1;
 const NULLARY_ARITY = 0;
-const TYPE_STRING = 'string';
 
-const callorcurry = require('../lib/callorcurry');
-const loadfunction = require('./loadfunction');
+const curryfunction = require('../lib/curryfunction');
 
 /**
  * Return a curried variant of the *func* function that curries at least *arity* arguments before applying *func* and
@@ -23,7 +21,7 @@ const loadfunction = require('./loadfunction');
  * appropriate arity for you.
  * 
  * If *arity* is `0`, the `curry()` also reverts to *func*'s `length` property. If *func*'s `length`
- * property is also `0`, `curry()` defaults to a binary arity.
+ * property is also `0`, `curry()` defaults to single arity.
  * 
  * If the *func* argument is a string, `curry()` will attempt to `require()` the function by passing *func*
  * to {@link module:loadfunction loadfunction()}. See {@link module:loadfunction loadfunction()} for more
@@ -60,9 +58,9 @@ const loadfunction = require('./loadfunction');
  */
 function curry(arity, func) {
 
-    return (arguments.length < 2) ? curry(NULLARY_ARITY, arity)
-         : (typeof func === TYPE_STRING) ? curry(arity, loadfunction(func))
-         : callorcurry( (arity || func.length || DEFAULT_ARITY), func );
+    return (arguments.length < 2)
+         ? curry(NULLARY_ARITY, arity)
+         : curryfunction( (arity || func.length || DEFAULT_ARITY), func );
 }
 
 module.exports = curry;

@@ -4,10 +4,6 @@
 
 'use strict';
 
-const TYPE_STRING = 'string';
-
-const loadfunction = require('./loadfunction');
-
 /**
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
  * and passes them both *func*. Any other arguments passed to the returned function are ignored.
@@ -30,12 +26,7 @@ const loadfunction = require('./loadfunction');
  * @returns {function}
  */
 function binary(func) {
-
-    const _binary = (typeof func === TYPE_STRING)
-                  ? binary( loadfunction(func) )
-                  : (a,b) => func(a,b);
-
-    return _binary;
+    return (a,b) => func(a,b);
 }
 
 module.exports = binary;

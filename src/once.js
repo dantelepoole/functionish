@@ -4,15 +4,11 @@
 
 'use strict';
 
-const TYPE_STRING = 'string';
 const VIRGIN_RESULT = Symbol();
 
 const callorcurry = require('../lib/callorcurry');
 const curryarity = require('./curryarity');
 const iscurried = require('./iscurried');
-
-const always = require('./always');
-const loadfunction = require('./loadfunction');
 
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
@@ -26,8 +22,6 @@ const loadfunction = require('./loadfunction');
  * @returns {function}
  */
 function once(func) {
-
-    if(typeof func === TYPE_STRING) func = loadfunction(func);
 
     let result = VIRGIN_RESULT;
 

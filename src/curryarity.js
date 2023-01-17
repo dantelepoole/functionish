@@ -5,7 +5,7 @@
 'use strict';
 
 const ARITY_ZERO = 0;
-const CURRY_ARITY = Symbol.for('functionish/curry/CURRY_ARITY');
+const CURRY_ARITY = Symbol.for('functionish/curryfunction/CURRY_ARITY');
 
 /**
  * Return the current arity of the curried function *func* or `0` if *func* is not curried.

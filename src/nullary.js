@@ -4,13 +4,22 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
-
 /**
  * Coerce *func* to have nullary arity. More specifically, return a function that ignores its arguments and calls
  * *func* without any arguments.
  * 
+ * `nullary()` does not preserve currying, so the returned function is never curried, even if *func* has
+ * been curried.
+ *
+ * @example <caption>Example usage of `nullary()`</caption>
+ * 
+ * const { nullary } = require('functionish');
+ * 
+ * const sum = (...numbers) => numbers.reduce( (a,b)=>(a+b), 0 );
+ * const always42 = nullary(sum, 42, 0);
+ * 
+ * always42(57, 38, 12, 99, 48); // returns 42
+ *  
  * @func nullary
  * @see {@link module:witharity witharity()}
  * @see {@link module:unary unary()}
@@ -20,8 +29,5 @@ const resolvefunction = require('./resolvefunction');
  */
 
 module.exports = function nullary(func) {
-
-    isfunction(func) || (func = resolvefunction(func));
-
     return () => func();
 }

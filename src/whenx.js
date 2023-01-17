@@ -12,14 +12,14 @@ const id = require('./id');
  * 
  * Unlike {@link module:when when()}, `whenx()` requires the *predicate* to be a function.
  * 
- * @example
+ * @example <caption>Example usage of `whenx()`</caption>
  *     
- * const whenx = require('functionish/whenx');
+ * const { whenx } = require('functionish');
  * 
  * const isodd = x => (x%2) === 1;
  * const double = x => (x*2);
  * 
- * const doubleifodd = when(isodd, double);
+ * const doubleifodd = whenx(isodd, double);
  * 
  * doubleifodd(42, 5); // returns 5
  * doubleifodd(41, 5); // returns 10
@@ -32,6 +32,8 @@ const id = require('./id');
  * @param {function} [falsebranch] The function to call if *predicate* is falsy
  * @returns {function}
  */
-module.exports = function whenx(predicate, truebranch, falsebranch=id) {
+function whenx(predicate, truebranch, falsebranch=id) {
     return (x, ...args) => predicate(x) ? truebranch(...args) : falsebranch(...args);
 }
+
+module.exports = whenx;

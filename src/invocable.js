@@ -4,10 +4,10 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-
+const curryarity = require('./curryarity');
+const curryfunction = require('../lib/curryfunction');
 const invoke = require('./invoke');
-const loadfunction = require('./loadfunction');
+const iscurried = require('./iscurried');
 const partial = require('./partial');
 
 /**
@@ -35,10 +35,12 @@ const partial = require('./partial');
  * @returns {function}
  */
 function invocable(func) {
+    
+    const _invocable = partial(invoke, func);
 
-    return (typeof func === TYPE_FUNCTION)
-         ? partial( invoke, loadfunction(func) )
-         : partial(invoke, func);
+    return iscurried(func)
+         ? curryfunction( curryarity(func), _invocable )
+         : _invocable;
 }
 
 module.exports = invocable;

@@ -4,7 +4,7 @@
 
 'use strict';
 
-const callorcurry = require('../lib/callorcurry');
+const curryfunction = require('../lib/curryfunction');
 const curryarity = require('./curryarity');
 const iscurried = require('./iscurried');
 
@@ -43,7 +43,7 @@ function rename(name, func) {
     }[name];
 
     return iscurried(func) 
-         ? callorcurry( curryarity(func), renamedfunc )
+         ? curryfunction( curryarity(func), renamedfunc )
          : renamedfunc;
 }
 

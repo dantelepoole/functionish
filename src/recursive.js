@@ -4,7 +4,7 @@
 
 'use strict';
 
-const callorcurry = require('../lib/callorcurry');
+const curryfunction = require('../lib/curryfunction');
 const curryarity = require('./curryarity');
 const iscurried = require('./iscurried');
 
@@ -48,17 +48,16 @@ const iscurried = require('./iscurried');
 function recursive(func) {
 
     return iscurried(func)
-         ? callorcurry( curryarity(func), _recursive )
+         ? curryfunction( curryarity(func), _recursive )
          : _recursive;
 
     function _recursive(...args) {
 
         const recurse = (...nextargs) => (args = nextargs);
-        const recursivefunc = func.bind(recurse);
 
-        let result = recursivefunc(...args);
+        let result = func.call(recurse, ...args);
 
-        while(result === args) result = recursivefunc(...args);
+        while(result === args) result = func.call(recurse, ...args);
 
         return result;
     }

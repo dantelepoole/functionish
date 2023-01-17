@@ -36,9 +36,9 @@ const TYPE_FUNCTION = 'function';
  */
 function bind(func, context, ...args) {
 
-    if(typeof func !== TYPE_FUNCTION) func = context[func];
-
-    return func.bind(context, ...args);
+    return (typeof func === TYPE_FUNCTION)
+         ? func.bind(context, ...args)
+         : context[func].bind(context, ...args);
 }
 
 module.exports = bind;

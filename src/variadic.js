@@ -4,36 +4,32 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
-
 /**
- * Return a function that accepts a variable number of arguments and invokes the *func* function, passing the arguments
+ * Return a function that accepts a spread paramter list and invokes the *func* function, passing the arguments
  * as a single array.
  * 
- * Use this function to convert uniadic function that accepts a single array parameter to a variadic function whose
- * parameter list consists of a single spread parameter.
+ * Use this function to convert a uniadic function that accepts a single array argument to a variadic function with
+ * a spread parameter list.
  * 
- * @example
+ * @example <caption>Example usage of `variadic()`</caption>
  * 
- * const variadic = require('functionish/variadic');
+ * const { variadic } = require('functionish');
  * 
- * function sum(numbers) {
- *     return numbers.reduce( (a,b)=>(a+b), 0 );
+ * function sum(numberarray) {
+ *     return numberarray.reduce( (a,b)=>(a+b), 0 );
  * }
  * 
  * const sum_variadic = variadic(sum);
  * 
  * sum_variadic(1,2,3); // returns 6
  * 
- * @func variadic
+ * @function variadic
  * @see {@link module:uniadic uniadic()}
- * @param {function} func The function to apply
+ * @param {function} func The function to make variadic
  * @returns {function}
  */
-module.exports = function variadic(func, ...partialargs) {
-
-    isfunction(func) || (func = resolvefunction(func));
-
+function variadic(func, ...partialargs) {
     return (...list) => func(...partialargs, list);
 }
+
+module.exports = variadic;

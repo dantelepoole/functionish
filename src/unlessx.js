@@ -13,26 +13,28 @@ const whenx = require('./whenx');
  * 
  * Unlike {@link module:unless unless()}, `unlessx()` requires the *predicate* to be a function.
  * 
- * @example
+ * @example <caption>Example usage of `unless()`</caption> 
  * 
  * const unlessx = require('functionish/unlessx');
  * 
  * const iseven = x => (x%2) === 0;
  * const double = x => (x*2);
  * 
- * const doubleifodd = unless(iseven, double);
+ * const doubleifodd = unlessx(iseven, double);
  * 
  * doubleifodd(42, 5); // returns 5
  * doubleifodd(41, 5); // returns 10
  * 
- * @func unlessx
+ * @function unlessx
  * @see {@link module:unless unless()}
  * @see {@link module:whenx whenx()}
  * @param {function} predicate The predicate function
- * @param {function} alternativebranch The function to call if *predicate* is falsy
- * @param {function} [mainbranch] The function to call if *predicate* is truthy
+ * @param {function} mainbranch The function to call if *predicate* is falsy
+ * @param {function} [alternativebranch] The function to call if *predicate* is truthy
  * @returns {function}
  */
-module.exports = function unlessx(predicate, mainbranch, alternativebranch=id) {
+function unlessx(predicate, mainbranch, alternativebranch=id) {
     return whenx(predicate, alternativebranch, mainbranch);
 }
+
+module.exports = unlessx;

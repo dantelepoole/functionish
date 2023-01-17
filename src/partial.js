@@ -6,7 +6,7 @@
 
 const CONTEXT_NONE = null;
 
-const callorcurry = require('../lib/callorcurry');
+const currytfunction = require('../lib/currytfunction');
 const curryarity = require('./curryarity');
 const notcurried = require('./notcurried');
 
@@ -42,7 +42,7 @@ function partial(func, ...boundargs) {
     const partialarity = curryarity(func) - boundargs.length;
 
     return (partialarity > 0)
-         ? callorcurry(partialarity, partialfunc)
+         ? currytfunction(partialarity, partialfunc)
          : partialfunc;
 }
 

@@ -31,7 +31,7 @@ function callable(value) {
 
     return (typeof value === TYPE_FUNCTION)
          ? value
-         : always;
+         : always(value);
 }
 
 module.exports = callable;
