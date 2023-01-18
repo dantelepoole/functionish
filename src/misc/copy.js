@@ -4,9 +4,9 @@
 
 'use strict';
 
-const isarray = require('../isarray');
-const isnull = require('../isnull');
-const isprimitive = require('../isprimitive');
+const isarray = require('../types/isarray');
+const isnull = require('../types/isnull');
+const isprimitive = require('../types/isprimitive');
 
 /**
  * Create a shallow copy of *source*. If *source* has a primitive type (number, boolean, string, null, bigint
@@ -14,9 +14,9 @@ const isprimitive = require('../isprimitive');
  * the copy is made by creating a new object with *source*'s prototype and then copying *source*'s own enumerable
  * properties to the copy using {@link external:Object.assign Object.assign()}. 
  * 
- * @example
+ * @example <caption>Example usage of copy()</caption>
  * 
- * const copy = require('functionish/misc/copy');
+ * const { copy } = require('functionish/misc');
  * 
  * const source = { firstname:'Hari', lastname:'Seldon' }
  * const clone = copy(source);
@@ -25,12 +25,11 @@ const isprimitive = require('../isprimitive');
  * Object.is(source,clone); // returns false
  * require('util').isDeepStrictEqual(source, clone); // returns true
  * 
- * @func copy
+ * @function copy
  * @param {any} source The value to copy
- * @returns A shallow copy of *source*
+ * @returns {any}
  */
-
-module.exports = function copy(source) {
+function copy(source) {
 
     return isarray(source) ? source.slice()
          : isprimitive(source) || isnull(source) ? source
@@ -44,3 +43,5 @@ function copyobject(source) {
     
     return Object.assign(clone, source);
 }
+
+module.exports = copy;

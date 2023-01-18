@@ -4,8 +4,8 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-const partial = require('./partial');
+const isarray = require('../types/isarray');
+const partial = require('../partial');
 
 /**
  * Return a deep clone of *source*. If *source* does not have type 'object', *source* itself is returned. If *source*
@@ -17,11 +17,22 @@ const partial = require('./partial');
  * 
  * The cloning algorithm does protect against circular references.
  * 
- * @func copydeep
+ * @example <caption>Example usage of copydeep()</caption>
+ * 
+ * const { copydeep } = require('functionish/misc');
+ * 
+ * const source = { firstname:'Hari', lastname:'Seldon' }
+ * const clone = copydeep(source);
+ * 
+ * console.log(clone); // prints "{ firstname:'Hari', lastname:'Seldon' }"
+ * Object.is(source,clone); // returns false
+ * require('util').isDeepStrictEqual(source, clone); // returns true
+ * 
+ * @function copydeep
  * @param {any} source The value to clone
  * @returns {any}
  */
-module.exports = function copydeep(source) {
+function copydeep(source) {
     return deepclonesafe( new WeakMap(), source );
 }
 
@@ -44,3 +55,5 @@ function deepcloneobject(cache, source) {
 
     return target;
 }
+
+module.exports = copydeep;
