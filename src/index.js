@@ -41,7 +41,7 @@ const functionish = {
     defer           : require('./defer'),
     evaluate        : require('./evaluate'),
     fallback        : require('./fallback'),
-    Flag            : require('./flag'),
+    Flag            : require('./Flag'),
     flip            : require('./flip'),
     id              : require('./id'),
     invocable       : require('./invocable'),
@@ -70,5 +70,25 @@ const functionish = {
     withdefault     : require('./withdefault'),
     wrap            : require('./wrap')
 }
+
+loadglobal([
+    functionish.always,
+    functionish.compose,
+    functionish.curry,
+    functionish.curry2,
+    functionish.curry3,
+    functionish.curry4,
+    functionish.flip,
+    functionish.id,
+    functionish.memoize,
+    functionish.noop,
+    functionish.once,
+    functionish.partial,
+    functionish.pipe,
+    functionish.tap,
+    functionish.when,
+    functionish.whenx,
+    functionish.wrap
+])
 
 module.exports = functionish;
