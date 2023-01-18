@@ -11,9 +11,9 @@
 
 const ABORTEVENT = 'abort';
 const ABORTSIGNAL_NAME = 'AbortSignal';
+const TYPE_FUNCTION = 'function';
 
 const { EventEmitter } = require('events');
-const isfunction = require('./isfunction');
 
 const defineproperties = Object.defineProperties;
 
@@ -21,7 +21,7 @@ class AbortSignal {
 
     static abort() {
 
-        const signal   = new AbortSignal();
+        const signal = new AbortSignal();
         signal.aborted = true;
 
         return signal;
@@ -45,14 +45,14 @@ function setsignaleventproperties(signal) {
     function dispatchEvent(eventname) {
 
         const signal = this;
-        const event  = eventfactory(eventname, signal);
+        const event = eventfactory(eventname, signal);
 
         if( eventname === ABORTEVENT ) signal.aborted = true;
 
         const handlername = buildeventhandlername(eventname);
-        const handler     = signal[handlername];
+        const handler = signal[handlername];
 
-        if( isfunction(handler) ) handler(event);
+        if(typeof handler === TYPE_FUNCTION) handler(event);
     
         events.emit(eventname, event);
     }
