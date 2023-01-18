@@ -8,8 +8,6 @@ const CACHE_NONE = null;
 
 const curryfunction = require('../lib/curryfunction');
 
-const iscached = x => (x !== CACHE_NONE);
-
 /**
  * Return a function that cache's *targetfunc*'s return values based on its argument list.
  * 
@@ -62,7 +60,7 @@ module.exports = function memoize(cachefunc, targetfunc) {
     function _memoize(...args) {
 
         const cachedresult = cachefunc(args);
-        if( iscached(cachedresult) ) return cachedresult.value;
+        if(cachedresult !== CACHE_NONE) return cachedresult.value;
 
         const result = targetfunc.call(this, ...args);
         cachefunc(args, { value:result });
