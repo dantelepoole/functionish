@@ -31,10 +31,7 @@ const curry2 = require('./curry2');
  * @returns {any}
  */
 function apply(func, args) {
-
-    const _apply = func.apply(this, args);
-    
-    return _apply;
+    return func.apply(this, args);
 }
 
 module.exports = curry2(apply);

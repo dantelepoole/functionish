@@ -5,8 +5,6 @@
 'use strict';
 
 const curryfunction = require('../lib/curryfunction');
-const curryarity = require('./curryarity');
-const iscurried = require('./iscurried');
 
 /**
  * Return a function that calls the *func* function with the order of the first two arguments reversed. Any further
@@ -51,8 +49,8 @@ function flip(func) {
 
     const _flip = (a, b, ...args) => func(b, a, ...args);
 
-    return iscurried(func)
-         ? curryfunction( curryarity(func), _flip )
+    return func.arity
+         ? curryfunction(func.arity, _flip)
          : _flip;
 }
 

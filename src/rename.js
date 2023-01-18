@@ -5,8 +5,6 @@
 'use strict';
 
 const curryfunction = require('../lib/curryfunction');
-const curryarity = require('./curryarity');
-const iscurried = require('./iscurried');
 
 /**
  * Return a function with the specified *name* that passes its arguments to *func* and returns the result.
@@ -42,8 +40,8 @@ function rename(name, func) {
         }
     }[name];
 
-    return iscurried(func) 
-         ? curryfunction( curryarity(func), renamedfunc )
+    return func.arity 
+         ? curryfunction(func.arity, renamedfunc)
          : renamedfunc;
 }
 

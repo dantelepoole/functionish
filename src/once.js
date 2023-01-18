@@ -6,9 +6,7 @@
 
 const VIRGIN_RESULT = Symbol();
 
-const callorcurry = require('../lib/callorcurry');
-const curryarity = require('./curryarity');
-const iscurried = require('./iscurried');
+const curryfunction = require('../lib/curryfunction');
 
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
@@ -29,8 +27,8 @@ function once(func) {
                              ? (result = func(...args))
                              : result;
 
-    return iscurried(func)
-         ? callorcurry( curryarity(func), _once )
+    return func.arity
+         ? curryfunction(func.arity, _once)
          : _once;
 }
 

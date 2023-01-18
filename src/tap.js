@@ -5,8 +5,6 @@
 'use strict';
 
 const curryfunction = require('../lib/curryfunction');
-const curryarity = require('./curryarity');
-const iscurried = require('./iscurried');
 
 /**
  * Return a function that passes its arguments to *tappedfunc* and returns its own first
@@ -50,8 +48,8 @@ function tapsimple(tappedfunc) {
 
     const _tap = (...args) => (tappedfunc(...args), args[0]);
 
-    return iscurried(tappedfunc)
-         ? curryfunction( curryarity(tappedfunc), _tap )
+    return tappedfunc.arity
+         ? curryfunction(tappedfunc.arity, _tap)
          : _tap;
 }
 
@@ -59,8 +57,8 @@ function tapcompose(tappedfunc, targetfunc) {
 
     const _tap = (...args) => (tappedfunc(...args), targetfunc(...args));
 
-    return iscurried(targetfunc)
-         ? curryfunction( curryarity(targetfunc), _tap )
+    return targetfunc.arity
+         ? curryfunction(targetfunc.arity, _tap)
          : _tap;
 }
 

@@ -6,9 +6,7 @@
 
 const CONTEXT_NONE = null;
 
-const currytfunction = require('../lib/currytfunction');
-const curryarity = require('./curryarity');
-const notcurried = require('./notcurried');
+const curryfunction = require('../lib/curryfunction');
 
 /**
  * Partial apply the *func*-function by binding to *boundargs*.  
@@ -37,12 +35,12 @@ function partial(func, ...boundargs) {
 
     const partialfunc = func.bind(CONTEXT_NONE, ...boundargs);
 
-    if( notcurried(partialfunc) ) return partialfunc;
+    if( ! func.arity ) return partialfunc;
 
-    const partialarity = curryarity(func) - boundargs.length;
+    const partialarity = func.arity - boundargs.length;
 
     return (partialarity > 0)
-         ? currytfunction(partialarity, partialfunc)
+         ? curryfunction(partialarity, partialfunc)
          : partialfunc;
 }
 

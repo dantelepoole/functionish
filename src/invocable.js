@@ -4,10 +4,8 @@
 
 'use strict';
 
-const curryarity = require('./curryarity');
 const curryfunction = require('../lib/curryfunction');
 const invoke = require('./invoke');
-const iscurried = require('./iscurried');
 const partial = require('./partial');
 
 /**
@@ -38,8 +36,8 @@ function invocable(func) {
     
     const _invocable = partial(invoke, func);
 
-    return iscurried(func)
-         ? curryfunction( curryarity(func), _invocable )
+    return func.arity
+         ? curryfunction(func.arity, _invocable)
          : _invocable;
 }
 
