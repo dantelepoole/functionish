@@ -6,6 +6,8 @@
 
 const CACHE_NONE = null;
 
+const curryfunction = require('../lib/curryfunction');
+
 const iscached = x => (x !== CACHE_NONE);
 
 /**
@@ -26,11 +28,14 @@ const iscached = x => (x !== CACHE_NONE);
  * cached. Therefore, the default cache function is appropriate for primitive type arguments only.If one or
  * more arguments have a non-primitive type, *the default cache function will produce incorrect
  * results*. Provide your own cache function to customize the caching for the types of arguments you expect your
- * function to receive. *Use the default cache function at your own risk.*
+ * function to receive.
  * 
- * @example
+ * Currying is preserved. If *targetfunc* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
+ * memoized function will be curried with the same arity.
  * 
- * const memoize = require('functionish/memoize');
+ * @example <caption>Example usage of memoize()</caption>
+ * 
+ * const { memoize } = require('functionish');
  * 
  * const loaduserdata = memoize( // one argument means the default cache function is used --> dangerous
  *     function loaduserdata(userid) {
@@ -41,7 +46,7 @@ const iscached = x => (x !== CACHE_NONE);
  * loaduserdata(42); // retrieves the user data from the database
  * loaduserdata(42); // returns the cached user data
  * 
- * @func memoize
+ * @function memoize
  * @param {function} cachefunc A function that can cache *targetfunc*'s arguments and results
  * @param {function} targetfunc The target function to cache the arguments and results of
  * @return {function} The memoized function
@@ -50,7 +55,11 @@ module.exports = function memoize(cachefunc, targetfunc) {
 
     if(arguments.length === 1) [cachefunc, targetfunc] = [defaultcachefunc(), cachefunc];
     
-    return function memoizedfunction(...args) {
+    return targetfunc.arity
+         ? curryfunction(targetfunc.arity, _memoize)
+         : _memoize;
+
+    function _memoize(...args) {
 
         const cachedresult = cachefunc(args);
         if( iscached(cachedresult) ) return cachedresult.value;
