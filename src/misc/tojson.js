@@ -5,9 +5,11 @@
 'use strict';
 
 /**
- * Alias for {@link external:JSON.stringify JSON.stringify()}
+ * Alias for {@link external:JSON.stringify JSON.stringify()}.
  * 
- * @func tojson
+ * @function tojson
+ * @see {@link external:JSON.stringify JSON.stringify()}
+ * @see {@link module:misc/parsejson parsejson()}
  * @param {any} value The value to serialize to JSON
  * @param {function} [replacer] A transformation function for values to serialize
  * @param {(String|Number)} [space] A String or Number object that's used to insert white space (including indentation,

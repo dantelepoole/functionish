@@ -4,16 +4,13 @@
 
 'use strict';
 
-const KEY_SEPARATOR_CHAR = '.';
-const PROPERTY_NOT_FOUND = undefined;
+const SEPARATOR_CHAR = '.';
+const TYPE_STRING = 'string';
+const SOURCE_VOID = 'undefined';
 
-const isobject = require('./isobject');
-const isstring = require('./isstring');
-const isundefined = require('./isundefined');
-const notarray = require('./notarray');
-const notobject = require('./notobject');
-
-const propertyreducer = (source, key) => isobject(source) ? source[key] : PROPERTY_NOT_FOUND;
+const pluckreducer = (source, key) => (source === null || source === undefined)
+                                    ? SOURCE_VOID
+                                    : source[key];
 
 /**
  * Return the value of the property of *source* specified by *path*.
@@ -21,18 +18,15 @@ const propertyreducer = (source, key) => isobject(source) ? source[key] : PROPER
  * The *path* argument may be a compound path, i.e. a path that goes multiple levels deep. In that case, the
  * individual property keys should be separated by a `.`.
  * 
- * The *path* may be any type that can be used as a property key, e.g. a string, symbol or number. Therefore, you can
- * access individual array items when the pluck property is an array.
- *  
- * The *path* may also be an array of individual property keys. In this case, the array items may not be compound
- * paths.
+ * The *path* may also be an array of individual property keys. In this case, each path element should be
+ * a single property key. This also allows you to access non-string properties (e.g. to index an array property,
+ * as illustrated in the example below).
  * 
- * If the path is invalid or if any intermediate property has a non-object value, `undefined` is returned. That means
- * that `pluck()` does not recurse down into the properties of, for example, a string or a function.
+ * If the *path* is invalid or if any intermediate property is `null` or `undefined`, `undefined` is returned.
  * 
- * @example
+ * @example <caption>Example usage of `pluck()`</caption>
  * 
- * const pluck = require('functionish/pluck');
+ * const { pluck } = require('functionish/misc');
  * 
  * const source = {
  *   firstname : 'Donald',
@@ -51,24 +45,25 @@ const propertyreducer = (source, key) => isobject(source) ? source[key] : PROPER
  *   }
  * }
  * 
- * pluck('firstname', source); // returns 'Donald'
+ * pluck('firstname', source);         // returns 'Donald'
  * pluck('creator.born.city', source); // returns 'Chicago'
- * pluck('nephews.length', source); // returns 3
- * pluck( ['nephews', 1, 'firstname' ], source); // returns 'Dewey'
- * pluck( 'wife', source ); // returns undefined
+ * pluck('nephews.length', source);    // returns 3
+ * pluck( 'wife', source );            // returns undefined
  * 
- * @func pluck
- * @param {string} path The path of the property to retrieve
+ * @example <caption>Example usage of `pluck()` to index an array</caption>
+ * 
+ * pluck( ['nephews', 1, 'firstname' ], source); // returns 'Dewey'
+ * 
+ * @function pluck
+ * @param {(string|any[])} path The path of the property to retrieve
  * @param {object} source The object to resolve *path* against
  * @returns {any}
  */
-module.exports = function pluck(path, source) {
+function pluck(path, source) {
 
-    return notobject(source) ? PROPERTY_NOT_FOUND
-            : isstring(path) ? path.split(KEY_SEPARATOR_CHAR).reduce(propertyreducer, source)
-            : isundefined(path) ? source
-            : notarray(path) ? source[path]
-            : (path.length == 1) ? source[ path[0] ]
-            : path.reduce(propertyreducer, source);
+    if(typeof path === TYPE_STRING) path = path.split(SEPARATOR_CHAR);
 
+    return path.reduce(pluckreducer, source);
 }
+
+module.exports = curry2(pluck);

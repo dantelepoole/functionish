@@ -7,7 +7,7 @@
 const curry2 = require('../curry2');
 
 /**
- * Return `true` if and only if *a* is strictly equal to *b*. Otherwise, return `false`.
+ * Alias for {@link external:Object.is Object.is()}.
  * 
  * `is()` is curried by default with binary arity.
  * 
@@ -27,8 +27,6 @@ const curry2 = require('../curry2');
  * @param  {any} b The value to compare with *a*
  * @returns {boolean}
  */
-function is(a, b) {
-    return (a === b);
-}
+const is = Object.is;
 
 module.exports = curry2(is);

@@ -17,7 +17,7 @@ const partial = require('../partial');
  * 
  * The cloning algorithm does protect against circular references.
  * 
- * @example <caption>Example usage of copydeep()</caption>
+ * @example <caption>Example usage of `copydeep()`</caption>
  * 
  * const { copydeep } = require('functionish/misc');
  * 

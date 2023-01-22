@@ -5,19 +5,28 @@
 'use strict';
 
 /**
- * Copy the own, enumerable properties of the *sources* to a new object. Properties of earlier *source* object will
- * be overwritten by properties of later *source* objects that have the same key.
+ * Copy the own, enumerable properties of each object in the *sources* array to a new object.
+ * Properties of earlier *source* object will be overwritten by properties of later *source*
+ * objects that have the same key.
  * 
- * @example
+ * The objects in the *sources* array are not altered.
  * 
- * const merge = require('functionish/misc/merge');
+ * @example <caption>Example usage of `merge()`</caption>
  * 
- * merge( { firstname:'Hari' }, { lastname:'Seldon' }); // returns { firstname:'Hari', lastname:'Seldon' }
+ * const { merge } = require('functionish/misc');
  * 
- * @func merge
- * @param {...obj[]} sources Two or more objects to merge
- * @returns {object} A new object 
+ * const firstname = { firstname:'Hari' }
+ * const lastname = { lastname:'Seldon' }
+ * 
+ * merge(firstname, lastname);
+ * // returns { firstname:'Hari', lastname:'Seldon' }
+ * 
+ * @function merge
+ * @param {...object[]} sources The objects to merge
+ * @returns {object} 
  */
-module.exports = function merge(...sources) {
+function merge(...sources) {
     return Object.assign( {}, ...sources );
 }
+
+module.exports = merge;

@@ -13,7 +13,7 @@ const isdefined = require('../types/isdefined');
  * 
  * `coalesce()` is curried by default with binary arity.
  * 
- * @example <caption>Example usage of coalesce()</caption>
+ * @example <caption>Example usage of `coalesce()`</caption>
  * 
  * const { coalesce } = require('functionish/misc');
  * 

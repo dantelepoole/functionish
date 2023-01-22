@@ -5,10 +5,10 @@
 'use strict';
 
 /**
- * Alias for Node's {@link external:util.format require('util').format() method}.
+ * Alias for Node's *require('util').*{@link external:util.format format()} method.
  * 
- * @func format
- * @see {@link external:util.format require('util').format()}
+ * @function format
+ * @see {@link external:util.format format()}
  * @param {string} formatstring A printf-like format string
  * @param {...any} args The arguments to the format string
  * @returns {string}

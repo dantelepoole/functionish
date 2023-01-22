@@ -5,8 +5,10 @@
 'use strict';
 
 /**
- * Do nothing, return undefined.
+ * Do nothing. Return undefined.
  * 
- * @func noop
+ * @function noop
  */
-module.exports = function noop() {}
+function noop() {}
+
+module.exports = noop;

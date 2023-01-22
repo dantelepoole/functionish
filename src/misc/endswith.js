@@ -13,7 +13,7 @@ const curry2 = require('../curry2');
  * 
  * `endswith()` is curried by default with binary arity.
  * 
- * @example <caption>Example usage of endswith()</caption>
+ * @example <caption>Example usage of `endswith()`</caption>
  * 
  * const { endswith } = require('functionish/misc');
  * 
@@ -21,6 +21,7 @@ const curry2 = require('../curry2');
  * 
  * @function endswith
  * @see {@link external:String.prototype.endsWith String.prototype.endsWith()}
+ * @see {@link module:misc/startswith startswith()}
  * @param {string} target The target string to check for
  * @param {string} source The source string to check
  * @returns {boolean}

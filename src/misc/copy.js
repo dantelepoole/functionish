@@ -14,7 +14,7 @@ const isprimitive = require('../types/isprimitive');
  * the copy is made by creating a new object with *source*'s prototype and then copying *source*'s own enumerable
  * properties to the copy using {@link external:Object.assign Object.assign()}. 
  * 
- * @example <caption>Example usage of copy()</caption>
+ * @example <caption>Example usage of `copy()`</caption>
  * 
  * const { copy } = require('functionish/misc');
  * 

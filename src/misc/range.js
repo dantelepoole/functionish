@@ -20,21 +20,21 @@ const isnumberornan = x => (typeof x === 'number');
 const ispositiveinteger = x => isinteger(x) && (x >= 0);
 
 /**
- * If passed a single argument, return an iterable that produces the number 1 through the specified number. If the
- * specified number is `0`, the iterable will be empty. The argument must be a positive integer.
+ * If passed a single argument, return an iterable that produces the number `1` through the specified number (inclusive).
+ * If the argument is less than `1`, an empty iterable is returned.
  * 
- * If passed two arguments, return an iterable that produces the numbers starting from the first argument to the
- * second argument (both inclusive). Both arguments must be integers, but don't have to be positive. If *end* is
- * less than *start*, the iterable will begin at *end* and count down. Otherwise, it begins at *start* and counts
- * up.
+ * If passed two arguments, return an iterable that produces the range of numbers starting at *start*
+ * through *end* (both inclusive). Both arguments must be integers, but don't have to be positive.
  * 
- * @example
+ * @example <caption>Example usage of `range()` with a single argument</caption>
  * 
- * const range = require('./range')
+ * const { range } = require('functionish/misc');
  * 
  * Array.from( range(5) ); // returns [1,2,3,4,5]
  * Array.from( range(1) ); // returns [1]
  * Array.from( range(0) ); // returns []
+ * 
+ * @example <caption>Example usage of `range()` with two arguments</caption>
  * 
  * Array.from( range(1,5) ); // returns [1,2,3,4,5]
  * Array.from( range(5,1) ); // returns [5,4,3,2,1]
@@ -42,54 +42,45 @@ const ispositiveinteger = x => isinteger(x) && (x >= 0);
  * Array.from( range(-1,-5) ); // returns [-1,-2,-3,-4,-5]
  * Array.from( range(-5,-1) ); // returns [-5,-4,-3,-2,-1]
  * 
- * @func range
- * @param {number} start The first number that the iterable should produce, or the maximum number to produce
- *                       *end* is ommitted
- * @param {number} end The last number that the iterable should produce
+ * @function range
+ * @param {number} start The number to start the range at or, if it is the only argument, the
+ *                       number to end the range at (inclusive).
+ * @param {number} end The number to end the range at (inclusive).
  * @returns {iterable}
  */
- module.exports = function range(start, end) {
+function range(start, end) {
 
-    (arguments.length === 1) ? ([start, end] = rangefromcount(start))
-                             : validaterange(start, end);
+    return (end === undefined) ? simplerange(start)
+         : (start === end) ? EMPTY_ITERABLE
+         : constrainrange(start, end);
 
-    if(start === end) return EMPTY_ITERABLE;
+}
 
-    const increment = (start > end) ?  STEP_DECREMENT : STEP_INCREMENT;
+function rangeiterable(start, end, increment) {
+
+    const rangeend = (increment + end);
 
     return {
-        [Symbol.iterator]: function* () {
-            
-            let counter = start;
-            const maxcount = (end + increment);
 
-            while(counter !== maxcount) {
-                yield counter;
-                counter += increment;
-            }
+        [Symbol.iterator]: function* () {
+            for(let counter = start; counter !== rangeend; counter += increment) yield counter;
         }
     }
 }
 
-function numericvaluemessage(x) {
-    return isnumberornan(x) ? `is ${x}` : `has type ${typeorclass(x)}`;
+function constrainrange(start, end) {
+
+    const increment = (start > end) ?  STEP_DECREMENT : STEP_INCREMENT;
+
+    return rangeiterable(start, end, increment);
 }
 
-function validaterange(start, end) {
+function simplerange(count) {
 
-    isinteger(start) || fail(ERR_BAD_RANGE, 'start', numericvaluemessage(start));
-    isinteger(end) || fail(ERR_BAD_RANGE, 'end', numericvaluemessage(end));
+    return (count < 1)
+         ? EMPTY_ITERABLE
+         : rangeiterable(1, count, 1);
+
 }
 
-function validatecount(count) {
-    ispositiveinteger(count) || fail(ERR_BAD_COUNT, numericvaluemessage(count));
-}
-
-function rangefromcount(count) {
-
-    validatecount(count);
-
-    return (count > 0) ? [1, count]
-         : (count < 0) ? [-1, count]
-         : [1, 1];
-}
+module.exports = range;

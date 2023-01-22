@@ -25,8 +25,8 @@ const curry2 = require('../curry2');
  * islikehariseldon(user3); // returns false
  * 
  * @function islike
- * @see {@link module:notlike notlike()} 
- * @see {@link module:isdeepequal isdeepequal()} 
+ * @see {@link module:misc/notlike notlike()} 
+ * @see {@link module:misc/isdeepequal isdeepequal()} 
  * @param {any} a The value to compare with *b*
  * @param  {any} b The value to compare with *a*
  * @returns {boolean}

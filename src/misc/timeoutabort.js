@@ -11,7 +11,7 @@ const noop = require('../noop');
 const timeout = require('../timeout');
 
 /**
- * A variant of {@link module:timeout timeout()} that triggers an `'abort'` event instead of calling a function when
+ * A variant of {@link module:misc/timeout timeout()} that triggers an `'abort'` event instead of calling a function when
  * the timeout expires. Instead of a `timeoutid`, this function returns a function that can be invoked without arguments
  * to cancel the pending timeout.
  * 
@@ -21,7 +21,7 @@ const timeout = require('../timeout');
  * If an `'abort'` event is triggered on *abortcontroller*'s `signal` by external code, it will cancel the pending
  * timeout.
  * 
- * @example
+ * @example <caption>Example usage of `timeoutabort()`</caption>
  * 
  * const timeoutabort = require('functionish/timeoutabort');
  * 
@@ -31,18 +31,18 @@ const timeout = require('../timeout');
  * canceltimeout(); // cancel the pending timeout
  * // OR: abortcontroller.abort() // also causes the pending timeout to be cancelled
  * 
- * @func timeoutabort
- * @see {@link module:timeout timeout()}
- * @param {integer} delay The number of milliseconds to wait before triggering an abort event
+ * @function timeoutabort
+ * @see {@link module:misc/timeout timeout()}
+ * @param {number} delay The number of milliseconds to wait before triggering an abort event
  * @param {AbortSignal} abortsignal The AbortSignal to trigger the abort event with
  * @returns {function} A function to cancel the pending timeout
  */
-module.exports = function timeoutabort(delay, abortsignal) {
+function timeoutabort(delay, abortsignal) {
 
-    if( abortsignal.aborted ) return noop;
+    if(abortsignal.aborted) return noop;
 
     const ontimeout = abortsignal.dispatchEvent.bind(abortsignal, ABORTEVENT);
-    const canceltimeout = timeout(delay, ontimeout)
+    const canceltimeout = timeout(delay, ontimeout);
 
     try {
         abortsignal.addEventListener(ABORTEVENT, canceltimeout, OPTIONS_ONCE);
@@ -53,3 +53,5 @@ module.exports = function timeoutabort(delay, abortsignal) {
     
     return canceltimeout;
 }
+
+module.exports = timeoutabort;

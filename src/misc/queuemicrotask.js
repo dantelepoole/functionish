@@ -6,19 +6,31 @@
 
 const CONTEXT_NONE = undefined;
 
-const isempty = require('./isempty');
-
 /**
  * Invoke *func* from the microtask queue, similar to {@link external:queueMicrotask queueMicrotask()} except that this
  * function also allows you to provide arguments to pass to *func* when it is invoked.
  * 
- * @func queuemicrotask
+ * @example <caption>Example usage of `queuemicrotask()`</caption>
+ * 
+ * const { queuemicrotask } = require('functionish/misc');
+ * 
+ * function printmessages(...messages) {
+ *    queuemicrotask(console.log, ...messages);
+ *    console.log('start');
+ * }
+ * 
+ * printmessages('foo', 'bar'); // prints 'start' first, then 'foo bar'
+ * 
+ * @function queuemicrotask
+ * @see {@link external:queueMicrotask queueMicrotask()}
  * @param {function} func The function to run from the microtask queue
  * @param  {...any} boundargs The arguments to pass to *func*
  */
-module.exports = function queuemicrotask(func, ...boundargs) {
+function queuemicrotask(func, ...boundargs) {
 
     queueMicrotask(
-        isempty(boundargs) ? func : func.bind(CONTEXT_NONE, ...boundargs)
+        boundargs.length ? func.bind(CONTEXT_NONE, ...boundargs) : func
     )
 }
+
+module.exports = queuemicrotask;

@@ -8,7 +8,7 @@
  * Return either `true` of `false` with 50/50% probability. Pass a number between 0
  * and 1 (inclusive) to adjust the probability of returning `true`.
  * 
- * @example <caption>Example usage of coalesce()</caption>
+ * @example <caption>Example usage of `coalesce()`</caption>
  * 
  * const { coinflip } = require('functionish/misc');
  * 
@@ -23,7 +23,7 @@
  * @returns {boolean}
  */
 function coinflip(probability=0.5) {
-    return (Math.random() - probability) < 0;
+    return (Math.random() < probability);
 }
 
 module.exports = coinflip;
