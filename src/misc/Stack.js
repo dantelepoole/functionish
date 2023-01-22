@@ -51,6 +51,10 @@ class Stack extends EventEmitter {
         return this;
     }
 
+    *[Symbol.iterator]() {
+        yield* this.#items.slice();
+    }
+
 }
 
 module.exports = Stack;

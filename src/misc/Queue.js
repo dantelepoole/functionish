@@ -12,7 +12,7 @@ class Queue extends EventEmitter {
 
     #head = undefined;
     #tail = undefined;
-    #itemcount = 0;
+    #size = 0;
 
     constructor(...initialvalues) {
         super();
@@ -20,12 +20,12 @@ class Queue extends EventEmitter {
     }
 
     get size() {
-        return this.#itemcount;
+        return this.#size;
     }
 
     clear() {
         this.#head = this.#tail = undefined;
-        this.#itemcount = 0;
+        this.#size = 0;
         return this;
     }
 
@@ -38,7 +38,7 @@ class Queue extends EventEmitter {
         this.#head = this.#head.next;
         if(this.#head === undefined) this.#tail = undefined;
 
-        this.#itemcount -= 1;
+        this.#size -= 1;
 
         this.emit(EVENT_DEQUEUE, nextvalue);
 
@@ -55,7 +55,7 @@ class Queue extends EventEmitter {
             else this.#tail = this.#tail.next = { value }
         }
 
-        this.#itemcount += values.length;
+        this.#size += values.length;
 
         this.emit(EVENT_ENQUEUE, values);
 
@@ -75,8 +75,8 @@ class Queue extends EventEmitter {
 
         for(const value of values) {
 
-            if(firstnode === undefined) firstnode = lastnode = { value };
-            else lastnode = firstnode.next = { value }
+            if(lastnode === undefined) firstnode = lastnode = { value };
+            else lastnode = lastnode.next = { value }
         }
 
         lastnode.next = this.#head;
@@ -84,12 +84,35 @@ class Queue extends EventEmitter {
 
         if(this.#tail === undefined) this.#tail = lastnode;
 
-        this.#itemcount += values.length;
+        this.#size += values.length;
 
         this.emit(EVENT_PRIORITY, values);
 
         return this;
     }
+
+    *[Symbol.iterator]() {
+
+        if(this.#head === undefined) return;
+
+        let node = copynodes(this.#head);
+
+        while(node) {
+            yield node.value;
+            node = node.next;
+        }
+    }
+}
+
+function copynodes(startnode) {
+
+    const nodechain = { value:startnode.value, next:startnode.next }
+
+    let node = nodechain;
+
+    while(node.next) node = node.next = { value:node.next.value, next:node.next.next }
+
+    return nodechain;
 }
 
 module.exports = Queue;
