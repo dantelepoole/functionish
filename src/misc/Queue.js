@@ -8,6 +8,8 @@ const EVENT_PRIORITY = 'priority';
 
 const EventEmitter = require('events').EventEmitter;
 
+const enqueuereducer = (currentnode, value) => (currentnode.next = { value });
+
 class Queue extends EventEmitter {
 
     #head = undefined;
@@ -31,31 +33,31 @@ class Queue extends EventEmitter {
 
     dequeue() {
 
-        if(this.#head === undefined) return;
+        if(this.#size === 0) return;
 
-        const nextvalue = this.#head.value;
+        const headvalue = this.#head.value;
         
         this.#head = this.#head.next;
-        if(this.#head === undefined) this.#tail = undefined;
-
         this.#size -= 1;
 
-        this.emit(EVENT_DEQUEUE, nextvalue);
+        if(this.#size === 0) this.#tail = undefined;
 
-        return nextvalue;
+        this.emit(EVENT_DEQUEUE, headvalue);
+
+        return headvalue;
     }
 
     enqueue(...values) {
 
-        if(values.length === 0) return this;
+        const chain = buildnodechain(values);
 
-        for(const value of values) {
+        if(chain.length === 0) return this;
 
-            if(this.#tail === undefined) this.#head = this.#tail = { value }
-            else this.#tail = this.#tail.next = { value }
-        }
+        if(this.#size === 0) this.#head = chain.first;
+        else this.#tail.next = chain.first;
 
-        this.#size += values.length;
+        this.#tail = chain.last;
+        this.#size += chain.length;
 
         this.emit(EVENT_ENQUEUE, values);
 
@@ -68,23 +70,16 @@ class Queue extends EventEmitter {
 
     priority(...values) {
 
-        if(values.length === 0) return this;
+        const chain = buildnodechain(values);
 
-        let firstnode = undefined;
-        let lastnode = undefined;
+        if(chain.length === 0) return this;
+        
+        chain.last.next = this.#head;
+        this.#head = chain.first;
+        
+        if(this.#size === 0) this.#tail = chain.last;
 
-        for(const value of values) {
-
-            if(lastnode === undefined) firstnode = lastnode = { value };
-            else lastnode = lastnode.next = { value }
-        }
-
-        lastnode.next = this.#head;
-        this.#head = firstnode;
-
-        if(this.#tail === undefined) this.#tail = lastnode;
-
-        this.#size += values.length;
+        this.#size += chain.length;
 
         this.emit(EVENT_PRIORITY, values);
 
@@ -93,26 +88,18 @@ class Queue extends EventEmitter {
 
     *[Symbol.iterator]() {
 
-        if(this.#head === undefined) return;
+        let node = { next:this.#head };
 
-        let node = copynodes(this.#head);
-
-        while(node) {
-            yield node.value;
-            node = node.next;
-        }
+        while(node = node.next) yield node.value;
     }
 }
 
-function copynodes(startnode) {
+function buildnodechain(values) {
 
-    const nodechain = { value:startnode.value, next:startnode.next }
+    const first = {};
+    const last = values.reduce(enqueuereducer, first);
 
-    let node = nodechain;
-
-    while(node.next) node = node.next = { value:node.next.value, next:node.next.next }
-
-    return nodechain;
+    return { first:first.next, last, length:values.length }
 }
 
 module.exports = Queue;

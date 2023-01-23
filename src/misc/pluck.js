@@ -6,7 +6,7 @@
 
 const SEPARATOR_CHAR = '.';
 const TYPE_STRING = 'string';
-const SOURCE_VOID = 'undefined';
+const SOURCE_VOID = undefined;
 
 const pluckreducer = (source, key) => (source === null || source === undefined)
                                     ? SOURCE_VOID

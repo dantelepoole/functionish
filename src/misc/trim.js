@@ -9,6 +9,12 @@
  * 
  * Return *value* with leading and trailing whitespace removed.
  * 
+ * @example <caption>Example usage of `trim()`</caption>
+ * 
+ * const { trim } = require('functionish/misc');
+ * 
+ * trim(' \n foobar \t\n\r'); // returns 'foobar'
+ * 
  * @function trim
  * @see {@link external:String.prototype.trim String.prototype.trim()}
  * @param {any} value The value to trim

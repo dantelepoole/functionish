@@ -34,9 +34,9 @@ const testproperty = (predicate, property) => (typeof predicate === TYPE_FUNCTIO
  * const isstring = x => (typeof x === 'string');
  * 
  * const spec = { age:iseven, name:isstring };
- * const test = { age:41, name: 'Hari Seldon' }
+ * const user = { age:41, name: 'Hari Seldon' }
  * 
- * const errors = where(spec, test);
+ * const errors = where(spec, user);
  * console.log(errors); // prints '[ ['age', 41] ]'
  * 
  * @function where

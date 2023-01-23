@@ -13,7 +13,7 @@ class Stack extends EventEmitter {
 
     constructor(...initialvalues) {
         super();
-        this.push(...initialvalues);
+        this.#items.push(...initialvalues);
     }
 
     get size() {
@@ -26,33 +26,30 @@ class Stack extends EventEmitter {
     }
 
     peek() {
-        if(this.#items.length) return this.#items[ this.#items.length - 1 ];
+        if(this.#items.length > 0) return this.#items[ this.#items.length - 1 ];
     }
     
     pop() {
 
-        if(this.#items.length === 0) return;
-
-        const value = this.#items.pop();
-
-        this.emit(EVENT_POP, value);
-
-        return value;
+        if(this.#items.length > 0) {
+            const value = this.#items.pop();
+            this.emit(EVENT_POP, value);
+            return value;
+        }
     }
 
     push(...values) {
 
-        if(values.length === 0) return this;
-
-        this.#items.push(...values);
-
-        this.emit(EVENT_PUSH, values);
+        if(values.length > 0) {
+            this.#items.push(...values);
+            this.emit(EVENT_PUSH, values);
+        }
 
         return this;
     }
 
     *[Symbol.iterator]() {
-        yield* this.#items.slice();
+        yield* this.#items;
     }
 
 }
