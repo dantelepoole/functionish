@@ -4,8 +4,6 @@
 
 'use strict';
 
-const ALWAYS_TRUE = () => true;
-
 const not = require('./not');
 const or = require('./or');
 
@@ -21,8 +19,9 @@ const or = require('./or');
  * 
  * If the *predicates* array is empty, the function returns `true`.
  * 
- * @example
- * const nor = require('functionish/logic/nor');
+ * @example <caption>Example usage of `nor()`</caption>
+ * 
+ * const { nor } = require('functionish/logic');
  * 
  * const isnumber = x => typeof x === 'number';
  * const isstring = x => typeof x === 'string';
@@ -38,7 +37,8 @@ const or = require('./or');
  * @param {...any[]} predicates Zero or more predicate functions or values to test
  * @returns {boolean}
  */
-
-module.exports = function nor(...predicates) {
-    return predicates.length ? not( or(...predicates) ) : ALWAYS_TRUE;
+function nor(...predicates) {
+    return not( or(...predicates) );
 }
+
+module.exports = nor;

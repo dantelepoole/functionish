@@ -6,8 +6,9 @@
 
 const ALWAYS_FALSE = () => false;
 const DISJUNCTION_NONE = undefined;
+const TYPE_FUNCTION = 'function';
 
-const callable = require('../callable');
+const always = require('../always');
 
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
@@ -22,8 +23,9 @@ const callable = require('../callable');
  * 
  * If the *predicates* array is empty, the function returns `false`.
  * 
- * @example
- * const or = require('functionish/logic/or');
+ * @example <caption>Example usage of `or()`</caption>
+ * 
+ * const { or } = require('functionish/logic');
  * 
  * const isnumber = x => typeof x === 'number';
  * const isstring = x => typeof x === 'string';
@@ -36,18 +38,21 @@ const callable = require('../callable');
  * 
  * @function or
  * @see {@link module:logic/and and()}
+ * @see {@link module:logic/nor nor()}
  * @param {...any[]} predicates Zero or more predicate functions or values to test
  * @returns {any} The return value of the first predicate to return a truthy value
  */
-
-module.exports = function or(...predicates) {
+function or(...predicates) {
     return predicates.reduceRight(disjunctreducer, DISJUNCTION_NONE) ?? ALWAYS_FALSE;
 }
 
 function disjunctreducer(disjunction, predicate) {
 
-    predicate = callable(predicate);
+    if(typeof predicate !== TYPE_FUNCTION) predicate = always(predicate);
 
-    return disjunction ? (...args) => predicate(...args) || disjunction(...args)
-                       : predicate;
+    return disjunction
+         ? (...args) => predicate(...args) || disjunction(...args)
+         : predicate;
 }
+
+module.exports = or;

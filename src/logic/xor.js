@@ -4,11 +4,14 @@
 
 'use strict';
 
-const boolify = require('./boolify');
-const callable = require('../callable');
-const compose = require('../compose');
+const TYPE_FUNCTION = 'function';
 
-const prep = compose(boolify, callable);
+const always = require('./always');
+const boolify = require('./boolify');
+
+const prep = predicate => (typeof predicate === TYPE_FUNCTION)
+                        ? boolify(predicate)
+                        : boolify( always(predicate) );
 
 /**
  * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `true` and only if
@@ -17,7 +20,8 @@ const prep = compose(boolify, callable);
  * 
  * If either predicate is not a function, its value is evaluated directly instead.
  * 
- * @example
+ * @example <caption>Example usage of `xor()`</caption>
+ * 
  * const xor = require('functionish/logic/xor');
  * 
  * function haveyourcake() {...}
@@ -30,10 +34,12 @@ const prep = compose(boolify, callable);
  * @param {any} predicate2 The second predicate to evaluate
  * @returns {boolean}
  */
-module.exports = function xor(predicate1, predicate2) {
+function xor(predicate1, predicate2) {
 
     predicate1 = prep(predicate1);
     predicate2 = prep(predicate2);
 
     return (...args) => (predicate1(...args) !== predicate2(...args));
 }
+
+module.exports = xor;

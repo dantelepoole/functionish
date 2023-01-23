@@ -4,15 +4,16 @@
 
 'use strict';
 
-const CONJUNCTION_NONE = undefined;
 const ALWAYS_TRUE = () => true;
+const CONJUNCTION_NONE = undefined;
+const TYPE_FUNCTION = 'function';
 
-const callable = require('../callable');
+const always = require('../always');
 
 /**
  * Functional variant of Javascript's `&&` operator. Returns a function that passes its arguments to each
- * *predicate* and returns the return value of the first *predicate* that returns a falsy value or, if all
- * *predicates* return truthy values, the return value of the last *predicate*.
+ * *predicate* and returns the return value of the first *predicate* that returns a falsy value. If all
+ * *predicates* return truthy values, the last *predicate*'s return value is returned.
  * 
  * Like the `&&` operator, `and()` is short-circuited, so it aborts as soon as a *predicate* returns a falsy
  * value, without evaluating the remaining *predicates*.
@@ -22,8 +23,9 @@ const callable = require('../callable');
  * 
  * If the *predicates* array is empty, the function returns `true`.
  * 
- * @example
- * const and = require('functionish/logic/and');
+ * @example <caption>Example usage of `and()`</caption>
+ * 
+ * const { and } = require('functionish/logic');
  * 
  * const isnumber = x => typeof x === 'number';
  * const iseven = x => (x%2) === 0;
@@ -35,17 +37,21 @@ const callable = require('../callable');
  * 
  * @function and
  * @see {@link module:logic/or or()}
+ * @see {@link module:logic/nand nand()}
  * @param {...any[]} predicates Zero or more predicate functions or values to test
  * @returns {any} The return value of the first predicate to return a falsy value
  */
-module.exports = function and(...predicates) {
+function and(...predicates) {
     return predicates.reduceRight(conjunctreducer, CONJUNCTION_NONE) ?? ALWAYS_TRUE;
 }
 
 function conjunctreducer(conjunction, predicate) {
 
-    predicate = callable(predicate);
+    if(typeof predicate !== TYPE_FUNCTION) predicate = always(predicate);
 
-    return conjunction ? (...args) => predicate(...args) && conjunction(...args)
-                       : predicate;
+    return conjunction
+         ? (...args) => predicate(...args) && conjunction(...args)
+         : predicate;
 }
+
+module.exports = and;
