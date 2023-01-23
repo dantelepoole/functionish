@@ -10,8 +10,9 @@
  * 
  * `null` is not considered primitive, but `NaN` and `undefined` are.
  * 
- * @example
- * const isprimitive = require('functionish/types/isprimitive');
+ * @example <caption>Example usage of `isprimitive()`</caption>
+ * 
+ * const { isprimitive } = require('functionish/types');
  * 
  * isprimitive(undefined); // returns true
  * isprimitive(NaN); // returns true
@@ -31,9 +32,11 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isprimitive(value) {
-    
+function isprimitive(value) {
+
     const valuetype = typeof value;
 
     return (valuetype !== 'function' && valuetype !== 'object')
 }
+
+module.exports = isprimitive;

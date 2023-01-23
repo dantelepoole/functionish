@@ -7,14 +7,19 @@
 const TYPE_NAN = 'NaN';
 const TYPE_NULL = 'null';
 
+const curry2 = require('../curry2');
+
 /**
  * Return `true` if *value* has the specified *type*. 
  * 
  * `NaN` *value*s match type `NaN`, not type `number`. Similarly, `null` *value*s
  * match type `null`, not type `object`. 
  * 
- * @example
- * const istype = require('functionish/types/istype');
+ * `istype()` is curried by default with binary arity.
+ * 
+ * @example <caption>Example usage of `istype()`</caption>
+ * 
+ * const { istype } = require('functionish/types');
  * 
  * istype('null', null); // returns true
  * istype('object', null); // returns false
@@ -31,10 +36,12 @@ const TYPE_NULL = 'null';
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function istype(type, value) {
+function istype(type, value) {
 
     return (value === null) ? (type === TYPE_NULL)
          : (value !== value) ? (type === TYPE_NAN)
          : (type === typeof value);
 
 }
+
+module.exports = curry2(istype);

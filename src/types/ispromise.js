@@ -8,7 +8,8 @@
  * Return `true` if the argument is an instance of the Javascript native Promise class.
  * Otherwise, return `false`.
  * 
- * @example
+ * @example <caption>Example usage of `ispromise()`</caption>
+ * 
  * const ispromise = require('functionish/types/ispromise');
  * 
  * ispromise( Promise.resolve(42) ); // returns true

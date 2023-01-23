@@ -7,8 +7,9 @@
 /**
  * Return `true` if *value* has type `string`. Otherwise, return `false`.
  * 
- * @example
- * const isstring = require('functionish/types/isstring');
+ * @example <caption>Example usage of `isstring()`</caption>
+ * 
+ * const { isstring } = require('functionish/types');
  * 
  * isstring('foobar'); // returns true
  * isstring(''); // returns true
@@ -22,6 +23,8 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isstring(value) {
+function isstring(value) {
     return (typeof value === 'string');
 }
+
+module.exports = isstring;

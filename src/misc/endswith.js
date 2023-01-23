@@ -7,7 +7,7 @@
 const curry2 = require('../curry2');
 
 /**
- * Function variant of {@link external:String.prototype.endsWith String.prototype.endsWith()}.
+ * Functional variant of {@link external:String.prototype.endsWith String.prototype.endsWith()}.
  * 
  * If *source* is not a string, an error is thrown.
  * 

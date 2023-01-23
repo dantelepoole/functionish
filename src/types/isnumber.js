@@ -7,8 +7,9 @@
 /**
  * Return `true` if *value* has type `number` and it is not `NaN`.
  * 
- * @example
- * const isnumber = require('functionish/types/isnumber');
+ * @example <caption>Example usage of `isnumber()`</caption>
+ * 
+ * const { isnumber } = require('functionish/types');
  * 
  * isnumber(42); // returns true
  * isnumber(42.42); // returns true
@@ -21,6 +22,8 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isnumber(value) {
+function isnumber(value) {
     return (typeof value === 'number') && (value === value);
 }
+
+module.exports = isnumber;

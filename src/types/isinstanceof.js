@@ -4,11 +4,16 @@
 
 'use strict';
 
+const curry2 = require('../curry2');
+
 /**
  * Return true if *instance* is an instance of *targetclass*. Otherwise, return false.
  * 
- * @example
- * const isinstanceof = require('functionish/types/isinstanceof');
+ * `isinstanceof()` is curried by default with binary arity.
+ * 
+ * @example <caption>Example usage of `isinstanceof()`</caption>
+ * 
+ * const { isinstanceof } = require('functionish/types');
  * 
  * isinstanceof(Date, new Date()); // returns true
  * isinstanceof(Object, {}); // returns true
@@ -22,6 +27,8 @@
  * @param {object} instance The object to check the class for
  * @returns {boolean}
  */
-module.exports = function isinstanceof(targetclass, instance) {
+function isinstanceof(targetclass, instance) {
     return (instance instanceof targetclass);
 }
+
+module.exports = curry2(isinstanceof);

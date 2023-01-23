@@ -1,5 +1,5 @@
 /**
-* @module types/isdefined
+* @module types/isundefined
 */
 
 'use strict';
@@ -7,8 +7,9 @@
 /**
  * Return `true` if and only if *value* is `undefined`, otherwise return `false`.
  * 
- * @example
- * const isundefined = require('functionish/types/isundefined');
+ * @example <caption>Example usage of `isundefined()`</caption>
+ * 
+ * const { isundefined } = require('functionish/types');
  * 
  * isundefined(undefined); // returns true
  * isundefined(); // returns true
@@ -22,6 +23,8 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isundefined(value) {
+function isundefined(value) {
     return (value === undefined);
 }
+
+module.exports = isundefined;

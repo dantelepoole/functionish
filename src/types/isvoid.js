@@ -12,8 +12,9 @@ const VOID_MARKER = Symbol();
  * 
  * This function does the same as {@link module:types/notdefined notdefined()}.
  * 
- * @example
- * const isvoid = require('functionish/types/isvoid');
+ * @example <caption>Example usage of `isvoid()`</caption>
+ * 
+ * const { isvoid } = require('functionish/types');
  * 
  * isvoid(undefined); // returns true
  * isvoid(null); // returns true
@@ -22,11 +23,14 @@ const VOID_MARKER = Symbol();
  * isvoid(42); // returns false
  * 
  * @function isvoid
+ * @see {@link module:types/isdefined isdefined()}
  * @see {@link module:types/notdefined notdefined()}
  * @see {@link module:types/notvoid notvoid()}
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isvoid(value) {
+function isvoid(value) {
     return (value ?? VOID_MARKER) !== value;
 }
+
+module.exports = isvoid;

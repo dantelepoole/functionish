@@ -21,11 +21,14 @@ const constructorname = obj => getprototype(obj).constructor.name;
  * class that does not implement a getter with the well-known symbol `Symbol.toStringTag` as key, a generic classname
  * of `Object` will be returned.
  * 
- * @example
+ * If *value* is `null`, the classname will be `Null`. If *value* is `NaN`, the classname will be `NaN`.
  * 
- * const classname = require('functionish/types/classname');
+ * @example <caption>Example usage of `classname()`</caption>
+ * 
+ * const { classname } = require('functionish/types');
  * 
  * classname(42); // returns 'Number'
+ * classname(NaN); // returns 'NaN'
  * classname(true); // returns 'Boolean'
  * classname({}); // returns 'Object'
  * classname(null); // returns 'Null'
@@ -42,12 +45,14 @@ const constructorname = obj => getprototype(obj).constructor.name;
  * @param {any} value 
  * @returns {string}
  */
-module.exports = function classname(value) {
+function classname(value) {
 
-    const objectclassname = getclassname(value);
+    const classname = getclassname(value);
 
-    return (objectclassname === CLASS_OBJECT) ? (constructorname(value) || objectclassname)
-         : (objectclassname !== CLASS_NUMBER) ? objectclassname
+    return (classname === CLASS_OBJECT) ? (constructorname(value) || classname)
+         : (classname !== CLASS_NUMBER) ? classname
          : (value === value) ? CLASS_NUMBER
          : CLASS_NAN;
 }
+
+module.exports = classname;

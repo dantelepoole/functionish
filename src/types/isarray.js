@@ -4,17 +4,18 @@
 'use strict';
 
 /**
- * Return true if the argument is an instance of the Javascript native Array class.
+ * Alias for {@link external:Array#isArray Array.isArray()}. Return true if the argument is
+ * an instance of the Javascript native Array class. Otherwise, return false.
  * 
- * @example
- * const isarray = require('functionish/types/isarray');
+ * @example <caption>Example usage of `isarray()`</caption>
+ * 
+ * const { isarray } = require('functionish/types');
  * 
  * isarray([]); // returns true
- * isarray( new Array(42) ); // returns true
- * 
- * isarray(Array); // returns false
+ * isarray(42); // returns false
  * 
  * @function isarray
+ * @see {@link external:Array#isArray Array.isArray()}
  * @see {@link module:types/notarray notarray()}
  * @param {any} value The value to check
  * @returns {boolean}

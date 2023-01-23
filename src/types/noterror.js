@@ -10,8 +10,9 @@ const iserror = require('./iserror');
  * Return `true` if the argument is not an instance of the Javascript native Error class. Otherwise,
  * return `false`.
  * 
- * @example
- * const noterror = require('functionish/types/noterror');
+ * @example <caption>Example usage of `noterror()`</caption>
+ * 
+ * const { noterror } = require('functionish/types');
  * 
  * noterror(new Error()); // returns false
  * noterror(new TypeError()); // returns false
@@ -21,11 +22,13 @@ const iserror = require('./iserror');
  * 
  * noterror(Error); // returns true
  * 
- * @func noterror
+ * @function noterror
  * @see {@link module:types/iserror iserror()}
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function noterror(error) {
+function noterror(error) {
     return ! iserror(error);
 }
+
+module.exports = noterror;

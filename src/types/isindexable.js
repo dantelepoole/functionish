@@ -4,14 +4,19 @@
 
 'use strict';
 
+const hasownproperty = Object.prototype.hasOwnProperty;
+
 /**
- * Return `true` if *value* is an indexable object, i.e. an array or a string or an non-null object that has a numeric
+ * Return `true` if *value* is an indexable object
+ * 
+ * An object is considered indexable if it is an array or a string or if it is an non-null object that has a numeric
  * `length` property and, if the `length` property is not `0`, has a property with the numeric key `0` and a value that
  * is not `undefined`,  and a property with a numeric key equal to the value of its `length` property minus 1 with a 
  * value that is not `undefined`.
  *  
- * @example
- * const isindexable = require('functionish/types/isindexable');
+ * @example <caption>Example usage of `isindexable()`</caption>
+ * 
+ * const { isindexable } = require('functionish/types');
  * 
  * isindexable( [] ); // returns true
  * isindexable( '' ); // returns true
@@ -46,7 +51,7 @@ function hasextremeindexproperties(indexable) {
 
     return (indexable.length === 0)
             ||
-           ( (indexable[0] !== undefined) && (indexable[indexable.length - 1] !== undefined) )
+           (hasownproperty(indexable, 0) && hasownproperty(indexable, indexable.length - 1));
 }
 
 function iscustomindexable(indexable) {

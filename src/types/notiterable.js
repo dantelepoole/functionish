@@ -5,14 +5,15 @@
 'use strict';
 
 /**
- * Return `true` if *iterable* does not appear to be an iterable object. An object is considered *iterable*
- * if has a `[Symbol.iterator]`-property with type 'function'.
+ * Return `true` if *iterable* does not appear to be an iterable object.
  * 
- * Although in Javascript strings are iterable, this function reports strings as non-iterable, since
- * in practice the intention is usually not to iterate over strings.
+ * Any object with a `[Symbol.iterator]`-property with type 'function' is
+ * considered iterable, except strings. Although Javascript strings are iterable, in practice iterating
+ * over a string's characters is not what the intention.
  * 
- * @example
- * const isiterable = require('functionish/types/isiterable');
+ * @example <caption>Example usage of `notiterable()`</caption>
+ * 
+ * const { notiterable } = require('functionish/types');
  * 
  * notiterable([]); // returns false
  * notiterable( new Set() ); // returns false
@@ -21,11 +22,16 @@
  * notiterable('foobar'); // returns true
  * notiterable({}); // returns true
  * 
- * @func notiterable
+ * @function notiterable
  * @see {@link module:types/isiterable isiterable()}
- * @param {any} value The value to check
+ * @param {any} iterable The value to check
  * @returns {boolean}
  */
-module.exports = function notiterable(value) {
-    return (typeof value?.[Symbol.iterator] !== 'function') || (typeof value === 'string');
+function notiterable(iterable) {
+
+    return (typeof iterable?.[Symbol.iterator] !== TYPE_FUNCTION)
+            ||
+           (typeof iterable === TYPE_STRING);
 }
+
+module.exports = notiterable;

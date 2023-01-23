@@ -7,8 +7,9 @@
 /**
  * Return `true` if *value* has type `boolean`. Otherwise, return `false`.
  * 
- * @example
- * const isboolean = require('functionish/types/isboolean');
+ * @example <caption>Example usage of `isboolean()`</caption>
+ * 
+ * const { isboolean } = require('functionish/types');
  * 
  * isboolean(true); // returns true
  * isboolean(false); // returns true
@@ -21,6 +22,8 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isboolean(value) {
+function isboolean(value) {
     return (typeof value === 'boolean');
 }
+
+module.exports = isboolean;

@@ -4,23 +4,22 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const notstring = require('./notstring');
+const TYPE_FUNCTION = 'function';
+const TYPE_STRING = 'string';
 
 /**
- * Return `true` if *iterable* appears to be an iterable object. This function considers an object *iterable*
- * if has a `[Symbol.iterator]`-property with type 'function'.
+ * Return `true` if *iterable* appears to be an iterable object.
  * 
- * Although in Javascript strings are iterable, this function does *not* recognize strings as iterable, since
- * in practice the intention is usually not to iterate over strings.
+ * Any object with a `[Symbol.iterator]`-property with type 'function' is
+ * considered iterable, except strings. Although Javascript strings are iterable, in practice iterating
+ * over a string's characters is not what the intention.
  * 
- * @example
- * const isiterable = require('functionish/types/isiterable');
+ * @example <caption>Example usage of `isiterable()`</caption>
+ * 
+ * const { isiterable } = require('functionish/types');
  * 
  * isiterable([]); // returns true
  * isiterable( new Set() ); // returns true
- * isiterable( new Map() ); // returns true
- * 
  * isiterable('foobar'); // returns false
  * isiterable({}); // returns false
  * 
@@ -29,6 +28,11 @@ const notstring = require('./notstring');
  * @param {any} iterable The value to check
  * @returns {boolean}
  */
-module.exports = function isiterable(iterable) {
-    return isfunction(iterable?.[Symbol.iterator]) && notstring(iterable);
+function isiterable(iterable) {
+
+    return (typeof iterable?.[Symbol.iterator] === TYPE_FUNCTION)
+            &&
+           (typeof iterable !== TYPE_STRING);
 }
+
+module.exports = isiterable;

@@ -7,8 +7,9 @@
 /**
  * Return `true` if *value* has type `symbol`. Otherwise, return `false`.
  * 
- * @example
- * const issymbol = require('functionish/types/issymbol');
+ * @example <caption>Example usage of `issymbol()`</caption>
+ * 
+ * const { issymbol } = require('functionish/types');
  * 
  * issymbol( Symbol() ); // returns true
  * issymbol( Symbol.for('foobar') ); // returns true
@@ -21,6 +22,8 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function issymbol(value) {
+function issymbol(value) {
     return (typeof value === 'symbol');
 }
+
+module.exports = issymbol;

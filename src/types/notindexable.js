@@ -5,7 +5,6 @@
 'use strict';
 
 const isindexable = require('./isindexable');
-const not = require('./not');
 
 /**
  * Return `false` if *value* is an indexable object, i.e. an array or a string or an non-null object that has a numeric
@@ -13,8 +12,9 @@ const not = require('./not');
  * is not `undefined`,  and a property with a numeric key equal to the value of its `length` property minus 1 with a 
  * value that is not `undefined`.
  *  
- * @example
- * const notindexable = require('functionish/types/notindexable');
+ * @example <caption>Example usage of `notindexable()`</caption>
+ * 
+ * const { notindexable } = require('functionish/types');
  * 
  * notindexable( [] ); // returns false
  * notindexable( '' ); // returns false
@@ -26,10 +26,13 @@ const not = require('./not');
  * notindexable( { length:1 } ); // returns true
  * notindexable( { length:2, [0]:42 } ); // returns true
  * 
- * @func notindexable
+ * @function notindexable
  * @see {@link module:types/isindexable isindexable()}
  * @param {any} value The value to check
  * @returns {boolean}
  */
+function notindexable(value) {
+    return ! isindexable(value);
+}
 
-module.exports = not(isindexable);
+module.exports = notindexable;

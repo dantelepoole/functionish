@@ -6,11 +6,11 @@
 /**
  * Return `true` if *value* is `NaN`. Otherwise, return `false`.
  * 
- * @example
- * const isnan = require('functionish/types/isnan');
+ * @example <caption>Example usage of `isnan()`</caption>
+ * 
+ * const { isnan } = require('functionish/types');
  * 
  * isnan(NaN); // returns true
- * 
  * isnan(42); // returns false
  * isnan(undefined); // returns false
  * isnan(null); // returns false
@@ -20,6 +20,8 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isnan(value) {
+function isnan(value) {
     return (value !== value);
 }
+
+module.exports = isnan;

@@ -6,8 +6,9 @@
 /**
  * Return `true` if *value* is not `NaN`. Otherwise, return `false`.
  * 
- * @example
- * const notnan = require('functionish/types/notnan');
+ * @example <caption>Example usage of `notnan()`</caption>
+ * 
+ * const { notnan } = require('functionish/types');
  * 
  * notnan(NaN); // returns false
  * 
@@ -15,11 +16,13 @@
  * notnan(undefined); // returns true
  * notnan(null); // returns true
  * 
- * @func notnan
+ * @function notnan
  * @see {@link module:types/isnan isnan()}
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function notnan(value) {
+function notnan(value) {
     return (value === value);
 }
+
+module.exports = notnan;

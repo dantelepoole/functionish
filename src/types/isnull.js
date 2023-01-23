@@ -7,8 +7,9 @@
 /**
  * Return `true` if *value* is `null`, otherwise return `false`.
  * 
- * @example
- * const isnull = require('functionish/types/isnull');
+ * @example <caption>Example usage of `isnull()`</caption>
+ * 
+ * const { isnull } = require('functionish/types');
  * 
  * isnull(null); // returns true
  * 
@@ -20,6 +21,8 @@
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function isnull(value) {
+function isnull(value) {
     return (value === null);
 }
+
+module.exports = isnull;

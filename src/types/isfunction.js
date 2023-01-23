@@ -7,8 +7,9 @@
 /**
  * Return `true` if *value* has type 'function'. Otherwise, return `false`.
  * 
- * @example
- * const isfunction = require('functionish/types/isfunction');
+ * @example <caption>Example usage of `isfunction()`</caption>
+ * 
+ * const { isfunction } = require('functionish/types');
  * 
  * isfunction(isfunction); // returns true
  * isfunction(x => x); // returns true
@@ -20,6 +21,8 @@
  * @param {value} value The value to check
  * @returns {boolean}
  */
-module.exports = function isfunction(value) {
+function isfunction(value) {
     return (typeof value === 'function');
 }
+
+module.exports = isfunction;

@@ -7,17 +7,20 @@
 /**
  * Return `true` if *value* does not have type `object` or if it is `null`.
  * 
- * @example
- * const notobject = require('functionish/types/notobject');
+ * @example <caption>Example usage of `notobject()`</caption>
+ * 
+ * const { notobject } = require('functionish/types');
  * 
  * notobject( {} ); // returns false
  * notobject( null ); // returns true
  * 
- * @func notobject
+ * @function notobject
  * @see {@link module:types/isobject isobject()}
  * @param {any} value The value to check
  * @returns {boolean}
  */
-module.exports = function notobject(value) {
+function notobject(value) {
     return (typeof value !== 'object' || value === null);
 }
+
+module.exports = notobject;

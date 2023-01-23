@@ -10,8 +10,9 @@ const TYPE_NULL = 'null';
 /**
  * Return *value*'s Javascript type or 'null' if *value* is `null` or 'NaN' if *value* is `NaN`.
  * 
- * @example
- * const type = require('functionish/types/type');
+ * @example <caption>Example usage of `type()`</caption>
+ * 
+ * const { type } = require('functionish/types');
  * 
  * type(42); // returns 'number'
  * type(true); // returns 'boolean'
@@ -27,13 +28,15 @@ const TYPE_NULL = 'null';
  * class Foobar {}
  * type(Foobar); // returns 'function'
  * 
- * @func type
+ * @function type
  * @param {any} value The value whose type to return
  * @returns {string}
  */
-module.exports = function type(value) {
+function type(value) {
     
     return (value === null) ? TYPE_NULL
          : (value === value) ? typeof value
          : TYPE_NAN;
 }
+
+module.exports = type;
