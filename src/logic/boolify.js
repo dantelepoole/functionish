@@ -1,11 +1,8 @@
 /**
- * @module types/boolify
+ * @module logic/boolify
  */
 
 'use strict';
-
-const isfunction = require('./isfunction');
-const loadfunction = require('../loadfunction');
 
 /**
  * Coerce *func*'s return value to type boolean.
@@ -13,10 +10,9 @@ const loadfunction = require('../loadfunction');
  * This function returns a function that passes its arguments *func* and returns either `true` or `false`
  * depending on whether *func* returns a truthy or falsy value respectively.
  * 
- * *func* may either be a function or the path to a package or module that exports a function.
+ * @example <caption>Example usage of `boolify()`</caption>
  * 
- * @example
- * const boolify = require('functionish/types/boolify');
+ * const { boolify } = require('functionish/logic');
  * 
  * const hasitems = boolify( array => array.length );
  * 
@@ -24,12 +20,11 @@ const loadfunction = require('../loadfunction');
  * hasitems( [] ); // return false
  * 
  * @function boolify
- * @param {(function|string)} func The function to boolify
+ * @param {function} func The function to boolify
  * @returns {function}
  */
-module.exports = function boolify(func) {
-
-    isfunction(func) || (func = loadfunction(func));
-
+function boolify(func) {
     return (...args) => !! func(...args);
 }
+
+module.exports = boolify;
