@@ -9,16 +9,6 @@ const EMPTY_ITERABLE = { [Symbol.iterator]: function* () {} };
 const STEP_DECREMENT = -1;
 const STEP_INCREMENT = 1;
 
-const ERR_BAD_RANGE = `RangeError~The range %s %s. Expected an integer number.`;
-const ERR_BAD_COUNT = `RangeError~The count %s. Expected a positive integer.`;
-
-const fail = require('./fail');
-const isinteger = require('./isinteger');
-const typeorclass = require('../typeorclass');
-
-const isnumberornan = x => (typeof x === 'number');
-const ispositiveinteger = x => isinteger(x) && (x >= 0);
-
 /**
  * If passed a single argument, return an iterable that produces the number `1` through the specified number (inclusive).
  * If the argument is less than `1`, an empty iterable is returned.

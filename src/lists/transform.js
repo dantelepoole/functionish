@@ -4,12 +4,24 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const buildtransformer = require('./transformer');
+const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 
-module.exports = function transform(transformer, list) {
+const curry2 = require('../curry2');
 
-    isfunction(transformer) || (transformer = buildtransformer(...transformer));
+function transform(transformer, list) {
 
-    return transformer(list);
+    return {
+
+        [Symbol.iterator] : function* () {
+
+            for(const value of list) {
+
+                const result = transformer(value);
+
+                if(result !== TRANSFORM_REJECT) yield result;
+            }
+        }
+    }
 }
+
+module.exports = curry2(transform);

@@ -1,29 +1,18 @@
 /**
- * @module misc/pluck
+ * @module misc/pluckx
  */
 
 'use strict';
 
-const SEPARATOR_CHAR = '.';
-const TYPE_STRING = 'string';
-const SOURCE_VOID = undefined;
-
-const pluckreducer = (source, key) => (source === null || source === undefined)
-                                    ? SOURCE_VOID
-                                    : source[key];
-
 /**
- * Return the value of the property of *source* specified by *path*.
+ * Return the value of the property of *source* specified by *key*. If no such property exists, or if *source* is `null` or 
+ * `undefined`, return `undefined`.
  * 
- * The *path* argument may be a compound path, i.e. a path that goes multiple levels deep. In that case, the
- * individual property keys should be separated by a `.`.
+ * See {@link module:misc/pluckx pluckx()} for a version that allows plucking properties identified with
+ * compound keys.
  * 
- * The *path* may also be an array of individual property keys. In this case, each path element should be
- * a single property key. This also allows you to access non-string properties (e.g. to index an array property,
- * as illustrated in the example below).
- * 
- * If the *path* is invalid or if any intermediate property is `null` or `undefined`, `undefined` is returned.
- * 
+ * `pluck()` is curried by default with binary arity.
+ *  
  * @example <caption>Example usage of `pluck()`</caption>
  * 
  * const { pluck } = require('functionish/misc');
@@ -45,25 +34,18 @@ const pluckreducer = (source, key) => (source === null || source === undefined)
  *   }
  * }
  * 
- * pluck('firstname', source);         // returns 'Donald'
- * pluck('creator.born.city', source); // returns 'Chicago'
- * pluck('nephews.length', source);    // returns 3
- * pluck( 'wife', source );            // returns undefined
- * 
- * @example <caption>Example usage of `pluck()` to index an array</caption>
- * 
- * pluck( ['nephews', 1, 'firstname' ], source); // returns 'Dewey'
+ * pluck('firstname', source); // returns 'Donald'
+ * pluck('creator', source);   // returns the `creator` object property
+ * pluck('nephews', source);   // returns the `nephews` array
  * 
  * @function pluck
- * @param {(string|any[])} path The path of the property to retrieve
- * @param {object} source The object to resolve *path* against
+ * @see {@link module:misc/pluckx pluckx()}
+ * @param {(string|number|symbol)} key The key of the property to retrieve
+ * @param {object} source The object pluck the property from
  * @returns {any}
  */
-function pluck(path, source) {
-
-    if(typeof path === TYPE_STRING) path = path.split(SEPARATOR_CHAR);
-
-    return path.reduce(pluckreducer, source);
+function pluck(key, source) {
+    return source?.[key];
 }
 
 module.exports = curry2(pluck);

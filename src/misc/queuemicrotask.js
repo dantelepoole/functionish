@@ -28,9 +28,9 @@ const CONTEXT_NONE = undefined;
  */
 function queuemicrotask(func, ...boundargs) {
 
-    queueMicrotask(
-        boundargs.length ? func.bind(CONTEXT_NONE, ...boundargs) : func
-    )
+    if(boundargs.length > 0) func = func.bind(CONTEXT_NONE, ...boundargs);
+
+    queueMicrotask(func);
 }
 
 module.exports = queuemicrotask;

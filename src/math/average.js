@@ -23,5 +23,5 @@ module.exports = function average(values) {
 
     for(const number of values) (total += number, count += 1);
 
-    return (total === 0) ? 0 : (total/count);
+    return (count > 0) ? (total/count) : 0;
 }

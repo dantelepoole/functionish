@@ -4,13 +4,20 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const reduce = require('./reduce');
-const buildtransducer = require('./transducer');
+const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 
-module.exports = function transduce(transducer, reducer, initialvalue, list) {
+const curry2 = require('../curry2');
 
-    isfunction(transducer) || (transducer = buildtransducer(...transducer));
-    
-    return reduce( transducer(reducer), initialvalue, list );
+function transduce(transformer, reducer) {
+
+    return function _transformreducer(current, nextvalue) {
+
+        nextvalue = transformer(nextvalue);
+
+        return (nextvalue !== TRANSFORM_REJECT)
+             ? reducer(current, nextvalue)
+             : current;
+    }
 }
+
+module.exports = curry2(transduce);

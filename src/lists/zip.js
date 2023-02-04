@@ -4,47 +4,57 @@
 
 'use strict';
 
+const curry2 = require('../curry2');
+
 /**
- * Return an iterable that produces a 2-element array on each iteration containing the next item from *list1* and
- * the next item from *list2*. The returned iterable completes as soon as either arguments completes.
+ * Return an iterable that produces 2-element arrays containing the next item from *list1* and
+ * the next item from *list2*. The returned iterable has the same length as the shortest *list*.
  * 
- * @example
+ * The returned iterable object is lazy, meaning it iterates over the argument lists only when it
+ * is iterated over itself. If you change the contents of either argument list after calling `zip()`
+ * and before processing the returned iterable, the changes will be reflected in the
+ * returned iterable. If this not the desired behaviour, iterate over the returned 
+ * iterable immediately after calling `zip()` (e.g. by loading it into an array).
  * 
- * const zip = require('functionish/lists/zip');
+ * `zip()` is curried by default with binary arity.
  * 
- * const list1 = [1,2,3,4,5];
- * const list2 = [6,7,8];
+ * @example <caption>Example usage of `zip()`</caption>
  * 
- * for(const item of zip(list1, list2)) console.log(item);
+ * const { zip } = require('functionish/lists');
  * 
- * // prints:
- * //   [1,6]
- * //   [2,7]
- * //   [3,8]
+ * const zipped = zip([1,2,3,4,5], [6,7,8]);
  * 
- * @func zip
+ * Array.from(zipped); // returns [ [1,6], [2,7], [3,8] ]
+ * 
+ * @function zip
  * @see {@link module:zipwith zipwith()}
  * @param {iterable} list1 The iterable to zip with the items from *list2* 
  * @param {iterable} list2 The iterable to zip the items from *list1* with
  * @returns {iterable}
  */
-module.exports = function zip(list1, list2) {
+function zip(list1, list2) {
 
     return {
+
         [Symbol.iterator]() {
 
             const iterator1 = list1[Symbol.iterator]();
             const iterator2 = list2[Symbol.iterator]();
 
             return { 
+
                 next() {
+                    
                     const item1 = iterator1.next();
                     const item2 = iterator2.next();
             
-                    return (item1.done || item2.done) ? { done:true }
-                                                      : { done:false, value:[item1.value, item2.value] }
+                    return (item1.done || item2.done)
+                         ? { done:true }
+                         : { done:false, value:[item1.value, item2.value] }
                 }
             }
         }
     }
 }
+
+module.exports = curry2(zip);

@@ -6,24 +6,24 @@
 
 const GROUP_NONE = undefined;
 
-const isvoid = require('../isvoid');
-const notvoid = require('../notvoid');
+const curry2 = require('../curry2');
+const isdefined = require('../types/isdefined');
+const isvoid = require('../types/isvoid');
 
 const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
-                                : notvoid(target[key]) ? target[key]
+                                : isdefined(target[key]) ? target[key]
                                 : (target[key] = []);
 
 /**
- * Splits a list into sub-lists stored in an object, based on the result of calling a key-returning function on each
- * element, and grouping the results according to values returned.
+ * Split a list into sub-lists stored in an object, based on the result of calling a key-returning function on each
+ * element, and grouping the results according to values returned. Each key on the returned object contains an array
+ * holding the items for which *selectgroup* returned that key.
  * 
- * Group the items in *list* into sub-lists stored in an object under keys returned by the *selectgroup* function for
- * each item in *list*. Each key on the returned object contains an array holding the items for which *selectgroup*
- * returned that key.
+ * If *keyselector* returns `null` or `undefined` for an item, that item is discarded.
  * 
- * If *selectgroup* returns `null` or `undefined` for an item, that item is discarded.
+ * `groupby()` is curried by default with binary arity.
  * 
- * @example
+ * @example <caption>Example usage of `groupby()`</caption>
  * 
  * const groupby = require('functionish/lists/groupby');
  * 
@@ -56,12 +56,12 @@ const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
  * //    A : [{ name:'Donald', score:100 }]
  * // }
  * 
- * @func groupby
+ * @function groupby
  * @param {func} keyselector A function that returns a key for a given item
  * @param {iterable} list An iterable object producing the items to group
- * @returns {object} An object containing the items grouped by their corresponding keys
+ * @returns {object} 
  */
-module.exports = function groupby(keyselector, list) {
+function groupby(keyselector, list) {
 
     const target = {};
 
@@ -70,9 +70,10 @@ module.exports = function groupby(keyselector, list) {
         const key = keyselector(item);
         const group = getgroup(target, key);
         
-        notvoid(group) && group.push(item);
+        isdefined(group) && group.push(item);
     }
 
     return target;
 }
                                  
+module.exports = groupby;

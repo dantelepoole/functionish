@@ -6,27 +6,38 @@
 
 const MINIMUM_BATCHSIZE = 1;
 
+const curry2 = require('../curry2');
+
 const maximum = Math.max;
 
 /**
  * Return an iterable of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
  * a batch size of `1` will be used.
  * 
- * @example
+ * The returned iterable object is lazy, meaning it iterates over *list* only when it
+ * is iterated over itself. If you change the contents of *list* after calling `batch()`
+ * and before processing the returned iterable, the changes will be reflected in the
+ * returned iterable. If this not the desired behaviour, iterate over the returned 
+ * iterable immediately after calling `batch()` (e.g. by loading it into an array).
  * 
- * const batch = require('functionish/lists/batch');
+ * `batch()` is curried by default with binary arity.
+ * 
+ * @example <caption>Example usage of `batch()`</caption>
+ * 
+ * const { batch } = require('functionish/lists');
  * 
  * const list = [1,2,3,4,5,6,7,8,9,10,11,12];
- *  
- * batch(5, list); // returns [ [1,2,3,4,5], [6,7,8,9,10], [11,12] ]
  * 
- * @func batch
+ * const batches = batch(5, list);
+ * 
+ * Array.from(batches); // returns [ [1,2,3,4,5], [6,7,8,9,10], [11,12] ]
+ * 
+ * @function batch
  * @param {number} batchsize The maximum number of items in each batch
- * @param {iterable} iterable The iterable producing the items to batch
+ * @param {iterable} list The iterable producing the items to batch
  * @returns {iterable}
  */
-
-module.exports = function batch(batchsize, iterable) {
+function batch(batchsize, list) {
 
     batchsize = maximum(batchsize, MINIMUM_BATCHSIZE);
 
@@ -36,7 +47,7 @@ module.exports = function batch(batchsize, iterable) {
 
             let batch = [];
 
-            for(const item of iterable) {
+            for(const item of list) {
         
                 batch.push(item);
         
@@ -51,3 +62,5 @@ module.exports = function batch(batchsize, iterable) {
         }
     }
 }
+
+module.exports = curry2(batch);

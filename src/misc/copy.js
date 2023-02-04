@@ -5,8 +5,8 @@
 'use strict';
 
 const isarray = require('../types/isarray');
-const isnull = require('../types/isnull');
-const isprimitive = require('../types/isprimitive');
+const isobject = require('../types/isobject');
+const notobject = require('../types/notobject');
 
 /**
  * Create a shallow copy of *source*. If *source* has a primitive type (number, boolean, string, null, bigint
@@ -31,8 +31,8 @@ const isprimitive = require('../types/isprimitive');
  */
 function copy(source) {
 
-    return isarray(source) ? source.slice()
-         : isprimitive(source) || isnull(source) ? source
+    return notobject(source) ? source
+         : isarray(source) ? source.slice()
          : copyobject(source);
 }
 

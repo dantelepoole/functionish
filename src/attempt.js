@@ -4,7 +4,7 @@
 
 'use strict';
 
-const callable = require('../callable');
+const TYPE_FUNCTION = 'function';
 
 /**
  * Pass *args* to the *func* function and return the result. If *func* throws, invoke the *errorhandler* and return the
@@ -12,22 +12,40 @@ const callable = require('../callable');
  * 
  * If *errorhandler* is a function, it is invoked with two arguments: the thrown error and the *args* array.
  * 
+ * @example <caption>Example usage of `attempt()`</caption>
+ * 
+ * const attempt = require('functionish');
+ * 
+ * function loaduserfromdb(userid) { ... }
+ * 
+ * function onuserloaderror(error, args) {
+ *    console.error(`Error loading user with userid`, args[0])
+ *    console.error(error);
+ *    return null;
+ * }
+ * 
+ * const getuser = attempt(onerror, loaduserfromdb);
+ * 
+ * getuser(42);
+ * 
  * @function attempt
  * @param {(function|any)} errorhandler The function to call or the value to return if *func* throws
  * @param {function} func The function to run
  * @param  {...any} args The argument to pass to *func*
  * @returns {any}
  */
-module.exports = function attempt(errorhandler, func) {
+function attempt(errorhandler, func) {
 
-    errorhandler = callable(errorhandler);
-    
     return function _attempt(...args) {
 
         try {
             return func(...args);
         } catch(error) {
-            return errorhandler(error, args);
+            return (typeof errorhandler === TYPE_FUNCTION)
+                 ? errorhandler(error, args)
+                 : errorhandler;
         }
     }
 }
+
+module.exports = attempt;

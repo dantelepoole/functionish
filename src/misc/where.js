@@ -5,7 +5,6 @@
 'use strict';
 
 const TYPE_FUNCTION = 'function';
-const TYPE_OBJECT = 'object';
 
 const curry2 = require('../curry2');
 
@@ -25,6 +24,8 @@ const testproperty = (predicate, property) => (typeof predicate === TYPE_FUNCTIO
  * The function returns an array containing an entry for each failing property. Each entry is a two-element array containing
  * the *specification* rule's key in the first element and the corresponding *subject* value in the second element.
  * If *subject* passed all rules, the errors array will be empty.
+ * 
+ * `where()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `where()`</caption>
  *     

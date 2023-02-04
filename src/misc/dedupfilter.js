@@ -5,7 +5,9 @@
 'use strict';
 
 /**
- * Return a filter function that accepts only unique values and rejects duplicates.
+ * Return a filter function that accepts only unique values and rejects duplicates. If no *hashfunc*
+ * is passed, the filter compares values using strict equality. Otherwise, it compare values by the
+ * hash values returned by *hashfunc*.
  * 
  * The returned filter function maintains a cache of all values passed through the filter. So you should never keep
  * a dedupfilter-instance around indefinitely, that would cause a memory leak. Instead, call `dedupfilter()` to create a
@@ -20,14 +22,25 @@
  * 
  * [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5].filter( dedupfilter() ); // returns [1,2,3,4,5]
  * 
+ * @example <caption>Example usage of `dedupfilter()` with a hashing function</caption>
+ * 
+ * const { dedupfilter } = require('functionish/misc');
+ * 
+ * function getuniqusers(users) {
+ *     return users.filter( user => user.id );
+ * }
+ * 
  * @function dedupfilter
+ * @param {function} [hashfunc] The hashing function
  * @returns {function}
  */
-function dedupfilter() {
+function dedupfilter(hashfunc) {
 
     const dedup = new Set();
 
-    return value => (dedup.size !== dedup.add(value).size);
+    return (typeof hashfunc === TYPE_FUNCTION)
+         ? value => (dedup.size !== dedup.add( hashfunc(value) ).size)
+         : value => (dedup.size !== dedup.add(value).size);
 }
 
 module.exports = dedupfilter;

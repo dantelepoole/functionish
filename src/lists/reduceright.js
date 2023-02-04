@@ -4,36 +4,34 @@
 
 'use strict';
 
-const isarray = require('./isarray');
-const isfunction = require('./isfunction');
-const resolvefunction = require('./resolvefunction');
+const curry3 = require('../curry3')
+const isarray = require('../types/isarray');
 
 /**
  * Functional variant of {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}. Reduces the
  * values in *list* in reverse order, starting with the *initialvalue* and using the *reducer* function.
  * 
- * @example
+ * `reduceright()` is curried by default with ternary arity.
  * 
- * const reduceright = require('functionish/lists/reduceright');
- * const range = require('functionish/misc/range');
+ * @example <caption>Example usage of `reduceright()`</caption>
  * 
- * function sum(a,b) { return (a+b) }
+ * const { reduceright } = require('functionish/lists');
+ * 
+ * const add = (a,b) => (a+b);
  * 
  * reduceright(sum, 0, [1,2,3]); // returns 6
- * reduceright(sum, 0, range(3)); //returns 6
  * 
- * @func reduceright
+ * @function reduceright
  * @param {function} reducer The reducer function
  * @param {any} initialvalue The initial value to pass to *reducer* as the accumulator
  * @param {iterable} list An iterable object
  * @returns {any} The reduced value
  */
+function reduceright(reducer, initialvalue, list) {
 
-module.exports = function reduceright(reducer, initialvalue, list) {
-
-    isfunction(reducer) || (reducer = resolvefunction(reducer));
-    
     isarray(list) || (list = [...list]);
 
     return list.reduceRight(reducer, initialvalue);
 }
+
+module.exports = curry3(reduceright);

@@ -4,27 +4,29 @@
 
 'use strict';
 
-const isfunction = require('./isfunction');
-const resolvefunction = require('../resolvefunction');
+const curry2 = require('../curry2');
 
 /**
- * Pass each item in *list* to the *func* function.
+ * Pass each item in *list* to the *func* function and return the *list*.
  * 
- * @example
+ * `iterate()` is curried by default with binary arity.
+ * 
+ * @example <caption>Example usage of `iterate()`</caption>
  *     
- * const iterate = require('functionish/lists/iterate');
+ * const { iterate } = require('functionish/lists');
  * 
  * iterate(console.log, [1,2,3]); // prints `2`, `4` and `6`
  *     
- * @func iterate
+ * @function iterate
  * @param {function} func The function to apply to each item in *list*
  * @param {iterable} list An iterable object
+ * @returns {iterable} *list*
  */
-module.exports = function iterate(func, list) {
-
-    isfunction(func) || (func = resolvefunction(func));
+function iterate(func, list) {
 
     for(const value of list) func(value);
 
     return list;
 }
+
+module.exports = curry2(iterate);

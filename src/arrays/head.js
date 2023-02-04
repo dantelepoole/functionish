@@ -1,5 +1,5 @@
 /**
- * @module collections/head
+ * @module arrays/head
  */
 
 'use strict';
@@ -7,17 +7,20 @@
 /**
  * Return the first item in *indexable* or `undefined` if *indexable* is empty.
  * 
- * @example
- * const head = require('functionish/head');
+ * @example <caption>Example usage of `head()`</caption>
+ * 
+ * const {head} = require('functionish/arrays');
  * 
  * head([1,2,3]); // returns 1
  * head([]); // returns `undefined`
  * head('foobar'); // returns 'f'
  * 
- * @func head
- * @param {indexable} indexable An indexable or iterable object
+ * @function head
+ * @param {indexable} indexable An indexable object
  * @returns {any}
  */
-module.exports = function head(indexable) {
+function head(indexable) {
     return indexable[0];
 }
+
+module.exports = head;

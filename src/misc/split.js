@@ -13,6 +13,12 @@ const curry2 = require('../curry2');
  * 
  * `split()` is curried by default with binary arity.
  * 
+ * @example <caption>Example usage of `split()`</caption>
+ * 
+ * const { split } = require('functionish/misc');
+ * 
+ * split('.', 'foo.bar'); // returns ['foo','bar']
+ * 
  * @function split
  * @see {@link external:String.prototype.split String.prototype.split()}
  * @param {string} separator The delimiter string

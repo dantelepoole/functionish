@@ -4,32 +4,42 @@
 
 'use strict';
 
-const HASHFUNC_ID = x => x;
+const HASH_STRICT = 'strict';
+
+const curry3 = require('../curry3');
 
 /**
  * Return an iterable producing only those items from *list1* that are not present in *list2*, but without duplicates.
  * 
- * If *hashfunc* is `null` or `undefined` (default), the list items are compared with strict
+ * If *hashfunc* is `'strict'`, the list items are compared with strict
  * equality (`===`). Otherwise, the items' hash results are compared instead. Therefore, *hashfunc*
- * should be collision-free (i.e. never return the same hash value for different arguments) and should
- * always return the same hash value when passed the same argument multiple times.
+ * should be absolutely collision-free, otherwise `diff()` can give incorrect results.
  * 
- * @example
+ * `diff()` is curried by default with ternary arity.
  * 
- * const diff = require('functionish/lists/diff');
+ * @example <caption>Example usage of `diff()`</caption>
  * 
- * Array.from( diff( [1,2,3], [3,4,5] ) ); // returns [1,2]
+ * const { diff } = require('functionish/lists');
+ * 
+ * const difference = diff('strict', [1,2,3], [3,4,5]);
+ * 
+ * Array.from( difference ); // returns [1,2]
  *  
- * @func diff
- * @param {function} hashfunc The hashing function 
+ * @function diff
+ * @param {(function|string)} hashfunc The hashing function or `'strict'` to use strict equality 
  * @param {iterable} list1 The first iterable
  * @param {iterable} list2 The second iterable
  * @returns {iterable}
  */
+function diff(hashfunc, list1, list2) {
 
-module.exports = function diff(hashfunc, list1, list2) {
+    return (hashfunc === HASH_STRICT)
+         ? diffstrict(list1, list2)
+         : diffhash(hashfunc, list1, list2);
 
-    hashfunc = (hashfunc ?? HASHFUNC_ID);
+}
+
+function diffhash(hashfunc, list1, list2) {
 
     return {
         [Symbol.iterator] : function* () {
@@ -41,14 +51,27 @@ module.exports = function diff(hashfunc, list1, list2) {
     }
 }
 
+function diffstrict(list1, list2) {
+
+    return {
+        [Symbol.iterator] : function* () {
+
+            const dedup = new Set(list2);
+            const isuniq = value => (dedup.size < dedup.add(value).size);
+
+            for(const value of list1) isuniq(value) && (yield value);
+        }
+    }
+}
+
 function isuniqfactory(list, hashfunc) {
 
-    const dedup = new Set( hashingiterable(list, hashfunc) );
+    const dedup = new Set( hashlist(list, hashfunc) );
 
     return value => (dedup.size < dedup.add( hashfunc(value) ).size);
 }
 
-function hashingiterable(list, hashfunc) {
+function hashlist(list, hashfunc) {
 
     return {
         [Symbol.iterator]: function* () {
@@ -56,3 +79,5 @@ function hashingiterable(list, hashfunc) {
         }
     }
 }
+
+module.exports = curry3(diff);

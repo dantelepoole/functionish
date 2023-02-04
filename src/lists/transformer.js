@@ -4,45 +4,24 @@
 
 'use strict';
 
-const CONTEXT_NONE = undefined;
-const FILTER_INCLUDE = true;
-const FILTER_REJECT = false;
+const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
+const TYPE_BOOLEAN = 'boolean';
 
-module.exports = function transformer(...transformations) {
+const id = require('../id');
 
-    const transformation = transform.bind(CONTEXT_NONE, transformations);
-    
-    return _transformer.bind(CONTEXT_NONE, transformation);
+const transformreducer = (transformer, transformation) => value => _transform(transformer, transformation, value);
+
+function transformer(...transformations) {
+    return transformations.reduceRight(transformreducer, id);
 }
 
-function _transformer(transformation, list) {
+function _transform(transformer, transformation, value) {
 
-    return {
+    const result = transformation(value);
 
-        [Symbol.iterator]: function* () {
-
-            for(const value of list) {
-
-                const transformedvalue = transformation(value);
-
-                if(transformedvalue !== FILTER_REJECT) yield transformedvalue;
-            }
-        }
-    }
+    return (typeof result !== TYPE_BOOLEAN) ? transformer(result)
+         : result ? transformer(value)
+         : TRANSFORM_REJECT;
 }
 
-function transform(transformations, value) {
-
-    for(const transformation of transformations) {
-
-        const transformedvalue = transformation(value);
-
-        if(transformedvalue === FILTER_INCLUDE) continue;
-
-        if(transformedvalue === FILTER_REJECT) return FILTER_REJECT;
-
-        value = transformedvalue;
-    }
-
-    return value;
-}
+module.exports = transformer;
