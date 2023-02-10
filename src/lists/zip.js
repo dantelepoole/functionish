@@ -5,16 +5,14 @@
 'use strict';
 
 const curry2 = require('../curry2');
+const isarray = require('../types/isarray');
 
 /**
  * Return an iterable that produces 2-element arrays containing the next item from *list1* and
  * the next item from *list2*. The returned iterable has the same length as the shortest *list*.
  * 
- * The returned iterable object is lazy, meaning it iterates over the argument lists only when it
- * is iterated over itself. If you change the contents of either argument list after calling `zip()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `zip()` (e.g. by loading it into an array).
+ * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
+ * iterable objects and an iterable object is returned that operates lazily.
  * 
  * `zip()` is curried by default with binary arity.
  * 
@@ -33,6 +31,15 @@ const curry2 = require('../curry2');
  * @returns {iterable}
  */
 function zip(list1, list2) {
+
+    const zippedlist = zipiterable(list1, list2);
+
+    return isarray(list1)
+         ? Array.from(zippedlist)
+         : zippedlist;
+}
+
+function zipiterable(list1, list2) {
 
     return {
 

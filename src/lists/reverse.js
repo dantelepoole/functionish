@@ -5,19 +5,19 @@
 'use strict';
 
 const EMPTY_STRING = '';
-const TYPE_STRING = 'string';
+
+const isarray = require('../types/isarray');
+const isstring = require('../types/isstring');
 
 /**
  * If *list* is a string, return it with its characters in reverse order.
  * 
- * Otherwise, return an iterable object that produces the items from *list* in reverse order,
- * without affecting or altering *list* itself.
+ * If *list* is an array, return a new array with its items in reverse order. The argument
+ * array is not changed.
  * 
- * The returned iterable object is semi-lazy. It needs to load *list* into memory entirely,
- * but does so only when you start iterating the returned iterable.If you change the contents
- * of *list* after calling `reverse()` and before processing the returned iterable, the changes
- * will be reflected in the returned iterable. If this not the desired behaviour, iterate over
- * the returned iterable immediately after calling `reverse()` (e.g. by loading it into an array).
+ * Otherwise, presume *list* is iterable and returns an iterable object that generates its
+ * items in reverse order. The returned list operates semi-lazily: it needs to load the argument list
+ * into memory entirely, but does so only when you start iterating the returned list.
  * 
  * @function reverse
  * @param {(iterable|string)} list An iterable object producing the items to reverse, or a string
@@ -25,8 +25,8 @@ const TYPE_STRING = 'string';
  */
 function reverse(list) {
 
-    return (typeof list === TYPE_STRING)
-         ? list.split(EMPTY_STRING).reverse().join(EMPTY_STRING)
+    return isstring(list) ? list.split(EMPTY_STRING).reverse().join(EMPTY_STRING)
+         : isarray(list) ? list.slice().reverse()
          : reverseiterable(list);
 }
 

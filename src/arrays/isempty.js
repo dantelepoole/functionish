@@ -4,6 +4,8 @@
 
 'use strict';
 
+const querycountiterable = list => list[Symbol.iterator()]().next().done ? 0 : 1;
+
 /**
  * Return `true` if *indexable* has a `length` or `size` property equal to `0` or
  * if *indexable* has no such properties at all.
@@ -23,12 +25,15 @@
  * 
  * @function isempty
  * @see {@link module:hasitems hasitems()}
- * @param {any} indexable The value to check
+ * @param {any} list The value to check
  * @returns {boolean}
  * 
  */
-function isempty(indexable) {
-    return ! (indexable.length ?? indexable.size ?? 0);
+function isempty(list) {
+
+    const itemcount = (list.length ?? list.size ?? querycountiterable(list));
+
+    return (itemcount === 0);
 }
 
 module.exports = isempty;

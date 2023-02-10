@@ -7,6 +7,7 @@
 const HASH_STRICT = 'strict';
 
 const curry3 = require('../curry3');
+const isarray = require('../types/isarray');
 
 /**
  * Return an iterable producing only those items from *list1* that are not present in *list2*, but without duplicates.
@@ -14,6 +15,9 @@ const curry3 = require('../curry3');
  * If *hashfunc* is `'strict'`, the list items are compared with strict
  * equality (`===`). Otherwise, the items' hash results are compared instead. Therefore, *hashfunc*
  * should be absolutely collision-free, otherwise `diff()` can give incorrect results.
+ * 
+ * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
+ * iterable objects and an iterable object is returned that operates lazily.
  * 
  * `diff()` is curried by default with ternary arity.
  * 
@@ -33,15 +37,19 @@ const curry3 = require('../curry3');
  */
 function diff(hashfunc, list1, list2) {
 
-    return (hashfunc === HASH_STRICT)
-         ? diffstrict(list1, list2)
-         : diffhash(hashfunc, list1, list2);
+    const difflist = (hashfunc === HASH_STRICT)
+                   ? diffstrict(list1, list2)
+                   : diffhash(hashfunc, list1, list2);
 
+    return isarray(list1)
+         ? Array.from(difflist)
+         : difflist;
 }
 
 function diffhash(hashfunc, list1, list2) {
 
     return {
+
         [Symbol.iterator] : function* () {
 
             const isuniq = isuniqfactory(list2, hashfunc);
@@ -54,6 +62,7 @@ function diffhash(hashfunc, list1, list2) {
 function diffstrict(list1, list2) {
 
     return {
+        
         [Symbol.iterator] : function* () {
 
             const dedup = new Set(list2);

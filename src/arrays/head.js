@@ -4,6 +4,8 @@
 
 'use strict';
 
+const isarray = require('../types/isarray');
+
 /**
  * Return the first item in *indexable* or `undefined` if *indexable* is empty.
  * 
@@ -16,11 +18,21 @@
  * head('foobar'); // returns 'f'
  * 
  * @function head
- * @param {indexable} indexable An indexable object
+ * @param {indexable} list An indexable object
  * @returns {any}
  */
-function head(indexable) {
-    return indexable[0];
+function head(list) {
+    
+    return isarray(list)
+         ? list[0]
+         : headiterable(list);
+}
+
+function headiterable(list) {
+
+    const firstitem = list[Symbol.iterator]().next();
+
+    if( ! firstitem.done ) return firstitem.value;
 }
 
 module.exports = head;

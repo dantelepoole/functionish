@@ -4,14 +4,13 @@
 
 'use strict';
 
+const isarray = require('../types/isarray');
+
 /**
  * Return a copy of *list* without its first item.
  * 
- * The returned iterable object is lazy, meaning it iterates over *list* only when it
- * is iterated over itself. If you change the contents of *list* after calling `tail()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `tail()` (e.g. by loading it into an array).
+ * If *list* is an array, an array is returned. Otherwise, *list* is presumed to be
+ * iterable and an iterable object is returned that operates lazily.
  * 
  * @example <caption>Example usage of `tail()`</caption>
  * 
@@ -26,6 +25,13 @@
  * @returns {iterable}
  */
 function tail(list) {
+    
+    return isarray(list)
+         ? list.slice(1)
+         : tailiterable(list);
+}
+
+function tailiterable(list) {
 
     return {
 

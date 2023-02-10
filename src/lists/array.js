@@ -10,7 +10,7 @@
  * 
  * @example <caption>Example usage of `array()`</caption>
  * 
- * const {array} = require('functionish/lists');
+ * const { array } = require('functionish/lists');
  * 
  * array('foobar'); // returns ['f','o','o','b','a','r'];
  * 

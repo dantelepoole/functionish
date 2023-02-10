@@ -4,6 +4,8 @@
 
 'use strict';
 
+const querycountiterable = list => list[Symbol.iterator()]().next().done ? 0 : 1;
+
 /**
  * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. If
  * *collection* has no such properties, `false` is returned.
@@ -31,11 +33,14 @@
  * @function hasitems
  * @see {@link module:types/isempty isempty()}
  * @see {@link module:types/notempty notempty()}
- * @param {collection} collection The collection to check
+ * @param {collection} list The collection to check
  * @returns {boolean}
  */
-function hasitems(collection) {
-    return !! (collection.length ?? collection.size ?? 0);
+function hasitems(list) {
+    
+    const itemcount = (list.length ?? list.size ?? querycountiterable(list));
+
+    return (itemcount > 0);
 }
 
 module.exports = hasitems;

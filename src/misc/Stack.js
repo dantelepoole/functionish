@@ -2,12 +2,7 @@
  * @module misc/Stack
  */
 
-const EVENT_POP = 'pop';
-const EVENT_PUSH = 'push';
-
-const EventEmitter = require('events').EventEmitter;
-
-class Stack extends EventEmitter {
+class Stack {
 
     #items = [];
 
@@ -30,20 +25,12 @@ class Stack extends EventEmitter {
     }
     
     pop() {
-
-        if(this.#items.length > 0) {
-            const value = this.#items.pop();
-            this.emit(EVENT_POP, value);
-            return value;
-        }
+        if(this.#items.length > 0) return this.#items.pop();
     }
 
     push(...values) {
 
-        if(values.length > 0) {
-            this.#items.push(...values);
-            this.emit(EVENT_PUSH, values);
-        }
+        this.#items.push(...values);
 
         return this;
     }

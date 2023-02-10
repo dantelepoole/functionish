@@ -5,6 +5,7 @@
 'use strict';
 
 const curry3 = require('../curry3');
+const isarray = require('../types/isarray');
 
 const HASH_STRICT = 'strict';
 
@@ -16,11 +17,8 @@ const HASH_STRICT = 'strict';
  * should be collision-free (i.e. never return the same hash value for different arguments) and should
  * always return the same hash value when passed the same argument multiple times.
  * 
- * The returned iterable object is lazy, meaning it iterates over the argument lists only when it
- * is iterated over itself. If you change the contents of either argument list after calling `intersection()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `intersection()` (e.g. by loading it into an array).
+ * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
+ * iterable objects and an iterable object is returned that operates lazily.
  * 
  * `intersection()` is curried by default with ternary arity.
  * 
@@ -39,9 +37,13 @@ const HASH_STRICT = 'strict';
  */
 function intersection(hashfunc, list1, list2) {
 
-    return (hashfunc === HASH_STRICT)
-         ? intersectionstrict(list1, list2)
-         : intersectionhash(hashfunc, list1, list2);
+    const resultlist = (hashfunc === HASH_STRICT)
+                     ? intersectionstrict(list1, list2)
+                     : intersectionhash(hashfunc, list1, list2);
+
+    return isarray(list1)
+         ? Array.from(resultlist)
+         : resultlist;
 }
 
 function intersectionhash(hashfunc, list1, list2) {

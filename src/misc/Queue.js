@@ -2,12 +2,6 @@
  * @module misc/Queue
  */
 
-const EVENT_DEQUEUE = 'dequeue';
-const EVENT_ENQUEUE = 'enqueue';
-const EVENT_PRIORITY = 'priority';
-
-const EventEmitter = require('events').EventEmitter;
-
 const enqueuereducer = (currentnode, value) => (currentnode.next = { value });
 
 class Queue extends EventEmitter {
@@ -42,8 +36,6 @@ class Queue extends EventEmitter {
 
         if(this.#size === 0) this.#tail = undefined;
 
-        this.emit(EVENT_DEQUEUE, headvalue);
-
         return headvalue;
     }
 
@@ -58,8 +50,6 @@ class Queue extends EventEmitter {
 
         this.#tail = chain.last;
         this.#size += chain.length;
-
-        this.emit(EVENT_ENQUEUE, values);
 
         return this;
     }
@@ -80,8 +70,6 @@ class Queue extends EventEmitter {
         if(this.#size === 0) this.#tail = chain.last;
 
         this.#size += chain.length;
-
-        this.emit(EVENT_PRIORITY, values);
 
         return this;
     }

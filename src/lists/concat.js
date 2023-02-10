@@ -4,11 +4,16 @@
 
 'use strict';
 
+const isarray = require('../types/isarray');
 const isiterable = require('../types/isiterable');
 
 /**
  * Return an iterable object that flattens each *list* in *lists* in order. If a *list* is not iterable,
  * the returned iterable produces the *list* itself.
+ * 
+ * If the first list in the *lists* array is array, its {@link external:Array.prototype.concat Array.prototype.concat()}
+ * method is called and the result is returned. Otherwise, the *lists* are presumed to be iterable objects
+ * and a new iterable object is returned that operates lazily.
  * 
  * @example <caption>Example usage of `concat()`</caption>
  * 
@@ -24,6 +29,13 @@ const isiterable = require('../types/isiterable');
  */
 function concat(...lists) {
     
+    return isarray(lists[0])
+         ? lists[0].concat( ...lists.slice(1) )
+         : concatiterable(lists);
+}
+
+function concatiterable(lists) {
+
     return {
         [Symbol.iterator] : function* () {
             for(const list of lists) isiterable(list) ? yield* list : yield list;

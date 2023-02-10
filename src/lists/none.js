@@ -5,6 +5,8 @@
 'use strict';
 
 const curry2 = require('../curry2');
+const isfunction = require('../types/isfunction');
+const unary = require('../unary');
 
 /**
  * Apply the *predicate* function to each item in *list* and return `true` if and only if *predicate* returns a falsy
@@ -12,6 +14,13 @@ const curry2 = require('../curry2');
  * 
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
+ * 
+ * If *list* is an array, this function calls the {@link external:Array.prototype.some Array.prototype.some()}
+ * method and returns the logical complement of result. However, the *predicate* function will only ever be called with
+ * a single argument (the current list item), not the additional arguments that {@link external:Array.prototype.some Array.prototype.some()}
+ * passes to its function.
+ * 
+ * If *list* is not an array, it is presumed to be an iterable object.
  * 
  * `none()` is curried by default with binary arity.
  *
@@ -33,9 +42,17 @@ const curry2 = require('../curry2');
  */
 function none(predicate, list) {
 
-    for(const value of list) if( predicate(value) ) return false;
+    return isfunction(list.some)
+         ? ! list.some( unary(predicate) )
+         : noneiterable(predicate, list);
 
-    return true;
+}
+
+function noneiterable(predicate, list) {
+
+    for(const value of list) if( predicate(value) ) return true;
+
+    return false;
 }
 
 module.exports = curry2(none);

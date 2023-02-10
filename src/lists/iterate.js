@@ -5,9 +5,19 @@
 'use strict';
 
 const curry2 = require('../curry2');
+const isarray = require('../types/isarray');
+const unary = require('../unary');
 
 /**
  * Pass each item in *list* to the *func* function and return the *list*.
+ * 
+ * If *list* is an array, this function calls its {@link external:Array.prototype.forEach Array.prototype.forEach()}
+ * method and returns the result. However, the *mapfunc* function will only ever be called with a single
+ * argument (the current list item), not the additional arguments that {@link external:Array.prototype.forEach Array.prototype.forEach()}
+ * passes to its function.
+ * 
+ * If *list* is not an array, it is presumed to be iterable and an iterable object is returned
+ * that operates lazily.
  * 
  * `iterate()` is curried by default with binary arity.
  * 
@@ -24,9 +34,14 @@ const curry2 = require('../curry2');
  */
 function iterate(func, list) {
 
-    for(const value of list) func(value);
+    isarray(list) ? list.forEach( unary(func) )
+                  : iterateiterable(func, list)
 
     return list;
+}
+
+function iterateiterable(func, list) {
+    for(const value of list) func(value);
 }
 
 module.exports = curry2(iterate);

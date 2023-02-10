@@ -4,12 +4,20 @@
 
 'use strict';
 
-const curry3 = require('../curry3')
-const isarray = require('../types/isarray');
+const curry3 = require('../curry3');
+const isfunction = require('../types/isfunction');
+const unary = require('../unary');
 
 /**
- * Functional variant of {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}. Reduces the
- * values in *list* in reverse order, starting with the *initialvalue* and using the *reducer* function.
+ * Reduce the values in *list* in reverse order starting with the *initialvalue* and using the
+ * *reducer* function.
+ * 
+ * If *list* is an array, this function calls its {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}
+ * method and returns the result. However, the *predicate* function will only ever be called with a single
+ * argument (the current list item), not the additional arguments that {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}
+ * passes to its function.
+ * 
+ * If *list* is not an array, it is presumed to be an iterable object.
  * 
  * `reduceright()` is curried by default with ternary arity.
  * 
@@ -29,9 +37,9 @@ const isarray = require('../types/isarray');
  */
 function reduceright(reducer, initialvalue, list) {
 
-    isarray(list) || (list = [...list]);
-
-    return list.reduceRight(reducer, initialvalue);
+    return isfunction(list.reduceRight)
+         ? list.reduceRight( unary(reducer), initialvalue )
+         : [...list].reduceRight( unary(reducer), initialvalue );
 }
 
 module.exports = curry3(reduceright);

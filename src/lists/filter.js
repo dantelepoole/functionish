@@ -5,16 +5,20 @@
 'use strict';
 
 const curry2 = require('../curry2');
+const isfunction = require('../types/isfunction');
+const unary = require('../unary');
 
 /**
  * Return an iterable object that produces only the values in *list* for which the
  * *predicate* returns a truthy value.
  * 
- * The returned iterable object is lazy, meaning it iterates over *list* only when it
- * is iterated over itself. If you change the contents of *list* after calling `filter()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `filter()` (e.g. by loading it into an array).
+ * If *list* is an array, this function calls its {@link external:Array.prototype.filter Array.prototype.filter()}
+ * method and returns the result. However, the *predicate* function will only ever be called with a single
+ * argument (the current list item), not the additional arguments that {@link external:Array.prototype.filter Array.prototype.filter()}
+ * passes to its function.
+ * 
+ * If *list* is not an array, it is presumed to be iterable and an iterable object is returned
+ * that operates lazily.
  * 
  * `filter()` is curried by default with binary arity.
  * 
@@ -35,6 +39,13 @@ const curry2 = require('../curry2');
  * @returns {iterable} 
  */
 function filter(predicate, list) {
+
+    return isfunction(list.filter) 
+         ? list.filter( unary(predicate) )
+         : filteriterable(predicate, list);
+}
+
+function filteriterable(predicate, list) {
 
     return {
         [Symbol.iterator] : function* () {

@@ -4,17 +4,15 @@
 
 'use strict';
 
-const curry3 = require('functionish/curry3');
+const curry3 = require('../curry3');
+const isarray = require('../types/isarray');
 
 /**
  * Similar to  {@link module:zip zip()} except that the returned iterable returns the result of applying *func* to the
  * elements of *list1* and *list2*.
  * 
- * The returned iterable object is lazy, meaning it iterates over the argument lists only when it
- * is iterated over itself. If you change the contents of either argument list after calling `zipwith()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `zipwith()` (e.g. by loading it into an array).
+ * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
+ * iterable objects and an iterable object is returned that operates lazily.
  * 
  * `zipwith()` is curried by default with ternary arity.
  * 
@@ -35,6 +33,15 @@ const curry3 = require('functionish/curry3');
  * @returns {iterable}
  */
 function zipwith(func, list1, list2) {
+
+    const zippedlist = zipwithiterable(func, list1, list2);
+
+    return isarray(list1)
+         ? Array.from(zippedlist)
+         : zippedlist;
+}
+
+function zipwithiterable(func, list1, list2) {
 
     return {
 

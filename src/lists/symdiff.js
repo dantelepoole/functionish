@@ -7,6 +7,7 @@
 const HASH_STRICT = 'strict';
 
 const curry3 = require('../curry3');
+const isarray = require('../types/isarray');
 
 /**
  * Return an iterable that produces the items from *list1* that are not present in *list2, in order, followed
@@ -17,11 +18,8 @@ const curry3 = require('../curry3');
  * equality (`===`). Otherwise, the items' hash results are compared instead. Therefore, *hashfunc*
  * should be absolutely collision-free, otherwise `symdiff()` can give incorrect results.
  * 
- * The returned iterable object is lazy, meaning it iterates over the argument lists only when it
- * is iterated over itself. If you change the contents of either argument list after calling `symdiff()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `symdiff()` (e.g. by loading it into an array).
+ * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
+ * iterable objects and an iterable object is returned that operates lazily.
  * 
  * `symdiff()` is curried by default with ternary arity.
  * 
@@ -41,9 +39,13 @@ const curry3 = require('../curry3');
  */
 function symdiff(hashfunc, list1, list2) {
 
-    return (hashfunc === HASH_STRICT)
-         ? symdiffstrict(list1, list2)
-         : symdiffhash(hashfunc, list1, list2);
+    const diffedlist = (hashfunc === HASH_STRICT)
+                     ? symdiffstrict(list1, list2)
+                     : symdiffhash(hashfunc, list1, list2);
+
+    return isarray(list1)
+         ? Array.from(diffedlist)
+         : diffedlist;
 }
 
 function symdiffhash(hashfunc, list1, list2) {

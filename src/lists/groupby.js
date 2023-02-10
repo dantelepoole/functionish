@@ -76,4 +76,4 @@ function groupby(keyselector, list) {
     return target;
 }
                                  
-module.exports = groupby;
+module.exports = curry2(groupby);

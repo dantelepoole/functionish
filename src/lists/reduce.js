@@ -5,10 +5,18 @@
 'use strict';
 
 const curry3 = require('../curry3');
+const isfunction = require('../types/isfunction');
+const unary = require('../unary');
 
 /**
- * Functional variant of {@link external:Array.prototype.reduce Array.prototype.reduce()}. Reduces the
- * values in *list* starting with the *initialvalue* and using the *reducer* function.
+ * Reduce the values in *list* starting with the *initialvalue* and using the *reducer* function.
+ * 
+ * If *list* is an array, this function calls its {@link external:Array.prototype.reduce Array.prototype.reduce()}
+ * method and returns the result. However, the *predicate* function will only ever be called with a single
+ * argument (the current list item), not the additional arguments that {@link external:Array.prototype.reduce Array.prototype.reduce()}
+ * passes to its function.
+ * 
+ * If *list* is not an array, it is presumed to be an iterable object.
  * 
  * `reduce()` is curried by default with ternary arity.
  * 
@@ -27,6 +35,13 @@ const curry3 = require('../curry3');
  * @returns {any} The reduced value
  */
 function reduce(reducer, initialvalue, list) {
+
+    return isfunction(list.reduce)
+         ? list.reduce( unary(reducer), initialvalue )
+         : reduceiterable(reducer, initialvalue, list);
+}
+
+function reduceiterable(reducer, initialvalue, list) {
 
     let result = initialvalue;
 

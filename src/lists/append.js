@@ -5,12 +5,18 @@
 'use strict';
 
 const curry2 = require('../curry2');
-
+const isarray = require('../types/isarray');
+const isstring = require('../types/isstring');
 
 /**
- * Return an iterable object that produces *list1*'s items followed by *list2*'s items. `append()` differs from
- * {@link module:union union()} in that, unlike {@link module:union union()}, `append()` does *not* discard duplicate
- * items.
+ * Return an iterable object that produces *list1*'s items followed by *list2*'s items.
+ * 
+ * If *list1* is an array, a new array is returned containing the items of *list1* followed by those of *list2*.
+ * 
+ * If *list1* is a string, a new string is returned consisting of *list1* followed by *list2*.
+ * 
+ * Otherwise, *list1* is presumed to iterable and an iterable object is returned that generates
+ * the items of *list1* followed by those of *list2*.
  * 
  * @example <caption>Example usage of `append()`</caption>
  * 
@@ -26,6 +32,13 @@ const curry2 = require('../curry2');
  */
 function append(list1, list2) {
     
+    return isarray(list1) ? [...list1, ...list2]
+         : isstring(list1) ? (list1 + list2)
+         : appenditerable(list1, list2);
+}
+
+function appenditerable(list1, list2) {
+
     return {
         [Symbol.iterator] : function* () {
             yield* list1;

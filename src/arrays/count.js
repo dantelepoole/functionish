@@ -18,11 +18,20 @@
  * count( new Set([1,1,1,2]) ); // returns 2
  * 
  * @function count
- * @param {object} countable An object with a `length` or `size` property
+ * @param {iterable} list An iterable object
  * @returns {number}
  */
-function count(countable) {
-    return (countable?.length ?? countable?.size ?? NaN);
+function count(list) {
+    return (list.length ?? list.size ?? countiterable(list));
+}
+
+function countiterable(list) {
+
+    let count = 0;
+
+    for(const value of list) count += 1;
+
+    return count;
 }
 
 module.exports = count;

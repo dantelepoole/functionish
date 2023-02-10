@@ -5,16 +5,20 @@
 'use strict';
 
 const curry2 = require('../curry2');
+const isarray = require('../types/isarray');
+const unary = require('../unary');
 
 /**
  * Return an iterable object that passes each value in *list* to the *mapfunc* function and flattens the result by one
  * level, meaning that if result is iterable, the result itself is expanded.
  * 
- * The returned iterable object is lazy, meaning it iterates over *list* only when it
- * is iterated over itself. If you change the contents of *list* after calling `flatmap()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `flatmap()` (e.g. by loading it into an array).
+ * If *list* is an array, this function calls its {@link external:Array.prototype.flatMap Array.prototype.flatMap()}
+ * method and returns the result. However, the *mapfunc* function will only ever be called with a single
+ * argument (the current list item), not the additional arguments that {@link external:Array.prototype.flatMap Array.prototype.flatMap()}
+ * passes to its function.
+ * 
+ * If *list* is not an array, it is presumed to be iterable and an iterable object is returned
+ * that operates lazily.
  * 
  * `flatmap()` is curried by default with binary arity.
  * 
@@ -39,6 +43,13 @@ const curry2 = require('../curry2');
  * @returns {iterable}
  */
 function flatmap(mapfunc, list) {
+
+    return isarray(list)
+         ? list.flatMap( unary(mapfunc) )
+         : flatmapiterable(mapfunc, list);
+}
+
+function flatmapiterable(mapfunc, list) {
 
     return {
         [Symbol.iterator] : function* () {

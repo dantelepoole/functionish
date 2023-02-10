@@ -7,18 +7,16 @@
 const MINIMUM_BATCHSIZE = 1;
 
 const curry2 = require('../curry2');
+const isarray = require('../types/isarray');
 
 const maximum = Math.max;
 
 /**
  * Return an iterable of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
  * a batch size of `1` will be used.
- * 
- * The returned iterable object is lazy, meaning it iterates over *list* only when it
- * is iterated over itself. If you change the contents of *list* after calling `batch()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `batch()` (e.g. by loading it into an array).
+ *
+ * If *list* is an array, an array is returned. Otherwise, *list* is presumed to be iterable
+ * and a new iterable object is returned that operates lazily. 
  * 
  * `batch()` is curried by default with binary arity.
  * 
@@ -40,6 +38,15 @@ const maximum = Math.max;
 function batch(batchsize, list) {
 
     batchsize = maximum(batchsize, MINIMUM_BATCHSIZE);
+
+    const batchedlist = batchiterable(batchsize, list);
+
+    return isarray(list)
+         ? Array.from(batchedlist)
+         : batchedlist;
+}
+
+function batchiterable(batchsize, list) {
 
     return {
     

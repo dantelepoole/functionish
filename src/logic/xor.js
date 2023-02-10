@@ -4,14 +4,12 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-
 const always = require('./always');
-const boolify = require('./boolify');
+const isfunction = require('../types/isfunction');
 
-const prep = predicate => (typeof predicate === TYPE_FUNCTION)
-                        ? boolify(predicate)
-                        : boolify( always(predicate) );
+const prepare = predicate => isfunction(predicate)
+                           ? (...args) => !! predicate(...args)
+                           : always( !! predicate );
 
 /**
  * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `true` and only if
@@ -36,8 +34,8 @@ const prep = predicate => (typeof predicate === TYPE_FUNCTION)
  */
 function xor(predicate1, predicate2) {
 
-    predicate1 = prep(predicate1);
-    predicate2 = prep(predicate2);
+    predicate1 = prepare(predicate1);
+    predicate2 = prepare(predicate2);
 
     return (...args) => (predicate1(...args) !== predicate2(...args));
 }

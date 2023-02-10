@@ -5,16 +5,16 @@
 'use strict';
 
 const isiterable = require('../isiterable');
+const isarray = require('../types/isarray');
+
 
 /**
  * Return an iterable object that flattens the values in *list* by one level, meaning that if any
  * value in list is iterable, that value itself is expanded.
  * 
- * The returned iterable object is lazy, meaning it iterates over *list* only when it
- * is iterated over itself. If you change the contents of *list* after calling `flat()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `flat()` (e.g. by loading it into an array).
+ * If *list* is an array, this function calls its {@link external:Array.prototype.flat Array.prototype.flat()}
+ * method and returns the result. If *list* is not an array, it is presumed to be iterable and an iterable
+ * object is returned that operates lazily.
  * 
  * @example <caption>Example usage of `flat()`</caption>
  * 
@@ -30,6 +30,13 @@ const isiterable = require('../isiterable');
  * @returns {iterable}
  */
 function flat(list) {
+
+    return isarray(list)
+         ? list.flat()
+         : flatiterable();
+}
+
+function flatiterable(list) {
 
     return {
         [Symbol.iterator] : function* () {

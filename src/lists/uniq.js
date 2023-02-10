@@ -7,6 +7,7 @@
 const HASH_STRICT = 'strict';
 
 const curry2 = require('../curry2');
+const isarray = require('../types/isarray');
 
 /**
  * Return an iterable that produces the items in *list* in order but without any duplicate items.
@@ -15,11 +16,8 @@ const curry2 = require('../curry2');
  * equality (`===`). Otherwise, the items' hash results are compared instead. Therefore, *hashfunc*
  * should be absolutely collision-free, otherwise `uniq()` can give incorrect results.
  * 
- * The returned iterable object is lazy, meaning it iterates over *list* only when it
- * is iterated over itself. If you change the contents of *list* after calling `uniq()`
- * and before processing the returned iterable, the changes will be reflected in the
- * returned iterable. If this not the desired behaviour, iterate over the returned 
- * iterable immediately after calling `uniq()` (e.g. by loading it into an array).
+ * If *list* is an array, an array is returned. Otherwise, *list* is presumed to be
+ * iterable and an iterable object is returned that operates lazily.
  * 
  * `uniq()` is curried by default with binary arity.
  * 
@@ -29,6 +27,15 @@ const curry2 = require('../curry2');
  * @returns {iterable}
  */
 function uniq(hashfunc, list) {
+
+    const uniqlist = uniqiterable(hashfunc, list);
+
+    return isarray(list)
+         ? Array.from(uniqlist)
+         : uniqlist;
+}
+
+function uniqiterable(hashfunc, list) {
 
     return {
         
