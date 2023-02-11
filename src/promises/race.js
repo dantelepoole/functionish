@@ -14,8 +14,6 @@ const runconcurrent = require('../../lib/runconcurrent');
 
 class RaceResult {
 
-    value = undefined
-
     constructor(result) {
         this.value = result;
     }
