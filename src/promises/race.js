@@ -12,43 +12,7 @@ const ERROR_NONE = null;
 const isfunction = require('../types/isfunction');
 const partial = require('../partial');
 const runconcurrent = require('../../lib/runconcurrent');
-
-function race(throttle, ...funcs) {
-
-    if( isfunction(throttle) ) [throttle, funcs] = [DEFAULT_THROTTLE, [throttle, ...funcs]];
-
-    const launchrace = partial(runconcurrent, throttle, funcs, finishifsuccess);
-
-    return function _race(...args) {
-
-        const executor = (resolve, reject) => launchrace( onfinish(resolve, reject), ...args );
-
-        return new Promise(executor);
-    }
-}
-
-function onfinish(resolve, reject) {
-
-    return function finishrace(error, result) {
-
-        error ? reject(error)
-        : (result instanceof RaceResult) ? resolve(result.value)
-        : reject( racefailerror() );
-
-    }
-}
-
-function finishifsuccess(finish, error, result) {
-    if( !error ) finish(ERROR_NONE, new RaceResult(result));
-}
-
-function racefailerror() {
-
-    const error = new Error(ERROR_RACE_FAILED);
-    error.name = ERROR_RACE_FAILED_NAME;
-
-    return error;
-}
+const { platform } = require('os');
 
 class RaceResult {
 
@@ -57,6 +21,30 @@ class RaceResult {
     constructor(result) {
         this.value = result;
     }
+}
+
+const finishunlesserror = (finish, error, result) => error || finish(ERROR_NONE, new RaceResult(result));
+
+const validateraceresult = raceresult => (raceresult instanceof RaceResult)
+                                       ? raceresult.value
+                                       : failrace();
+
+function race(throttle, ...funcs) {
+
+    if( isfunction(throttle) ) [throttle, funcs] = [DEFAULT_THROTTLE, [throttle, ...funcs]];
+
+    const _race = (...args) => runconcurrent(throttle, funcs, finishunlesserror, args)
+                                    .then(validateraceresult);
+
+    return _race;
+                                }
+
+function failrace() {
+
+    const error = new Error(ERROR_RACE_FAILED);
+    error.name = ERROR_RACE_FAILED_NAME;
+
+    throw error;
 }
 
 module.exports = race;
