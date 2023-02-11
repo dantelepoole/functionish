@@ -12,11 +12,11 @@ const runconcurrent = require('../../lib/runconcurrent');
 
 const finishonerror = (finish, error) => error && finish(error);
 
-function parallel(failonerror, throttle, ...funcs) {
+function parallel(rejectonerror, throttle, ...funcs) {
 
     if( isfunction(throttle) ) [throttle, funcs] = [DEFAULT_THROTTLE, [throttle, ...funcs]];
 
-    const onfunccomplete = failonerror ? finishonerror : noop;
+    const onfunccomplete = rejectonerror ? finishonerror : noop;
 
     const _parallel = (...args) => runconcurrent(throttle, funcs, onfunccomplete, args);
     return _parallel;
