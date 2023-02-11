@@ -10,9 +10,7 @@ const ERROR_RACE_FAILED_NAME = `RaceFailError`;
 const ERROR_NONE = null;
 
 const isfunction = require('../types/isfunction');
-const partial = require('../partial');
 const runconcurrent = require('../../lib/runconcurrent');
-const { platform } = require('os');
 
 class RaceResult {
 
