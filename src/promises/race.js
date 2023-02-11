@@ -20,20 +20,18 @@ class RaceResult {
 }
 
 const finishunlesserror = (finish, error, result) => error || finish(ERROR_NONE, new RaceResult(result));
-
-const validateraceresult = raceresult => (raceresult instanceof RaceResult)
-                                       ? raceresult.value
-                                       : failrace();
+const israceresult = result => (result instanceof RaceResult);
+const validateresult = result => israceresult(result) ? result.value : failrace();
 
 function race(throttle, ...funcs) {
 
     if( isfunction(throttle) ) [throttle, funcs] = [DEFAULT_THROTTLE, [throttle, ...funcs]];
 
     const _race = (...args) => runconcurrent(throttle, funcs, finishunlesserror, args)
-                                    .then(validateraceresult);
+                                    .then(validateresult);
 
     return _race;
-                                }
+}
 
 function failrace() {
 
