@@ -18,8 +18,7 @@ function parallel(rejectonerror, throttle, ...funcs) {
 
     const onfunccomplete = rejectonerror ? finishonerror : noop;
 
-    const _parallel = (...args) => runconcurrent(throttle, funcs, onfunccomplete, args);
-    return _parallel;
+    return (...args) => runconcurrent(throttle, funcs, onfunccomplete, args);
 }
 
 module.exports = parallel;

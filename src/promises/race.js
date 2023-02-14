@@ -27,10 +27,8 @@ function race(throttle, ...funcs) {
 
     if( isfunction(throttle) ) [throttle, funcs] = [DEFAULT_THROTTLE, [throttle, ...funcs]];
 
-    const _race = (...args) => runconcurrent(throttle, funcs, finishunlesserror, args)
+    return (...args) => runconcurrent(throttle, funcs, finishunlesserror, args)
                                     .then(validateresult);
-
-    return _race;
 }
 
 function failrace() {
