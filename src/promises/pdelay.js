@@ -6,9 +6,9 @@
 
 const compose = require('../compose');
 
-function pdelay(delayms, func, ...args) {
+function pdelay(delayms, targetfunc) {
 
-    const executor = resolve => setTimeout( compose(resolve, func), delayms, ...args );
+    const executor = resolve => setTimeout( compose(resolve, targetfunc), delayms );
 
     return new Promise(executor);
 }
