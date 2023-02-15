@@ -5,20 +5,23 @@
 'use strict';
 
 const DEFAULT_THROTTLE = require('os').cpus().length;
+const MODE_FAILFAST = 'failfast';
 
+const concurrent = require('../../lib/concurrent');
+const isfailmodefast = mode => (mode === MODE_FAILFAST);
 const isfunction = require('../types/isfunction');
 const noop = require('../noop');
-const runconcurrent = require('../../lib/runconcurrent');
+const partial = require('../partial');
 
-const finishonerror = (finish, error) => error && finish(error);
+const finishonerror = (index, finish, error, data) => error && finish(error);
 
-function parallel(rejectonerror, throttle, ...funcs) {
+function parallel(failmode, throttle, ...funcs) {
 
     if( isfunction(throttle) ) [throttle, funcs] = [DEFAULT_THROTTLE, [throttle, ...funcs]];
 
-    const onfunccomplete = rejectonerror ? finishonerror : noop;
+    const onfunccomplete = isfailmodefast(failmode) ? finishonerror : noop;
 
-    return (...args) => runconcurrent(throttle, funcs, onfunccomplete, args);
+    return partial(concurrent, throttle, funcs, onfunccomplete);
 }
 
 module.exports = parallel;

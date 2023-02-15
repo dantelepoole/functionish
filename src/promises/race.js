@@ -5,30 +5,35 @@
 'use strict';
 
 const DEFAULT_THROTTLE = require('os').cpus().length;
-const ERROR_RACE_FAILED = `All functions in the race threw an error.`;
+const ERROR_RACE_FAILED = `All functions in the race failed.`;
 const ERROR_RACE_FAILED_NAME = `RaceFailError`;
 const ERROR_NONE = null;
 
 const isfunction = require('../types/isfunction');
-const runconcurrent = require('../../lib/runconcurrent');
-
-class RaceResult {
-
-    constructor(result) {
-        this.value = result;
-    }
-}
-
-const finishunlesserror = (finish, error, result) => error || finish(ERROR_NONE, new RaceResult(result));
-const israceresult = result => (result instanceof RaceResult);
-const validateresult = result => israceresult(result) ? result.value : failrace();
+const concurrent = require('../../lib/concurrent');
+const partial = require('../partial');
 
 function race(throttle, ...funcs) {
 
     if( isfunction(throttle) ) [throttle, funcs] = [DEFAULT_THROTTLE, [throttle, ...funcs]];
 
-    return (...args) => runconcurrent(throttle, funcs, finishunlesserror, args)
-                                    .then(validateresult);
+    const onracefunccomplete = initonracefunccomplete(funcs.length);
+
+    return partial(concurrent, throttle, funcs, onracefunccomplete);
+
+}
+
+function initonracefunccomplete(funccount) {
+
+    let hitcount = 0;
+
+    return function onracefunccomplete(index, finish, error, data) {
+
+        hitcount += 1;
+
+        if( ! error ) return finish(ERROR_NONE, data);
+        else if(hitcount === funccount) failrace();
+    }
 }
 
 function failrace() {
