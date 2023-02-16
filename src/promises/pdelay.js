@@ -5,6 +5,7 @@
 'use strict';
 
 const compose = require('../compose');
+const curry2 = require('../curry2');
 
 function pdelay(delayms, targetfunc) {
 
@@ -13,4 +14,4 @@ function pdelay(delayms, targetfunc) {
     return new Promise(executor);
 }
 
-module.exports = pdelay;
+module.exports = curry2(pdelay);
