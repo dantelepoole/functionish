@@ -4,15 +4,13 @@
 
 'use strict';
 
-const DEFAULT_THROTTLE = require('os').cpus().length;
-
 const DEFAULT_CONFIG = Object.freeze({
     basedelay   : 100,
     maxdelay    : 3_000,
     maxretries  : 5,
     queryretry  : require('../noop'),
-    throttle    : DEFAULT_THROTTLE
-});
+    throttle    : require('../misc/cpuinfo').length
+})
 
 const compose = require('../compose');
 const curry2 = require('../curry2');
@@ -37,39 +35,34 @@ function retry(options, targetfunc, ...args) {
 
     targetfunc = partial(targetfunc, ...args);
 
-    const onreject = initrejecthandler(
-        delaytargetfunc(targetfunc),
-        configfactory(options)
-    );
-
-    return pcatch( onreject, promise(targetfunc) );
+    return pcatch(
+        initrejecthandler( delaytargetfunc(targetfunc), configfactory(options) ),
+        promise(targetfunc)
+    )
 }
 
 function initrejecthandler(delayedtargetfunc, config) {
     
     let retrycount = 0;
-    
+    const incrementretrycount = () => (retrycount += 1);
+
     const calculatedelay = compose(
         applyjitter,
         enforcemaxdelay(config.maxdelay),
         calculatebackoff(config.basedelay)
-    );
-    
-    const attachrejecthandler = pcatch(onreject);
+    )
 
-    return onreject;
-    
-    function onreject(error) {
+    return function onreject(error) {
 
-        retrycount += 1;
+        incrementretrycount();
 
         const handlerejection = compose(
-            attachrejecthandler,
+            pcatch(onreject),
             delayedtargetfunc,
             queryretry(config, retrycount, error),
             calculatedelay,
             enforcemaxretries(config.maxretries)
-        );
+        )
             
         return handlerejection(retrycount, error);
     }

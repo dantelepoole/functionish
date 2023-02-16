@@ -4,10 +4,10 @@
 
 'use strict';
 
-const getcpucount = require('os').cpus;
+const getcpuinfo = require('os').cpus;
 
 function cpuinfo() {
-    return getcpucount();
+    return getcpuinfo();
 }
 
 module.exports = cpuinfo();
