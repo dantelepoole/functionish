@@ -18,6 +18,7 @@ const compose = require('../compose');
 const curry2 = require('../curry2');
 const flip = require('../flip');
 const merge = require('../misc/merge');
+const partial = require('../partial');
 const pcatch = require('./pcatch');
 const pdelay = require('./pdelay');
 const promise = require('./promise');
@@ -30,15 +31,17 @@ const configfactory = options => merge(DEFAULT_CONFIG, options);
 const delaytargetfunc = compose(flip(pdelay), promisify);
 const enforcemaxdelay = maxdelay => delayms => Math.min(delayms, maxdelay);
 const enforcemaxretries = maxretries => (retrycount, error) => (retrycount <= maxretries) ? retrycount : raise(error);
-const queryretry = (queryretry, retrycount, error) => delayms => queryretry(retrycount, error, delayms) ?? delayms;
+const queryretry = (config, retrycount, error) => delayms => config.queryretry(retrycount, error, delayms) ?? delayms;
 
-function retry(options, targetfunc) {
+function retry(options, targetfunc, ...args) {
+
+    targetfunc = partial(targetfunc, ...args);
 
     const onreject = initrejecthandler(
         delaytargetfunc(targetfunc),
         configfactory(options)
     );
-    
+
     return pcatch( onreject, promise(targetfunc) );
 }
 
@@ -52,14 +55,18 @@ function initrejecthandler(delayedtargetfunc, config) {
         calculatebackoff(config.basedelay)
     );
     
-    return function onreject(error) {
+    const attachrejecthandler = pcatch(onreject);
+
+    return onreject;
+    
+    function onreject(error) {
 
         retrycount += 1;
 
         const handlerejection = compose(
-            pcatch(onreject),
+            attachrejecthandler,
             delayedtargetfunc,
-            queryretry(config.queryretry, retrycount, error),
+            queryretry(config, retrycount, error),
             calculatedelay,
             enforcemaxretries(config.maxretries)
         );
