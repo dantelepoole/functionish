@@ -29,7 +29,7 @@
  * @returns {function}
  */
 function variadic(func, ...partialargs) {
-    return (...list) => func(...partialargs, list);
+    return (...args) => func(...partialargs, args);
 }
 
 module.exports = variadic;

@@ -53,7 +53,7 @@ const curryfunction = require('../lib/curryfunction');
  * @see {@link module:curry3 curry3()}
  * @see {@link module:curry4 curry4()}
  * @param {number} arity The number of arguments to curry
- * @param {(function|string)} func The function to curry
+ * @param {function} func The function to curry
  * @returns {function}
  */
 function curry(arity, func) {

@@ -38,15 +38,17 @@ const when = require('./when');
  * @returns {function}
  */
 function withdefault(defaultvalue, func) {
-    
-    const _withdefault = compose(
-        when(isvoid, always(defaultvalue)),
-        func
-    )
 
     return func.arity
          ? curryfunction(func.arity, _withdefault)
          : _withdefault;
+
+    function _withdefault(...args) {
+
+        const result = func(...args);
+        
+        return isvoid(result) ? defaultvalue : result;
+    }
 }
 
 module.exports = curry2(withdefault);
