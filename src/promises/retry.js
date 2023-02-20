@@ -29,28 +29,30 @@ const configfactory = options => merge(DEFAULT_CONFIG, options);
 const delaytargetfunc = compose(flip(pdelay), promisify);
 const enforcemaxdelay = maxdelay => delayms => Math.min(delayms, maxdelay);
 const enforcemaxretries = maxretries => (retrycount, error) => (retrycount <= maxretries) ? retrycount : raise(error);
-const queryretry = (config, retrycount, error) => delayms => config.queryretry(retrycount, error, delayms) ?? delayms;
+const queryretry = (queryretry, retrycount, error) => delayms => queryretry(retrycount, error, delayms) ?? delayms;
+
+const initcalculatedelay = config => compose(
+    applyjitter, enforcemaxdelay(config.maxdelay), calculatebackoff(config.basedelay)
+)
 
 function retry(options, targetfunc, ...args) {
 
     targetfunc = partial(targetfunc, ...args);
 
+    const config = configfactory(options);
+    const delayedtargetfunc = delaytargetfunc(targetfunc);
+    const calculatedelay = initcalculatedelay(config);
+
     return pcatch(
-        initrejecthandler( delaytargetfunc(targetfunc), configfactory(options) ),
+        initrejecthandler(delayedtargetfunc, config, calculatedelay),
         promise(targetfunc)
     )
 }
 
-function initrejecthandler(delayedtargetfunc, config) {
+function initrejecthandler(delayedtargetfunc, config, calculatedelay) {
     
     let retrycount = 0;
     const incrementretrycount = () => (retrycount += 1);
-
-    const calculatedelay = compose(
-        applyjitter,
-        enforcemaxdelay(config.maxdelay),
-        calculatebackoff(config.basedelay)
-    )
 
     return function onreject(error) {
 
@@ -59,7 +61,7 @@ function initrejecthandler(delayedtargetfunc, config) {
         const handlerejection = compose(
             pcatch(onreject),
             delayedtargetfunc,
-            queryretry(config, retrycount, error),
+            queryretry(config.queryretry, retrycount, error),
             calculatedelay,
             enforcemaxretries(config.maxretries)
         )
