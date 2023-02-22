@@ -5,7 +5,8 @@
 'use strict';
 
 const ERROR_DEBOUNCE = 'debounce';
-const MODE_IMMEDIATE = 'immediate';
+const MODE_LEADING = 'leading';
+const TIMER_NONE = undefined;
 
 const compose = require('../compose');
 const curry3 = require('./curry3');
@@ -25,16 +26,33 @@ const funcexecutorfactory = func => (resolve, reject) => partial(fulfill, func, 
  */
 function pdebounce(mode, delayms, func) {
 
-    if (mode && mode === MODE_IMMEDIATE) return pdebounceimmediate(delayms, func);
+    return (mode === MODE_LEADING)
+         ? pdebounceleading(delayms, func)
+         : pdebouncetrailing(delayms, func);
+}
+
+function fulfill(func, resolve, reject, ...args) {
+
+    try {
+        
+        const result = func(...args);
+        resolve(result);
+
+    } catch(error) {
+        reject(error);
+    }
+}
+
+function pdebouncetrailing(delayms, func) {
 
     const funcexecutor = funcexecutorfactory(func);
 
     let cancelpendingoperation = noop;
     const clearpendingoperation = () => (cancelpendingoperation = noop);
 
-    let timeoutid = undefined;
+    let timeoutid = TIMER_NONE;
 
-    return function _pdebounce(...args) {
+    return function _pdebouncetrailing(...args) {
 
         cancelpendingoperation();
 
@@ -56,27 +74,15 @@ function pdebounce(mode, delayms, func) {
     }
 }
 
-function fulfill(func, resolve, reject, ...args) {
-
-    try {
-        
-        const result = func(...args);
-        resolve(result);
-
-    } catch(error) {
-        reject(error);
-    }
-}
-
-function pdebounceimmediate(delayms, func) {
+function pdebounceleading(delayms, func) {
 
     const funcexecutor = funcexecutorfactory(func);
 
-    let timeoutid = undefined;
-    const istimerrunning = () => (timeoutid !== undefined);
-    const resettimeout = () => (timeoutid = undefined);
+    let timeoutid = TIMER_NONE;
+    const istimerrunning = () => (timeoutid !== TIMER_NONE);
+    const resettimeout = () => (timeoutid = TIMER_NONE);
 
-    return function _pdebounceimmediate(...args) {
+    return function _pdebounceleading(...args) {
 
         return istimerrunning()
              ? Promise.reject(ERROR_DEBOUNCE)

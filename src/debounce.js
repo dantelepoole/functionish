@@ -4,8 +4,10 @@
 
 'use strict';
 
-const MODE_IMMEDIATE = 'immediate';
+const MODE_LEADING = 'leading';
+const TIMER_NONE = undefined;
 
+const compose = require('./compose');
 const curry3 = require('./curry3');
 
 /**
@@ -19,25 +21,23 @@ const curry3 = require('./curry3');
  */
 function debounce(mode, delayms, func) {
 
-    const modeimmediate = (mode === MODE_IMMEDIATE);
+    const ismodeleading = (mode === MODE_LEADING);
 
-    let timeoutid = undefined;
-    const notpending = () => (timeoutid === undefined);
-    const resettimeout = () => (timeoutid = undefined);
-    const cleartimeout = () => clearTimeout(timeoutid);
-    const settimeout = delayedfunc => (timeoutid = setTimeout(delayedfunc, delayms));
+    let timeoutid = TIMER_NONE;
+    const timernotrunning = () => (timeoutid === TIMER_NONE);
+    const resettimeout = () => (timeoutid = TIMER_NONE);
 
     return function _debounce(...args) {
 
-      if( modeimmediate && notpending() ) func(...args);
+      if( ismodeleading && timernotrunning() ) func(...args);
 
-      cleartimeout();
+      clearTimeout(timeoutid);
 
-      const ondebounce = modeimmediate
-                     ? resettimeout
-                     : () => cleartimeout() + func(...args);
+      const ondebounce = ismodeleading
+                       ? resettimeout
+                       : compose(resettimeout(), func(...args));
   
-      settimeout(ondebounce);
+      timeoutid = setTimeout(ondebounce, delayms);
 
     }
 }
