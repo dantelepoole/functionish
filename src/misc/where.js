@@ -6,7 +6,7 @@
 
 const TYPE_FUNCTION = 'function';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 const testproperty = (predicate, property) => (typeof predicate === TYPE_FUNCTION)
                                             ? predicate(property)
@@ -25,7 +25,7 @@ const testproperty = (predicate, property) => (typeof predicate === TYPE_FUNCTIO
  * the *specification* rule's key in the first element and the corresponding *subject* value in the second element.
  * If *subject* passed all rules, the errors array will be empty.
  * 
- * `where()` is curried by default with binary arity.
+ * `where()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `where()`</caption>
  *     
@@ -64,4 +64,4 @@ function where(specification, subject) {
     return errors;
 }
 
-module.exports = curry2(where);
+module.exports = curry(1, where);

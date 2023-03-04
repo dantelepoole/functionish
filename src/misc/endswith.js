@@ -4,14 +4,14 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Functional variant of {@link external:String.prototype.endsWith String.prototype.endsWith()}.
  * 
  * If *source* is not a string, an error is thrown.
  * 
- * `endswith()` is curried by default with binary arity.
+ * `endswith()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `endswith()`</caption>
  * 
@@ -30,4 +30,4 @@ function endswith(target, source) {
     return source.endsWith(target);
 }
 
-module.exports = curry2(endswith);
+module.exports = curry(1, endswith);

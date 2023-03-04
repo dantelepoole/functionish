@@ -4,8 +4,12 @@
 
 'use strict';
 
+const curry = require('./curry');
+
 /**
  * Alias for {@link module:misc/is is()}.
+ * 
+ * `isequal()` is curried by default with unary arity.
  * 
  * @function isequal
  * @see {@link module:misc/is is()}
@@ -15,4 +19,4 @@
  */
 const isequal = require('./is');
 
-module.exports = isequal;
+module.exports = curry(1, isequal);

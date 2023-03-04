@@ -8,6 +8,8 @@ const SEPARATOR_CHAR = '.';
 const TYPE_STRING = 'string';
 const SOURCE_VOID = undefined;
 
+const curry = require('../curry');
+
 const pluckreducer = (source, key) => (source === null || source === undefined)
                                     ? SOURCE_VOID
                                     : source[key];
@@ -23,6 +25,8 @@ const pluckreducer = (source, key) => (source === null || source === undefined)
  * as illustrated in the example below).
  * 
  * If the *path* is invalid or if any intermediate property is `null` or `undefined`, `undefined` is returned.
+ * 
+ * `pluckx()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `pluckx()`</caption>
  * 
@@ -66,4 +70,4 @@ function pluckx(path, source) {
     return path.reduce(pluckreducer, source);
 }
 
-module.exports = curry2(pluckx);
+module.exports = curry(1, pluckx);

@@ -4,14 +4,14 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Functional variant of {@link external:String.prototype.split String.prototype.split()}. The
  * *source* argument must be a string, on which the `split()` method is invoked with *separator*
  * as the argument.
  * 
- * `split()` is curried by default with binary arity.
+ * `split()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `split()`</caption>
  * 
@@ -29,4 +29,4 @@ function split(separator, source) {
     return source.split(separator);
 }
 
-module.exports = curry2(split);
+module.exports = curry(1, split);

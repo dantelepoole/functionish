@@ -4,12 +4,12 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Return `true` if and only if *a* is not strictly equal to *b*. Otherwise, return `false`.
  * 
- * `isnot()` is curried by default with binary arity.
+ * `isnot()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `isnot()`</caption>
  *     
@@ -31,4 +31,4 @@ function isnot(a, b) {
     return (a !== b);
 }
 
-module.exports = curry2(isnot);
+module.exports = curry(1, isnot);

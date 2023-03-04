@@ -4,14 +4,14 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isdefined = require('../types/isdefined');
 
 /**
  * Functional variant of the Javascript `??` operator that coalesces all <abbr title="null, undefined or NaN">void</abbr>
  * values, including `NaN`.
  * 
- * `coalesce()` is curried by default with binary arity.
+ * `coalesce()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `coalesce()`</caption>
  * 
@@ -31,4 +31,4 @@ function coalesce(defaultvalue, value) {
     return isdefined(value) ? value : defaultvalue;
 }
 
-module.exports = curry2(coalesce);
+module.exports = curry(1, coalesce);

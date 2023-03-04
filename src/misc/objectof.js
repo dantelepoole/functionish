@@ -4,12 +4,12 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Return a new object with an own, enumerable property with the specified *key* and *value*.
  * 
- * `objectof()` is curried by default with binary arity.
+ * `objectof()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `objectof()`</caption>
  * 
@@ -26,4 +26,4 @@ function objectof(key, value) {
     return { [key]:value }
 }
 
-module.exports = curry2(objectof);
+module.exports = curry(1, objectof);

@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isdeepequal = require('./isdeepequal');
 
 /**
@@ -12,7 +12,7 @@ const isdeepequal = require('./isdeepequal');
  * 
  * Uses the `isDeepStrictEqual()` method of Node's `util` package for the comparison.
  * 
- * `notdeepequal()` is curried by default with binary arity.
+ * `notdeepequal()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `notdeepequal()`</caption>
  * 
@@ -31,4 +31,4 @@ function notdeepequal(a,b) {
     return ! isdeepequal(a, b);
 }
 
-module.exports = curry2(notdeepequal);
+module.exports = curry(1, notdeepequal);

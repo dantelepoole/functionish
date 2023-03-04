@@ -4,12 +4,12 @@
 
 'use strict';
 
-const curry2 = require('./curry2');
+const curry = require('./curry');
 
 /**
  * Return `true` if *object* has a property under the specified *key* with a value that is not `undefined`.
  * 
- * `haskey()` is curried by default with binary arity.
+ * `haskey()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `haskey()`</caption>
  * 
@@ -29,4 +29,4 @@ function haskey(key, object) {
     return (object[key] !== undefined);
 }
 
-module.exports = curry2(haskey);
+module.exports = curry(1, haskey);

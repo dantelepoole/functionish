@@ -4,12 +4,12 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Alias for {@link external:Object.is Object.is()}.
  * 
- * `is()` is curried by default with binary arity.
+ * `is()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `is()`</caption>
  *     
@@ -29,4 +29,4 @@ const curry2 = require('../curry2');
  */
 const is = Object.is;
 
-module.exports = curry2(is);
+module.exports = curry(1, is);

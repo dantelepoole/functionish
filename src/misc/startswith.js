@@ -4,14 +4,14 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Functional variant of {@link external:String.prototype.startsWith String.prototype.startsWith()}.
  * The *source* argument must be a string, on which the `startsWith()` method is called with *target*
  * as the argument.
  * 
- * `startswith()` is curried by default with binary arity.
+ * `startswith()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `startswith()`</caption>
  * 
@@ -30,4 +30,4 @@ function startswith(target, source) {
     return source.startsWith(target);
 }
 
-module.exports = curry2(startswith);
+module.exports = curry(1, startswith);

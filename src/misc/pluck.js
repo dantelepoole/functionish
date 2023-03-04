@@ -1,8 +1,10 @@
 /**
- * @module misc/pluckx
+ * @module misc/pluck
  */
 
 'use strict';
+
+const curry = require('../curry');
 
 /**
  * Return the value of the property of *source* specified by *key*. If no such property exists, or if *source* is `null` or 
@@ -11,7 +13,7 @@
  * See {@link module:misc/pluckx pluckx()} for a version that allows plucking properties identified with
  * compound keys.
  * 
- * `pluck()` is curried by default with binary arity.
+ * `pluck()` is curried by default with unary arity.
  *  
  * @example <caption>Example usage of `pluck()`</caption>
  * 
@@ -48,4 +50,4 @@ function pluck(key, source) {
     return source?.[key];
 }
 
-module.exports = curry2(pluck);
+module.exports = curry(1, pluck);

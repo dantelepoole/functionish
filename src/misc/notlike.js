@@ -4,13 +4,13 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const islike = require('./islike');
 
 /**
  * Return `true` if and only if *a* is deep equal to *b*. Otherwise, return `false`.
  * 
- * `islike()` is curried by default with binary arity.
+ * `islike()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `notlike()`</caption>
  *     
@@ -36,4 +36,4 @@ function notlike(a,b) {
     return ! islike(a,b);
 }
 
-module.exports = curry2(notlike);
+module.exports = curry(1, notlike);

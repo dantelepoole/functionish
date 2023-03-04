@@ -4,10 +4,12 @@
 
 'use strict';
 
+const curry = require('./curry');
+
 /**
  * Alias for the `isDeepStrictEqual()` method of Node's `util` package.
  * 
- * `isdeepequal()` is curried by default with binary arity.
+ * `isdeepequal()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `isdeepequal()`</caption>
  * 
@@ -22,4 +24,4 @@
  * @param {any} b The value to compare against
  * @returns {boolean}
  */
-module.exports = require('util').isDeepStrictEqual;
+module.exports = curry(1, require('util').isDeepStrictEqual);

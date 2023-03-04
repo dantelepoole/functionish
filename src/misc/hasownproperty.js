@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('./curry2');
+const curry = require('./curry');
 
 const hasownproperty_native = Object.prototype.hasOwnProperty;
 
@@ -12,7 +12,7 @@ const hasownproperty_native = Object.prototype.hasOwnProperty;
  * Alias for {@link external:Object.prototype.hasOwnProperty Object.property.hasOwnProperty()}
  * with flipped parameters.
  * 
- * `hasownproperty()` is curried by default with binary arity.
+ * `hasownproperty()` is curried by default with unary arity.
  * 
  * @function hasownproperty
  * @param {object} object The object to check the properties of
@@ -23,4 +23,4 @@ function hasownproperty(key, object) {
     return hasownproperty_native.call(object, key)
 }
 
-module.exports = curry2(hasownproperty);
+module.exports = curry(1, hasownproperty);
