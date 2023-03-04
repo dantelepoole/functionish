@@ -5,11 +5,12 @@
 'use strict';
 
 const always = require('./always');
+const curry = require('../curry');
 const isfunction = require('../types/isfunction');
 
 const prepare = predicate => isfunction(predicate)
-                           ? (...args) => !! predicate(...args)
-                           : always( !! predicate );
+                           ? (...args) => !!predicate(...args)
+                           : always( !!predicate );
 
 /**
  * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `true` and only if
@@ -17,6 +18,8 @@ const prepare = predicate => isfunction(predicate)
  * value. If both return a truthy value or both return a falsy value, `false` is returned.
  * 
  * If either predicate is not a function, its value is evaluated directly instead.
+ * 
+ * [to do: curried]
  * 
  * @example <caption>Example usage of `xor()`</caption>
  * 
@@ -37,7 +40,9 @@ function xor(predicate1, predicate2) {
     predicate1 = prepare(predicate1);
     predicate2 = prepare(predicate2);
 
-    return (...args) => (predicate1(...args) !== predicate2(...args));
+    const _xor = (...args) => (predicate1(...args) !== predicate2(...args));
+
+    return _xor;
 }
 
-module.exports = xor;
+module.exports = curry(1, xor);

@@ -42,16 +42,21 @@ const always = require('../always');
  * @returns {any} The return value of the first predicate to return a falsy value
  */
 function and(...predicates) {
-    return predicates.reduceRight(conjunctreducer, CONJUNCTION_NONE) ?? ALWAYS_TRUE;
+
+    const conjunction = predicates.reduceRight(conjunctreducer, CONJUNCTION_NONE) ?? ALWAYS_TRUE;
+    const _and = (...args) => conjunction(...args);
+
+    return _and;
 }
 
 function conjunctreducer(conjunction, predicate) {
 
     if(typeof predicate !== TYPE_FUNCTION) predicate = always(predicate);
 
-    return conjunction
-         ? (...args) => predicate(...args) && conjunction(...args)
-         : predicate;
+    if( !conjunction ) return predicate;
+
+    const conjunct = (...args) => predicate(...args) && conjunction(...args);
+    return conjunct;
 }
 
 module.exports = and;

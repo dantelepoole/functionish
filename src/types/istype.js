@@ -7,7 +7,7 @@
 const TYPE_NAN = 'NaN';
 const TYPE_NULL = 'null';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Return `true` if *value* has the specified *type*. 
@@ -44,4 +44,4 @@ function istype(type, value) {
 
 }
 
-module.exports = curry2(istype);
+module.exports = curry(1, istype);

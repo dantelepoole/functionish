@@ -7,7 +7,7 @@
 const TYPE_NAN = 'NaN';
 const TYPE_NULL = 'null';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Return `true` if *value* does not have the specified *type*. 
@@ -43,4 +43,4 @@ function nottype(type, value) {
             : (value !== typeof value);
 }
 
-module.exports = curry2(nottype);
+module.exports = curry(1, nottype);

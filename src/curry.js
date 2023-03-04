@@ -4,8 +4,6 @@
 
 'use strict';
 
-const curryfunction = require('../lib/curryfunction');
-
 /**
  * to do
  * 
@@ -16,9 +14,21 @@ const curryfunction = require('../lib/curryfunction');
  */
 function curry(arity, func) {
 
-    return (arguments.length === 1) ? curryfunction(arity.length - 1, arity)
-         : !arity ? curryfunction( func.length - 1, func )
-         : curryfunction(arity, func);
+    return (arguments.length === 1) ? initcurry(arity.length - 1, arity)
+         : !arity ? initcurry(func.length - 1, func)
+         : initcurry(arity, func);
+}
+
+function initcurry(arity, func) {
+
+    if( ! (arity > 0) ) arity = DEFAULT_CURRY_ARITY;
+
+    return function _curried(...args) {
+
+        return (arity < args.length) ? func(...args)
+             : (arity === args.length) ? func.bind(CONTEXT_NONE, ...args)
+             : _curried.bind(CONTEXT_NONE, ...args);
+    }
 }
 
 module.exports = curry;

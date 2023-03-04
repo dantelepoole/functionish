@@ -4,8 +4,6 @@
 
 'use strict';
 
-const curryfunction = require('../../lib/curryfunction');
-
 /**
  * Coerce *func*'s return value to type boolean.
  * 
@@ -32,9 +30,7 @@ function boolify(func) {
     
     const _boolify = (...args) => !! func(...args);
 
-    return func.arity
-         ? curryfunction(func.arity, _boolify)
-         : _boolify;
+    return _boolify;
 }
 
 module.exports = boolify;

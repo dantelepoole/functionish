@@ -4,12 +4,12 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Return true if *instance* is an instance of *targetclass*. Otherwise, return false.
  * 
- * `isinstanceof()` is curried by default with binary arity.
+ * `isinstanceof()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `isinstanceof()`</caption>
  * 
@@ -31,4 +31,4 @@ function isinstanceof(targetclass, instance) {
     return (instance instanceof targetclass);
 }
 
-module.exports = curry2(isinstanceof);
+module.exports = curry(1, isinstanceof);

@@ -16,7 +16,7 @@ const last = require('./collections/last');
 
 const hasdefaultbranch = compose(isfunction, last);
 const querypredicate = arg => clause => clause[INDEX_PREDICATE](arg);
-const clausefinder = clauses => arg => clauses.find( querypredicate(arg) );
+const clausematcher = clauses => arg => clauses.find( querypredicate(arg) );
 
 module.exports = function select(expression, ...clauses) {
 
@@ -24,7 +24,7 @@ module.exports = function select(expression, ...clauses) {
 
     isfunction(expression) || (expression = always(expression));
 
-    const runselect = compose(clausefinder(clauses), expression);
+    const runselect = compose(clausematcher(clauses), expression);
 
     return function _select(...args) {
 

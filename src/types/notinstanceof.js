@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Return true if *instance* is not an instance of *targetclass*. Otherwise, return false.
@@ -31,4 +31,4 @@ function notinstanceof(targetclass, instance) {
     return ! (instance instanceof targetclass);
 }
 
-module.exports = curry2(notinstanceof);
+module.exports = curry(1, notinstanceof);

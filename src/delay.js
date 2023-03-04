@@ -6,9 +6,13 @@
 
 const CONTEXT_NONE = null;
 
+const curry = require('./curry');
+
 /**
  * Call *func* with the specified *args* after at least *delay* milliseconds have passed and return a function that
  * cancels the delayed function.
+ * 
+ * [to do: curried]
  * 
  * @example <caption>Example usage of `delay()`</caption>
  * 
@@ -33,4 +37,4 @@ function delay(delayms, func, ...args) {
     return clearTimeout.bind(CONTEXT_NONE, timeoutid);
 }
 
-module.exports = delay;
+module.exports = curry(1, delay);

@@ -43,16 +43,22 @@ const always = require('../always');
  * @returns {any} The return value of the first predicate to return a truthy value
  */
 function or(...predicates) {
-    return predicates.reduceRight(disjunctreducer, DISJUNCTION_NONE) ?? ALWAYS_FALSE;
+    
+    const disjunction = predicates.reduceRight(disjunctreducer, DISJUNCTION_NONE) ?? ALWAYS_FALSE;
+    const _or = (...args) => disjunction(...args);
+
+    return _or;
 }
 
 function disjunctreducer(disjunction, predicate) {
 
     if(typeof predicate !== TYPE_FUNCTION) predicate = always(predicate);
 
-    return disjunction
-         ? (...args) => predicate(...args) || disjunction(...args)
-         : predicate;
+    if( !disjunction ) return predicate;
+
+    const disjunct = (...args) => predicate(...args) || disjunction(...args);
+    return disjunct;
+
 }
 
 module.exports = or;

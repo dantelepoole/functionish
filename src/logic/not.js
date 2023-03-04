@@ -4,14 +4,11 @@
 
 'use strict';
 
-const curryfunction = require('../../lib/curryfunction');
-
 /**
  * Return a function that passes it arguments to *func* and returns the boolean complement
  * of *func*'s return value.
  * 
- * Currying is preserved. If *func* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
- * negated function will be curried with the same arity.
+ * [to do: negate argument if it is not a function]
  * 
  * @example <caption>Example usage of `not()`</caption>
  * 
@@ -29,11 +26,11 @@ const curryfunction = require('../../lib/curryfunction');
  */
 function not(func) {
     
-    const _not = (...args) => ! func(...args);
+    if(typeof func !== 'function') return !func;
 
-    return func.arity
-         ? curryfunction(func.arity, _not)
-         : _not;
+    const _not = (...args) => !func(...args);
+
+    return _not;
 }
 
 module.exports = not;

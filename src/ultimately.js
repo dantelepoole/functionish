@@ -25,8 +25,11 @@ function ultimately(ultimatelyhandler, func) {
     return function _ultimately(...args) {
 
         try {
+
             const result = func(...args);
+            
             return ultimatelyhandler(ERROR_NONE, result);
+
         } catch(error) {
             return ultimatelyhandler(error, RESULT_NONE);
         }

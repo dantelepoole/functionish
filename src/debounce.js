@@ -8,7 +8,7 @@ const MODE_LEADING = 'leading';
 const TIMER_NONE = undefined;
 
 const compose = require('./compose');
-const curry3 = require('./curry3');
+const curry = require('./curry');
 
 /**
  * to do
@@ -42,4 +42,4 @@ function debounce(mode, delayms, func) {
     }
 }
 
-module.exports = curry3(debounce);
+module.exports = curry(2, debounce);
