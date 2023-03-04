@@ -19,6 +19,8 @@
  * @param {number} value The value to check
  * @returns {boolean}
  */
-module.exports = function ispositive(value) {
+function ispositive(value) {
     return (value >= 0);
 }
+
+module.exports = ispositive;

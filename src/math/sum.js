@@ -16,7 +16,7 @@
  * @param {iterable} factors The list of values to sum
  * @returns {number}
  */
-module.exports = function sum(values) {
+function sum(values) {
     
     let total = 0;
 
@@ -24,3 +24,5 @@ module.exports = function sum(values) {
 
     return total;
 }
+
+module.exports = sum;

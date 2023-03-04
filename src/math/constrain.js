@@ -4,6 +4,7 @@
 
 'use strict';
 
+const curry = require('../curry');
 const isvoid = require('../types/isvoid');
 
 /**
@@ -29,10 +30,12 @@ const isvoid = require('../types/isvoid');
  * @param {number} value The value to check
  * @returns {number}
  */
-module.exports = function constrain(lowerlimit, upperlimit, value) {
+function constrain(lowerlimit, upperlimit, value) {
 
     return isvoid(value) ? lowerlimit
          : (lowerlimit > value) ? lowerlimit
          : (upperlimit < value) ? upperlimit
          : value;
 }
+
+module.exports = curry(2, constrain);

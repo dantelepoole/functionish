@@ -4,8 +4,12 @@
 
 'use strict';
 
+const curry = require('../curry');
+
 /**
  * Return `true` if *b* is greater than or equal to *a*. Otherwise, return `false`.
+ * 
+ * `isgreaterthanorequal()` is curried by default with unary arity.
  * 
  * @example
  * const isgreaterthanorequal = require('functionish/math/isgreaterthanorequal');
@@ -19,6 +23,8 @@
  * @param {number} b The value to compare
  * @returns {boolean}
  */
-module.exports = function isgreaterthanorequal(a,b) {
+function isgreaterthanorequal(a,b) {
     return (b >= a)
 }
+
+module.exports = curry(1, isgreaterthanorequal);

@@ -4,8 +4,12 @@
 
 'use strict';
 
+const curry = require('../curry');
+
 /**
  * Return `true` if *b* is less than or equal to *a*. Otherwise, return `false`.
+ * 
+ * `islessthanorequal()` is curried by default with unary arity.
  * 
  * @example
  * const islessthanorequal = require('functionish/math/islessthanorequal');
@@ -19,6 +23,8 @@
  * @param {number} b The value to compare
  * @returns {boolean}
  */
-module.exports = function islessthanorequal(a,b) {
+function islessthanorequal(a,b) {
     return (b <= a)
 }
+
+module.exports = curry(1, islessthanorequal);

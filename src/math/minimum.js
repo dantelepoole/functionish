@@ -20,6 +20,8 @@
  * @param {iterable} values The list of values to check.
  * @returns {number}
  */
-module.exports = function minimum(values) {
+function minimum(values) {
     return Math.min(...values);
 }
+
+module.exports = minimum;

@@ -16,7 +16,7 @@
  * @param {iterable} values The list of values to average
  * @returns {number}
  */
-module.exports = function average(values) {
+function average(values) {
 
     let total = 0;
     let count = 0;
@@ -25,3 +25,5 @@ module.exports = function average(values) {
 
     return (count > 0) ? (total/count) : 0;
 }
+
+module.exports = average;

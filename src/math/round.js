@@ -7,7 +7,7 @@
 /**
  * Round the value of *value* to the nearest integer.
  * 
- * This funciton is an alias for {@link external:Math.round Math.round}.
+ * This functon is an alias for {@link external:Math.round Math.round}.
  * 
  * @example
  * const round = require('functionish/math/round');
@@ -21,4 +21,4 @@
  * @param {number} value The value to round to the nearest integer.
  * @returns {number}
  */
-module.exports = Math.round;
+module.exports = Math.round;i

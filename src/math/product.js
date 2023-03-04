@@ -4,9 +4,12 @@
 
 'use strict';
 
-const multiply = (a,b) => (a*b);
+const FACTOR_NONE = undefined;
 
-const multiplyall = (...factors) => factors.length ? factors.reduce(multiply, 1) : 0;
+const reduce = require('../lists/reduce');
+
+const productreducer = (product, factor) => (product ?? 1) * factor;
+const multiply = reduce(productreducer, FACTOR_NONE);
 
 /**
  * Return the product of the values in the *factors* list.
@@ -20,6 +23,8 @@ const multiplyall = (...factors) => factors.length ? factors.reduce(multiply, 1)
  * @param {iterable} factors The list of values to multiply
  * @returns {number}
  */
-module.exports = function product(factors) {
-    return multiplyall(...factors);
+function product(factors) {
+    return multiply(factors);
 }
+
+module.exports = product;

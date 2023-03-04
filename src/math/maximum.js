@@ -20,6 +20,8 @@
  * @param {iterable} values The list of values to check.
  * @returns {number}
  */
-module.exports = function maximum(values) {
+function maximum(values) {
     return Math.max(...values);
 }
+
+module.exports = maximum;
