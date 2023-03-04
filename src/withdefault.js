@@ -4,12 +4,8 @@
 
 'use strict';
 
-const always = require('./always');
-const compose = require('./compose');
 const curry2 = require('./curry2');
-const curryfunction = require('../lib/curryfunction');
 const isvoid = require('./types/isvoid');
-const when = require('./when');
 
 /**
  * Return a function that passes *func* and its arguments to *wrapperfunc* and returns the result, allowing
@@ -39,11 +35,7 @@ const when = require('./when');
  */
 function withdefault(defaultvalue, func) {
 
-    return func.arity
-         ? curryfunction(func.arity, _withdefault)
-         : _withdefault;
-
-    function _withdefault(...args) {
+    return function _withdefault(...args) {
 
         const result = func(...args);
         

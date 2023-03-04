@@ -5,7 +5,6 @@
 'use strict';
 
 const curry2 = require('./curry2');
-const curryfunction = require('../lib/curryfunction');
 
 /**
  * Return a function that invokes *func* and passes its return value to the *returnvalueprocessor*
@@ -34,9 +33,7 @@ function post(returnvalueprocessor, func) {
     
     const _post = (...args) => returnvalueprocessor( func(...args) );
 
-    return func.arity
-         ? curryfunction(func.arity, _post)
-         : _post;
+    return _post;
 }
 
 module.exports = curry2(post);

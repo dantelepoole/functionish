@@ -4,11 +4,7 @@
 
 'use strict';
 
-const FUNCTION_NONE = undefined;
-
-const id = require('./id');
-
-const composereducer = (f, g) => f ? (...args) => f( g(...args) ) : g;
+const composereducer = (args, func) => [ func(...args) ];
 
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
@@ -34,7 +30,10 @@ const composereducer = (f, g) => f ? (...args) => f( g(...args) ) : g;
  * @returns {function}
  */
 function compose(...funcs) {
-    return funcs.reduce(composereducer, FUNCTION_NONE) ?? id;    
+
+    const _compose = (...args) => funcs.reduceRight(composereducer, args)[0];
+
+    return _compose;
 }
 
 module.exports = compose;

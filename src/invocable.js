@@ -4,7 +4,6 @@
 
 'use strict';
 
-const curryfunction = require('../lib/curryfunction');
 const invoke = require('./invoke');
 const partial = require('./partial');
 
@@ -33,12 +32,7 @@ const partial = require('./partial');
  * @returns {function}
  */
 function invocable(func) {
-    
-    const _invocable = partial(invoke, func);
-
-    return func.arity
-         ? curryfunction(func.arity, _invocable)
-         : _invocable;
+    return partial(invoke, func);
 }
 
 module.exports = invocable;

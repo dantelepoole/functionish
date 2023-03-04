@@ -8,9 +8,6 @@
  * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
  * and passes them both *func*. Any other arguments passed to the returned function are ignored.
  * 
- * `binary()` does not preserve currying, so the returned function is never curried, even if *func* has
- * been curried.
- * 
  * @example <caption>Example usage of `binary()`</caption>
  * 
  * const { binary } = require('functionish');
@@ -26,7 +23,10 @@
  * @returns {function}
  */
 function binary(func) {
-    return (a,b) => func(a,b);
+    
+    const _binary = (a,b) => func(a,b);
+
+    return _binary;
 }
 
 module.exports = binary;

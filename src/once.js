@@ -4,9 +4,8 @@
 
 'use strict';
 
+const CONTEXT_NONE = null;
 const VIRGIN_RESULT = Symbol();
-
-const curryfunction = require('../lib/curryfunction');
 
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
@@ -15,11 +14,15 @@ const curryfunction = require('../lib/curryfunction');
  * This is not the same as a memoize-function, because `once()` always returns the cached result on subsequent
  * invocations, even if passed different arguments.
  * 
+ * [to do:partialargs]
+ * 
  * @function once
  * @param {function} func The function to run
  * @returns {function}
  */
-function once(func) {
+function once(func, ...partialargs) {
+
+    if(partialargs.length) func = func.bind(CONTEXT_NONE, ...partialargs);
 
     let result = VIRGIN_RESULT;
 
@@ -27,9 +30,7 @@ function once(func) {
                              ? (result = func(...args))
                              : result;
 
-    return func.arity
-         ? curryfunction(func.arity, _once)
-         : _once;
+    return _once;
 }
 
 module.exports = once;

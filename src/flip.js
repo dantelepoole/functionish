@@ -4,18 +4,9 @@
 
 'use strict';
 
-const curryfunction = require('../lib/curryfunction');
-
 /**
  * Return a function that calls the *func* function with the order of the first two arguments reversed. Any further
  * arguments are passed in their original order.
- * 
- * If the *func* argument is a string, `flip()` will attempt to `require()` the function by passing *func*
- * to {@link module:loadfunction loadfunction()}. See {@link module:loadfunction loadfunction()} for more
- * details.
- * 
- * Currying is preserved. If *func* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
- * flipped function will be curried with the same arity.
  * 
  * @example <caption>Example usage of `flip()`</caption>
  * 
@@ -41,17 +32,14 @@ const curryfunction = require('../lib/curryfunction');
  * atmostzero(1);   // returns false
  * 
  * @function flip
- * @see {@link module:loadfunction loadfunction()}
- * @param {(function|string)} func The function to flip the arguments for
+ * @param {function} func The function to flip the arguments for
  * @returns {function}
  */
 function flip(func) {
 
     const _flip = (a, b, ...args) => func(b, a, ...args);
 
-    return func.arity
-         ? curryfunction(func.arity, _flip)
-         : _flip;
+    return _flip;
 }
 
 module.exports = flip;

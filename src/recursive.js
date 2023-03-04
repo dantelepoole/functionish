@@ -4,8 +4,6 @@
 
 'use strict';
 
-const curryfunction = require('../lib/curryfunction');
-
 /**
  * Return a function that allows *func* to emulate tail recursion.
  * 
@@ -45,11 +43,7 @@ const curryfunction = require('../lib/curryfunction');
  */
 function recursive(func) {
 
-    return func.arity
-         ? curryfunction(func.arity, _recursive)
-         : _recursive;
-
-    function _recursive(...args) {
+    return function _recursive(...args) {
 
         const recurse = (...nextargs) => (args = nextargs);
 

@@ -20,7 +20,10 @@
  * @returns {function}
  */
 function always(value) {
-    return () => value;
+    
+    const _always = () => value;
+
+    return _always;
 }
 
 module.exports = always;

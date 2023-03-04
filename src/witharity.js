@@ -34,7 +34,10 @@
  * @returns {function}
  */
 function witharity(arity, func) {
-    return (...args) => ( (args.length = arity), func(...args) );
+    
+    const _witharity = (...args) => ( (args.length = arity), func(...args) );
+
+    return _witharity;
 }
 
 module.exports = witharity;

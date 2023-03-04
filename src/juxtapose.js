@@ -27,7 +27,10 @@ const applicable = require('./applicable');
  * @returns {any[]}
  */
 function juxtapose(...funcs) {
-    return (...args) => funcs.map( applicable(...args) );
+    
+    const _juxtapose = (...args) => funcs.map( applicable(...args) );
+
+    return _juxtapose;
 }
 
 module.exports = juxtapose;

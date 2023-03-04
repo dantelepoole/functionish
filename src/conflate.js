@@ -18,7 +18,10 @@ const conflatereducer = args => (_, func) => func(...args);
  * @returns {function}
  */
 function conflate(...funcs) {
-    return (...args) => funcs.reduce(conflatereducer(args), args[0]);
+    
+    const _conflate = (...args) => funcs.reduce(conflatereducer(args), args[0]);
+
+    return _conflate;
 }
 
 module.exports = conflate;

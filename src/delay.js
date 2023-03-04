@@ -4,6 +4,8 @@
 
 'use strict';
 
+const CONTEXT_NONE = null;
+
 /**
  * Call *func* with the specified *args* after at least *delay* milliseconds have passed and return a function that
  * cancels the delayed function.
@@ -28,9 +30,7 @@ function delay(delayms, func, ...args) {
 
     const timeoutid = setTimeout(func, delayms, ...args);
     
-    const canceldelayedfunction = () => clearTimeout(timeoutid);
-
-    return canceldelayedfunction;
+    return clearTimeout.bind(CONTEXT_NONE, timeoutid);
 }
 
 module.exports = delay;

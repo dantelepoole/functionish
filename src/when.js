@@ -40,9 +40,11 @@ const id = require('./id');
  */
 function when(condition, truebranch, falsebranch=id) {
 
-    return (typeof condition === TYPE_FUNCTION)
-         ? (...args) => condition(...args) ? truebranch(...args) : falsebranch(...args)
-         : (...args) => condition ? truebranch(...args) : falsebranch(...args);
+    const _when = (typeof condition === TYPE_FUNCTION)
+                ? (...args) => condition(...args) ? truebranch(...args) : falsebranch(...args)
+                : (...args) => condition ? truebranch(...args) : falsebranch(...args);
+
+    return _when;
 }
 
 module.exports = when;

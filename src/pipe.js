@@ -4,11 +4,7 @@
 
 'use strict';
 
-const FUNCTION_NONE = undefined;
-
-const id = require('./id');
-
-const pipereducer = (f, g) => f ? (...args) => f( g(...args) ) : g;
+const pipereducer = (args, func) => [ func(...args) ];
 
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
@@ -35,7 +31,10 @@ const pipereducer = (f, g) => f ? (...args) => f( g(...args) ) : g;
  * @returns {function}
  */
 function pipe(...funcs) {
-    return funcs.reduceRight(pipereducer, FUNCTION_NONE) ?? id;  
+    
+    const _pipe = (...args) => funcs.reduce(pipereducer, args)[0];
+
+    return _pipe;
 }
 
 module.exports = pipe;

@@ -4,14 +4,13 @@
 
 'use strict';
 
-const curryfunction = require('../lib/curryfunction');
+const CONTEXT_NONE = null;
 
 /**
- * Return a function that passes its arguments to *tappedfunc* and returns its own first
+ * Return a function that passes its arguments to *func* and returns its own first
  * argument.
  * 
- * Currying is preserved. If *tappedfunc* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
- * returned function will be curried with the same arity.
+ * [to do: partialargs]
  * 
  * @example <caption>Example usage of `tap()`</caption>
  * 
@@ -21,16 +20,17 @@ const curryfunction = require('../lib/curryfunction');
  * 
  * log(42); // prints 42 to the screen and returns 42
  * 
- * @param {function} tappedfunc The function to tap
+ * @param {function} func The function to tap
+ * @param {...any[]} partialargs The arguments to partial apply to *func*
  * @returns {function}
  */
-function tap(tappedfunc) {
+function tap(func, ...partialargs) {
 
-    const _tap = (...args) => (tappedfunc(...args), args[0]);
+    if (partialargs.length) func = func.bind(CONTEXT_NONE, ...partialargs);
 
-    return tappedfunc.arity
-         ? curryfunction(tappedfunc.arity, _tap)
-         : _tap;
+    const _tap = (...args) => ( func(...args), args[0] );
+
+    return _tap;
 }
 
 module.exports = tap;

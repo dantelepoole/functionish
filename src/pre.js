@@ -5,7 +5,6 @@
 'use strict';
 
 const curry2 = require('./curry2');
-const curryfunction = require('../lib/curryfunction');
 
 /**
  * Return a function that sends its arguments to the *argprocessor* function and passes the returned
@@ -33,9 +32,7 @@ function pre(argprocessor, func) {
     
     const _pre = (...args) => func( ...argprocessor(...args) );
 
-    return func.arity
-         ? curryfunction(func.arity, _pre)
-         : _pre;
+    return _pre;
 }
 
 module.exports = curry2(pre);

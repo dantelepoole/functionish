@@ -27,7 +27,10 @@
  * @returns {function}
  */
 function unary(func) {
-    return x => func(x);
+
+    const _unary = x => func(x);
+
+    return _unary;
 }
 
 module.exports = unary;

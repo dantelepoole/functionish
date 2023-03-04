@@ -33,7 +33,10 @@ const id = require('./id');
  * @returns {function}
  */
 function whenx(predicate, truebranch, falsebranch=id) {
-    return (x, ...args) => predicate(x) ? truebranch(...args) : falsebranch(...args);
+    
+    const _whenx = (x, ...args) => predicate(x) ? truebranch(...args) : falsebranch(...args);
+    
+    return _whenx;
 }
 
 module.exports = whenx;

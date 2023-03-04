@@ -7,31 +7,25 @@
 const TRANSFORM_REJECT = Symbol.for('functionish/transform/TRANSFORM_REJECT');
 
 const id = require('../id');
-const isarray = require('../types/isarray');
 const isfunction = require('../types/isfunction');
 const notboolean = require('../types/notboolean');
-
-const _transform = transformation => source => isfunction(source)
-                                             ? transducer(transformation, source)
-                                             : listtransformer(transformation, source);
+const partial = require('../partial');
 
 function transformer(...transformations) {
 
     const transformation = transformations.reduceRight(transformationreducer, id);
 
-    return _transform(transformation);
+    return partial(_transform, transformation);
+}
+
+function _transform(transformation, source) {
+
+    return isfunction(source)
+         ? transducer(transformation, source)
+         : listtransformer(transformation, source);
 }
 
 function listtransformer(transformation, list) {
-
-    const transformedlist = transformingiterable(transformation, list);
-
-    return isarray(list)
-         ? Array.from(transformedlist)
-         : transformedlist;
-}
-
-function transformingiterable(transformation, list) {
 
     return {
 
@@ -59,14 +53,14 @@ function transducer(transformation, reducer) {
     }
 }
 
-function transformationreducer(nexttransformation, transformation) {
+function transformationreducer(transformation, func) {
 
     return function transformvalue(value) {
 
-        const result = transformation(value);
+        const result = func(value);
 
-        return notboolean(result) ? nexttransformation(result)
-             : result ? nexttransformation(value)
+        return notboolean(result) ? transformation(result)
+             : result ? transformation(value)
              : TRANSFORM_REJECT;
     }
 }

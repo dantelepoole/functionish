@@ -6,8 +6,6 @@
 
 const CACHE_NONE = null;
 
-const curryfunction = require('../lib/curryfunction');
-
 /**
  * Return a function that cache's *targetfunc*'s return values based on its argument list.
  * 
@@ -28,9 +26,6 @@ const curryfunction = require('../lib/curryfunction');
  * results*. Provide your own cache function to customize the caching for the types of arguments you expect your
  * function to receive.
  * 
- * Currying is preserved. If *targetfunc* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
- * memoized function will be curried with the same arity.
- * 
  * @example <caption>Example usage of memoize()</caption>
  * 
  * const { memoize } = require('functionish');
@@ -49,20 +44,17 @@ const curryfunction = require('../lib/curryfunction');
  * @param {function} targetfunc The target function to cache the arguments and results of
  * @return {function} The memoized function
  */
-module.exports = function memoize(cachefunc, targetfunc) {
+function memoize(cachefunc, targetfunc) {
 
     if(arguments.length === 1) [cachefunc, targetfunc] = [defaultcachefunc(), cachefunc];
     
-    return targetfunc.arity
-         ? curryfunction(targetfunc.arity, _memoize)
-         : _memoize;
-
-    function _memoize(...args) {
+    return function _memoize(...args) {
 
         const cachedresult = cachefunc(args);
         if(cachedresult !== CACHE_NONE) return cachedresult.value;
 
-        const result = targetfunc.call(this, ...args);
+        const result = targetfunc(...args);
+        
         cachefunc(args, { value:result });
 
         return result;
@@ -82,3 +74,5 @@ function defaultcachefunc() {
         resultmap.set(cachekey, result);
     }
 }
+
+module.exports = memoize;

@@ -26,7 +26,10 @@
  * @returns {function}
  */
 function applicable(...args) {
-    return func => func(...args);
+    
+    const _applicable = func => func(...args);
+
+    return _applicable;
 }
 
 module.exports = applicable;

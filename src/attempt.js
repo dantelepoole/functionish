@@ -39,8 +39,11 @@ function attempt(errorhandler, func) {
     return function _attempt(...args) {
 
         try {
+
             return func(...args);
+            
         } catch(error) {
+
             return (typeof errorhandler === TYPE_FUNCTION)
                  ? errorhandler(error, args)
                  : errorhandler;

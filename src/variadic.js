@@ -29,7 +29,10 @@
  * @returns {function}
  */
 function variadic(func, ...partialargs) {
-    return (...args) => func(...partialargs, args);
+    
+    const _variadic = (...args) => func(...partialargs, args);
+
+    return _variadic;
 }
 
 module.exports = variadic;

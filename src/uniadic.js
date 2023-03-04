@@ -32,5 +32,8 @@
  * @returns {function}
  */
 module.exports = function uniadic(func, ...partialargs) {
-    return list => func(...partialargs, ...list);
+    
+    const _uniadic = list => func(...partialargs, ...list);
+
+    return _uniadic;
 }

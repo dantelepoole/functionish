@@ -4,16 +4,14 @@
 
 'use strict';
 
-const CONTEXT_NONE = null;
-
-const curryfunction = require('../lib/curryfunction');
+const CONTEXT_NONE = undefined;
 
 /**
- * Partial apply the *func*-function by binding to *boundargs*.  
+ * Partial apply the *func*-function by binding to *partialargs*.  
  * 
  * Currying is preserved. If *func* has been curried (i.e. it has been passed to {@link module:curry curry()}), the
  * partial function will be curried with an arity equal to *func*'s curried arity minus the number of
- * *boundargs* passed to `partial()`.
+ * *partialargs* passed to `partial()`.
  * 
  * @example <caption>Example usage of `partial()`</caption>
  * 
@@ -28,20 +26,14 @@ const curryfunction = require('../lib/curryfunction');
  * 
  * @function partial
  * @param {function} func The function to partially apply
- * @param  {...any} boundargs Zero or more arguments to partially apply *func* with
+ * @param  {...any} partialargs Zero or more arguments to partially apply *func* with
  * @returns {function}
  */
-function partial(func, ...boundargs) {
+function partial(func, ...partialargs) {
 
-    const partialfunc = func.bind(CONTEXT_NONE, ...boundargs);
+    const _partial = func.bind(CONTEXT_NONE, ...partialargs);
 
-    if( ! func.arity ) return partialfunc;
-
-    const partialarity = func.arity - boundargs.length;
-
-    return (partialarity > 0)
-         ? curryfunction(partialarity, partialfunc)
-         : partialfunc;
+    return _partial;
 }
 
 module.exports = partial;

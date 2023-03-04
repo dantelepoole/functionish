@@ -4,8 +4,9 @@
 
 'use strict';
 
-const curry2 = require('./curry2');
-const curryfunction = require('../lib/curryfunction');
+const CONTEXT_NONE = null;
+
+const curry = require('./curry');
 
 /**
  * Return a function that passes *func* and its arguments to *wrapperfunc* and returns the result, allowing
@@ -14,9 +15,7 @@ const curryfunction = require('../lib/curryfunction');
  * Both *func* and *wrapperfunc* must be functions. *Wrapperfunc* should have the signature 
  * `wrapperfunc(func, ...args)` and must invoke *func* itself.
  * 
- * `wrap()` is curried by default with binary arity. Also, currying is preserved. If *func* has 
- * been curried (i.e. it has been passed to {@link module:curry curry()}), the returned function will
- * be curried with the same arity.
+ * `wrap()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `wrap()`</caption>
  *     
@@ -51,12 +50,7 @@ const curryfunction = require('../lib/curryfunction');
  * @returns {function}
  */
 function wrap(wrapperfunc, func) {
-    
-    const _wrap = (...args) => wrapperfunc(func, ...args);
-
-    return func.arity
-         ? curryfunction(func.arity, _wrap)
-         : _wrap;
+    return wrapperfunc.bind(CONTEXT_NONE, func);
 }
 
-module.exports = curry2(wrap);
+module.exports = curry(1, wrap);

@@ -8,9 +8,6 @@
  * Coerce *func* to have nullary arity. More specifically, return a function that ignores its arguments and calls
  * *func* without any arguments.
  * 
- * `nullary()` does not preserve currying, so the returned function is never curried, even if *func* has
- * been curried.
- *
  * @example <caption>Example usage of `nullary()`</caption>
  * 
  * const { nullary } = require('functionish');
@@ -29,5 +26,8 @@
  */
 
 module.exports = function nullary(func) {
-    return () => func();
+
+    const _nullary = () => func();
+
+    return _nullary;
 }
