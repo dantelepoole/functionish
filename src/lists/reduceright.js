@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry3 = require('../curry3');
+const curry = require('../curry');
 const isfunction = require('../types/isfunction');
 const unary = require('../unary');
 
@@ -19,7 +19,7 @@ const unary = require('../unary');
  * 
  * If *list* is not an array, it is presumed to be an iterable object.
  * 
- * `reduceright()` is curried by default with ternary arity.
+ * `reduceright()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `reduceright()`</caption>
  * 
@@ -42,4 +42,4 @@ function reduceright(reducer, initialvalue, list) {
          : [...list].reduceRight( unary(reducer), initialvalue );
 }
 
-module.exports = curry3(reduceright);
+module.exports = curry(2, reduceright);

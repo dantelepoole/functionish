@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
 const unary = require('../unary');
 
@@ -19,7 +19,7 @@ const unary = require('../unary');
  * 
  * If *list* is not an array, it is presumed to be an iterable object.
  * 
- * `find()` is curried by default with binary arity.
+ * `find()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `find()`</caption>
  *     
@@ -48,4 +48,4 @@ function finditerable(predicate, list) {
     for(const value of list) if( predicate(value) ) return value;
 }
 
-module.exports = curry2(find);
+module.exports = curry(1, find);

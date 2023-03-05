@@ -6,8 +6,9 @@
 
 const HASH_STRICT = 'strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
+const isvoid = require('../isvoid');
 
 /**
  * Return an iterable that produces the items in *list* in order but without any duplicate items.
@@ -19,7 +20,7 @@ const isarray = require('../types/isarray');
  * If *list* is an array, an array is returned. Otherwise, *list* is presumed to be
  * iterable and an iterable object is returned that operates lazily.
  * 
- * `uniq()` is curried by default with binary arity.
+ * `uniq()` is curried by default with unary arity.
  * 
  * @function uniq
  * @param {(function|string)} hashfunc The hashing function or `'strict'` to use strict equality
@@ -52,9 +53,9 @@ function isuniqfactory(hashfunc) {
 
     const dedup = new Set();
 
-    return (hashfunc === HASH_STRICT)
+    return isvoid(hashfunc) || (hashfunc === HASH_STRICT)
          ? value => (dedup.size < dedup.add(value).size)
          : value => (dedup.size < dedup.add( hashfunc(value) ).size);
 }
 
-module.exports = curry2(uniq);
+module.exports = curry(1, uniq);

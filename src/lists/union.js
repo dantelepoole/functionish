@@ -6,8 +6,9 @@
 
 const HASH_STRICT = 'strict';
 
-const curry3 = require('../curry3');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
+const isvoid = require('../types/isvoid');
 
 /**
  * Return an iterable producing the items from *list1* followed by the items in *list2*, with duplicate items removed.
@@ -21,7 +22,7 @@ const isarray = require('../types/isarray');
  * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
  * iterable objects and an iterable object is returned that operates lazily.
  * 
- * `union()` is curried by default with ternary arity.
+ * `union()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `union()`</caption>
  * 
@@ -60,9 +61,9 @@ function isuniqfactory(hashfunc) {
 
     const dedup = new Set();
 
-    return (hashfunc === HASH_STRICT)
+    return isvoid(hashfunc) || (hashfunc === HASH_STRICT)
          ? value => (dedup.size < dedup.add(value).size)
          : value => (dedup.size < dedup.add( hashfunc(value) ).size);
 }
 
-module.exports = curry3(union);
+module.exports = curry(2, union);

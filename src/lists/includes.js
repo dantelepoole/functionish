@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
 
 /**
@@ -13,7 +13,7 @@ const isarray = require('../types/isarray');
  * If *list* is an array, its {@link external:Array.prototype.includes Array.prototype.includes()} method
  * is called and the result returned. Otherwise, *list* is presumed to be iterable object.
  * 
- * `includes()` is curried by default with binary arity.
+ * `includes()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `includes()`</caption>
  * 
@@ -40,4 +40,4 @@ function includesiterable(value, list) {
     return false;    
 }
 
-module.exports = curry2(includes);
+module.exports = curry(1, includes);

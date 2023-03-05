@@ -6,7 +6,7 @@
 
 const MINIMUM_BATCHSIZE = 1;
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
 
 const maximum = Math.max;
@@ -18,7 +18,7 @@ const maximum = Math.max;
  * If *list* is an array, an array is returned. Otherwise, *list* is presumed to be iterable
  * and a new iterable object is returned that operates lazily. 
  * 
- * `batch()` is curried by default with binary arity.
+ * `batch()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `batch()`</caption>
  * 
@@ -70,4 +70,4 @@ function batchiterable(batchsize, list) {
     }
 }
 
-module.exports = curry2(batch);
+module.exports = curry(1, batch);

@@ -6,7 +6,7 @@
 
 const GROUP_NONE = undefined;
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isdefined = require('../types/isdefined');
 const isvoid = require('../types/isvoid');
 
@@ -21,7 +21,7 @@ const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
  * 
  * If *keyselector* returns `null` or `undefined` for an item, that item is discarded.
  * 
- * `groupby()` is curried by default with binary arity.
+ * `groupby()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `groupby()`</caption>
  * 
@@ -76,4 +76,4 @@ function groupby(keyselector, list) {
     return target;
 }
                                  
-module.exports = curry2(groupby);
+module.exports = curry(1, groupby);

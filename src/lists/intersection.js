@@ -4,8 +4,9 @@
 
 'use strict';
 
-const curry3 = require('../curry3');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
+const isvoid = require('../types/isvoid');
 
 const HASH_STRICT = 'strict';
 
@@ -20,7 +21,7 @@ const HASH_STRICT = 'strict';
  * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
  * iterable objects and an iterable object is returned that operates lazily.
  * 
- * `intersection()` is curried by default with ternary arity.
+ * `intersection()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `intersection()`</caption>
  * 
@@ -37,7 +38,7 @@ const HASH_STRICT = 'strict';
  */
 function intersection(hashfunc, list1, list2) {
 
-    const resultlist = (hashfunc === HASH_STRICT)
+    const resultlist = isvoid(hashfunc) || (hashfunc === HASH_STRICT)
                      ? intersectionstrict(list1, list2)
                      : intersectionhash(hashfunc, list1, list2);
 
@@ -84,4 +85,4 @@ function hashlist(hashfunc, list) {
     }
 }
 
-module.exports = curry3(intersection);
+module.exports = curry(2, intersection);

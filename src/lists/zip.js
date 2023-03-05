@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
 
 /**
@@ -14,7 +14,7 @@ const isarray = require('../types/isarray');
  * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
  * iterable objects and an iterable object is returned that operates lazily.
  * 
- * `zip()` is curried by default with binary arity.
+ * `zip()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `zip()`</caption>
  * 
@@ -64,4 +64,4 @@ function zipiterable(list1, list2) {
     }
 }
 
-module.exports = curry2(zip);
+module.exports = curry(1, zip);

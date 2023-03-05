@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isfunction = require('../types/isfunction');
 const unary = require('../unary');
 
@@ -23,7 +23,7 @@ const unary = require('../unary');
  * 
  * If *list* is not an array, it is presumed to be an iterable object.
  * 
- * `all()` is curried by default with binary arity.
+ * `all()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `all()`</caption>
  * 
@@ -55,4 +55,4 @@ function alliterable(predicate, list) {
     return true;
 }
 
-module.exports = curry2(all);
+module.exports = curry(1, all);

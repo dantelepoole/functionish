@@ -6,8 +6,9 @@
 
 const HASH_STRICT = 'strict';
 
-const curry3 = require('../curry3');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
+const isvoid = require('../types/isvoid');
 
 /**
  * Return an iterable that produces the items from *list1* that are not present in *list2, in order, followed
@@ -21,7 +22,7 @@ const isarray = require('../types/isarray');
  * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
  * iterable objects and an iterable object is returned that operates lazily.
  * 
- * `symdiff()` is curried by default with ternary arity.
+ * `symdiff()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `symdiff()`</caption>
  * 
@@ -39,7 +40,7 @@ const isarray = require('../types/isarray');
  */
 function symdiff(hashfunc, list1, list2) {
 
-    const diffedlist = (hashfunc === HASH_STRICT)
+    const diffedlist = isvoid(hashfunc) || (hashfunc === HASH_STRICT)
                      ? symdiffstrict(list1, list2)
                      : symdiffhash(hashfunc, list1, list2);
 
@@ -105,4 +106,4 @@ function hashmapfactory(list, hashfunc) {
     )
 }
 
-module.exports = curry3(symdiff);
+module.exports = curry(2, symdiff);

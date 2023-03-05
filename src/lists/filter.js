@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isfunction = require('../types/isfunction');
 const unary = require('../unary');
 
@@ -20,7 +20,7 @@ const unary = require('../unary');
  * If *list* is not an array, it is presumed to be iterable and an iterable object is returned
  * that operates lazily.
  * 
- * `filter()` is curried by default with binary arity.
+ * `filter()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `filter()`</caption>
  * 
@@ -54,4 +54,4 @@ function filteriterable(predicate, list) {
     }
 }
 
-module.exports = curry2(filter);
+module.exports = curry(1, filter);

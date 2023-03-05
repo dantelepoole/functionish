@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
 const unary = require('../unary');
 
@@ -20,7 +20,7 @@ const unary = require('../unary');
  * If *list* is not an array, it is presumed to be iterable and an iterable object is returned
  * that operates lazily.
  * 
- * `flatmap()` is curried by default with binary arity.
+ * `flatmap()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `flatmap()`</caption>
  * 
@@ -64,4 +64,4 @@ function flatmapiterable(mapfunc, list) {
     }
 }
 
-module.exports = curry2(flatmap);
+module.exports = curry(1, flatmap);

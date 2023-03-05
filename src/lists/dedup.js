@@ -6,7 +6,7 @@
 
 const COMPARE_STRICT = 'strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
 const isvoid = require('../types/isvoid');
 
@@ -20,7 +20,7 @@ const isvoid = require('../types/isvoid');
  * If *list* is an array, an array is returned. Otherwise, an iterable object is returned
  * that operates lazily.
  *
- *  `dedup()` is curried by default with binary arity.
+ *  `dedup()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `dedup()`</caption>
  * 
@@ -70,4 +70,4 @@ function dedupiterablehashed(hashfunc, list) {
     }
 }
 
-module.exports = curry2(dedup);
+module.exports = curry(1, dedup);

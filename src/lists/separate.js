@@ -4,16 +4,16 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Separate the items in *list* depending on whether or not *predicate* accepts or rejects an
  * item. The return value is a two-item array with the first array containing an array of items for which *predicate*
  * returned `true` and the second containing an array of items for which *predicate* returned `false`.
  * 
- * `separate()` is curried by default with binary arity.
+ * `separate()` is curried by default with unary arity.
  * 
- * @example <caption>Example usage of `seperate()`</caption>
+ * @example <caption>Example usage of `separate()`</caption>
  * 
  * const { separate } = require('functionish/lists');
  * 
@@ -37,4 +37,4 @@ function separate(predicate, list) {
     return [buffertrue, bufferfalse];
 }
 
-module.exports = curry2(separate);
+module.exports = curry(1, separate);

@@ -4,9 +4,11 @@
 
 'use strict';
 
+const isarray = require('../types/isarray');
+
 /**
- * Return an array containing the items produced by *list*. If *list* itself is an
- * array, a shallow copy is returned.
+ * Return an array containing the items produced by *list*. If *list* already is an
+ * array, it is returned unchanged.
  * 
  * @example <caption>Example usage of `array()`</caption>
  * 
@@ -20,7 +22,7 @@
  * @returns {any[]}
  */
 function array(list) {
-    return [...list];
+    return isarray(list) ? list : [...list];
 }
 
 module.exports = array;

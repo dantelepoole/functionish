@@ -10,7 +10,7 @@
  * 
  * @example <caption>Example usage of `iterator()`</caption>
  * 
- * const { iterator } = require('functionish/iterator');
+ * const { iterator } = require('functionish/lists');
  * 
  * const iteration = iterator([1,2,3,4,5]);
  * 

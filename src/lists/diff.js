@@ -6,8 +6,9 @@
 
 const HASH_STRICT = 'strict';
 
-const curry3 = require('../curry3');
+const curry = require('../curry');
 const isarray = require('../types/isarray');
+const isvoid = require('../types/isvoid');
 
 /**
  * Return an iterable producing only those items from *list1* that are not present in *list2*, but without duplicates.
@@ -19,7 +20,7 @@ const isarray = require('../types/isarray');
  * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
  * iterable objects and an iterable object is returned that operates lazily.
  * 
- * `diff()` is curried by default with ternary arity.
+ * `diff()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `diff()`</caption>
  * 
@@ -37,7 +38,7 @@ const isarray = require('../types/isarray');
  */
 function diff(hashfunc, list1, list2) {
 
-    const difflist = (hashfunc === HASH_STRICT)
+    const difflist = isvoid(hashfunc) || (hashfunc === HASH_STRICT)
                    ? diffstrict(list1, list2)
                    : diffhash(hashfunc, list1, list2);
 
@@ -89,4 +90,4 @@ function hashlist(list, hashfunc) {
     }
 }
 
-module.exports = curry3(diff);
+module.exports = curry(2, diff);
