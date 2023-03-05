@@ -8,7 +8,7 @@ const curry = require('../curry');
 const isvoid = require('../types/isvoid');
 
 /**
- * Return *value* if itlies between *lowerlimit* and *upperlimit* (both inclusive). Otherwise, return
+ * Return *value* if it lies between *lowerlimit* and *upperlimit* (both inclusive). Otherwise, return
  * the limit closest to *value*.
  * 
  * If *value* is `null`, `undefined` or `NaN`, *lowerlimit* is returned.
