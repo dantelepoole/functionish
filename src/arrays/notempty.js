@@ -1,15 +1,18 @@
 /**
- * @module collections/notempty
+ * @module arrays/notempty
  */
 
 'use strict';
 
+const hasitems = require('./hasitems');
+
 /**
  * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. If
- * *collection* has no such properties, `false` is returned.
+ * *collection* has no such properties and *collection* is iterable, return `true` if *collection*
+ * has at least one item.
  * 
- * This function is the counterpart of {@link module:types/isempty isempty()} and functions identically
- * to {@link module:types/hasitems hasitems()}.
+ * This function is the counterpart of {@link module:arrays/isempty isempty()} and functions identically
+ * to {@link module:arrays/hasitems hasitems()}.
  * 
  * @example
  * const notempty = require('functionish/collections/notempty');
@@ -37,6 +40,8 @@
  * @returns {boolean}
  * 
  */
-module.exports = function notempty(collection) {
-    return !! (collection.length ?? collection.size ?? 0);
+function notempty(collection) {
+    return hasitems(collection)
 }
+
+module.exports = notempty;

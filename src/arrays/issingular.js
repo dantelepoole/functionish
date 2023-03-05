@@ -1,5 +1,5 @@
 /**
-* @module collections/issingular
+* @module arrays/issingular
 */
 
 'use strict';
@@ -12,6 +12,8 @@
  * @param {any} countable An object with a numeric `length` or `size` property.
  * @returns {boolean}
  */
-module.exports = function issingular(countable) {
+function issingular(countable) {
     return (countable.length ?? countable.size) === 1;
 }
+
+module.exports = issingular;

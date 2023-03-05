@@ -1,5 +1,5 @@
 /**
- * @module collections/length
+ * @module arrays/length
  */
 
 'use strict';
@@ -7,10 +7,12 @@
 /**
  * Return the value of *countable*'s `length` or `size` property or `NaN` if it has neither.
  * 
- * @func length
+ * @function length
  * @param {object} countable The object to retrieve the `length` or `size` property from
  * @returns {number}
  */
-module.exports = function length(countable) {
+function length(countable) {
     return (countable.length ?? countable.size ?? NaN);
 }
+
+module.exports = length;

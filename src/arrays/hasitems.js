@@ -8,10 +8,11 @@ const querycountiterable = list => list[Symbol.iterator()]().next().done ? 0 : 1
 
 /**
  * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. If
- * *collection* has no such properties, `false` is returned.
+ * *collection* has no such properties and *collection* is iterable, return `true` if *collection*
+ * has at least one item.
  * 
- * This function is the counterpart of {@link module:types/isempty isempty()} and functions identically
- * to {@link module:types/notempty notempty()}.
+ * This function is the counterpart of {@link module:arrays/isempty isempty()} and functions identically
+ * to {@link module:arrays/notempty notempty()}.
  * 
  * @example <caption>Example usage of `hasitems()`</caption>
  * 

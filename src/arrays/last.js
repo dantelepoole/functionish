@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * Return the last item in *collection* or `undefined` if *collection* is empty.
+ * Return the last item in *array* or `undefined` if *array* is empty.
  * 
  * @example
  * const last = require('functionish/collections/last');
@@ -15,9 +15,11 @@
  * last('foobar'); // returns 'r'
  * 
  * @function last
- * @param {indexable} collection The indexable object to retrieve the last item from
+ * @param {indexable} array The array to retrieve the last item from
  * @returns {any}
  */
-module.exports = function last(collection) {
-    return collection[ collection.length - 1 ];
+function last(array) {
+    return array[ array.length - 1 ];
 }
+
+module.exports = last;

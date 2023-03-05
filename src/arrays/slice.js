@@ -28,7 +28,7 @@ const isslicable = slicable => (typeof slicable?.slice === 'function');
  * @param {iterable} slicable An iterable object
  * @returns {array}
  */
-module.exports = function slice(start, end, slicable) {
+function slice(start, end, slicable) {
 
     const argcount = arguments.length;
 
@@ -40,3 +40,4 @@ module.exports = function slice(start, end, slicable) {
                                 : Array.from(slicable).slice(start, end);
 }
 
+module.exports = slice;

@@ -1,6 +1,8 @@
 /**
- * @module collections/iswithinbounds
+ * @module arrays/iswithinbounds
  */
+
+const curry = require('../curry');
 
 /**
  * Return `true` if *index* is greater than or equal to 0 AND less than *indexable*'s length. Otherwise, return `false`.
@@ -11,10 +13,15 @@
  * If *indexable* is not a number and has no numeric `length` property, or if *index* is not a number, this function
  * returns `false`.
  * 
+ * `iswithinbounds()` is curried by default with unary arity.
+ * 
+ * @function iswithinbounds
  * @param {indexable} indexable The indexable object to check against
  * @param {number} index The index to check
  * @returns {boolean}
  */
-module.exports = function iswithinbounds(indexable, index) {
+function iswithinbounds(indexable, index) {
     return (index >= 0 && index < indexable.length);
 }
+
+module.exports = curry(1, iswithinbounds);

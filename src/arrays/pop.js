@@ -7,10 +7,12 @@
 /**
  * Remove and return the last item in *array* or return `undefined` if *array* is empty.
  * 
- * @func pop
+ * @function pop
  * @param {any[]} array The array to return the last item from
  * @returns {any}
  */
-module.exports = function pop(array) {
+function pop(array) {
     return array.pop();
 }
+
+module.exports = pop;
