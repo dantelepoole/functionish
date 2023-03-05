@@ -14,9 +14,6 @@
  * If the argument passed to the returned function is not an iterable, an error is thrown. If the returned function is
  * called without an argument, *func* is called without arguments.
  * 
- * `uniadic()` does not preserve currying, so the returned function is never curried, even if *func* has
- * been curried.
- * 
  * @example <caption>Example usage of `uniadic()`</caption>
  * 
  * const { uniadic } = require('functionish');

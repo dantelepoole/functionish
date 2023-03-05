@@ -4,6 +4,8 @@
 
 'use strict';
 
+const curry = require('./curry');
+
 /**
  * Set the arity (number of parameters) for *func*. This function returns a new function that always passes *arity*
  * number of arguments to *func*, regardless of the number of arguments it actually receives. 
@@ -14,7 +16,7 @@
  * 
  * The returned function will the same name as the target function, but tagged as having a specific arity.
  * 
- * `witharity()` is curried by default with binary arity.
+ * `witharity()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `witharity()`</caption>
  * 
@@ -40,4 +42,4 @@ function witharity(arity, func) {
     return _witharity;
 }
 
-module.exports = witharity;
+module.exports = curry(1, witharity);

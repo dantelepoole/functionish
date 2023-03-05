@@ -4,19 +4,13 @@
 
 'use strict';
 
-const curry2 = require('./curry2');
+const curry = require('./curry');
 const isvoid = require('./types/isvoid');
 
 /**
- * Return a function that passes *func* and its arguments to *wrapperfunc* and returns the result, allowing
- * wrapperfunc to pre-process *func*'s arguments and/or post-process *func*'s return value.
+ * [to do]
  * 
- * Both *func* and *wrapperfunc* must be functions. *Wrapperfunc* should have the signature 
- * `wrapperfunc(func, ...args)` and must invoke *func* itself.
- * 
- * `wrap()` is curried by default with binary arity. Also, currying is preserved. If *func* has 
- * been curried (i.e. it has been passed to {@link module:curry curry()}), the returned function will
- * be curried with the same arity.
+ * `withdefault()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `withdefault()`</caption>
  *     
@@ -43,4 +37,4 @@ function withdefault(defaultvalue, func) {
     }
 }
 
-module.exports = curry2(withdefault);
+module.exports = curry(1, withdefault);

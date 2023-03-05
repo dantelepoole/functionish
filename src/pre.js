@@ -4,13 +4,13 @@
 
 'use strict';
 
-const curry2 = require('./curry2');
+const curry = require('./curry');
 
 /**
  * Return a function that sends its arguments to the *argprocessor* function and passes the returned
  * array to *func* as a rest parameter. If *argprocessor* does not return an array, an error is thrown.
  * 
- * `pre()` is curried by default with binary arity.
+ * `pre()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `pre()`</caption>
  * 
@@ -35,4 +35,4 @@ function pre(argprocessor, func) {
     return _pre;
 }
 
-module.exports = curry2(pre);
+module.exports = curry(1, pre);

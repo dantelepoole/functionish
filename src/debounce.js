@@ -9,6 +9,7 @@ const TIMER_NONE = undefined;
 
 const compose = require('./compose');
 const curry = require('./curry');
+const isvoid = require('./types/isvoid');
 
 /**
  * to do
@@ -21,7 +22,7 @@ const curry = require('./curry');
  */
 function debounce(mode, delayms, func) {
 
-    const ismodeleading = (mode === MODE_LEADING);
+    const ismodeleading = isvoid(mode) || (mode !== MODE_LEADING);
 
     let timeoutid = TIMER_NONE;
     const timernotrunning = () => (timeoutid === TIMER_NONE);

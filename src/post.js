@@ -4,13 +4,13 @@
 
 'use strict';
 
-const curry2 = require('./curry2');
+const curry = require('./curry');
 
 /**
  * Return a function that invokes *func* and passes its return value to the *returnvalueprocessor*
  * function.
  * 
- * `post()` is curried by default with binary arity.
+ * `post()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `post()`</caption>
  * 
@@ -36,4 +36,4 @@ function post(returnvalueprocessor, func) {
     return _post;
 }
 
-module.exports = curry2(post);
+module.exports = curry(1, post);

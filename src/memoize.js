@@ -6,6 +6,9 @@
 
 const CACHE_NONE = null;
 
+const curry = require('./curry');
+const isvoid = require('./types/isvoid');
+
 /**
  * Return a function that cache's *targetfunc*'s return values based on its argument list.
  * 
@@ -19,18 +22,21 @@ const CACHE_NONE = null;
  * be the actual return value of the *targetfunc*. Instead, it will be an object that holds *targetfunc*'s actual
  * return value as a property.
  * 
- * If called with a single argument, `memoize()` will use its default cache function. The default cache function
+ * If *cachefunction* is `null` or `undefined`, `memoize()` will use its default cache function. The default cache function
  * is very simplistic and simply converts the arguments to strings to construct the key with which a return value is
  * cached. Therefore, the default cache function is appropriate for primitive type arguments only.If one or
  * more arguments have a non-primitive type, *the default cache function will produce incorrect
  * results*. Provide your own cache function to customize the caching for the types of arguments you expect your
  * function to receive.
  * 
+ * `memoize()` is curried by default with unary arity.
+ * 
  * @example <caption>Example usage of memoize()</caption>
  * 
  * const { memoize } = require('functionish');
  * 
- * const loaduserdata = memoize( // one argument means the default cache function is used --> dangerous
+ * const loaduserdata = memoize(
+ *     null, // use default cache function
  *     function loaduserdata(userid) {
  *         // retrieve data from the database
  *     }
@@ -46,7 +52,7 @@ const CACHE_NONE = null;
  */
 function memoize(cachefunc, targetfunc) {
 
-    if(arguments.length === 1) [cachefunc, targetfunc] = [defaultcachefunc(), cachefunc];
+    if( isvoid(cachefunc) ) cachefunc = defaultcachefunc();
     
     return function _memoize(...args) {
 
@@ -75,4 +81,4 @@ function defaultcachefunc() {
     }
 }
 
-module.exports = memoize;
+module.exports = curry(1, memoize);

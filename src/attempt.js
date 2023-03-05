@@ -6,15 +6,19 @@
 
 const TYPE_FUNCTION = 'function';
 
+const curry = require('./curry');
+
 /**
  * Pass *args* to the *func* function and return the result. If *func* throws, invoke the *errorhandler* and return the
  * result. If *errorhandler* is not a function, return *errorhandler*'s value instead.
  * 
  * If *errorhandler* is a function, it is invoked with two arguments: the thrown error and the *args* array.
  * 
+ * `attempt()` is curried by default with unary arity.
+ * 
  * @example <caption>Example usage of `attempt()`</caption>
  * 
- * const attempt = require('functionish');
+ * const { attempt } = require('functionish');
  * 
  * function loaduserfromdb(userid) { ... }
  * 
@@ -51,4 +55,4 @@ function attempt(errorhandler, func) {
     }
 }
 
-module.exports = attempt;
+module.exports = curry(1, attempt);

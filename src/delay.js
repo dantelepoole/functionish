@@ -12,7 +12,7 @@ const curry = require('./curry');
  * Call *func* with the specified *args* after at least *delay* milliseconds have passed and return a function that
  * cancels the delayed function.
  * 
- * [to do: curried]
+ * `delay()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `delay()`</caption>
  * 

@@ -8,9 +8,6 @@
  * Return a function that accepts exactly one parameter and passes it to *func*. Any other arguments
  * passed to the returned function are ignored.
  * 
- * `unary()` does not preserve currying, so the returned function is never curried, even if *func* has
- * been curried.
- * 
  * @example <caption>Example usage of `unary()`</caption>
  * 
  * const { unary } = require('functionish');

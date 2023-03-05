@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry2 = require('./curry2');
+const curry = require('./curry');
 
 /**
  * Pass *args* to *func* and return the result.
@@ -12,7 +12,7 @@ const curry2 = require('./curry2');
  * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()} except it does not provide
  * for passing a custom `this`-obejct.
  * 
- * `apply()` is curried by default with binary arity.
+ * `apply()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `apply()`</caption>
  * 
@@ -34,4 +34,4 @@ function apply(func, args) {
     return func.apply(this, args);
 }
 
-module.exports = curry2(apply);
+module.exports = curry(1, apply);
