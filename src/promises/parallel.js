@@ -13,7 +13,7 @@ const isfunction = require('../types/isfunction');
 const noop = require('../noop');
 const partial = require('../partial');
 
-const finishonerror = (index, finish, error, data) => error && finish(error);
+const finishonerror = (_, finish, error) => error && finish(error);
 
 function parallel(failmode, throttle, ...funcs) {
 

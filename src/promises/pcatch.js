@@ -4,12 +4,12 @@
 
 'use strict';
 
-const curry2 = require('../curry2');
+const curry = require('../curry');
 
 /**
  * Functional variant of {@link external:Promise.prototype.catch Promise.prototype.catch()}.
  * 
- * `pcatch()` is curried by default with binary arity.
+ * `pcatch()` is curried by default with unary arity.
  * 
  * @function pcatch
  * @param {function} rejecthandler The handler function to call if *promise* rejects
@@ -20,4 +20,4 @@ function pcatch(rejecthandler, promise) {
     return promise.catch(rejecthandler);
 }
 
-module.exports = curry2(pcatch);
+module.exports = curry(1, pcatch);

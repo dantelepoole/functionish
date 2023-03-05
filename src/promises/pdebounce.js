@@ -9,7 +9,7 @@ const MODE_LEADING = 'leading';
 const TIMER_NONE = undefined;
 
 const compose = require('../compose');
-const curry3 = require('./curry3');
+const curry = require('./curry');
 const defer = require('./defer');
 const noop = require('./noop');
 
@@ -101,4 +101,4 @@ function pdebounceleading(delayms, func) {
 
 }
 
-module.exports = curry3(pdebounce);
+module.exports = curry(2, pdebounce);

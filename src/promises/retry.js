@@ -13,7 +13,7 @@ const DEFAULT_CONFIG = Object.freeze({
 })
 
 const compose = require('../compose');
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const flip = require('../flip');
 const merge = require('../misc/merge');
 const partial = require('../partial');
@@ -71,4 +71,4 @@ function initrejecthandler(delayedtargetfunc, config, calculatedelay) {
 
 }
 
-module.exports = curry2(retry);
+module.exports = curry(1, retry);

@@ -4,8 +4,7 @@
 
 'use strict';
 
-const compose = require('../compose');
-const curry2 = require('../curry2');
+const curry = require('../curry');
 const partial = require('../partial');
 
 const targetfuncexecutorfactory = targetfunc => (resolve, reject) => partial(fulfilltargetfunc, targetfunc, resolve, reject);
@@ -29,4 +28,4 @@ function fulfilltargetfunc(targetfunc, resolve, reject, ...args) {
     }
 }
 
-module.exports = curry2(pdelay);
+module.exports = curry(1, pdelay);

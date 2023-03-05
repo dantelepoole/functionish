@@ -6,9 +6,7 @@
 
 const PROMISE_NONE = undefined;
 
-const promise = require('./promise');
-
-const promisereducer = args => (p, f) => (p === PROMISE_NONE) ? promise(f, ...args) : p.then(f);
+const promisereducer = args => (promise, func) => (promise === PROMISE_NONE) ? func(...args) : promise.then(func);
 
 function pcompose(...funcs) {
 
