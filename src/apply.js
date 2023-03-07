@@ -4,6 +4,8 @@
 
 'use strict';
 
+const CONTEXT_NONE = undefined;
+
 const curry = require('./curry');
 
 /**
@@ -31,7 +33,7 @@ const curry = require('./curry');
  * @returns {any}
  */
 function apply(func, args) {
-    return func.apply(this, args);
+    return func.apply(CONTEXT_NONE, args);
 }
 
 module.exports = curry(1, apply);

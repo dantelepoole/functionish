@@ -44,6 +44,7 @@ const always = require('../always');
 function and(...predicates) {
 
     const conjunction = predicates.reduceRight(conjunctreducer, CONJUNCTION_NONE) ?? ALWAYS_TRUE;
+    
     const _and = (...args) => conjunction(...args);
 
     return _and;
@@ -56,6 +57,7 @@ function conjunctreducer(conjunction, predicate) {
     if( !conjunction ) return predicate;
 
     const conjunct = (...args) => predicate(...args) && conjunction(...args);
+
     return conjunct;
 }
 
