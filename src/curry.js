@@ -4,6 +4,9 @@
 
 'use strict';
 
+const CONTEXT_NONE = undefined;
+const DEFAULT_CURRY_ARITY = 1;
+
 /**
  * to do
  * 
