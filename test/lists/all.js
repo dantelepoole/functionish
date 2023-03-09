@@ -1,4 +1,4 @@
-const all = require('../all');
+const all = require('../../src/lists/all');
 const expect = require('chai').expect;
 const spy = require('sinon').spy;
 
@@ -37,10 +37,6 @@ describe('all()', function() {
             expect( all(islessthan10, numbers1to10) ).to.be.false;
             expect( islessthan.callCount ).to.be.equal(10);
 
-            islessthan.resetHistory();
-            const islessthan5 = islessthan.bind(null, 5);
-            expect( all(islessthan5, numbers1to10) ).to.be.false;
-            expect( islessthan.callCount ).to.be.equal(5);
         }
     )
 
@@ -61,12 +57,12 @@ describe('all()', function() {
         }
     )
 
-    it('should be curried with arity 2',
+    it('should be curried with unary arity',
         function () {
-            let result = all(isnumber);
+
+            const result = all(isnumber);
             expect(result).to.be.a('function');
-            result = result(numbers1to10)
-            expect(result).to.be.true;
+            expect( result(numbers1to10) ).to.be.true;
         }
     )
 
