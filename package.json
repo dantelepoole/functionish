@@ -4,7 +4,7 @@
   "description": "A set of utility functions for functional-ish programming in Node",
   "main": "./src/index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --recursive",
     "doc": "jsdoc -c ./jsdoc.conf.json -d ./doc -R README.md -r ./src"
   },
   "repository": {
