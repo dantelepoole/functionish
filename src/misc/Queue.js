@@ -12,23 +12,16 @@ class Queue {
 
     #length = 0;
     #head = {};
-    #tail = NODE_NONE;
+    #tail = this.#head;
 
     constructor(...initialitems) {
-
-        this.#tail = this.#head;
-        
-        if(initialitems.length) {
-            this.#tail = initialitems.reduce(enqueuereducer, this.#tail);
-            this.#length = initialitems.length;
-        }
+        this.enqueue(...initialitems);
     }
 
     clear() {
         
         this.#length = 0;
-        this.#head.next = NODE_NONE;
-        this.#tail = this.#head;
+        this.#head = this.#tail = {};
 
         return this;
     }

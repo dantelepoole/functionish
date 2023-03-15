@@ -15,8 +15,7 @@ class Stack {
     #head = {};
 
     constructor(...initialitems) {
-        this.#head = initialitems.reduce(pushreducer, this.#head);
-        this.#length = initialitems.length;
+        this.push(...initialitems);
     }
 
     clear() {
