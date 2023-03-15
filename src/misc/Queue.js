@@ -1,93 +1,85 @@
 /**
- * @module misc/Queue
+ * @module misc/queue
  */
 
-const enqueuereducer = (currentnode, value) => (currentnode.next = { value });
+'use strict';
 
-class Queue extends EventEmitter {
+const NODE_NONE = undefined;
 
-    #head = undefined;
-    #tail = undefined;
-    #size = 0;
+const enqueuereducer = (node, data) => (node.next = { data });
 
-    constructor(...initialvalues) {
-        super();
-        this.enqueue(...initialvalues);
-    }
+class Queue {
 
-    get size() {
-        return this.#size;
+    #length = 0;
+    #head = {};
+    #tail = NODE_NONE;
+
+    constructor(...initialitems) {
+
+        this.#tail = this.#head;
+        
+        if(initialitems.length) {
+            this.#tail = initialitems.reduce(enqueuereducer, this.#tail);
+            this.#length = initialitems.length;
+        }
     }
 
     clear() {
-        this.#head = this.#tail = undefined;
-        this.#size = 0;
+        
+        this.#length = 0;
+        this.#head.next = NODE_NONE;
+        this.#tail = this.#head;
+
         return this;
+    }
+
+    drain() {
+        return [...this];
     }
 
     dequeue() {
 
-        if(this.#size === 0) return;
-
-        const headvalue = this.#head.value;
+        if(this.#length === 0) return;
         
-        this.#head = this.#head.next;
-        this.#size -= 1;
+        const node = this.#head.next;
+        this.#head.next = node.next;
+        
+        this.#length -= 1;
+        if(this.#length === 0) this.#tail = this.#head;
 
-        if(this.#size === 0) this.#tail = undefined;
-
-        return headvalue;
+        return node.data;
     }
 
-    enqueue(...values) {
+    enqueue(...items) {
 
-        const chain = buildnodechain(values);
-
-        if(chain.length === 0) return this;
-
-        if(this.#size === 0) this.#head = chain.first;
-        else this.#tail.next = chain.first;
-
-        this.#tail = chain.last;
-        this.#size += chain.length;
+        this.#tail = items.reduce(enqueuereducer, this.#tail);
+        this.#length += items.length;
 
         return this;
     }
 
     peek() {
-        if(this.#head) return this.#head.value;
+        return this.#head.next?.data;
     }
 
-    priority(...values) {
+    toString() {
+        return `Queue[${this.#length}]`;
+    }
 
-        const chain = buildnodechain(values);
-
-        if(chain.length === 0) return this;
+    *values() {
         
-        chain.last.next = this.#head;
-        this.#head = chain.first;
-        
-        if(this.#size === 0) this.#tail = chain.last;
+        let node = this.#head;
 
-        this.#size += chain.length;
-
-        return this;
+        while(node.next !== NODE_NONE) yield (node = node.next).data;
     }
 
-    *[Symbol.iterator]() {
-
-        let node = { next:this.#head };
-
-        while(node = node.next) yield node.value;
+    get size() {
+        return this.#length;
     }
-}
 
-function buildnodechain(values) {
-
-    const first = {};
-    const last = values.reduce(enqueuereducer, first);
-
-    return { first:first.next, last, length:values.length }
+    *[Symbol.iterator](){
+        while(this.#length > 0) yield this.dequeue();
+    }
 }
 
 module.exports = Queue;

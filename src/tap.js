@@ -26,9 +26,7 @@ const CONTEXT_NONE = null;
  */
 function tap(func, ...partialargs) {
 
-    if (partialargs.length) func = func.bind(CONTEXT_NONE, ...partialargs);
-
-    const _tap = (...args) => ( func(...args), args[0] );
+    const _tap = (...args) => ( func(...partialargs, ...args), args[0] );
 
     return _tap;
 }

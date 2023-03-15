@@ -1,44 +1,77 @@
 /**
- * @module misc/Stack
+ * @module misc/stack
  */
+
+'use strict';
+
+const NODE_NONE = undefined;
+
+const insertbefore = (node, data) => (node.next = { data, next:node.next });
+const pushreducer = (node, data) => ( insertbefore(node, data), node );
 
 class Stack {
 
-    #items = [];
+    #length = 0;
+    #head = {};
 
-    constructor(...initialvalues) {
-        super();
-        this.#items.push(...initialvalues);
-    }
-
-    get size() {
-        return this.#items.length;
+    constructor(...initialitems) {
+        this.#head = initialitems.reduce(pushreducer, this.#head);
+        this.#length = initialitems.length;
     }
 
     clear() {
-        this.#items.length = 0;
+
+        this.#length = 0;
+        this.head.next = NODE_NONE;
+
         return this;
+    }
+
+    drain() {
+        return [...this];
     }
 
     peek() {
-        if(this.#items.length > 0) return this.#items[ this.#items.length - 1 ];
+        return this.#head.next?.data;
     }
-    
+
     pop() {
-        if(this.#items.length > 0) return this.#items.pop();
+
+        if(this.#length === 0) return;
+        this.#length -= 1;
+
+        const node = this.#head.next;
+        this.#head.next = node.next;
+
+        return node.data;
     }
 
-    push(...values) {
+    push(...items) {
 
-        this.#items.push(...values);
+        this.#head = items.reduce(pushreducer, this.#head);
+        this.#length += items.length;
 
         return this;
     }
 
-    *[Symbol.iterator]() {
-        yield* this.#items;
+    toString() {
+        return `Stack[${this.#length}]`;
     }
 
+    *values() {
+        
+        let node = this.#head;
+
+        while(node.next !== NODE_NONE) yield (node = node.next).data;
+    }
+
+    get size() {
+        return this.#length;
+    }
+
+    *[Symbol.iterator]() {
+        while(this.#length > 0) yield this.pop();
+    }
 }
 
 module.exports = Stack;
