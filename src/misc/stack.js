@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Stack = require('./Stack');
+const Stack = require('../../lib/Stack');
 
 function stack(...initialitems) {
     return new Stack(...initialitems);

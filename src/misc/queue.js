@@ -4,7 +4,7 @@
 
 'use strict';
 
-const Queue = require('./Queue');
+const Queue = require('../../lib/Queue');
 
 function queue(...initialitems) {
     return new Queue(...initialitems);
