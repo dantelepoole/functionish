@@ -7,19 +7,37 @@
 const EVENT_FLIP = 'flip';
 const HINT_NUMBER = 'number';
 const HINT_STRING = 'string';
+const NAME_EMPTY = undefined;
 
 const EventEmitter = require('events');
 
 class Flag extends EventEmitter {
 
-    static get OFF() {
-        return new Flag(false);
+    static off(name=NAME_EMPTY) {
+        
+        const flag = new Flag(false);
+        flag.name = name;
+
+        return flag;
     }
 
-    static get ON() {
-        return new Flag(true);
+    static on(name=NAME_EMPTY) {
+        
+        const flag = new Flag(true);
+        flag.name = name;
+
+        return flag;
     }
 
+    static for(initialvalue, name=NAME_EMPTY) {
+
+        const flag = new Flag(initialvalue);
+        flag.name = name;
+
+        return flag;
+    }
+
+    name = NAME_EMPTY;
     #value = false;
 
     constructor(initialvalue=false) {
@@ -30,7 +48,7 @@ class Flag extends EventEmitter {
     flip() {
         this.#value = ! this.#value;
 
-        this.emit(EVENT_FLIP, this.#value);
+        this.emit(EVENT_FLIP, this.#name, this.#value);
 
         return this.#value;
     }
@@ -70,13 +88,13 @@ class Flag extends EventEmitter {
 
         this.#value = newvalue;
 
-        this.emit(EVENT_FLIP, newvalue);
+        this.emit(EVENT_FLIP, this.#name, newvalue);
 
         return this;
     }
 
     toString() {
-        return `Flag[$${this.#value}]`;
+        return `Flag[${this.#name}=${this.#value}]`;
     }
 
     value() {
@@ -85,7 +103,7 @@ class Flag extends EventEmitter {
 
     [Symbol.toPrimitive](hint) {
 
-        return (hint === HINT_STRING) ? this.#value ? 'true' : 'false'
+        return (hint === HINT_STRING) ? String(this.#value)
              : (hint === HINT_NUMBER) ? this.#value ? 1 : 0
              : this.#value;
       }
