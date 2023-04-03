@@ -42,19 +42,22 @@ describe('and()', function() {
 
         it('should return the return value of the last predicate if all predicates return a truthy value', function() {
 
-            const alwaystrue = spy(() => true);
+            const alwaystrue = spy( always(TRUTHY_VALUE) );
             const _and = and(isnumber, iseven, alwaystrue);
-            expect( _and(42) ).to.be.true;
+            expect( _and(42) ).to.be.equal(TRUTHY_VALUE);
 
-            expect(isnumber.callCount).to.be.equal(1);
-            expect(iseven.callCount).to.be.equal(1);
-            expect(alwaystrue.callCount).to.be.equal(1);
         }) 
 
         it('should call each predicate if all predicates return a truthy value', function() {
 
-            const _and = and(isnumber, iseven, always(TRUTHY_VALUE));
+            const alwaystrue = spy( always(TRUTHY_VALUE) );
+            const _and = and(isnumber, iseven, alwaystrue);
             expect( _and(42) ).to.be.equal(TRUTHY_VALUE);
+
+            expect(isnumber.callCount).to.be.equal(1);
+            expect(iseven.callCount).to.be.equal(1);
+            expect(alwaystrue.callCount).to.be.equal(1);
+
         }) 
 
         it('should return the return value of the first predicate that returns a falsy value', function() {

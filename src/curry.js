@@ -17,8 +17,8 @@ const DEFAULT_CURRY_ARITY = 1;
  */
 function curry(arity, func) {
 
-    return (arguments.length === 1) ? initcurry(arity.length - 1, arity)
-         : !arity ? initcurry(func.length - 1, func)
+    return (arguments.length === 1) ? initcurry(arity.length-1, arity)
+         : !arity ? initcurry(func.length-1, func)
          : initcurry(arity, func);
 }
 

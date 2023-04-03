@@ -43,22 +43,14 @@ const always = require('../always');
  */
 function and(...predicates) {
 
-    const conjunction = predicates.reduceRight(conjunctreducer, CONJUNCTION_NONE) ?? ALWAYS_TRUE;
-    
-    const _and = (...args) => conjunction(...args);
+    return function _and(...args) {
 
-    return _and;
-}
+        let result = true;
 
-function conjunctreducer(conjunction, predicate) {
+        for(let i = 0; i < predicates.length; i += 1) if( ! (result = predicates[i](...args)) ) return result;
 
-    if(typeof predicate !== TYPE_FUNCTION) predicate = always(predicate);
-
-    if( !conjunction ) return predicate;
-
-    const conjunct = (...args) => predicate(...args) && conjunction(...args);
-
-    return conjunct;
+        return result;
+    }
 }
 
 module.exports = and;

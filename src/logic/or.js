@@ -4,12 +4,6 @@
 
 'use strict';
 
-const ALWAYS_FALSE = () => false;
-const DISJUNCTION_NONE = undefined;
-const TYPE_FUNCTION = 'function';
-
-const always = require('../always');
-
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
  * *predicate* and returns the return value of the first *predicate* that returns a truthy value or, if all
@@ -44,21 +38,14 @@ const always = require('../always');
  */
 function or(...predicates) {
     
-    const disjunction = predicates.reduceRight(disjunctreducer, DISJUNCTION_NONE) ?? ALWAYS_FALSE;
-    const _or = (...args) => disjunction(...args);
+    return function _or(...args) {
 
-    return _or;
-}
+        let result = false;
 
-function disjunctreducer(disjunction, predicate) {
+        for(let i = 0; i < predicates.length; i += 1) if( result = predicates[i](...args) ) return result;
 
-    if(typeof predicate !== TYPE_FUNCTION) predicate = always(predicate);
-
-    if( !disjunction ) return predicate;
-
-    const disjunct = (...args) => predicate(...args) || disjunction(...args);
-    return disjunct;
-
+        return result;
+    }
 }
 
 module.exports = or;

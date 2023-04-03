@@ -4,8 +4,6 @@
 
 'use strict';
 
-const pipereducer = (args, func) => [ func(...args) ];
-
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
  * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
@@ -31,10 +29,14 @@ const pipereducer = (args, func) => [ func(...args) ];
  * @returns {function}
  */
 function pipe(...funcs) {
-    
-    const _pipe = (...args) => funcs.reduce(pipereducer, args)[0];
 
-    return _pipe;
+    return function _pipe(...args) {
+
+        for(let i = 0; i < funcs.length; i += 1) args = [ funcs[i](...args) ];
+
+        return args[0];
+    }
+
 }
 
 module.exports = pipe;

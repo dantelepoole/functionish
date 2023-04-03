@@ -4,8 +4,6 @@
 
 'use strict';
 
-const composereducer = (args, func) => [ func(...args) ];
-
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
  * from right to left. See {@link module:pipe pipe()} for further details.
@@ -31,9 +29,12 @@ const composereducer = (args, func) => [ func(...args) ];
  */
 function compose(...funcs) {
 
-    const _compose = (...args) => funcs.reduceRight(composereducer, args)[0];
+    return function _compose(...args) {
 
-    return _compose;
+        for(let i = funcs.length-1; i >= 0; i -= 1) args = [ funcs[i](...args) ];
+
+        return args[0];
+    }
 }
 
 module.exports = compose;
