@@ -23,8 +23,8 @@ const curry = require('../curry');
  * @param {number} value The value to check
  * @returns {boolean}
  */
-function isbetween(lowerlimit, upperlimit, value) {
-    return (lowerlimit <= value) && (upperlimit >= value);
+function isbetween(lowerbound, upperbound, value) {
+    return (lowerbound <= value) && (upperbound >= value);
 }
 
 module.exports = curry(2, isbetween);

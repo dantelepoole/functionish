@@ -54,12 +54,12 @@ function memoize(cachefunc, targetfunc) {
 
     if( isvoid(cachefunc) ) cachefunc = defaultcachefunc();
     
-    return function _memoize(...args) {
+    return function _memoizedfunction(...args) {
 
         const cachedresult = cachefunc(args);
         if(cachedresult !== CACHE_NONE) return cachedresult.value;
 
-        const result = targetfunc(...args);
+        const result = targetfunc.call(this, ...args);
         
         cachefunc(args, { value:result });
 

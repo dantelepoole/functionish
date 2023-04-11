@@ -21,14 +21,18 @@ const CONTEXT_NONE = null;
  * log(42); // prints 42 to the screen and returns 42
  * 
  * @param {function} func The function to tap
- * @param {...any[]} partialargs The arguments to partial apply to *func*
+ * @param {...any[]} partialargs Optional arguments to partial apply to *func*
  * @returns {function}
  */
 function tap(func, ...partialargs) {
 
-    const _tap = (...args) => ( func(...partialargs, ...args), args[0] );
+    return function _tappedfunction(...args) {
 
-    return _tap;
+        func.call(this, ...partialargs, ...args);
+
+        return args[0];
+    }
+
 }
 
 module.exports = tap;

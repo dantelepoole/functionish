@@ -21,4 +21,4 @@
  * @param {number} value The value to round to the nearest integer.
  * @returns {number}
  */
-module.exports = Math.round;i
+module.exports = Math.round;

@@ -5,15 +5,13 @@
 'use strict';
 
 /**
- * Return the highest value in the *values* list or `-Infinity` if the *values* list is empty.
- * 
- * This function is an alias for {@link external:Math.max Math.max()}.
+ * Return the highest value in the *values* list or `NaN` if the *values* list is empty.
  * 
  * @example
  * const maximum = require('functionish/math/maximum');
  * 
  * maximum( [0, 15, 42, 36] ); // returns 42
- * maximum(); // returns -Infinity
+ * maximum(); // returns NaN
  * 
  * @function maximum
  * @see {@link external:Math.max Math.max()}
@@ -21,7 +19,17 @@
  * @returns {number}
  */
 function maximum(values) {
-    return Math.max(...values);
+
+    let maxvalue = NaN;
+
+    for(const value of values) {
+
+        if(maxvalue >= value) continue;
+
+        maxvalue = value;
+    }
+
+    return maxvalue;
 }
 
 module.exports = maximum;

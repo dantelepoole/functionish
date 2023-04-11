@@ -50,7 +50,10 @@ const curry = require('./curry');
  * @returns {function}
  */
 function wrap(wrapperfunc, func) {
-    return wrapperfunc.bind(CONTEXT_NONE, func);
+
+    return function _wrappedfunction(...args) {
+        return wrapperfunc.call(this, func, ...args);
+    }
 }
 
 module.exports = curry(1, wrap);

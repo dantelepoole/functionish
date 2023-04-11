@@ -9,9 +9,9 @@ const isvoid = require('../types/isvoid');
 
 /**
  * Return *value* if it lies between *lowerlimit* and *upperlimit* (both inclusive). Otherwise, return
- * the limit closest to *value*.
+ * the limit closest to *value*. If value
  * 
- * If *value* is `null`, `undefined` or `NaN`, *lowerlimit* is returned.
+ * If *value* is `null`, `undefined` or `NaN`, `NaN` is returned.
  * 
  * @example
  * const constrain = require('functionish/math/constrain');
@@ -20,21 +20,21 @@ const isvoid = require('../types/isvoid');
  * constrain(0, 10, -1); // returns 0
  * constrain(0, 10, 42); // returns 10
  * 
- * constrain(1, 10, null); // returns 0
- * constrain(1, 10, undefined); // returns 0
- * constrain(1, 10, NaN); // returns 0
+ * constrain(1, 10, null); // returns NaN
+ * constrain(1, 10, undefined); // returns NaN
+ * constrain(1, 10, NaN); // returns NaN
  * 
  * @function constrain
- * @param {number} lowerlimit The lower limit for *value* (inclusive)
- * @param {number} upperlimit The upper limit for *value* (inclusive)
+ * @param {number} lowerbound The lower limit for *value* (inclusive)
+ * @param {number} upperbound The upper limit for *value* (inclusive)
  * @param {number} value The value to check
  * @returns {number}
  */
-function constrain(lowerlimit, upperlimit, value) {
+function constrain(lowerbound, upperbound, value) {
 
-    return isvoid(value) ? lowerlimit
-         : (lowerlimit > value) ? lowerlimit
-         : (upperlimit < value) ? upperlimit
+    return isvoid(value) ? NaN
+         : (lowerbound > value) ? lowerbound
+         : (upperbound < value) ? upperbound
          : value;
 }
 

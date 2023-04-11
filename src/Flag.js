@@ -4,51 +4,45 @@
 
 'use strict';
 
+const DEFAULT_VALUE = false;
 const EVENT_FLIP = 'flip';
 const HINT_NUMBER = 'number';
 const HINT_STRING = 'string';
-const NAME_EMPTY = undefined;
+const NAME_NONE = undefined;
+const OFF_INTEGER = 0;
+const OFF_STRING = 'off';
+const ON_INTEGER = 1;
+const ON_STRING = 'on';
 
 const EventEmitter = require('events');
 
 class Flag extends EventEmitter {
 
-    static off(name=NAME_EMPTY) {
-        
-        const flag = new Flag(false);
-        flag.name = name;
-
-        return flag;
+    static OFF(name=NAME_NONE) {
+        return new Flag(false, name);
     }
 
-    static on(name=NAME_EMPTY) {
-        
-        const flag = new Flag(true);
-        flag.name = name;
-
-        return flag;
+    static ON(name=NAME_NONE) {
+        return new Flag(true, name);
     }
 
-    static for(initialvalue, name=NAME_EMPTY) {
-
-        const flag = new Flag(initialvalue);
-        flag.name = name;
-
-        return flag;
+    static for(initialvalue, name=NAME_NONE) {
+        return new Flag(initialvalue, name);
     }
 
-    name = NAME_EMPTY;
-    #value = false;
+    name = NAME_NONE;
+    #value = DEFAULT_VALUE;
 
-    constructor(initialvalue=false) {
+    constructor(initialvalue=DEFAULT_VALUE, name=NAME_NONE) {
         super();
         this.#value = !! initialvalue;
+        this.name = name;
     }
 
     flip() {
         this.#value = ! this.#value;
 
-        this.emit(EVENT_FLIP, this.#name, this.#value);
+        this.emit(EVENT_FLIP, this.name, this.#value);
 
         return this.#value;
     }
@@ -60,24 +54,25 @@ class Flag extends EventEmitter {
              : (this.#value === !! value);
     }
 
-    disable() {
+    setoff() {
         return this.set(false);
     }
 
-    enable() {
+    seton() {
         return this.set(true);
     }
 
-    isdisabled() {
+    ison() {
         return (! this.#value);
     }
 
-    isenabled() {
+    isoff() {
         return this.#value;
     }
 
     reader() {
-        return () => this.#value;
+        const flagreader = () => this.#value;
+        return flagreader;
     }
 
     set(newvalue) {
@@ -88,13 +83,13 @@ class Flag extends EventEmitter {
 
         this.#value = newvalue;
 
-        this.emit(EVENT_FLIP, this.#name, newvalue);
+        this.emit(EVENT_FLIP, this.name, newvalue);
 
         return this;
     }
 
     toString() {
-        return `Flag[${this.#name}=${this.#value}]`;
+        return `Flag[${this.name}=${this.#value}]`;
     }
 
     value() {
@@ -103,8 +98,8 @@ class Flag extends EventEmitter {
 
     [Symbol.toPrimitive](hint) {
 
-        return (hint === HINT_STRING) ? String(this.#value)
-             : (hint === HINT_NUMBER) ? this.#value ? 1 : 0
+        return (hint === HINT_STRING) ? this.#value ? ON_STRING : OFF_STRING
+             : (hint === HINT_NUMBER) ? this.#value ? ON_INTEGER : OFF_INTEGER
              : this.#value;
       }
 }

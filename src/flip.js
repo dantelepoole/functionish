@@ -37,9 +37,9 @@
  */
 function flip(func) {
 
-    const _flip = (a, b, ...args) => func(b, a, ...args);
-
-    return _flip;
+    return function _flippedfunction(a, b, ...args) {
+        return func.call(this, b, a, ...args);
+    }
 }
 
 module.exports = flip;

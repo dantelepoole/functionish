@@ -29,8 +29,12 @@
  * @returns {function}
  */
 module.exports = function uniadic(func, ...partialargs) {
-    
-    const _uniadic = list => func(...partialargs, ...list);
 
-    return _uniadic;
+    return function _uniadicfunction(list) {
+        return func.call(this, ...partialargs, ...list);
+    }
+
+    // const _uniadic = list => func(...partialargs, ...list);
+
+    // return _uniadic;
 }

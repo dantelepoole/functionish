@@ -4,7 +4,6 @@
 
 'use strict';
 
-const CONTEXT_NONE = null;
 const VIRGIN_RESULT = Symbol();
 
 /**
@@ -18,19 +17,20 @@ const VIRGIN_RESULT = Symbol();
  * 
  * @function once
  * @param {function} func The function to run
+ * @param {...any[]} partialargs Optional arguments to partially apply to *func*
  * @returns {function}
  */
 function once(func, ...partialargs) {
 
-    if(partialargs.length) func = func.bind(CONTEXT_NONE, ...partialargs);
-
     let result = VIRGIN_RESULT;
 
-    const _once = (...args) => (result === VIRGIN_RESULT)
-                             ? (result = func(...args))
-                             : result;
+    return function _oncefunction(...args) {
 
-    return _once;
+        return (result === VIRGIN_RESULT)
+             ? (result = func.call(this, ...partialargs, ...args))
+             : result;
+    }
+
 }
 
 module.exports = once;

@@ -27,10 +27,10 @@
  * @returns {function}
  */
 function boolify(func) {
-    
-    const _boolify = (...args) => !! func(...args);
 
-    return _boolify;
+    return function _boolifiedfunction(...args) {
+        return !! func.call(this, ...args);
+    }
 }
 
 module.exports = boolify;

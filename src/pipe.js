@@ -30,13 +30,12 @@
  */
 function pipe(...funcs) {
 
-    return function _pipe(...args) {
+    return function _pipedfunctions(...args) {
 
-        for(let i = 0; i < funcs.length; i += 1) args = [ funcs[i](...args) ];
+        for(let i = 0; i < funcs.length; i++) args = [ funcs[i](...args) ];
 
         return args[0];
     }
-
 }
 
 module.exports = pipe;

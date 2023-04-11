@@ -31,9 +31,9 @@ const CONTEXT_NONE = undefined;
  */
 function partial(func, ...partialargs) {
 
-    const _partial = func.bind(CONTEXT_NONE, ...partialargs);
-
-    return _partial;
+    return function _partiallyappliedfunction(...args) {
+        return func.call(this, ...partialargs, ...args);
+    }
 }
 
 module.exports = partial;

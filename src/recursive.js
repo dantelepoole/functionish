@@ -43,7 +43,7 @@
  */
 function recursive(func) {
 
-    return function _recursive(...args) {
+    return function _recursivefunction(...args) {
 
         const recurse = (...nextargs) => (args = nextargs);
 

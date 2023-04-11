@@ -29,7 +29,7 @@ const TYPE_FUNCTION = 'function';
 function evaluate(expression, ...args) {
 
     return (typeof expression === TYPE_FUNCTION)
-         ? expression(...args)
+         ? expression.call(this, ...args)
          : expression;
 }
 

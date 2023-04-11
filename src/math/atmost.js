@@ -14,12 +14,12 @@ const curry = require('../curry');
  * to do
  * 
  * @function atmost
- * @param {number} upperlimit The upper limit for *value* (inclusive)
+ * @param {number} upperbound The upper limit for *value* (inclusive)
  * @param {number} value The value to check
  * @returns {number}
  */
-function atmost(upperlimit, value) {
-    return ( !(upperlimit >= value) ) ? upperlimit : value;
+function atmost(upperbound, value) {
+    return (upperbound > value) ? upperbound : value;
 }
 
 module.exports = curry(1, atmost);

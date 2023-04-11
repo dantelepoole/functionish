@@ -4,8 +4,9 @@
 
 'use strict';
 
-const CONTEXT_NONE = undefined;
 const DEFAULT_CURRY_ARITY = 1;
+
+const getarity = func => (func.length > 1) ? (func.length - 1) : DEFAULT_CURRY_ARITY;
 
 /**
  * to do
@@ -17,20 +18,25 @@ const DEFAULT_CURRY_ARITY = 1;
  */
 function curry(arity, func) {
 
-    return (arguments.length === 1) ? initcurry(arity.length-1, arity)
-         : !arity ? initcurry(func.length-1, func)
-         : initcurry(arity, func);
+    return (arguments.length === 1) ? initcurry( getarity(arity), arity, [] )
+         : (arity > 0) ? initcurry(arity, func, [])
+         : initcurry( getarity(func), func, [] );
+
 }
 
-function initcurry(arity, func) {
+function initcurry(arity, func, curriedargs) {
 
-    if( ! (arity > 0) ) arity = DEFAULT_CURRY_ARITY;
+    const restarity = (arity - curriedargs.length);
 
-    return function _curried(...args) {
+    return function _curriedfunction(...args) {
 
-        return (arity < args.length) ? func(...args)
-             : (arity === args.length) ? func.bind(CONTEXT_NONE, ...args)
-             : _curried.bind(CONTEXT_NONE, ...args);
+        return (restarity < args.length) ? func.call(this, ...curriedargs, ...args)
+             : (restarity === args.length) ? _callcurriedfunction
+             : initcurry(arity, func, [...curriedargs, ...args]);
+    }
+
+    function _callcurriedfunction(...args) {
+        return func.call(this, ...curriedargs, ...args);
     }
 }
 

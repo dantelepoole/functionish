@@ -27,7 +27,7 @@
 
 module.exports = function nullary(func) {
 
-    const _nullary = () => func();
-
-    return _nullary;
+    return function _nullaryfunction() {
+        return func.call(this);
+    }
 }

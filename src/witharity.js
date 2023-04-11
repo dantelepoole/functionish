@@ -36,10 +36,13 @@ const curry = require('./curry');
  * @returns {function}
  */
 function witharity(arity, func) {
-    
-    const _witharity = (...args) => ( (args.length = arity), func(...args) );
 
-    return _witharity;
+    return function _witharity(...args) {
+        
+        args.length = arity;
+
+        return func.call(this, ...args);
+    }
 }
 
 module.exports = curry(1, witharity);

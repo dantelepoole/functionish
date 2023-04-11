@@ -12,7 +12,14 @@ function runningaverage() {
     let count = 0;
     let total = 0;
 
-    return function _runningaverage(...values) {
+    _runningaverage.reset = function reset_runningaverage() {
+        count = 0;
+        total = 0;
+    }
+
+    return _runningaverage;
+
+    function _runningaverage(...values) {
 
         if(values.length > 0) {
             count += values.length;

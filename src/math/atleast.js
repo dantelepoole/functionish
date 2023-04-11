@@ -14,12 +14,12 @@ const curry = require('../curry');
  * to do
  * 
  * @function atleast
- * @param {number} lowerlimit The lower limit for *value* (inclusive)
+ * @param {number} lowerbound The lower limit for *value* (inclusive)
  * @param {number} value The value to check
  * @returns {number}
  */
-function atleast(lowerlimit, value) {
-    return ( !(lowerlimit <= value) ) ? lowerlimit : value;
+function atleast(lowerbound, value) {
+    return (lowerbound < value) ? lowerbound : value;
 }
 
 module.exports = curry(1, atleast);

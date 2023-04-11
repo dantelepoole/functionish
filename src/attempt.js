@@ -44,7 +44,7 @@ function attempt(errorhandler, func) {
 
         try {
 
-            return func(...args);
+            return func.call(this, ...args);
             
         } catch(error) {
 

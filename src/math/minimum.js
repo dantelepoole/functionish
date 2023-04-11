@@ -5,15 +5,13 @@
 'use strict';
 
 /**
- * Return the lowest value in the *values* list or `Infinity` if the *values* list is empty.
- * 
- * This function is an alias for {@link external:Math.min Math.min()}.
+ * Return the lowest value in the *values* list or `NaN` if the *values* list is empty.
  * 
  * @example
  * const minimum = require('functionish/math/minimum');
  * 
  * minimum( [100, 150, 42, 366] ); // returns 42
- * minimum(); // returns Infinity
+ * minimum(); // returns NaN
  * 
  * @function minimum
  * {@link external:Math.min Math.min()}
@@ -21,7 +19,17 @@
  * @returns {number}
  */
 function minimum(values) {
-    return Math.min(...values);
+
+    let minvalue = NaN;
+
+    for(const value of values) {
+
+        if(minvalue <= value) continue;
+
+        minvalue = value;
+    }
+
+    return minvalue;
 }
 
 module.exports = minimum;

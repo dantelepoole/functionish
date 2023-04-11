@@ -36,7 +36,7 @@ function rename(name, func) {
 
     const renamedfunc = { 
         [name](...args) { 
-            return func(...args);
+            return func.call(this, ...args);
         }
     }[name];
 

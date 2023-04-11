@@ -23,10 +23,10 @@
  * @returns {function}
  */
 function binary(func) {
-    
-    const _binary = (a,b) => func(a,b);
 
-    return _binary;
+    return function _binaryfunction(a, b) {
+        return func.call(this, a, b);
+    }
 }
 
 module.exports = binary;

@@ -4,6 +4,8 @@
 
 'use strict';
 
+const id = require('./id');
+
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
  * from right to left. See {@link module:pipe pipe()} for further details.
@@ -29,9 +31,9 @@
  */
 function compose(...funcs) {
 
-    return function _compose(...args) {
+    return function _composedfunctions(...args) {
 
-        for(let i = funcs.length-1; i >= 0; i -= 1) args = [ funcs[i](...args) ];
+        for(let i = funcs.length-1; i >= 0; i -= 1) args = [ funcs[i](...args )];
 
         return args[0];
     }

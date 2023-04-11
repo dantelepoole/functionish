@@ -23,11 +23,11 @@
  * @param {function} func The function to invoke with a single argument
  * @returns {function}
  */
-function unary(func) {
+function unary(func, ...partialargs) {
 
-    const _unary = x => func(x);
-
-    return _unary;
+    return function _unaryfunction(x) {
+        return func.call(this, ...partialargs, x);
+    }
 }
 
 module.exports = unary;

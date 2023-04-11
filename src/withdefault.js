@@ -31,7 +31,7 @@ function withdefault(defaultvalue, func) {
 
     return function _withdefault(...args) {
 
-        const result = func(...args);
+        const result = func.call(this, ...args);
         
         return isvoid(result) ? defaultvalue : result;
     }

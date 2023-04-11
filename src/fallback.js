@@ -4,9 +4,8 @@
 
 'use strict';
 
-const ALWAYS_UNDEFINED = undefined;
-const FUNCTION_NONE = undefined;
-const RESULT_ERROR = Symbol();
+const ERROR_NONE = undefined;
+const RESULT_NONE = undefined;
 
 /**
  * Return a function that passes its arguments to each *func* in order and returns the return value
@@ -34,27 +33,31 @@ const RESULT_ERROR = Symbol();
  * @returns {any}
  */
 function fallback(...funcs) {
-    return funcs.reduceRight(fallbackreducer, FUNCTION_NONE) ?? ALWAYS_UNDEFINED;
-}
 
-function fallbackreducer(f,g) {
+    return function _fallbackfunctions(...args) {
 
-    if( f === FUNCTION_NONE ) return g;
+        let result = args[0];
+        let error = ERROR_NONE;
 
-    return function _fallback(...args) {
+        for(let i = 0; i < funcs.length; i += 1) {
 
-        const result = safeinvoke(g, args);
+            [result, error] = safeinvoke(funcs[i], args);
 
-        return (result === RESULT_ERROR) ? f(...args) : result;
+            if( !error ) return result;
+        }
+
+        if(error) throw error;
+
+        return result;
     }
 }
 
 function safeinvoke(func, args) {
 
     try {
-        return func(...args);
+        return [ func(...args), ERROR_NONE ];
     } catch(error) {
-        return RESULT_ERROR;
+        return [ RESULT_NONE, error ];
     }
 }
 
