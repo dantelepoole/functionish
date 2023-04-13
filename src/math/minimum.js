@@ -7,6 +7,8 @@
 /**
  * Return the lowest value in the *values* list or `NaN` if the *values* list is empty.
  * 
+ * [to do: edit doc for null, undefined or NaN values]
+ * 
  * @example
  * const minimum = require('functionish/math/minimum');
  * 
@@ -24,9 +26,13 @@ function minimum(values) {
 
     for(const value of values) {
 
-        if(minvalue <= value) continue;
-
-        minvalue = value;
+        if(typeof value !== 'number') return NaN
+        
+        else if (minvalue <= value) continue;
+        
+        else if (minvalue > value || minvalue !== minvalue) minvalue = value;
+        
+        else return NaN;
     }
 
     return minvalue;
