@@ -16,13 +16,6 @@ const unary = require('../unary');
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a falsy value, without
  * evaluating any remaining items in *list*.
  * 
- * If *list* is an array, this function calls its {@link external:Array.prototype.every Array.prototype.every()}
- * method and returns the result. However, the *predicate* function will only ever be called with a single
- * argument (the current list item), not the additional arguments that {@link external:Array.prototype.every Array.prototype.every()}
- * passes to its function.
- * 
- * If *list* is not an array, it is presumed to be an iterable object.
- * 
  * `all()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `all()`</caption>
@@ -42,13 +35,6 @@ const unary = require('../unary');
  * @returns {boolean}
  */
 function all(predicate, list) {
-
-    return isfunction(list.every)
-         ? list.every( unary(predicate) )
-         : alliterable(predicate, list);
-}
-
-function alliterable(predicate, list) {
 
     for(const value of list) if( ! predicate(value) ) return false;
 
