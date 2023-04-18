@@ -4,13 +4,12 @@
 
 'use strict';
 
-const EMPTY_STRING = '';
+const TYPE_STRING = '';
 
-const isarray = require('../types/isarray');
-const isstring = require('../types/isstring');
 const tostring = require('../types/tostring');
 
-const stringappendreducer = (string, partialstring) => string + tostring(partialstring);
+const isstring = x => (typeof x === TYPE_STRING);
+const stringappendreducer = (string, part) => string + tostring(part);
 
 /**
  * to do
@@ -19,8 +18,8 @@ const stringappendreducer = (string, partialstring) => string + tostring(partial
  */
 function append(list, ...items) {
 
-    return isarray(list) ? [...list, ...items]
-         : isstring(list) ? appendstrings(list, items)
+    return isstring(list)
+         ? appendstrings(list, items)
          : appenditerable(list, items);
 }
 
