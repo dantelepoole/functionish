@@ -13,7 +13,7 @@
  * 
  * @example <caption>Example usage of `at()`</caption>
  * 
- * const { at } = require('functionish/array');
+ * const { at } = require('functionish/arrays');
  * 
  * const array = [1,2,3,42,5];
  * const item = at( [1,2,3,42,5], 3 );
@@ -27,9 +27,10 @@
  */
 function at(array, index) {
 
-    if(index < 0) index += array.length;
+    return (index < 0)
+         ? array[ index + array.length ]
+         : array[index];
 
-    return array[index];
 }
 
 module.exports = at;

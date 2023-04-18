@@ -19,11 +19,10 @@ const curry = require('../curry');
  * @returns {any[][]}
  */
 function sever(index, array) {
-    
-    const left = array.slice(0, index);
-    const right = array.slice(index);
 
-    return [left, right];
+    if(index < 0) index += array.length;
+    
+    return [ array.slice(0, index), array.slice(index) ];
 }
 
 module.exports = curry(1, sever);

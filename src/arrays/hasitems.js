@@ -4,19 +4,15 @@
 
 'use strict';
 
-const querycountiterable = list => list[Symbol.iterator()]().next().done ? 0 : 1;
-
 /**
- * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. If
- * *collection* has no such properties and *collection* is iterable, return `true` if *collection*
- * has at least one item.
+ * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. Otherwise, return `false`.
  * 
  * This function is the counterpart of {@link module:arrays/isempty isempty()} and functions identically
  * to {@link module:arrays/notempty notempty()}.
  * 
  * @example <caption>Example usage of `hasitems()`</caption>
  * 
- * const {hasitems} = require('functionish/arraya');
+ * const {hasitems} = require('functionish/arrays');
  * 
  * hasitems( [1,2,3] ); //  returns true
  * hasitems( 'foobar' ); // returns true
@@ -34,12 +30,12 @@ const querycountiterable = list => list[Symbol.iterator()]().next().done ? 0 : 1
  * @function hasitems
  * @see {@link module:types/isempty isempty()}
  * @see {@link module:types/notempty notempty()}
- * @param {collection} list The collection to check
+ * @param {any} collection The collection to check
  * @returns {boolean}
  */
-function hasitems(list) {
+function hasitems(collection) {
     
-    const itemcount = (list.length ?? list.size ?? querycountiterable(list));
+    const itemcount = (collection.length ?? collection.size ?? NaN);
 
     return (itemcount > 0);
 }

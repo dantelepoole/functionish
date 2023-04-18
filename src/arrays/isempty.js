@@ -4,11 +4,11 @@
 
 'use strict';
 
-const querycountiterable = list => list[Symbol.iterator()]().next().done ? 0 : 1;
-
 /**
- * Return `true` if *indexable* has a `length` or `size` property equal to `0` or
- * if *indexable* has no such properties at all.
+ * Return `true` if *indexable* has a `length` or `size` property equal to `0`. Otherwise, return `false`.
+ * 
+ * This function is the counterpart of {@link module:arrays/isempty isempty()} and 
+ * {@link module:arrays/hasitems hasitems()}.
  * 
  * @example <caption>Example usage of `isempty()`</caption>
  * 
@@ -25,13 +25,14 @@ const querycountiterable = list => list[Symbol.iterator()]().next().done ? 0 : 1
  * 
  * @function isempty
  * @see {@link module:hasitems hasitems()}
- * @param {any} list The value to check
+ * @see {@link module:arrays/isempty isempty()}
+ * @param {any} collection The collection to check
  * @returns {boolean}
  * 
  */
-function isempty(list) {
+function isempty(collection) {
 
-    const itemcount = (list.length ?? list.size ?? querycountiterable(list));
+    const itemcount = (collection.length ?? collection.size ?? NaN);
 
     return (itemcount === 0);
 }

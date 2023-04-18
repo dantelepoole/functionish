@@ -8,7 +8,7 @@
  * Return the last item in *array* or `undefined` if *array* is empty.
  * 
  * @example
- * const last = require('functionish/collections/last');
+ * const last = require('functionish/arrays/last');
  * 
  * last([1,2,3]); // returns 3
  * last([]); // returns undefined

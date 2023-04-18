@@ -7,9 +7,7 @@
 const hasitems = require('./hasitems');
 
 /**
- * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. If
- * *collection* has no such properties and *collection* is iterable, return `true` if *collection*
- * has at least one item.
+ * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. Otherwise, return `false`.
  * 
  * This function is the counterpart of {@link module:arrays/isempty isempty()} and functions identically
  * to {@link module:arrays/hasitems hasitems()}.
@@ -36,7 +34,7 @@ const hasitems = require('./hasitems');
  * @function notempty
  * @see {@link module:types/isempty isempty()}
  * @see {@link module:thypes/hasitems hasitems()}
- * @param {collection} collection The collection to check
+ * @param {any} collection The collection to check
  * @returns {boolean}
  * 
  */
