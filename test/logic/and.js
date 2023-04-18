@@ -75,5 +75,11 @@ describe('and()', function() {
             expect(isstring.callCount).to.be.equal(1);
             expect(iseven.callCount).to.be.equal(0);
         }) 
+
+        it('should throw if any predicate is not a function', function() {
+
+            const _and = and(isnumber, 'foobar');
+            expect( ()=>_and(42) ).to.throw();
+        })
     })
 })

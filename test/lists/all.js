@@ -5,7 +5,6 @@ const sandbox = require('sinon').createSandbox();
 const spy = sandbox.spy.bind(sandbox);
 
 const numbers1to10_array = [1,2,3,4,5,6,7,8,9,10];
-spy(numbers1to10_array, 'every');
 
 function* numbers1to10_list() {
     yield* numbers1to10_array;
@@ -20,7 +19,6 @@ describe('all()', function() {
         function() {
             isnumber.resetHistory();
             islessthan.resetHistory();
-            numbers1to10_array.every.resetHistory();
         }
     )
 
@@ -35,18 +33,6 @@ describe('all()', function() {
         function() {
             expect( all(isnumber, numbers1to10_array) ).to.be.true;
             expect( isnumber.callCount ).to.be.equal(10);
-        }
-    )
-
-    it(`should pass the predicate to the list's every()-method the list has one`,
-        function() {
-
-            const isnumber = spy(x => (typeof x === 'number'));
-
-            const result = all(isnumber, numbers1to10_array);
-            expect(result).to.be.true;
-            expect(numbers1to10_array.every.callCount).to.be.equal(1);
-            expect(isnumber.callCount).to.be.equal(numbers1to10_array.length);
         }
     )
 

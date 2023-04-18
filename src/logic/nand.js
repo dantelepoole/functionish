@@ -14,9 +14,6 @@ const not = require('./not');
  * predicate returns a falsy value. If all *predicates* return a truthy value, the function returns
  * `false`.
  * 
- * A *predicate* may be either a function to be called or any other value. In the latter case, the value
- * is evaluated directly.
- * 
  * If the *predicates* array is empty, the function returns `false`.
  * 
  * @example <caption>Example usage of `nand()`</caption>
@@ -34,7 +31,7 @@ const not = require('./not');
  * 
  * @function nand
  * @see {@link module:logic/and and()}
- * @param {...any[]} predicates Zero or more predicate functions or values to test
+ * @param {...any[]} predicates The predicate functions to test
  * @returns {boolean}
  */
 function nand(...predicates) {
