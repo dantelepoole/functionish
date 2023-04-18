@@ -15,13 +15,6 @@ const unary = require('../unary');
  * The function is short-circuited, so it returns `true` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
  * 
- * If *list* is an array, this function calls its {@link external:Array.prototype.some Array.prototype.some()}
- * method and returns the result. However, the *predicate* function will only ever be called with a single
- * argument (the current list item), not the additional arguments that {@link external:Array.prototype.some Array.prototype.some()}
- * passes to its function.
- * 
- * If *list* is not an array, it is presumed to be an iterable object.
- * 
  * `any()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `any()`</caption>
@@ -40,13 +33,6 @@ const unary = require('../unary');
  * @returns {boolean}
  */
 function any(predicate, list) {
-
-    return isfunction(list.some)
-         ? list.some( unary(predicate) )
-         : anyiterable(predicate, list);
-}
-
-function anyiterable(predicate, list) {
 
     for(const value of list) if( predicate(value) ) return true;
 

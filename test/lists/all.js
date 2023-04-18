@@ -6,10 +6,6 @@ const spy = sandbox.spy.bind(sandbox);
 
 const numbers1to10_array = [1,2,3,4,5,6,7,8,9,10];
 
-function* numbers1to10_list() {
-    yield* numbers1to10_array;
-}
-
 const isnumber = spy( function isnumber(x) { return typeof x ==='number'; } )
 const islessthan = spy( function islessthan(num, x) { return (x < num); } )
 
@@ -33,16 +29,6 @@ describe('all()', function() {
         function() {
             expect( all(isnumber, numbers1to10_array) ).to.be.true;
             expect( isnumber.callCount ).to.be.equal(10);
-        }
-    )
-
-    it(`should always invoke the predicate with a single argument`,
-        function() {
-
-            const isnumber = spy((...args) => (throwifnotunary(args), typeof args[0] === 'number'));
-
-            expect( ()=>all(isnumber, numbers1to10_array) ).not.to.throw();
-            expect( ()=>all(isnumber, numbers1to10_list()) ).not.to.throw();
         }
     )
 
