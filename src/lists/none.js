@@ -42,17 +42,10 @@ const unary = require('../unary');
  */
 function none(predicate, list) {
 
-    return isfunction(list.some)
-         ? ! list.some( unary(predicate) )
-         : noneiterable(predicate, list);
+    for(const value of list) if( predicate(value) ) return false;
 
-}
+    return true;
 
-function noneiterable(predicate, list) {
-
-    for(const value of list) if( predicate(value) ) return true;
-
-    return false;
 }
 
 module.exports = curry(1, none);

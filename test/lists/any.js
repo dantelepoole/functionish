@@ -6,10 +6,6 @@ const spy = sandbox.spy.bind(sandbox);
 
 const numbers1to10_array = [1,2,3,4,5,6,7,8,9,10];
 
-function* numbers1to10_list() {
-    yield* numbers1to10_array;
-}
-
 const isnumber = spy( function isnumber(x) { return typeof x === 'number'; } )
 const isstring = spy( function isstring(x) { return typeof x === 'string'; } )
 const isgreaterthan = spy( function isgreaterthan(num, x) { return (x > num); } )
