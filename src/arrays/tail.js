@@ -16,7 +16,7 @@
  * @returns {any}
  */
 function tail(array) {
-    return array.slice(1);
+    return array[ array.length - 1 ];
 }
 
 module.exports = tail;
