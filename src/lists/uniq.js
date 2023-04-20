@@ -28,8 +28,12 @@ const isvoid = require('../isvoid');
  * @returns {iterable}
  */
 function uniq(list) {
+    return uniqusing(HASH_NONE, list);
+}
 
-    const uniqlist = uniqiterable(HASH_NONE, list);
+function uniqusing(hashfunc, list) {
+
+    const uniqlist = uniqiterable(hashfunc, list);
 
     return isarray(list)
          ? [...uniqlist]
@@ -53,18 +57,11 @@ function isuniqfactory(hashfunc=HASH_NONE) {
 
     const dedup = new Set();
 
-    return (hashfunc === HASH_NONE)
-         ? value => (dedup.size < dedup.add(value).size)
-         : value => (dedup.size < dedup.add( hashfunc(value) ).size);
-}
+    const isuniq = (hashfunc === HASH_NONE)
+                 ? value => (dedup.size < dedup.add(value).size)
+                 : value => (dedup.size < dedup.add( hashfunc(value) ).size);
 
-function uniqusing(hashfunc, list) {
-
-    const uniqlist = uniqiterable(hashfunc, list);
-
-    return isarray(list)
-         ? [...uniqlist]
-         : uniqlist;
+    return isuniq;
 }
 
 module.exports = curry(1, uniq);
