@@ -4,9 +4,14 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+const TYPE_STRING = 'string';
+
 const curry = require('../curry');
-const isarray = require('../types/isarray');
-const unary = require('../unary');
+
+const isflatMappable = x => (typeof x.flatMap === TYPE_FUNCTION);
+const isflatmappable = x => (typeof x.flatmap === TYPE_FUNCTION);
+const isiterable = x => (typeof x?.[Symbol.iterator] === TYPE_FUNCTION) && (typeof x !== TYPE_STRING);
 
 /**
  * Return an iterable object that passes each value in *list* to the *mapfunc* function and flattens the result by one
@@ -44,15 +49,15 @@ const unary = require('../unary');
  */
 function flatmap(mapfunc, list) {
 
-    return isarray(list)
-         ? list.flatMap( unary(mapfunc) )
-         : flatmapiterable(mapfunc, list);
+    return isflatMappable(list) ? list.flatMap( x => mapfunc(x) )
+         : isflatmappable(list) ? list.flatmap( x => mapfunc(x) )
+         : flatmaplist(mapfunc, list);
 }
 
-function flatmapiterable(mapfunc, list) {
+function flatmaplist(mapfunc, list) {
 
     return {
-        [Symbol.iterator] : function* () {
+        *[Symbol.iterator]() {
 
             for(const value of list) {
 

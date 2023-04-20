@@ -5,8 +5,6 @@
 'use strict';
 
 const curry = require('../curry');
-const isfunction = require('../types/isfunction');
-const unary = require('../unary');
 
 /**
  * Apply the *predicate* function to each item in *list* and return `true` when *predicate* returns a truthy value. If

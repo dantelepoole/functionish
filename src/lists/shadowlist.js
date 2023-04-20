@@ -1,10 +1,10 @@
 /**
- * @module lists/lazylist
+ * @module lists/shadowlist
  */
 
 'use strict';
 
-function lazylist(list) {
+function shadowlist(list) {
     
     return {
         *[Symbol.iterator]() {
@@ -13,4 +13,4 @@ function lazylist(list) {
     }
 }
 
-module.exports = lazylist;
+module.exports = shadowlist;

@@ -4,9 +4,11 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+
 const curry = require('../curry');
-const isfunction = require('../types/isfunction');
-const unary = require('../unary');
+
+const isfunction = x => (typeof x === TYPE_FUNCTION);
 
 /**
  * Reduce the values in *list* in reverse order starting with the *initialvalue* and using the
@@ -38,7 +40,7 @@ const unary = require('../unary');
 function reduceright(reducer, initialvalue, list) {
 
     return isfunction(list.reduceRight)
-         ? list.reduceRight( unary(reducer), initialvalue )
+         ? list.reduceRight( x => reducer(x), initialvalue )
          : [...list].reduceRight( unary(reducer), initialvalue );
 }
 

@@ -4,34 +4,26 @@
 
 'use strict';
 
-const TYPE_STRING = '';
-
-const tostring = require('../types/tostring');
-
-const isstring = x => (typeof x === TYPE_STRING);
-const stringappendreducer = (string, part) => string + tostring(part);
+const EMPTY_STRING = '';
+const TYPE_STRING = 'string';
 
 /**
  * to do
  * 
  * @function append
  */
-function append(list, ...items) {
+function append(base, ...items) {
 
-    return isstring(list)
-         ? appendstrings(list, items)
-         : appenditerable(list, items);
+    return (typeof base === TYPE_STRING)
+         ? base + items.join(EMPTY_STRING)
+         : appenditerable(base, items);
 }
 
-function appendstrings(string, items) {
-    return items.reduce(stringappendreducer, string);
-}
-
-function appenditerable(list1, items) {
+function appenditerable(list, items) {
 
     return {
         [Symbol.iterator] : function* () {
-            yield* list1;
+            yield* list;
             yield* items;
         }
     }

@@ -4,8 +4,12 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+const TYPE_STRING = 'string';
+
 const isarray = require('../types/isarray');
-const isiterable = require('../types/isiterable');
+
+const isiterable = x => (typeof x?.[Symbol.iterator] === TYPE_FUNCTION) && (typeof x !== TYPE_STRING);
 
 /**
  * Return an iterable object that flattens each *list* in *lists* in order. If a *list* is not iterable,

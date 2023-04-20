@@ -5,39 +5,33 @@
 'use strict';
 
 const curry = require('../curry');
-const isarray = require('../types/isarray');
 
 /**
- * Return `true` if any item in the *list* is strictly equal to *value*. Otherwise, return `false`.
- * 
- * If *list* is an array, its {@link external:Array.prototype.includes Array.prototype.includes()} method
- * is called and the result returned. Otherwise, *list* is presumed to be iterable object.
- * 
- * `includes()` is curried by default with unary arity.
+ * [to do]
  * 
  * @example <caption>Example usage of `includes()`</caption>
  * 
- * const { includes } = require('functionish/lists');
- * 
- * includes(42, [1,2,3,42,4,5]); // returns true
+ * to do
  * 
  * @function includes
- * @param {any} value The value to look for
+ * @param {any} targetvalue The value to look for
  * @param {iterable} list An iterable object
  * @returns {boolean}
  */
-function includes(value, list) {
+function includes(targetvalue, list) {
 
-    return isarray(list)
-         ? list.includes(value)
-         : includesiterable(value, list);
+    for(const value of list) if(value === targetvalue) return true;
+
+    return false;
 }
 
-function includesiterable(value, list) {
+function includesusing(comparator, targetvalue, list) {
 
-    for(const item of list) if(item === value) return true;
+    for(const value of list) if(comparator(value) === targetvalue) return true;
 
     return false;    
 }
+
+includes.using = curry(2, includesusing);
 
 module.exports = curry(1, includes);

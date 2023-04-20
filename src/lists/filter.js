@@ -4,9 +4,11 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+
 const curry = require('../curry');
-const isfunction = require('../types/isfunction');
-const unary = require('../unary');
+
+const isfunction = x => (typeof x === TYPE_FUNCTION);
 
 /**
  * Return an iterable object that produces only the values in *list* for which the
@@ -41,14 +43,14 @@ const unary = require('../unary');
 function filter(predicate, list) {
 
     return isfunction(list.filter) 
-         ? list.filter( unary(predicate) )
+         ? list.filter( x => predicate(x) )
          : filteriterable(predicate, list);
 }
 
 function filteriterable(predicate, list) {
 
     return {
-        [Symbol.iterator] : function* () {
+        *[Symbol.iterator]() {
             for(const value of list) predicate(value) && (yield value);
         }
     }

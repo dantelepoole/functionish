@@ -38,7 +38,7 @@ function reverseiterable(list) {
 
             const items = Array.from(list);
 
-            for(let i = items.length - 1; i >= 0; i -= 1) yield items[i];
+            for(let i = items.length-1; i >= 0; i -= 1) yield items[i];
         }
    }
 }

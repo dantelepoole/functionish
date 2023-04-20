@@ -4,9 +4,11 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+
 const curry = require('../curry');
-const isfunction = require('../types/isfunction');
-const unary = require('../unary');
+
+const isfunction = x => (typeof x === TYPE_FUNCTION);
 
 /**
  * Reduce the values in *list* starting with the *initialvalue* and using the *reducer* function.
@@ -37,7 +39,7 @@ const unary = require('../unary');
 function reduce(reducer, initialvalue, list) {
 
     return isfunction(list.reduce)
-         ? list.reduce( unary(reducer), initialvalue )
+         ? list.reduce( x => reducer(x), initialvalue )
          : reduceiterable(reducer, initialvalue, list);
 }
 

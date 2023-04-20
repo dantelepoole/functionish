@@ -4,9 +4,11 @@
 
 'use strict';
 
+const TYPE_FUNCTION = 'function';
+
 const curry = require('../curry');
-const isfunction = require('../types/isfunction');
-const unary = require('../unary');
+
+const isfunction = x => (typeof x === TYPE_FUNCTION);
 
 /**
  * Return an iterable object that passes each value to the *mapfunc* function and produces the results.
@@ -38,7 +40,7 @@ const unary = require('../unary');
 function map(mapfunc, list) {
     
     return isfunction(list.map)
-         ? list.map( unary(mapfunc) )
+         ? list.map( x => mapfunc(x) )
          : mapiterable(mapfunc, list);
 }
 

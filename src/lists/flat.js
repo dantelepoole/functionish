@@ -4,17 +4,18 @@
 
 'use strict';
 
-const isiterable = require('../isiterable');
-const isarray = require('../types/isarray');
+const TYPE_FUNCTION = 'function';
 
+const curry = require('../curry');
+
+const isfunction = x => (typeof x === TYPE_FUNCTION);
 
 /**
  * Return an iterable object that flattens the values in *list* by one level, meaning that if any
  * value in list is iterable, that value itself is expanded.
  * 
- * If *list* is an array, this function calls its {@link external:Array.prototype.flat Array.prototype.flat()}
- * method and returns the result. If *list* is not an array, it is presumed to be iterable and an iterable
- * object is returned that operates lazily.
+ * If *list* has a `flat()` method, this function calls it and returns the result. Otherwise, *list* is presumed to be
+ * iterable and an iterable object is returned that operates lazily.
  * 
  * @example <caption>Example usage of `flat()`</caption>
  * 
@@ -31,7 +32,7 @@ const isarray = require('../types/isarray');
  */
 function flat(list) {
 
-    return isarray(list)
+    return isfunction(list.flat)
          ? list.flat()
          : flatiterable();
 }

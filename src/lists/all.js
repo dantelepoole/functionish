@@ -5,8 +5,6 @@
 'use strict';
 
 const curry = require('../curry');
-const isfunction = require('../types/isfunction');
-const unary = require('../unary');
 
 /**
  * Functional variant of {@link external:Array.prototype.every() Array.prototype.every()}. Apply the *predicate*
