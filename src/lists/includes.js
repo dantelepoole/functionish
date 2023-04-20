@@ -32,6 +32,5 @@ function includesusing(comparator, targetvalue, list) {
     return false;    
 }
 
-includes.using = curry(2, includesusing);
-
 module.exports = curry(1, includes);
+module.exports.using = curry(2, includesusing);

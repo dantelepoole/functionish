@@ -4,7 +4,7 @@
 
 'use strict';
 
-const HASH_STRICT = 'strict';
+const HASH_NONE = undefined;
 
 const curry = require('../curry');
 const isarray = require('../types/isarray');
@@ -27,12 +27,12 @@ const isvoid = require('../isvoid');
  * @param {iterable} list An iterable object producing the items to remove duplicates from
  * @returns {iterable}
  */
-function uniq(hashfunc, list) {
+function uniq(list) {
 
-    const uniqlist = uniqiterable(hashfunc, list);
+    const uniqlist = uniqiterable(HASH_NONE, list);
 
     return isarray(list)
-         ? Array.from(uniqlist)
+         ? [...uniqlist]
          : uniqlist;
 }
 
@@ -49,13 +49,23 @@ function uniqiterable(hashfunc, list) {
     }
 }
 
-function isuniqfactory(hashfunc) {
+function isuniqfactory(hashfunc=HASH_NONE) {
 
     const dedup = new Set();
 
-    return isvoid(hashfunc) || (hashfunc === HASH_STRICT)
+    return (hashfunc === HASH_NONE)
          ? value => (dedup.size < dedup.add(value).size)
          : value => (dedup.size < dedup.add( hashfunc(value) ).size);
 }
 
+function uniqusing(hashfunc, list) {
+
+    const uniqlist = uniqiterable(hashfunc, list);
+
+    return isarray(list)
+         ? [...uniqlist]
+         : uniqlist;
+}
+
 module.exports = curry(1, uniq);
+module.exports.using = curry(1, uniqusing);
