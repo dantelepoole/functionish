@@ -41,10 +41,10 @@ function map(mapfunc, list) {
     
     return isfunction(list.map)
          ? list.map( x => mapfunc(x) )
-         : mapiterable(mapfunc, list);
+         : maplist(mapfunc, list);
 }
 
-function mapiterable(mapfunc, list) {
+function maplist(mapfunc, list) {
 
     return {
         [Symbol.iterator] : function* () {

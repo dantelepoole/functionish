@@ -19,19 +19,14 @@ const isvoid = require('../isvoid');
  * @returns {iterable}
  */
 function uniq(list) {
-    return uniqusing(HASH_NONE, list);
+    return uniqlist(HASH_NONE, list);
 }
 
 function uniqusing(hashfunc, list) {
-
-    const uniqlist = uniqiterable(hashfunc, list);
-
-    return isarray(list)
-         ? [...uniqlist]
-         : uniqlist;
+    return uniqlist(hashfunc, list);
 }
 
-function uniqiterable(hashfunc, list) {
+function uniqlist(hashfunc, list) {
 
     return {
         

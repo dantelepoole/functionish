@@ -7,6 +7,7 @@
 const CONTEXT_NONE = null;
 
 const curry = require('./curry');
+const defer = require('./defer');
 
 /**
  * Call *func* with the specified *args* after at least *delay* milliseconds have passed and return a function that
@@ -32,7 +33,8 @@ const curry = require('./curry');
  */
 function delay(delayms, func, ...args) {
 
-    const timeoutid = setTimeout(func, delayms, ...args);
+    const deferredfunc = defer(func, ...args);
+    const timeoutid = setTimeout(deferredfunc, delayms);
     
     return clearTimeout.bind(CONTEXT_NONE, timeoutid);
 }

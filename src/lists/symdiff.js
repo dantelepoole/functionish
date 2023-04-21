@@ -4,33 +4,14 @@
 
 'use strict';
 
-const HASH_STRICT = 'strict';
-
 const curry = require('../curry');
-const isarray = require('../types/isarray');
-const isvoid = require('../types/isvoid');
 
 /**
- * Return an iterable that produces the items from *list1* that are not present in *list2, in order, followed
- * by the items from *list1* that are not present in *list2*, in order. The returned iterable will not produce
- * any duplicates. 
- * 
- * If *hashfunc* is `'strict'`, the list items are compared with strict
- * equality (`===`). Otherwise, the items' hash results are compared instead. Therefore, *hashfunc*
- * should be absolutely collision-free, otherwise `symdiff()` can give incorrect results.
- * 
- * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
- * iterable objects and an iterable object is returned that operates lazily.
- * 
- * `symdiff()` is curried by default with binary arity.
+ * [to do]
  * 
  * @example <caption>Example usage of `symdiff()`</caption>
  * 
- * const { symdiff } = require('functionish/lists');
- * 
- * const difference = symdiff('strict', [1,2,3], [3,4,5] );
- * 
- * Array.from(difference); // returns [1,2,4,5]
+ * [to do]
  * 
  * @function symdiff
  * @param {(function|string)} hashfunc The hashing function or `'strict'` to use strict equality
@@ -38,59 +19,56 @@ const isvoid = require('../types/isvoid');
  * @param {iterable} list2 The second iterable
  * @returns {iterable}
  */
-function symdiff(hashfunc, list1, list2) {
+function symdiff(list1, list2) {
 
-    const diffedlist = isvoid(hashfunc) || (hashfunc === HASH_STRICT)
-                     ? symdiffstrict(list1, list2)
-                     : symdiffhash(hashfunc, list1, list2);
+    return {
 
-    return isarray(list1)
-         ? Array.from(diffedlist)
-         : diffedlist;
+        [Symbol.iterator] : function* () {
+
+            const set2 = new Set(list2);
+            const isuniqdiff = isuniqdiff_factory(set2);
+        
+            for(const value of list1) isuniqdiff(value) && (yield value);
+        
+            yield* set2;
+        }
+    }
 }
 
-function symdiffhash(hashfunc, list1, list2) {
+function symdiffusing(hashfunc, list1, list2) {
 
     return {
 
         [Symbol.iterator] : function* () {
 
             const map2 = hashmapfactory(list2, hashfunc);
-            const isuniqdiff = isuniqdiff_factory(map2, hashfunc);
+            const isuniqdiff = isuniqdiff_factory_hash(map2, hashfunc);
 
             for(const value of list1) isuniqdiff(value) && (yield value);
 
             yield* map2.values();
         }
     }
+
 }
 
-function symdiffstrict(list1, list2) {
-
-    return {
-
-        [Symbol.iterator] : function* () {
-
-            const list2values = new Set(list2);
-            const dedup = new Set();
-        
-            const isuniqdiff = value => ( ! list2values.delete(value) )
-                                          &&
-                                        (dedup.size < dedup.add(value).size);
-        
-            for(const value of list1) isuniqdiff(value) && (yield value);
-        
-            yield* list2values.values();
-        }
-    }
-}
-
-function isuniqdiff_factory(map, hashfunc) {
+function isuniqdiff_factory(valueset) {
 
     const dedup = new Set();
 
-    return value => {
+    const isuniqdiff = value => !valueset.delete(value) && (dedup.size < dedup.add(value).size);
+
+    return isuniqdiff;
+}
+
+function isuniqdiff_factory_hash(map, hashfunc) {
+
+    const dedup = new Set();
+
+    return function isuniqdiff(value) {
+
         const hashvalue = hashfunc(value);
+
         return (! map.delete(hashvalue)) && (dedup.size < dedup.add(hashvalue).size);
     }
 }
@@ -106,4 +84,5 @@ function hashmapfactory(list, hashfunc) {
     )
 }
 
-module.exports = curry(2, symdiff);
+module.exports = curry(1, symdiff);
+module.exports.using = curry(2, symdiffusing);

@@ -40,10 +40,10 @@ function reduce(reducer, initialvalue, list) {
 
     return isfunction(list.reduce)
          ? list.reduce( x => reducer(x), initialvalue )
-         : reduceiterable(reducer, initialvalue, list);
+         : reducelist(reducer, initialvalue, list);
 }
 
-function reduceiterable(reducer, initialvalue, list) {
+function reducelist(reducer, initialvalue, list) {
 
     let result = initialvalue;
 

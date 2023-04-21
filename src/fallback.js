@@ -4,29 +4,25 @@
 
 'use strict';
 
-const ERROR_NONE = undefined;
-const RESULT_NONE = undefined;
+const isempty = require('./arrays/isempty');
+const isvoid = require('./types/isvoid');
+
+const _fallback_empty = x => x;
 
 /**
  * Return a function that passes its arguments to each *func* in order and returns the return value
- * of the first function that does not throw an error. If all *funcs* throw, the returned function itself
- * throws the error thrown by the last function in the *funcs* array.
+ * of the first function that does not throw an error or return a <abbr title="null, undefined or NaN">void</abbr>
+ * value. If the last *func* throws, the returned function also throws. If the last *func* returns a
+ * <abbr title="null, undefined or NaN">void</abbr> value, the returned function returns `undefined`.
  * 
  * If the *funcs* array is empty, the returned function returns `undefined`.
  * 
+ * `fallback()` is `this`-aware, so it propagates its `this`-value to each *func* it invokes.
+ * 
  * @example <caption>Example usage of `fallback()`</caption>
  * 
- * const { fallback } = require('functionish');
  * 
- * function getuserfromcache(userid) { ... }
- * function getuserfromdb(userid) { ... }
- * function anonymoususer() { ... }
- * 
- * const getuser = fallback(getuserfromcache, getuserfromdb, anonymoususer);
- * 
- * // query the cache for userid 42. If the cache throws, query the database. If the database
- * // throws, return an anonymous user object.
- * getuser(42);
+ * [to do]
  * 
  * @function fallback
  * @param {...function[]} funcs The array of functions to run in order
@@ -34,30 +30,28 @@ const RESULT_NONE = undefined;
  */
 function fallback(...funcs) {
 
-    return function _fallbackfunctions(...args) {
+    if( isempty(funcs) ) return _fallback_empty;
 
-        let result = args[0];
-        let error = ERROR_NONE;
+    const lastfallback = funcs.pop();
 
-        for(let i = 0; i < funcs.length; i += 1) {
+    return function _fallback(...args) {
 
-            [result, error] = safeinvoke(funcs[i], args);
+        for(let index = 0; index < funcs.length; index += 1) {
 
-            if( !error ) return result;
+            try {
+
+                const result = funcs[index].call(this, ...args);
+
+                if( isvoid(result) ) continue;
+
+                return result;
+
+            } catch(error) {
+                //noop
+            }
         }
 
-        if(error) throw error;
-
-        return result;
-    }
-}
-
-function safeinvoke(func, args) {
-
-    try {
-        return [ func(...args), ERROR_NONE ];
-    } catch(error) {
-        return [ RESULT_NONE, error ];
+        return lastfallback.call(this, ...args);
     }
 }
 

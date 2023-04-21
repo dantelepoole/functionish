@@ -7,8 +7,6 @@
 const HASH_NONE = undefined;
 
 const curry = require('../curry');
-const isarray = require('../types/isarray');
-const isvoid = require('../types/isvoid');
 
 /**
  * [to do]
@@ -33,16 +31,12 @@ function unionusing(hashfunc, list1, list2) {
     const isuniq = isuniqfactory(hashfunc);
     const concatenatedlist = concatlists(list1, list2);
 
-    const unionlist = {
+    return {
         
         *[Symbol.iterator]() {
             for(const value of concatenatedlist) isuniq(value) && (yield value);
         }
     }
-
-    return isarray(list1)
-         ? Array.from(unionlist)
-         : unionlist;
 }
 
 function concatlists(list1, list2) {

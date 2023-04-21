@@ -9,10 +9,7 @@ const isarray = require('../types/isarray');
 
 /**
  * Similar to  {@link module:zip zip()} except that the returned iterable returns the result of applying *func* to the
- * elements of *list1* and *list2*.
- * 
- * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
- * iterable objects and an iterable object is returned that operates lazily.
+ * elements of *list1* and *list2*. The returned iterable has the same number of items as the longest *list*.
  * 
  * `zipwith()` is curried by default with binary arity.
  * 
@@ -50,15 +47,22 @@ function zipwithiterable(func, list1, list2) {
             const iterator1 = list1[Symbol.iterator]();
             const iterator2 = list2[Symbol.iterator]();
 
+            let done = false;
+
             return { 
                 
                 next() {
+
+                    if(done) return { done:true }
+
                     const item1 = iterator1.next();
                     const item2 = iterator2.next();
             
-                    return (item1.done || item2.done)
-                         ? { done:true }
-                         : { done:false, value:func(item1.value, item2.value)}
+                    done = item1.done && item2.done;
+
+                    const value = done ? VALUE_NONE : func(item1.value, item2.value);
+
+                    return { done, value }
                 }
             }
         }

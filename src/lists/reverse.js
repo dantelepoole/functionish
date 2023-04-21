@@ -27,10 +27,10 @@ function reverse(list) {
 
     return isstring(list) ? list.split(EMPTY_STRING).reverse().join(EMPTY_STRING)
          : isarray(list) ? list.slice().reverse()
-         : reverseiterable(list);
+         : reducelist(list);
 }
 
-function reverseiterable(list) {
+function reducelist(list) {
 
     return {
 

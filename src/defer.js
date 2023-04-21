@@ -8,6 +8,8 @@
  * Return a function that calls *func* with the specified *args*. This function behaves very similar to
  * {@link module:partial partial()} except that the returned function disregards its own arguments.
  * 
+ * `defer()` is `this`-aware, so it propagates its `this`-value to *func*.
+ * 
  * @example <caption>Example usage of `defer()`</caption>
  * 
  * const { defer } = require('functionish');
@@ -27,9 +29,9 @@
  */
 function defer(func, ...args) {
     
-    const _defer = () => func(...args);
+    const _deferredfunction = () => func.call(this, ...args);
 
-    return _defer;
+    return _deferredfunction;
 }
 
 module.exports = defer;
