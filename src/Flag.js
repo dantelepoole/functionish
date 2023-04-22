@@ -18,32 +18,36 @@ const EventEmitter = require('events');
 
 const always = require('./always');
 const evaluate = require('./evaluate');
+const id = require('./id');
 
 class Flag extends EventEmitter {
 
-    static False(once=false) {
-        return new Flag(false, once);
+    static False() {
+        return new Flag(false);
     }
 
-    static True(once=false) {
-        return new Flag(true, once);
+    static True() {
+        return new Flag(true);
     }
 
     static Once(initialvalue=DEFAULT_VALUE) {
-        return new Flag(initialvalue, true);
+        
+        const flag = new Flag(initialvalue);
+
+        flag.#once = true;
+
+        return flag;
     }
 
     static ReadOnly(initialvalue=DEFAULT_VALUE) {
-
-        const flag = new Flag(initialvalue);
-        flag.#mutable = false;
-
-        return flag;
+        return new Flag(initialvalue, true);
     }
 
     #once = false;
     #mutable = true;
     #value = DEFAULT_VALUE;
+
+    #setter = this.set.bind(this);
 
     constructor(initialvalue=DEFAULT_VALUE, readonly=false) {
         super();
@@ -72,7 +76,7 @@ class Flag extends EventEmitter {
         return this.set( ! this.#value ).value;
     }
 
-    execute(truebranch, falsebranch) {
+    evaluate(truebranch, falsebranch) {
 
         const branch = this.#value
                      ? truebranch
@@ -100,6 +104,30 @@ class Flag extends EventEmitter {
         return this.#mutable;
     }
 
+    isfollowing(otherflag) {
+        return otherflag.listeners(EVENT_FLIP).includes(this.#setter);
+    }
+
+    follow(primaryflag) {
+
+        if( this.#mutable ) {
+
+            this.isfollowing(primaryflag) || primaryflag.on(EVENT_FLIP, this.#setter);
+
+            (this.#value === primaryflag.value) || this.set(primaryflag.value);
+
+        }
+
+        return this;
+    }
+
+    unfollow(otherflag) {
+
+        this.isfollowing(otherflag) && otherflag.removeListener(EVENT_FLIP, this.#setter);
+
+        return this;
+    }
+
     and(othervalue) {
 
         return (! this.#value) ? false
@@ -119,6 +147,22 @@ class Flag extends EventEmitter {
         return (othervalue instanceof Flag)
              ? (this.#value !== othervalue.value)
              : (this.#value !== !! othervalue)
+    }
+
+    run(func, ...args) {
+        if( this.#value ) return func(...args);
+    }
+
+    wrap(func, ...partialargs) {
+
+        const flag = this;
+
+        return function _flagwrapped(...args) {
+
+            return flag.value
+                 ? func.call(this, ...partialargs, ...args)
+                 : args[0];
+        }
     }
 
     select(truevalue, falsevalue) {
@@ -147,8 +191,7 @@ class Flag extends EventEmitter {
             
             this.#once && (this.#mutable = false);
             
-            const emitdeferred = () => this.emit(EVENT_FLIP, newvalue);
-            queueMicrotask(emitdeferred);
+            this.emit(EVENT_FLIP, newvalue);
         }
 
         return this;
