@@ -24,21 +24,21 @@ function curry(arity, func) {
 
 }
 
-function initcurry(arity, func, ...curriedargs) {
+function initcurry(arity, targetfunc, ...curriedargs) {
 
     return function _curriedfunction(...args) {
 
         const argcount = curriedargs.length + args.length;
         
-        return (arity < argcount) ? func.call(this, ...curriedargs, ...args)
-             : (arity === argcount) ? bindcurriedfunction(func, ...curriedargs, ...args)
-             : initcurry(arity, func, ...curriedargs, ...args);
+        return (arity < argcount) ? targetfunc.call(this, ...curriedargs, ...args)
+             : (arity === argcount) ? partial(targetfunc, ...curriedargs, ...args)
+             : initcurry(arity, targetfunc, ...curriedargs, ...args);
     }
 }
 
-function bindcurriedfunction(func, ...curriedargs) {
+function partial(func, ...curriedargs) {
 
-    return function _callcurriedfunction(...args) {
+    return function _partialfunction(...args) {
         return func.call(this, ...curriedargs, ...args);
     }
 }

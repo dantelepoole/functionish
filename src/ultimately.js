@@ -27,7 +27,7 @@ function ultimately(ultimatelyhandler, func) {
 
         try {
 
-            const result = func(...args);
+            const result = func.call(this, ...args);
             
             return ultimatelyhandler(ERROR_NONE, result);
 

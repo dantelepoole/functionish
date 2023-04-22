@@ -51,7 +51,7 @@ const curry = require('./curry');
  */
 function wrap(wrapperfunc, func) {
 
-    return function _wrappedfunction(...args) {
+    return function _wrapped(...args) {
         return wrapperfunc.call(this, func, ...args);
     }
 }

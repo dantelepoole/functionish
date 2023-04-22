@@ -4,6 +4,8 @@
 
 'use strict';
 
+const curry = require('./curry');
+
 /**
  * Invoke *func* *count* number of times, passing *args* at each invocation, and return the result of
  * the last invocation or `undefined` is *func* is never called.
@@ -24,9 +26,9 @@ function repeat(count, func, ...args) {
 
     let result = undefined;
 
-    while(0 < count--) result = func(...args);
+    while(count--) result = func.call(this, ...args);
 
     return result;
 }
 
-module.exports = repeat;
+module.exports = curry(1, repeat);

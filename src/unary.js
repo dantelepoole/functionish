@@ -21,6 +21,7 @@
  * @see {@link module:unary unary()}
  * @see {@link module:binary binary()}
  * @param {function} func The function to invoke with a single argument
+ * @param {...any[]} partialargs Optional arguments to pass to *func*
  * @returns {function}
  */
 function unary(func, ...partialargs) {

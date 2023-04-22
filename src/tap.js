@@ -26,7 +26,7 @@ const CONTEXT_NONE = null;
  */
 function tap(func, ...partialargs) {
 
-    return function _tappedfunction(...args) {
+    return function _tapped(...args) {
 
         func.call(this, ...partialargs, ...args);
 

@@ -26,6 +26,7 @@
  * @function variadic
  * @see {@link module:uniadic uniadic()}
  * @param {function} func The function to make variadic
+ * @param {...any[]} partialargs Optional arguments to pass to *func*
  * @returns {function}
  */
 function variadic(func, ...partialargs) {

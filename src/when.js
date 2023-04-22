@@ -6,6 +6,8 @@
 
 const TYPE_FUNCTION = 'function';
 
+const always = require('./always');
+const curry = require('./curry');
 const id = require('./id');
 
 /**
@@ -17,6 +19,8 @@ const id = require('./id');
  * or *alternativebranch*, depending on the result of evaluating the *condition*.
  * 
  * If no *alternativebranch* is provided, the returned function simply returns its first argument instead.
+ * 
+ * `when()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `when()`</caption> 
  *     
@@ -40,11 +44,14 @@ const id = require('./id');
  */
 function when(condition, truebranch, falsebranch=id) {
 
-    const _when = (typeof condition === TYPE_FUNCTION)
-                ? (...args) => condition(...args) ? truebranch(...args) : falsebranch(...args)
-                : (...args) => condition ? truebranch(...args) : falsebranch(...args);
+    if(typeof condition !== TYPE_FUNCTION) condition = always(condition);
 
-    return _when;
+    return function _when(...args) {
+        
+        return condition.call(this, ...args)
+             ? truebranch.call(this, ...args)
+             : falsebranch.call(this, ...args);
+    }
 }
 
-module.exports = when;
+module.exports = curry(1, when);

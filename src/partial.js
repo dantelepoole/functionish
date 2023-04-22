@@ -31,7 +31,7 @@ const CONTEXT_NONE = undefined;
  */
 function partial(func, ...partialargs) {
 
-    return function _partiallyappliedfunction(...args) {
+    return function _partialfunction(...args) {
         return func.call(this, ...partialargs, ...args);
     }
 }

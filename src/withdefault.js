@@ -25,13 +25,14 @@ const isvoid = require('./types/isvoid');
  * @function withdefault
  * @param {any} defaultvalue The value to return if *func* returns a void value
  * @param {function} func The target function
+ * @param {...any[]} partialargs Optional arguments to pass to *func*
  * @returns {function}
  */
-function withdefault(defaultvalue, func) {
+function withdefault(defaultvalue, func, ...partialargs) {
 
     return function _withdefault(...args) {
 
-        const result = func.call(this, ...args);
+        const result = func.call(this, ...partialargs, ...args);
         
         return isvoid(result) ? defaultvalue : result;
     }

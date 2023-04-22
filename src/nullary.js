@@ -25,9 +25,11 @@
  * @returns {function}
  */
 
-module.exports = function nullary(func) {
+function nullary(func) {
 
     return function _nullaryfunction() {
         return func.call(this);
     }
 }
+
+module.exports = nullary;

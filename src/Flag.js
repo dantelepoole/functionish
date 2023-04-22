@@ -6,45 +6,79 @@
 
 const DEFAULT_VALUE = false;
 const EVENT_FLIP = 'flip';
+const FALSE_INTEGER = 0;
+const FALSE_STRING = 'false';
 const HINT_NUMBER = 'number';
 const HINT_STRING = 'string';
-const NAME_NONE = undefined;
-const OFF_INTEGER = 0;
-const OFF_STRING = 'off';
-const ON_INTEGER = 1;
-const ON_STRING = 'on';
+const TRUE_INTEGER = 1;
+const TRUE_STRING = 'true';
+const TYPE_FUNCTION = 'function';
 
 const EventEmitter = require('events');
 
+const always = require('./always');
+const evaluate = require('./evaluate');
+
 class Flag extends EventEmitter {
 
-    static OFF(name=NAME_NONE) {
-        return new Flag(false, name);
+    static False(once=false) {
+        return new Flag(false, once);
     }
 
-    static ON(name=NAME_NONE) {
-        return new Flag(true, name);
+    static True(once=false) {
+        return new Flag(true, once);
     }
 
-    static for(initialvalue, name=NAME_NONE) {
-        return new Flag(initialvalue, name);
+    static Once(initialvalue=DEFAULT_VALUE) {
+        return new Flag(initialvalue, true);
     }
 
-    name = NAME_NONE;
+    static ReadOnly(initialvalue=DEFAULT_VALUE) {
+
+        const flag = new Flag(initialvalue);
+        flag.#mutable = false;
+
+        return flag;
+    }
+
+    #once = false;
+    #mutable = true;
     #value = DEFAULT_VALUE;
 
-    constructor(initialvalue=DEFAULT_VALUE, name=NAME_NONE) {
+    constructor(initialvalue=DEFAULT_VALUE, readonly=false) {
         super();
         this.#value = !! initialvalue;
-        this.name = name;
+        this.#mutable = ! readonly;
+    }
+
+    depend(truebranch, falsebranch) {
+
+        const flag = this;
+
+        if(typeof truebranch !== TYPE_FUNCTION) truebranch = always(truebranch);
+        if(typeof falsebranch !== TYPE_FUNCTION) falsebranch = always(falsebranch);
+
+        return function _flagdependant(...args) {
+
+            const branch = flag.value
+                         ? truebranch
+                         : falsebranch;
+            
+            return branch.call(this, ...args);
+        }
     }
 
     flip() {
-        this.#value = ! this.#value;
+        return this.set( ! this.#value ).value;
+    }
 
-        this.emit(EVENT_FLIP, this.name, this.#value);
+    execute(truebranch, falsebranch) {
 
-        return this.#value;
+        const branch = this.#value
+                     ? truebranch
+                     : falsebranch;
+
+        return evaluate(branch);
     }
 
     is(value) {
@@ -54,20 +88,41 @@ class Flag extends EventEmitter {
              : (this.#value === !! value);
     }
 
-    setoff() {
-        return this.set(false);
-    }
-
-    seton() {
-        return this.set(true);
-    }
-
-    ison() {
+    istrue() {
         return (! this.#value);
     }
 
-    isoff() {
+    isfalse() {
         return this.#value;
+    }
+
+    ismutable() {
+        return this.#mutable;
+    }
+
+    and(othervalue) {
+
+        return (! this.#value) ? false
+             : (othervalue instanceof Flag) ? othervalue.value
+             : !! othervalue;
+    }
+
+    or(othervalue) {
+
+        return this.#value ? this.#value
+             : (othervalue instanceof Flag) ? othervalue.value
+             : !! othervalue;
+    }
+
+    xor(othervalue) {
+
+        return (othervalue instanceof Flag)
+             ? (this.#value !== othervalue.value)
+             : (this.#value !== !! othervalue)
+    }
+
+    select(truevalue, falsevalue) {
+        return this.#value ? truevalue : falsevalue;
     }
 
     reader() {
@@ -75,31 +130,46 @@ class Flag extends EventEmitter {
         return flagreader;
     }
 
+    writer() {
+        const flagwriter = value => (this.set(value), this.#value);
+        return flagwriter;
+    }
+
     set(newvalue) {
 
-        newvalue = !! newvalue;
+        newvalue = (newvalue instanceof Flag)
+                 ? newvalue.value
+                 : !! newvalue;
 
-        if(this.#value === newvalue) return this;
+        if( (this.#value !== newvalue) && this.#mutable ) {
 
-        this.#value = newvalue;
-
-        this.emit(EVENT_FLIP, this.name, newvalue);
+            this.#value = newvalue;
+            
+            this.#once && (this.#mutable = false);
+            
+            const emitdeferred = () => this.emit(EVENT_FLIP, newvalue);
+            queueMicrotask(emitdeferred);
+        }
 
         return this;
     }
 
     toString() {
-        return `Flag[${this.name}=${this.#value}]`;
+        return `Flag[${this.#value}]`;
     }
 
-    value() {
+    get value() {
         return this.#value;
+    }
+
+    set value(newvalue) {
+        this.set(newvalue);
     }
 
     [Symbol.toPrimitive](hint) {
 
-        return (hint === HINT_STRING) ? this.#value ? ON_STRING : OFF_STRING
-             : (hint === HINT_NUMBER) ? this.#value ? ON_INTEGER : OFF_INTEGER
+        return (hint === HINT_STRING) ? this.#value ? TRUE_STRING : FALSE_STRING
+             : (hint === HINT_NUMBER) ? this.#value ? TRUE_INTEGER : FALSE_INTEGER
              : this.#value;
       }
 }
