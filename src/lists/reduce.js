@@ -7,6 +7,9 @@
 const curry = require('../curry');
 const partial = require('../partial');
 
+const bootstrapreduce = (reducer, list) => (list === undefined)
+                                         ? partial( reduce, bootstrapreducer(reducer), undefined )
+                                         : reduce( bootstrapreducer(reducer), undefined, list );
 /**
  * to do
  * 
@@ -37,18 +40,11 @@ function reduce(reducer, initialvalue, list) {
     return accumulator;
 }
 
-function bootstrapreduce(reducer, list) {
-
-    return (argcount === 1)
-         ? partial( reduce, bootstrapreducer(reducer), undefined )
-         : reduce( bootstrapreducer(reducer), undefined, list );
-}
-
 function bootstrapreducer(reducer) {
 
     let reducenext = (_,nextvalue) => (reducenext=reducer, nextvalue);
 
-    return (...args) => reducenext(...args);
+    return (accumulator, nextvalue, abort) => reducenext(accumulator, nextvalue, abort);
 }
 
 module.exports = curry(2, reduce);
