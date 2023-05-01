@@ -38,18 +38,34 @@ const isfunction = x => (typeof x === TYPE_FUNCTION);
  */
 function reduce(reducer, initialvalue, list) {
 
-    return isfunction(list.reduce)
-         ? list.reduce( x => reducer(x), initialvalue )
-         : reducelist(reducer, initialvalue, list);
+    let isaborted = false;
+    const abort = result => (isaborted = true, result);
+    
+    let accumulator = initialvalue;
+
+    for(const nextvalue of list) {
+
+        accumulator = reducer(accumulator, nextvalue, abort);
+
+        if(isaborted) break;
+    }
+
+    return accumulator;
 }
 
-function reducelist(reducer, initialvalue, list) {
+function reduceself(reducer, list) {
 
-    let result = initialvalue;
+    return (arguments.length === 1)
+         ? reduce( selfreducer(reducer), undefined )
+         : reduce( selfreducer(reducer), undefined, list );
+}
 
-    for(const value of list) result = reducer(result, value);
+function selfreducer(reducer) {
 
-    return result;
+    let reducenext = (_,nextvalue) => (reducenext=reducer, nextvalue);
+
+    return (...args) => reducenext(...args);
 }
 
 module.exports = curry(2, reduce);
+module.exports.self = reduceself;
