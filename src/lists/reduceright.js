@@ -4,32 +4,15 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-
 const curry = require('../curry');
-
-const isfunction = x => (typeof x === TYPE_FUNCTION);
+const partial = require('../partial');
 
 /**
- * Reduce the values in *list* in reverse order starting with the *initialvalue* and using the
- * *reducer* function.
- * 
- * If *list* is an array, this function calls its {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}
- * method and returns the result. However, the *predicate* function will only ever be called with a single
- * argument (the current list item), not the additional arguments that {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}
- * passes to its function.
- * 
- * If *list* is not an array, it is presumed to be an iterable object.
- * 
- * `reduceright()` is curried by default with binary arity.
+ * to do
  * 
  * @example <caption>Example usage of `reduceright()`</caption>
  * 
- * const { reduceright } = require('functionish/lists');
- * 
- * const add = (a,b) => (a+b);
- * 
- * reduceright(sum, 0, [1,2,3]); // returns 6
+ * to do
  * 
  * @function reduceright
  * @param {function} reducer The reducer function
@@ -39,9 +22,36 @@ const isfunction = x => (typeof x === TYPE_FUNCTION);
  */
 function reduceright(reducer, initialvalue, list) {
 
-    return isfunction(list.reduceRight)
-         ? list.reduceRight( x => reducer(x), initialvalue )
-         : [...list].reduceRight( unary(reducer), initialvalue );
+    const array = [...list].reverse();
+
+    let isaborted = false;
+    const abort = result => (isaborted = true, result);
+    
+    let accumulator = initialvalue;
+
+    for(let index = array.length-1; index >= 0; index -= 1) {
+
+        accumulator = reducer(accumulator, array[index], abort);
+
+        if(isaborted) break;
+    }
+
+    return accumulator;
+}
+
+function bootstrapreduceright(reducer, list) {
+
+    return (arguments.length === 1)
+         ? partial( reduceright, bootstrapreducer(reducer), undefined )
+         : reduceright( bootstrapreducer(reducer), undefined, list );
+}
+
+function bootstrapreducer(reducer) {
+
+    let reducenext = (_,nextvalue) => (reducenext=reducer, nextvalue);
+
+    return (...args) => reducenext(...args);
 }
 
 module.exports = curry(2, reduceright);
+module.exports.bootstrap = bootstrapreduceright;
