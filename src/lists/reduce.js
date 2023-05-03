@@ -4,31 +4,18 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-
 const curry = require('../curry');
+const partial = require('../partial');
 
-const isfunction = x => (typeof x === TYPE_FUNCTION);
-
+const bootstrapreduce = (reducer, list) => (list === undefined)
+                                         ? partial( reduce, bootstrapreducer(reducer), undefined )
+                                         : reduce( bootstrapreducer(reducer), undefined, list );
 /**
- * Reduce the values in *list* starting with the *initialvalue* and using the *reducer* function.
- * 
- * If *list* is an array, this function calls its {@link external:Array.prototype.reduce Array.prototype.reduce()}
- * method and returns the result. However, the *predicate* function will only ever be called with a single
- * argument (the current list item), not the additional arguments that {@link external:Array.prototype.reduce Array.prototype.reduce()}
- * passes to its function.
- * 
- * If *list* is not an array, it is presumed to be an iterable object.
- * 
- * `reduce()` is curried by default with binary arity.
+ * to do
  * 
  * @example <caption>Example usage of `reduce()`</caption>
  * 
- * const { reduce } = require('functionish/lists');
- * 
- * const add = (a,b) => (a+b);
- * 
- * reduce(add, 0, [1,2,3]); // returns 6
+ * to do
  * 
  * @function reduce
  * @param {function} reducer The reducer function
@@ -38,18 +25,27 @@ const isfunction = x => (typeof x === TYPE_FUNCTION);
  */
 function reduce(reducer, initialvalue, list) {
 
-    return isfunction(list.reduce)
-         ? list.reduce( x => reducer(x), initialvalue )
-         : reducelist(reducer, initialvalue, list);
+    let isaborted = false;
+    const abort = result => (isaborted = true, result);
+    
+    let accumulator = initialvalue;
+
+    for(const nextvalue of list) {
+
+        accumulator = reducer(accumulator, nextvalue, abort);
+
+        if(isaborted) break;
+    }
+
+    return accumulator;
 }
 
-function reducelist(reducer, initialvalue, list) {
+function bootstrapreducer(reducer) {
 
-    let result = initialvalue;
+    let reducenext = (_,nextvalue) => (reducenext=reducer, nextvalue);
 
-    for(const value of list) result = reducer(result, value);
-
-    return result;
+    return (accumulator, nextvalue, abort) => reducenext(accumulator, nextvalue, abort);
 }
 
 module.exports = curry(2, reduce);
+module.exports.bootstrap = bootstrapreduce;
