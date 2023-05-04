@@ -6,6 +6,7 @@
 
 const curry = require('../curry');
 const isdefined = require('../types/isdefined');
+const isfunction = require('../types/isfunction');
 
 /**
  * Functional variant of the Javascript `??` operator that coalesces all <abbr title="null, undefined or NaN">void</abbr>
@@ -28,7 +29,10 @@ const isdefined = require('../types/isdefined');
  * @returns {any}
  */
 function coalesce(defaultvalue, value) {
-    return isdefined(value) ? value : defaultvalue;
+
+    return isdefined(value) ? value
+         : isfunction(defaultvalue) ? defaultvalue()
+         : defaultvalue;
 }
 
 module.exports = curry(1, coalesce);
