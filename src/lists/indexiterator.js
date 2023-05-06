@@ -7,6 +7,9 @@
 
 const ERR_BAD_ITERABLE = `IndexIterator: Expected an iterable or iterator object or a generator function.`;
 
+const getitemcountfromcursor = cursor => cursor.index < 0 ? 0
+                                       : cursor.done ? cursor.index
+                                       : cursor.index + 1;
 const isfunction = func => (typeof func === 'function');
 const isobject = obj => (typeof obj === 'object' && (obj !== null) );
 
@@ -19,21 +22,31 @@ class IndexIterator {
 
     #iterator;
     #nextitem;
+    #cursor;
 
     constructor(iterator) {
         
         this.#iterator = iterator;
-        this.#nextitem = { index:0, ...iterator.next() }
+        this.#nextitem = iterator.next();
+        this.#cursor = initcursor(this);
     }
-
+    
     next() {
 
-        if( this.#nextitem.done ) return this.#nextitem;
+        if( !this.#cursor.done ) {
 
-        const item = this.#nextitem;
-        this.#nextitem = { index:item.index+1, ...this.#iterator.next() }
+            this.#cursor.done = this.#nextitem.done;
+            this.#cursor.value = this.#nextitem.value;
+            this.#cursor.index += 1;
 
-        return item;
+            this.#nextitem = this.#iterator.next();
+        }
+
+        return this.#cursor;
+    }
+
+    get cursor() {
+        return this.#cursor;
     }
 
     get done() {
@@ -45,7 +58,7 @@ class IndexIterator {
     }
 
     get itemcount() {
-        return this.#nextitem.index;
+        return getitemcountfromcursor(this.#cursor);
     }
 }
 
@@ -68,6 +81,17 @@ function indexiterator(source) {
                    : raisebaditerable();
 
     return new IndexIterator(iterator);
+}
+
+function initcursor(iterator) {
+
+    return {
+        done  : false,
+        index : -1,
+        next  : () => !iterator.next().done,
+        value : undefined,
+        get hasvalue() { return !this.done }
+    }
 }
 
 function raisebaditerable() {
