@@ -5,6 +5,7 @@
 
 'use strict';
 
+const DEFAULT_LIST_ITEM = Object.freeze({ index:-1, done:false, value:undefined });
 const ERR_BAD_ITERABLE = `IndexIterator: Expected an iterable or iterator object or a generator function.`;
 
 const isfunction = func => (typeof func === 'function');
@@ -18,45 +19,34 @@ const isiterator = iterator => isobject(iterator) && isfunction(iterator.next);
 class IndexIterator {
 
     #iterator;
-    #nextitem;
-    #cursor;
+    #nextitem = { ...DEFAULT_LIST_ITEM }
 
     constructor(iterator) {
         
         this.#iterator = iterator;
-        this.#nextitem = { index:0, ...iterator.next() };
-        this.#cursor = initcursor(this);
+        this.#updatenextitem();
     }
     
-    next() {
+    #updatenextitem() {
 
-        const cursor = this.#cursor;
+        const nextitem = this.#iterator.next();
+        this.#nextitem.done = nextitem.done;
+        this.#nextitem.value = nextitem.value;
         
-        if( !cursor.done ) {
-            
-            const currentitem = this.#nextitem;
-            cursor.index = currentitem.index;
-            cursor.done = currentitem.done;
-            cursor.value = currentitem.value;
-            
-            if( !currentitem.done ) {
-                
-                const nextitem = this.#iterator.next();
-                currentitem.index += 1;
-                currentitem.done = nextitem.done;
-                currentitem.value = nextitem.value;
-            }
-        }
-
-        return cursor;
+        this.#nextitem.index += 1;
     }
 
-    get cursor() {
-        return this.#cursor;
+    next() {
+
+        const currentitem = { ...this.#nextitem }
+        
+        currentitem.done || this.#updatenextitem();
+
+        return currentitem;
     }
 
     get done() {
-        return this.#nextitem.done
+        return !!this.#nextitem.done
     }
 
     get hasnext() {
@@ -66,6 +56,7 @@ class IndexIterator {
     get itemcount() {
         return this.#nextitem.index;
     }
+
 }
 
 /**
@@ -87,18 +78,6 @@ function indexiterator(source) {
                    : raisebaditerable();
 
     return new IndexIterator(iterator);
-}
-
-function initcursor(iterator) {
-
-    return {
-        done  : false,
-        index : -1,
-        next  : () => !iterator.next().done,
-        value : undefined,
-
-        get hasvalue() { return !this.done }
-    }
 }
 
 function raisebaditerable() {
