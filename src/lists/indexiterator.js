@@ -11,8 +11,6 @@ const ERR_BAD_ITERABLE = `IndexIterator: Expected an iterable or iterator object
 const isfunction = func => (typeof func === 'function');
 const isobject = obj => (typeof obj === 'object' && (obj !== null) );
 
-const isgeneratorfunction = require('util').types.isGeneratorFunction;
-
 const isiterable = list => isfunction( list[Symbol.iterator] );
 const isiterator = iterator => isobject(iterator) && isfunction(iterator.next);
 
@@ -45,6 +43,10 @@ class IndexIterator {
         return currentitem;
     }
 
+    nextvalue() {
+        return this.next().value;
+    }
+
     get done() {
         return !!this.#nextitem.done
     }
@@ -53,7 +55,7 @@ class IndexIterator {
         return !this.#nextitem.done;
     }
 
-    get itemcount() {
+    get count() {
         return this.#nextitem.index;
     }
 
@@ -74,7 +76,7 @@ function indexiterator(source) {
 
     const iterator = isiterable(source) ? source[Symbol.iterator]()
                    : isiterator(source) ? source
-                   : isgeneratorfunction(source) ? source()
+                   : isfunction(source) ? source()
                    : raisebaditerable();
 
     return new IndexIterator(iterator);
