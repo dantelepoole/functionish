@@ -10,6 +10,7 @@ const ERR_BAD_ITERABLE = `IndexIterator: Expected an iterable or iterator object
 const isfunction = func => (typeof func === 'function');
 const isiterable = iterable => isfunction( iterable[Symbol.iterator] );
 const isiterator = iterator => isfunction(iterator?.next);
+const raisebaditerable = () => { throw new TypeError(ERR_BAD_ITERABLE) }
 
 class IndexIterator {
 
@@ -80,10 +81,6 @@ function indexiterator(source) {
                    : raisebaditerable();
 
     return new IndexIterator(iterator);
-}
-
-function raisebaditerable() {
-    throw new TypeError(ERR_BAD_ITERABLE);
 }
 
 module.exports = indexiterator;
