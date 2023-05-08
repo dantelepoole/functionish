@@ -5,11 +5,11 @@
 
 'use strict';
 
-const ERR_BAD_ITERABLE = `IndexIterator: Expected an iterable or iterator object or a generator function.`;
+const ERR_BAD_ITERABLE = `Expected an iterable or iterator object or a function.`;
 
 const isfunction = func => (typeof func === 'function');
 const isiterable = iterable => isfunction( iterable[Symbol.iterator] );
-const isiterator = iterator => isfunction(iterator?.next);
+const isiterator = iterator => isfunction(iterator.next);
 const raisebaditerable = () => { throw new TypeError(ERR_BAD_ITERABLE) }
 
 class IndexIterator {
