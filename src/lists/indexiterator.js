@@ -5,24 +5,24 @@
 
 'use strict';
 
-const DEFAULT_LIST_ITEM = Object.freeze({ index:-1, done:false, value:undefined });
 const ERR_BAD_ITERABLE = `IndexIterator: Expected an iterable or iterator object or a generator function.`;
 
 const isfunction = func => (typeof func === 'function');
-const isobject = obj => (typeof obj === 'object' && (obj !== null) );
-
-const isiterable = list => isfunction( list[Symbol.iterator] );
-const isiterator = iterator => isobject(iterator) && isfunction(iterator.next);
+const isiterable = iterable => isfunction( iterable[Symbol.iterator] );
+const isiterator = iterator => isfunction(iterator?.next);
 
 class IndexIterator {
 
     #iterator;
-    #nextitem = { ...DEFAULT_LIST_ITEM }
+    #nextitem = { index:0 }
 
     constructor(iterator) {
         
         this.#iterator = iterator;
-        this.#updatenextitem();
+        
+        const nextitem = iterator.next();
+        this.#nextitem.done = nextitem.done;
+        this.#nextitem.value = nextitem.value;
     }
     
     #updatenextitem() {
