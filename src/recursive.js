@@ -4,7 +4,8 @@
 
 'use strict';
 
-const partial = require('./partial');
+const CONTEXT_NONE = undefined;
+
 const recurse = require('./recurse');
 
 /**
@@ -20,7 +21,7 @@ const recurse = require('./recurse');
  * @returns {function}
  */
 function recursive(func, ...partialargs) {
-    return partial(recurse, func, ...partialargs);
+    return recurse.bind(CONTEXT_NONE, func, ...partialargs);
 }
 
 module.exports = recursive;
