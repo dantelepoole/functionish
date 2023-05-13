@@ -32,7 +32,7 @@
 function variadic(func, ...partialargs) {
     
     return function _variadicfunction(...args) {
-        return func.call(this, ...partialargs, ...args);
+        return func.call(this, ...partialargs, args);
     }
 }
 
