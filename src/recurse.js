@@ -6,13 +6,13 @@
 
 function recurse(func, ...args) {
 
-    func = func.bind({
+    const context = {
         [func.name] : (...recurseargs) => (args = recurseargs)
-    })
+    }
 
-    let result = func(...args);
+    let result = func.call(context, ...args);
 
-    while(result === args) result = func(...args);
+    while(result === args) result = func.call(context, ...args);
 
     return result;
 }
