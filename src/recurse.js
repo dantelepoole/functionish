@@ -10,11 +10,12 @@ function recurse(func, ...args) {
         [func.name] : (...recurseargs) => (args = recurseargs)
     }
 
-    let result = func.call(context, ...args);
+    let result = args;
 
     while(result === args) result = func.call(context, ...args);
 
     return result;
+
 }
 
 module.exports = recurse;
