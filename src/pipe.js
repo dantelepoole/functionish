@@ -32,7 +32,7 @@ function pipe(...funcs) {
 
     return function _pipedfunctions(...args) {
 
-        for(let index = 0; index < funcs.length; index++) args = [ funcs[index].call(this, ...args) ];
+        for(let i = 0; i < funcs.length; i += 1) args = [ funcs[i].call(this, ...args) ];
 
         return args[0];
     }

@@ -33,7 +33,7 @@ function compose(...funcs) {
 
     return function _composedfunctions(...args) {
 
-        for(let index = funcs.length-1; index >= 0; index -= 1) args = [ funcs[index].call(this, ...args )];
+        for(let i = funcs.length-1; i >= 0; i -= 1) args = [ funcs[i].call(this, ...args) ];
 
         return args[0];
     }
