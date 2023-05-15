@@ -4,7 +4,8 @@
 
 'use strict';
 
-const partial = require('./partial');
+const CONTEXT_NONE = undefined;
+
 const listrecurse = require('./listrecurse');
 
 /**
@@ -19,7 +20,7 @@ const listrecurse = require('./listrecurse');
  * @returns {function}
  */
 function listrecursive(func, ...partialargs) {
-    return partial(listrecurse, func, ...partialargs);
+    return listrecurse.bind(CONTEXT_NONE, func, ...partialargs);
 }
 
 module.exports = listrecursive;

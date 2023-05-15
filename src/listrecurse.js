@@ -4,20 +4,14 @@
 
 'use strict';
 
-const indexiterator = require('./lists/indexiterator');
+const listiterator = require('./lists/listiterator');
+const recurse = require('./recurse');
 
 function listrecurse(func, ...args) {
 
     const list = args.pop();
-    const iterator = indexiterator(list);
 
-    const recurse = (...recurseargs) => (args = recurseargs);
-
-    let result = func.call(recurse, ...args, iterator.next());
-
-    while(result === args) result = func.call(recurse, ...args, iterator.next());
-
-    return result;
+    return recurse(func, ...args, listiterator(list));
 }
 
 module.exports = listrecurse;

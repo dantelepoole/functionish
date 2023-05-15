@@ -6,9 +6,8 @@
 
 function recurse(func, ...args) {
 
-    const context = {
-        [func.name] : (...recurseargs) => (args = recurseargs)
-    }
+    const _signalrecurse = (...recurseargs) => (args = recurseargs);
+    const context = { [func.name]:_signalrecurse }
 
     let result = args;
 
