@@ -1,10 +1,11 @@
 /**
- * @module ultimately
+ * @module onfinally
  */
 
 'use strict';
 
 const ERROR_NONE = undefined;
+const FINALLY_NONE = undefined;
 const RESULT_NONE = undefined;
 
 const curry  = require('./curry');
@@ -12,29 +13,38 @@ const curry  = require('./curry');
 /**
  * to do
  * 
- * @example <caption>Example usage of `ultimately()`</caption>
+ * @example <caption>Example usage of `onfinally()`</caption>
  * 
  * to do
  * 
- * @function ultimately
- * @param {function} ultimatelyhandler to do
+ * @function onfinally
+ * @param {function} finallyhandler to do
  * @param {function} func The function to run
  * @returns {any}
  */
-function ultimately(ultimatelyhandler, func) {
+function onfinally(finallyhandler, func, ...partialargs) {
 
-    return function _ultimately(...args) {
+    return function _onfinally(...args) {
 
         try {
 
-            const result = func.call(this, ...args);
+            const result = func.call(this, ...partialargs, ...args);
             
-            return ultimatelyhandler(ERROR_NONE, result);
+            const finallyresult = finallyhandler(ERROR_NONE, result, ...partialargs, ...args);
+
+            return (finallyresult === FINALLY_NONE)
+                 ? result
+                 : finallyresult;
 
         } catch(error) {
-            return ultimatelyhandler(error, RESULT_NONE);
+            
+            const finallyresult = finallyhandler(error, RESULT_NONE, ...partialargs, ...args);
+
+            if(finallyresult === FINALLY_NONE) throw error;
+
+            return finallyresult;
         }
     }
 }
 
-module.exports = curry(1, ultimately);
+module.exports = curry(1, onfinally);
