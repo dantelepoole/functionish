@@ -5,9 +5,10 @@
 'use strict';
 
 const EMPTY_STRING = '';
-const PAYLOAD_NONE = undefined;
+const NAME_DEFAULT = 'Error';
 
 const curry = require('../curry');
+const format = require('./format');
 
 const tostring = str => String(str ?? EMPTY_STRING);
 
@@ -20,12 +21,12 @@ const tostring = str => String(str ?? EMPTY_STRING);
  * 
  * @function error
  */
-function error(name, message, payload=PAYLOAD_NONE) {
+function error(name=NAME_DEFAULT, message, ...messageargs) {
     
-    const err = new Error( tostring(message) );
+    const formattedmessage = format(message, ...messageargs);
+    const err = new Error(formattedmessage);
 
-    if(name) err.name = tostring(name);
-    if(payload !== PAYLOAD_NONE) err.payload = payload;
+    (name === NAME_DEFAULT) || (err.name = tostring(name));
 
     return err;
 }

@@ -1,5 +1,5 @@
 /**
- * @module collections/last
+ * @module collections/tail
  */
 
 'use strict';
