@@ -37,7 +37,6 @@ function debounce(mode, delayms, func) {
       const ondebounce = ismodeleading
                        ? resettimeout
                        : compose( func.bind(this, ...args), resettimeout );
-                      //  : compose(resettimeout(), func(...args));
   
       timeoutid = setTimeout(ondebounce, delayms);
 

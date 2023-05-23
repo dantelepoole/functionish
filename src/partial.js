@@ -4,8 +4,6 @@
 
 'use strict';
 
-const CONTEXT_NONE = undefined;
-
 /**
  * Partial apply the *func*-function by binding to *partialargs*.  
  * 

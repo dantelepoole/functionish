@@ -22,7 +22,7 @@ function fork(joinfunc, ...funcs) {
 
         const sequenceresults = runsequence.call(this, ...args);
 
-        return joinfunc(...sequenceresults);
+        return joinfunc.call(this, ...sequenceresults);
     }
 }
 

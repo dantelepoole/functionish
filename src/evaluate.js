@@ -4,7 +4,7 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
+const isfunction = require('./types/isfunction');
 
 /**
  * If *expression* is a function, pass *args* to it and return the result. Otherwise, ignore *args* and just return
@@ -28,7 +28,7 @@ const TYPE_FUNCTION = 'function';
  */
 function evaluate(expression, ...args) {
 
-    return (typeof expression === TYPE_FUNCTION)
+    return isfunction(expression)
          ? expression.call(this, ...args)
          : expression;
 }

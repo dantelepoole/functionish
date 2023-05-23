@@ -4,8 +4,8 @@
 
 'use strict';
 
+const isdefined = require('./types/isdefined');
 const isempty = require('./arrays/isempty');
-const isvoid = require('./types/isvoid');
 
 const _fallback_empty = x => x;
 
@@ -41,13 +41,10 @@ function fallback(...funcs) {
             try {
 
                 const result = funcs[index].call(this, ...args);
-
-                if( isvoid(result) ) continue;
-
-                return result;
+                if( isdefined(result) ) return result;
 
             } catch(error) {
-                //noop
+                continue;
             }
         }
 

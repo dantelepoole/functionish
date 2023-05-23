@@ -4,19 +4,11 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-
 const curry = require('./curry');
+const isfunction = require('./types/isfunction');
 
 /**
- * A functional variant of {@link external:Function.prototype.bind Function.prototype.bind()}. Return a bound version
- * of *func* that will run with *context* as its `this` and will be passed *args* automatically when called.
- * 
- * If *func* is not a function, it is to be the key of the *context* method to bind.
- * 
- * See {@link module:partial partial()} for a function that does the same thing but without providing for a *context*.
- * 
- * `bind()` is curried by default with unary arity.
+ * to do
  * 
  * @example <caption>Example usage of `bind()`</caption>
  * 
@@ -37,9 +29,9 @@ const curry = require('./curry');
  */
 function bind(func, context, ...args) {
 
-    return (typeof func === TYPE_FUNCTION)
-         ? func.bind(context, ...args)
-         : context[func].bind(context, ...args);
+    isfunction(func) || (func = context[func]);
+
+    return func.bind(context, ...args);
 }
 
 module.exports = curry(1, bind);

@@ -4,11 +4,10 @@
 
 'use strict';
 
+const curry = require('./curry');
+
 /**
- * Return a function that calls the *func* function with the order of the first two arguments reversed. Any further
- * arguments are passed in their original order.
- * 
- * [to do: partialargs]
+ * to do
  * 
  * @example <caption>Example usage of `flip()`</caption>
  * 
@@ -17,7 +16,7 @@
  * const isgreaterthan = (x,y) => (x > y);
  * const islessthanorequal = flip(isgreaterthan);
  * 
- * isgreaterthan(1,42);     s// returns false
+ * isgreaterthan(1,42);     // returns false
  * islessthanorequal(1,42); // returns true
  * 
  * @function flip
@@ -27,7 +26,13 @@
  */
 function flip(func, ...partialargs) {
 
-    return function _flipped(a, b, ...args) {
+    const curryarity = func.curryarity - partialargs.length;
+
+    return (curryarity > 0)
+         ? curry(curryarity, _flipped)
+         : _flipped;
+
+    function _flipped(a, b, ...args) {
         return func.call(this, ...partialargs, b, a, ...args);
     }
 }

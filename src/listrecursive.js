@@ -4,7 +4,7 @@
 
 'use strict';
 
-const CONTEXT_NONE = undefined;
+const CONTEXT_NONE = null;
 
 const listrecurse = require('./listrecurse');
 

@@ -28,10 +28,7 @@
  * @returns {function}
  */
 function defer(func, ...args) {
-    
-    const _deferredfunction = () => func.call(this, ...args);
-
-    return _deferredfunction;
+    return () => func.call(this, ...args);
 }
 
 module.exports = defer;
