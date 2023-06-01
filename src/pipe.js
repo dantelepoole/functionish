@@ -29,13 +29,14 @@
  * @returns {function}
  */
 function pipe(...funcs) {
+    return (...args) => runpipedfunctions(funcs, args);
+}
 
-    return function _pipedfunctions(...args) {
+function runpipedfunctions(funcs, args) {
 
-        for(let i = 0; i < funcs.length; i += 1) args = [ funcs[i].call(this, ...args) ];
+    for(let i = 0; i < funcs.length; i += 1) args = [ funcs[i](...args) ];
 
-        return args[0];
-    }
+    return args[0];
 }
 
 module.exports = pipe;

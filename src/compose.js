@@ -28,13 +28,14 @@
  * @returns {function}
  */
 function compose(...funcs) {
+    return (...args) => runcomposedfunctions(funcs, args);
+}
 
-    return function _composedfunctions(...args) {
+function runcomposedfunctions(funcs, args) {
 
-        for(let i = funcs.length-1; i >= 0; i -= 1) args = [ funcs[i].call(this, ...args) ];
+    for(let i = funcs.length-1; i >= 0; i -= 1) args = [ funcs[i](...args) ];
 
-        return args[0];
-    }
+    return args[0];
 }
 
 module.exports = compose;

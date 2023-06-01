@@ -6,6 +6,8 @@
 
 const VIRGIN_RESULT = Symbol();
 
+const curry = require('./curry');
+
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
  * invocations, the cached result is returned without calling *func* again.
@@ -24,7 +26,13 @@ function once(func, ...partialargs) {
 
     let result = VIRGIN_RESULT;
 
-    return function _oncefunction(...args) {
+    const curryarity = func.curryarity - partialargs.length;
+    
+    return (curryarity > 0)
+         ? curry(curryarity, _oncefunction)
+         : _oncefunction;
+         
+    function _oncefunction(...args) {
 
         return (result === VIRGIN_RESULT)
              ? (result = func.call(this, ...partialargs, ...args))

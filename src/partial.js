@@ -4,6 +4,8 @@
 
 'use strict';
 
+const curry = require("./curry");
+
 /**
  * Partial apply the *func*-function by binding to *partialargs*.  
  * 
@@ -29,7 +31,13 @@
  */
 function partial(func, ...partialargs) {
 
-    return function _partial(...args) {
+    const curryarity = func.curryarity - partialargs.length;
+
+    return (curryarity > 0)
+         ? curry(curryarity, _partial)
+         : _partial;
+
+    function _partial(...args) {
         return func.call(this, ...partialargs, ...args);
     }
 }

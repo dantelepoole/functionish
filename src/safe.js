@@ -7,6 +7,7 @@
 const ERROR_NONE = undefined;
 const DATA_NONE = undefined;
 
+const curry = require('./curry');
 /**
  * to do
  * 
@@ -19,23 +20,18 @@ const DATA_NONE = undefined;
  */
 function safe(func, ...partialargs) {
 
-    return function _safe(...args) {
+    const curryarity = func.curryarity - partialargs.length;
+
+    return (curryarity > 0)
+         ? curry(curryarity, _safe)
+         : _safe;
+
+    function _safe(...args) {
 
         try {
-
-            return {
-                data    : func.call(this, ...partialargs, ...args),
-                error   : ERROR_NONE,
-                iserror : false 
-            }
-
+            return [ ERROR_NONE, func.call(this, ...partialargs, ...args) ];
         } catch(exception) {
-
-            return { 
-                data    : DATA_NONE,
-                error   : exception,
-                iserror : true
-            }
+            return [exception, DATA_NONE];
         }
 
     }

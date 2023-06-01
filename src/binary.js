@@ -23,8 +23,8 @@
  * @returns {function}
  */
 function binary(func) {
-
-    return function _binaryfunction(a, b) {
+    
+    return function _binary(a,b) {
         return func.call(this, a, b);
     }
 }

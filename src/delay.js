@@ -33,7 +33,7 @@ const defer = require('./defer');
  */
 function delay(delayms, func, ...args) {
 
-    const deferredfunc = defer(func, ...args);
+    const deferredfunc = defer.call(this, func, ...args);
     const timeoutid = setTimeout(deferredfunc, delayms);
     
     return clearTimeout.bind(CONTEXT_NONE, timeoutid);

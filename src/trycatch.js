@@ -5,8 +5,6 @@
 'use strict';
 
 const curry = require('./curry');
-const isfunction = require('./types/isfunction');
-const safe = require('./safe');
 
 /**
  * to do
@@ -22,7 +20,13 @@ const safe = require('./safe');
  */
 function trycatch(onerror, func, ...partialargs) {
 
-    return function _trycatch(...args) {
+    const curryarity = func.curryarity - partialargs.length;
+
+    return (curryarity > 0)
+         ? curry(curryarity, _trycatch)
+         : _trycatch;
+         
+    function _trycatch(...args) {
 
         try {
             return func.call(this, ...partialargs, ...args);

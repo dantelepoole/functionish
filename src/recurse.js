@@ -6,15 +6,13 @@
 
 function recurse(func, ...args) {
 
-    const _signalrecurse = (...recurseargs) => (args = recurseargs);
-    const context = { [func.name]:_signalrecurse }
+    const recurse = (...recurseargs) => (args = recurseargs);
 
     let result = args;
 
-    while(result === args) result = func.call(context, ...args);
+    while(result === args) result = func(recurse, ...args);
 
     return result;
-
 }
 
 module.exports = recurse;

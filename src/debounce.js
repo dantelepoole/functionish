@@ -17,10 +17,10 @@ const isvoid = require('./types/isvoid');
  * @function debounce
  * @param {string} mode The debounce mode
  * @param {number} delayms The number of milliseconds to delay the invocation of *func*
- * @param {function} func The function to invoke
+ * @param {function} targetfunc The function to invoke
  * @returns {function}
  */
-function debounce(mode, delayms, func) {
+function debounce(mode, delayms, targetfunc) {
 
     const ismodeleading = isvoid(mode) || (mode !== MODE_LEADING);
 
@@ -30,13 +30,13 @@ function debounce(mode, delayms, func) {
 
     return function _debounce(...args) {
 
-      if( ismodeleading && timernotrunning() ) func.call(this, ...args);
+      if( ismodeleading && timernotrunning() ) targetfunc.call(this, ...args);
 
       clearTimeout(timeoutid);
 
       const ondebounce = ismodeleading
                        ? resettimeout
-                       : compose( func.bind(this, ...args), resettimeout );
+                       : compose( targetfunc.bind(this, ...args), resettimeout );
   
       timeoutid = setTimeout(ondebounce, delayms);
 

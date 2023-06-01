@@ -4,10 +4,14 @@
 
 'use strict';
 
-const ONERROR_NONE = undefined;
+const INDEX_DATA = 1;
+const INDEX_ERROR = 0;
+const FINALLY_RESULT_NONE = undefined;
 
 const curry = require('./curry');
-const trycatchfinally = require('./trycatchfinally');
+const raise = require('./misc/raise');
+const safe = require('./safe');
+const trycatch = require('./trycatch');
 
 /**
  * to do
@@ -21,8 +25,28 @@ const trycatchfinally = require('./trycatchfinally');
  * @param {function} func The function to run
  * @returns {any}
  */
-function tryfinally(onfinally, func, ...partialargs) {
-    return trycatchfinally(ONERROR_NONE, onfinally, func, ...partialargs);
+function tryfinally(onerror=raise, onfinally, func, ...partialargs) {
+
+    const safefunc = safe(
+        trycatch(onerror, func, ...partialargs)
+    )
+
+    const curryarity = func.curryarity - partialargs.length;
+
+    return (curryarity > 0)
+         ? curry(curryarity, _tryfinally)
+         : _tryfinally;
+         
+    function _tryfinally(...args) {
+
+        const result = safefunc.call(this, ...args);
+
+        const finallyresult = onfinally.call(this, result[INDEX_ERROR], result[INDEX_DATA]);
+
+        return (finallyresult !== FINALLY_RESULT_NONE) ? finallyresult
+             : result[INDEX_ERROR] ? raise(result[INDEX_ERROR])
+             : result[INDEX_DATA];
+    }
 }
 
-module.exports = curry(1, tryfinally);
+module.exports = curry(2, tryfinally);

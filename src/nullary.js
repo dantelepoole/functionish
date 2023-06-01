@@ -27,7 +27,7 @@
 
 function nullary(func) {
 
-    return function _nullaryfunction() {
+    return function _nullary() {
         return func.call(this);
     }
 }

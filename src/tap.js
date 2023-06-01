@@ -4,7 +4,7 @@
 
 'use strict';
 
-const CONTEXT_NONE = null;
+const curry = require('./curry');
 
 /**
  * Return a function that passes its arguments to *func* and returns its own first
@@ -26,7 +26,13 @@ const CONTEXT_NONE = null;
  */
 function tap(func, ...partialargs) {
 
-    return function _tapped(...args) {
+    const curryarity = func.curryarity - partialargs.length;
+
+    return (curryarity > 0)
+         ? curry(curryarity, _tapped)
+         : _tapped;
+         
+    function _tapped(...args) {
 
         func.call(this, ...partialargs, ...args);
 

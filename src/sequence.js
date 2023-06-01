@@ -5,7 +5,6 @@
 'use strict';
 
 const bindapply = (context, args) => func => func.call(context, ...args);
-
 const sequencerunner = funcs => (context, args) => funcs.map( bindapply(context, args) );
 
 /**

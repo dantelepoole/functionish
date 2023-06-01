@@ -4,10 +4,9 @@
 
 'use strict';
 
+const id = require('./id');
 const isdefined = require('./types/isdefined');
 const isempty = require('./arrays/isempty');
-
-const _fallback_empty = x => x;
 
 /**
  * Return a function that passes its arguments to each *func* in order and returns the return value
@@ -30,17 +29,17 @@ const _fallback_empty = x => x;
  */
 function fallback(...funcs) {
 
-    if( isempty(funcs) ) return _fallback_empty;
+    if( isempty(funcs) ) return id;
 
     const lastfallback = funcs.pop();
 
     return function _fallback(...args) {
 
-        for(let index = 0; index < funcs.length; index += 1) {
+        for(let i = 0; i < funcs.length; i += 1) {
 
             try {
 
-                const result = funcs[index].call(this, ...args);
+                const result = funcs[i].call(this, ...args);
                 if( isdefined(result) ) return result;
 
             } catch(error) {
