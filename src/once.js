@@ -27,12 +27,9 @@ function once(func, ...partialargs) {
 
     let result = VIRGIN_RESULT;
 
-    return function _once(...args) {
-
-        return (result === VIRGIN_RESULT)
-             ? (result = func.call(this, ...partialargs, ...args))
-             : result;
-    }
+    return (...args) => (result === VIRGIN_RESULT)
+                      ? (result = func(...partialargs, ...args))
+                      : result;
 }
 
 module.exports = once;
