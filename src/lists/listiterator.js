@@ -15,35 +15,28 @@ const raisebaditerable = () => { throw new TypeError(ERR_BAD_ITERABLE) }
 class ListIterator {
 
     #iterator;
-    #nextitem = { index:0 };
+    #count = 0;
+    #nextitem = { done:false }
 
     constructor(iterator) {
         
         this.#iterator = iterator;
-        this.#updatenextitem();
+        this.next();
 
     }
     
-    #updatenextitem() {
-
-        const nextitem = this.#iterator.next();
-        this.#nextitem.done = nextitem.done;
-        this.#nextitem.value = nextitem.value;
-
-        this.#nextitem.index += 1;
-    }
-
     next() {
 
-        const currentitem = { ...this.#nextitem }
+        if( this.#nextitem.done ) return this.#nextitem;
+
+        const currentitem = this.#nextitem;
         
-        if( !currentitem.done ) this.#updatenextitem();
+        const {done, value} = this.#iterator.next();
+        this.#nextitem = { done, value, index:this.#count }
+        
+        done || (this.#count += 1);
 
         return currentitem;
-    }
-
-    nextvalue() {
-        return this.next().value;
     }
 
     get done() {
@@ -54,7 +47,7 @@ class ListIterator {
         return !this.#nextitem.done;
     }
 
-    get size() {
+    get count() {
         return this.#nextitem.index;
     }
 

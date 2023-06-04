@@ -20,13 +20,7 @@ const curry = require('./curry');
  */
 function wrap(wrapperfunc, func, ...partialargs) {
 
-    const curryarity = func.curryarity - partialargs.length;
-
-    return (curryarity > 0)
-         ? curry(curryarity, _wrapped)
-         : _wrapped;
-
-    function _wrapped(...args) {
+    return function _wrappedfunction(...args) {
         return wrapperfunc.call(this, func, ...partialargs, ...args);
     }
 }

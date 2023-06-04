@@ -20,7 +20,7 @@ function wrapper(...wrapfuncs) {
 
         let index = 0;
         const next = (...nextargs) => (index === wrapfuncs.length)
-                                    ? sinkfunc.call(this, ...partialargs, ...nextargs)
+                                    ? sinkfunc.call(this, ...nextargs)
                                     : wrapfuncs[index++].call(this, next, ...nextargs);
 
         return next(...args);

@@ -6,6 +6,7 @@
 
 const VIRGIN_RESULT = Symbol();
 
+const always = require('./always');
 const curry = require('./curry');
 
 /**
@@ -26,19 +27,12 @@ function once(func, ...partialargs) {
 
     let result = VIRGIN_RESULT;
 
-    const curryarity = func.curryarity - partialargs.length;
-    
-    return (curryarity > 0)
-         ? curry(curryarity, _oncefunction)
-         : _oncefunction;
-         
-    function _oncefunction(...args) {
+    return function _once(...args) {
 
         return (result === VIRGIN_RESULT)
              ? (result = func.call(this, ...partialargs, ...args))
              : result;
     }
-
 }
 
 module.exports = once;
