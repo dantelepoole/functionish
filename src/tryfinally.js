@@ -4,8 +4,7 @@
 
 'use strict';
 
-const INDEX_DATA = 1;
-const INDEX_ERROR = 0;
+const ERROR_NONE = null;
 const FINALLY_RESULT_NONE = undefined;
 
 const curry = require('./curry');
@@ -33,13 +32,13 @@ function tryfinally(onerror=raise, onfinally, func, ...partialargs) {
 
     return function _tryfinally(...args) {
 
-        const result = safefunc.call(this, ...args);
+        const [error, data] = safefunc.call(this, ...args);
 
-        const finallyresult = onfinally.call(this, result[INDEX_ERROR], result[INDEX_DATA]);
+        const finallyresult = onfinally.call(this, error, data);
 
         return (finallyresult !== FINALLY_RESULT_NONE) ? finallyresult
-             : result[INDEX_ERROR] ? raise(result[INDEX_ERROR])
-             : result[INDEX_DATA];
+             : (error === ERROR_NONE) ? data
+             : raise(error);
     }
 }
 

@@ -6,6 +6,7 @@
 
 const VIRGIN_RESULT = Symbol();
 
+const always = require('./always');
 const curry = require('./curry');
 
 /**

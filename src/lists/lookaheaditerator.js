@@ -20,7 +20,7 @@ class LookAheadIterator {
     constructor(iterator) {
         
         this.#iterator = iterator;
-        this.#updatenextitem();
+        this.next();
 
     }
     
@@ -36,15 +36,16 @@ class LookAheadIterator {
 
     next() {
 
-        const currentitem = { ...this.#nextitem }
+        if( this.#nextitem.done ) return this.#nextitem;
+
+        const currentitem = this.#nextitem;
         
-        if( !currentitem.done ) this.#updatenextitem();
+        const {done, value} = this.#iterator.next();
+        this.#nextitem = { done, value, index:this.#count }
+        
+        done || (this.#count += 1);
 
         return currentitem;
-    }
-
-    nextvalue() {
-        return this.next().value;
     }
 
     get done() {
@@ -55,7 +56,7 @@ class LookAheadIterator {
         return !this.#nextitem.done;
     }
 
-    get size() {
+    get count() {
         return this.#nextitem.index;
     }
 

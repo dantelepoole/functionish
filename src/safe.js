@@ -4,7 +4,7 @@
 
 'use strict';
 
-const ERROR_NONE = undefined;
+const ERROR_NONE = null;
 const DATA_NONE = undefined;
 
 /**
