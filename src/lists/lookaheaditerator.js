@@ -1,21 +1,21 @@
 /**
- * @module lib/listiterator
+ * @module lib/lookaheaditerator
  * @ignore
  */
 
 'use strict';
 
-const ERR_BAD_ITERABLE = `listiterator(): Expected an iterable or iterator object or a function.`;
+const ERR_BAD_ITERABLE = `lookaheaditerator(): Expected an iterable or iterator object or a function.`;
 
 const isfunction = func => (typeof func === 'function');
 const isiterable = iterable => isfunction( iterable[Symbol.iterator] );
 const isiterator = iterator => isfunction(iterator.next);
 const raisebaditerable = () => { throw new TypeError(ERR_BAD_ITERABLE) }
 
-class ListIterator {
+class LookAheadIterator {
 
     #iterator;
-    #nextitem = { index:0 };
+    #nextitem = { index:-1 };
 
     constructor(iterator) {
         
@@ -27,6 +27,7 @@ class ListIterator {
     #updatenextitem() {
 
         const nextitem = this.#iterator.next();
+
         this.#nextitem.done = nextitem.done;
         this.#nextitem.value = nextitem.value;
 
@@ -63,22 +64,22 @@ class ListIterator {
 /**
  * to do
  * 
- * @example <caption>Example usage of `listiterator()`</caption>
+ * @example <caption>Example usage of `lookaheaditerator()`</caption>
  * 
  * to do
  * 
- * @function listiterator
+ * @function lookaheaditerator
  * @param {iterable} source The iterable object to get an iterator for 
  * @returns {iterator}
  */
-function listiterator(source) {
+function lookaheaditerator(source) {
 
     const iterator = isiterable(source) ? source[Symbol.iterator]()
                    : isiterator(source) ? source
                    : isfunction(source) ? source()
                    : raisebaditerable();
 
-    return new ListIterator(iterator);
+    return new LookAheadIterator(iterator);
 }
 
-module.exports = listiterator;
+module.exports = lookaheaditerator;
