@@ -20,15 +20,21 @@ const curry = require('./curry');
  */
 function wrap(wrapperfunc, func, ...partialargs) {
 
-    const curryarity = func.curryarity - partialargs.length;
+    if( isarray(wrapperfunc) ) return _wrapmany.bind(null, wrapperfunc, func, ...partialargs);
 
-    return (curryarity > 0)
-         ? curry(curryarity, _wrapped)
-         : _wrapped;
-
-    function _wrapped(...args) {
-        return wrapperfunc.call(this, func, ...partialargs, ...args);
+    return function _wrap(...args) {
+        return wrapperfunc(func, ...partialargs, ...args);
     }
+}
+
+function _wrapmany(wrapfuncs, targetfunc, ...args) {
+
+    let index = 0;
+    const next = (...nextargs) => (index === wrapfuncs.length)
+                                ? targetfunc.call(this, ...partialargs, ...nextargs)
+                                : wrapfuncs[index++].call(this, next, ...nextargs);
+
+    return next(...args);
 }
 
 module.exports = curry(1, wrap);

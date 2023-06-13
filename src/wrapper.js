@@ -16,11 +16,11 @@
  */
 function wrapper(...wrapfuncs) {
 
-    return function _wrapper(sinkfunc, ...args) {
+    return function _wrapper(targetfunc, ...args) {
 
         let index = 0;
         const next = (...nextargs) => (index === wrapfuncs.length)
-                                    ? sinkfunc.call(this, ...partialargs, ...nextargs)
+                                    ? targetfunc.call(this, ...partialargs, ...nextargs)
                                     : wrapfuncs[index++].call(this, next, ...nextargs);
 
         return next(...args);

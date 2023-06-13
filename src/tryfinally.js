@@ -31,13 +31,7 @@ function tryfinally(onerror=raise, onfinally, func, ...partialargs) {
         trycatch(onerror, func, ...partialargs)
     )
 
-    const curryarity = func.curryarity - partialargs.length;
-
-    return (curryarity > 0)
-         ? curry(curryarity, _tryfinally)
-         : _tryfinally;
-         
-    function _tryfinally(...args) {
+    return function _tryfinally(...args) {
 
         const result = safefunc.call(this, ...args);
 

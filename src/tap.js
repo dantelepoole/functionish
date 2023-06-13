@@ -4,8 +4,6 @@
 
 'use strict';
 
-const curry = require('./curry');
-
 /**
  * Return a function that passes its arguments to *func* and returns its own first
  * argument.
@@ -26,13 +24,7 @@ const curry = require('./curry');
  */
 function tap(func, ...partialargs) {
 
-    const curryarity = func.curryarity - partialargs.length;
-
-    return (curryarity > 0)
-         ? curry(curryarity, _tapped)
-         : _tapped;
-         
-    function _tapped(...args) {
+    return function _tapped(...args) {
 
         func.call(this, ...partialargs, ...args);
 

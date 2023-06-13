@@ -30,13 +30,7 @@ const isvoid = require('./types/isvoid');
  */
 function withdefault(defaultvalue, func, ...partialargs) {
 
-    const curryarity = func.curryarity - partialargs.length;
-
-    return (curryarity > 0)
-         ? curry(curryarity, _withdefault)
-         : _withdefault;
-         
-    function _withdefault(...args) {
+    return function _withdefault(...args) {
 
         const result = func.call(this, ...partialargs, ...args);
         

@@ -20,13 +20,7 @@ const curry = require('./curry');
  */
 function trycatch(onerror, func, ...partialargs) {
 
-    const curryarity = func.curryarity - partialargs.length;
-
-    return (curryarity > 0)
-         ? curry(curryarity, _trycatch)
-         : _trycatch;
-         
-    function _trycatch(...args) {
+    return function _trycatch(...args) {
 
         try {
             return func.call(this, ...partialargs, ...args);

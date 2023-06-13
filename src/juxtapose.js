@@ -14,7 +14,9 @@ function juxtapose(...funcs) {
 
     return function _juxtapose(...args) {
 
-        const restfunc = isarray( tail(args) ) ? head( args.pop() ) : collect;
+        const restfunc = isarray( tail(args) )
+                       ? head( args.pop() )
+                       : collect;
 
         let argindex = 0;
         const applynext = func => (func ?? id).call(this, args[argindex++]);

@@ -31,13 +31,7 @@ const curry = require("./curry");
  */
 function partial(func, ...partialargs) {
 
-    const curryarity = func.curryarity - partialargs.length;
-
-    return (curryarity > 0)
-         ? curry(curryarity, _partial)
-         : _partial;
-
-    function _partial(...args) {
+    return function _partial(...args) {
         return func.call(this, ...partialargs, ...args);
     }
 }

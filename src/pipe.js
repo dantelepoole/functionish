@@ -29,14 +29,18 @@
  * @returns {function}
  */
 function pipe(...funcs) {
-    return (...args) => runpipedfunctions(funcs, args);
-}
 
-function runpipedfunctions(funcs, args) {
+    const firstfunc = funcs.shift() ?? id;
 
-    for(let i = 0; i < funcs.length; i += 1) args = [ funcs[i](...args) ];
+    return function _functionpipe(...args) {
 
-    return args[0];
+        let result = firstfunc(...args);
+
+        for(let i = 0; i < funcs.length; i += 1) result = funcs[i](...args);
+
+        return result;
+    }
+
 }
 
 module.exports = pipe;

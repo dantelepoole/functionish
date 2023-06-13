@@ -29,11 +29,7 @@ function curry(arity, func) {
 
 function initcurry(arity, targetfunc, ...curriedargs) {
 
-    _curriedfunction.curryarity = (arity - curriedargs.length);
-
-    return _curriedfunction;
-
-    function _curriedfunction(...args) {
+    return function _curriedfunction(...args) {
 
         const argcount = curriedargs.length + args.length;
         

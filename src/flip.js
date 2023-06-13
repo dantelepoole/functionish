@@ -25,14 +25,8 @@ const curry = require('./curry');
  * @returns {function}
  */
 function flip(func, ...partialargs) {
-
-    const curryarity = func.curryarity - partialargs.length;
-
-    return (curryarity > 0)
-         ? curry(curryarity, _flipped)
-         : _flipped;
-
-    function _flipped(a, b, ...args) {
+    
+    return function _flip(a, b, ...args) {
         return func.call(this, ...partialargs, b, a, ...args);
     }
 }
