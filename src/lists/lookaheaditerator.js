@@ -16,7 +16,7 @@ const raisebaditerable = () => { throw new TypeError(ERR_BAD_ITERABLE) }
 class LookAheadIterator {
 
     #iterator;
-    #nextitem = { index:-1 };
+    #nextitem = { done:false, value:undefined, index:-1 };
 
     constructor(iterator) {
         
@@ -27,23 +27,25 @@ class LookAheadIterator {
     
     #updatenextitem() {
 
-        const item = this.#iterator.next();
+        const {done, value} = this.#iterator.next();
 
-        this.#nextitem = {
-            done  : !! item.done,
-            value : item.value,
-            index : this.#nextitem.index + 1
-        }
+        this.#nextitem.done = !! done;
+        this.#nextitem.value = value;
+        this.#nextitem.index += 1;
 
     }
 
     next() {
 
-        const currentitem = this.#nextitem;
-        
+        const currentitem = { ...this.#nextitem }
+
         if( !currentitem.done ) this.#updatenextitem();
 
         return currentitem;
+    }
+
+    peek() {
+        return { ...this.#nextitem }
     }
 
     get done() {
