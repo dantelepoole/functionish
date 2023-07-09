@@ -5,10 +5,11 @@
 'use strict';
 
 const SEPARATOR_CHAR = '.';
-const TYPE_STRING = 'string';
 const SOURCE_VOID = undefined;
 
 const curry = require('../curry');
+const isarray = require('../types/isarray');
+const isstring = require('../types/isstring');
 
 const pluckreducer = (source, key) => (source === null || source === undefined)
                                     ? SOURCE_VOID
@@ -65,9 +66,9 @@ const pluckreducer = (source, key) => (source === null || source === undefined)
  */
 function pluckx(path, source) {
 
-    if(typeof path === TYPE_STRING) path = path.split(SEPARATOR_CHAR);
-
-    return path.reduce(pluckreducer, source);
+    return isstring(path) ? path.split(SEPARATOR_CHAR).reduce(pluckreducer, source)
+         : isarray(path) ? path.reduce(pluckreducer, source)
+         : [path].reduce(pluckreducer, source);
 }
 
 module.exports = curry(1, pluckx);

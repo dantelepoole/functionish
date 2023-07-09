@@ -5,6 +5,7 @@
 'use strict';
 
 const curry = require('./curry');
+const isfunction = require('./types/isfunction');
 
 /**
  * to do
@@ -12,9 +13,15 @@ const curry = require('./curry');
  * @example <caption>Example usage of `sendmessage()`</caption>
  * 
  * @function sendmessage
+ * @returns {any}
  */
-function sendmessage(method, args=[], object) {
-    return object[method](...args);
+function sendmessage(message, ...args) {
+
+    const target = args.pop();
+
+    return isfunction(message)
+         ? message.call(target, ...partialargs, ...args)
+         : target[message](...partialargs, ...args);
 }
 
-module.exports = curry(2, sendmessage);
+module.exports = curry(1, sendmessage);

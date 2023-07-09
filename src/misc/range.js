@@ -5,9 +5,10 @@
 'use strict';
 
 const EMPTY_ITERABLE = { [Symbol.iterator]: function* () {} };
-
 const STEP_DECREMENT = -1;
 const STEP_INCREMENT = 1;
+
+const isvoid = require('../types/isvoid');
 
 /**
  * If passed a single argument, return an iterable that produces the number `1` through the specified number (inclusive).
@@ -40,10 +41,9 @@ const STEP_INCREMENT = 1;
  */
 function range(start, end) {
 
-    return (end === undefined) ? simplerange(start)
-         : (start === end) ? EMPTY_ITERABLE
-         : constrainrange(start, end);
-
+    return isvoid(end) ? simplerange(start)
+         : (start <= end) ? rangeiterable(start, end, STEP_INCREMENT)
+         : rangeiterable(start, end, STEP_DECREMENT);
 }
 
 function rangeiterable(start, end, increment) {
@@ -58,19 +58,11 @@ function rangeiterable(start, end, increment) {
     }
 }
 
-function constrainrange(start, end) {
-
-    const increment = (start > end) ?  STEP_DECREMENT : STEP_INCREMENT;
-
-    return rangeiterable(start, end, increment);
-}
-
 function simplerange(count) {
 
-    return (count < 1)
-         ? EMPTY_ITERABLE
-         : rangeiterable(1, count, 1);
-
+    return (count > 0) ? rangeiterable(1, count, 1)
+         : (count < 0) ? rangeiterable(-1, count, -1)
+         : EMPTY_ITERABLE;
 }
 
 module.exports = range;

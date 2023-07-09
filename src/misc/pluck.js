@@ -7,11 +7,10 @@
 const curry = require('../curry');
 
 /**
- * Return the value of the property of *source* specified by *key*. If no such property exists, or if *source* is `null` or 
- * `undefined`, return `undefined`.
+ * Return the value of the property of *source* specified by *key* or `undefined` if the *key* does not exist on
+ * the *source* object.
  * 
- * See {@link module:misc/pluckx pluckx()} for a version that allows plucking properties identified with
- * compound keys.
+ * See {@link module:misc/pluckx pluckx()} for a version that allows plucking properties with compound keys.
  * 
  * `pluck()` is curried by default with unary arity.
  *  
@@ -37,7 +36,7 @@ const curry = require('../curry');
  * }
  * 
  * pluck('firstname', source); // returns 'Donald'
- * pluck('creator', source);   // returns the `creator` object property
+ * pluck('creator', source);   // returns the `creator` object
  * pluck('nephews', source);   // returns the `nephews` array
  * 
  * @function pluck
@@ -47,7 +46,7 @@ const curry = require('../curry');
  * @returns {any}
  */
 function pluck(key, source) {
-    return source?.[key];
+    return source[key];
 }
 
 module.exports = curry(1, pluck);

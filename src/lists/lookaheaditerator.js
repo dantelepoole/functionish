@@ -5,9 +5,10 @@
 
 'use strict';
 
-const ERR_BAD_ITERABLE = `lookaheaditerator(): Expected an iterable or iterator object or a function.`;
+const ERR_BAD_ITERABLE = `lookaheaditerator(): Expected an iterable object, an iterator object or a function.`;
 
-const isfunction = func => (typeof func === 'function');
+const isfunction = require('../types/isfunction');
+
 const isiterable = iterable => isfunction( iterable[Symbol.iterator] );
 const isiterator = iterator => isfunction(iterator.next);
 const raisebaditerable = () => { throw new TypeError(ERR_BAD_ITERABLE) }
@@ -20,30 +21,27 @@ class LookAheadIterator {
     constructor(iterator) {
         
         this.#iterator = iterator;
-        this.next();
+        this.#updatenextitem();
 
     }
     
     #updatenextitem() {
 
-        const nextitem = this.#iterator.next();
+        const item = this.#iterator.next();
 
-        this.#nextitem.done = nextitem.done;
-        this.#nextitem.value = nextitem.value;
+        this.#nextitem = {
+            done  : !! item.done,
+            value : item.value,
+            index : this.#nextitem.index + 1
+        }
 
-        this.#nextitem.index += 1;
     }
 
     next() {
 
-        if( this.#nextitem.done ) return this.#nextitem;
-
         const currentitem = this.#nextitem;
         
-        const {done, value} = this.#iterator.next();
-        this.#nextitem = { done, value, index:this.#count }
-        
-        done || (this.#count += 1);
+        if( !currentitem.done ) this.#updatenextitem();
 
         return currentitem;
     }
