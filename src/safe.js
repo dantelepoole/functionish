@@ -23,8 +23,8 @@ function safe(func, ...partialargs) {
 
         try {
             return [ ERROR_NONE, func.call(this, ...partialargs, ...args) ];
-        } catch(exception) {
-            return [exception, DATA_NONE];
+        } catch(error) {
+            return [ error, DATA_NONE ];
         }
 
     }
