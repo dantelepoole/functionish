@@ -32,15 +32,17 @@ function pipe(...funcs) {
 
     const firstfunc = funcs.shift() ?? id;
 
-    return function _functionpipe(...args) {
+    return _piped.bind(firstfunc, funcs);
 
-        let result = firstfunc(...args);
+}
 
-        for(let i = 0; i < funcs.length; i += 1) result = funcs[i](...args);
+function _piped(firstfunc, funcs, ...args) {
 
-        return result;
-    }
+    let result = firstfunc(...args);
 
+    for(let i = 0; i < funcs.length; i += 1) result = funcs[i](...args);
+
+    return result;
 }
 
 module.exports = pipe;

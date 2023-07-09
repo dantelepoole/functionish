@@ -18,10 +18,14 @@ const validatearity = arity => (isinteger(arity) && arity > 0) || raisebadarity(
 /**
  * to do
  * 
+ * @example <caption>Example usage of `curry()`</caption>
+ * 
+ * to co
+ * 
  * @function curry
- * @param {number} arity The number of arguments to curry
+ * @param {number} arity The number of arguments to curry (one less than the minimum number of parameters required by *func*)
  * @param {function} func The function to curry
- * @returns {any}
+ * @returns {function}
  */
 function curry(arity, func) {
     return validatearity(arity) && initcurry(arity, func);

@@ -8,7 +8,11 @@ const curry = require('./curry');
 const isfunction = require('./types/isfunction');
 
 /**
- * to do
+ * Functional variant of {@link external:Function.prototype.bind Function.prototype.bind()}. Return a function that runs
+ * *func* with *context* for its `this`-value and pre-bound to the *arg* arguments.
+ * 
+ * If it is a string or symbol instead of a function, the target function is looked up as a method on the *context* object
+ * with the key *func*.
  * 
  * @example <caption>Example usage of `bind()`</caption>
  * 

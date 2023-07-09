@@ -10,7 +10,7 @@ const curry = require('./curry');
  * Pass *args* to *func* and return the result.
  * 
  * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()} except it does not provide
- * for passing a custom `this`-obejct.
+ * for passing a custom `this`-obejct - the `this`-object that `apply()` itself is invoked with is used instead.
  * 
  * `apply()` is curried by default with unary arity.
  * 

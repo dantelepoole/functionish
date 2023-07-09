@@ -5,8 +5,8 @@
 'use strict';
 
 /**
- * Coerce *func* to have have binary arity. More specifically, return a function that accepts exactly two parameters
- * and passes them both *func*. Any other arguments passed to the returned function are ignored.
+ * More specifically, return a function that accepts exactly two arguments
+ * and passes them both *func*, effectively coercing *func* to have exactly two arguments.
  * 
  * @example <caption>Example usage of `binary()`</caption>
  * 

@@ -11,7 +11,7 @@ const defer = require('./defer');
 
 /**
  * Call *func* with the specified *args* after at least *delay* milliseconds have passed and return a function that
- * cancels the delayed function.
+ * cancels the delayed *func* invocation.
  * 
  * `delay()` is curried by default with unary arity.
  * 
