@@ -14,9 +14,7 @@ const isempty = require('./arrays/isempty');
  * value. If the last *func* throws, the returned function also throws. If the last *func* returns a
  * <abbr title="null, undefined or NaN">void</abbr> value, the returned function returns `undefined`.
  * 
- * If the *funcs* array is empty, the returned function returns `undefined`.
- * 
- * `fallback()` is `this`-aware, so it propagates its `this`-value to each *func* it invokes.
+ * If the *funcs* array is empty, the returned function returns its first argument.
  * 
  * @example <caption>Example usage of `fallback()`</caption>
  * 
@@ -43,7 +41,7 @@ function fallback(...funcs) {
                 if( isdefined(result) ) return result;
 
             } catch(error) {
-                continue;
+                // no-op
             }
         }
 

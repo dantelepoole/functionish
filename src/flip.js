@@ -21,7 +21,7 @@ const curry = require('./curry');
  * 
  * @function flip
  * @param {function} func The function to flip the arguments for
- * @param {...any[]} partialargs Optional arguments to pass to *func*
+ * @param {...any[]} partialargs Optional arguments to pass to *func* before the flipped arguments
  * @returns {function}
  */
 function flip(func, ...partialargs) {

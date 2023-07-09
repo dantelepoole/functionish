@@ -5,7 +5,7 @@
 'use strict';
 
 const invoke = (context, args) => func => func.call(context, ...args);
-const sequencerunner = funcs => (context, args) => funcs.map( invoke(context, args) );
+const sequencerunnerfactory = funcs => (context, args) => funcs.map( invoke(context, args) );
 
 /**
  * [to do]
@@ -20,7 +20,7 @@ const sequencerunner = funcs => (context, args) => funcs.map( invoke(context, ar
  */
 function sequence(...funcs) {
 
-    const runsequence = sequencerunner(funcs);
+    const runsequence = sequencerunnerfactory(funcs);
 
     return function _sequence(...args) {
         return runsequence(this, args);
