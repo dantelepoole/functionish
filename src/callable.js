@@ -23,14 +23,14 @@ const isfunction = require('./types/isfunction');
  * 
  * @function callable
  * @see {@link module:evaluate evaluate()}
- * @param {any} value The value to make callable
+ * @param {any} source The value to make callable
  * @returns {function}
  */
-function callable(value) {
+function callable(source) {
 
-    return isfunction(value)
-         ? value
-         : always(value);
+    return isfunction(source)
+         ? source
+         : always(source);
 }
 
 module.exports = callable;

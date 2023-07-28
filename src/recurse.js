@@ -10,7 +10,6 @@ function recurse(func, ...args) {
 
     let result = args;
 
-    // while(result === args) result = func(recurse, ...args);
     while(result === args) result = func.call(recurse, ...args);
 
     return result;

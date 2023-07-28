@@ -4,6 +4,7 @@
 
 'use strict';
 
+const noop = require('./noop');
 const sequence = require('./sequence');
 
 /**
@@ -14,7 +15,7 @@ const sequence = require('./sequence');
  * [to do]
  * 
  */
-function fork(joinfunc, ...funcs) {
+function fork(joinfunc=noop, ...funcs) {
 
     const runsequence = sequence(...funcs);
 

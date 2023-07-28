@@ -4,6 +4,8 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
  * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
@@ -32,17 +34,15 @@ function pipe(...funcs) {
 
     const firstfunc = funcs.shift() ?? id;
 
-    return _piped.bind(firstfunc, funcs);
+    return function _pipe(...args) {
 
-}
+        let result = firstfunc.call(this, ...args);
 
-function _piped(firstfunc, funcs, ...args) {
+        for(let i = 0; i < funcs.length; i += 1) result = funcs[i].call(this, ...args);
 
-    let result = firstfunc(...args);
+        return result;
+    }
 
-    for(let i = 0; i < funcs.length; i += 1) result = funcs[i](...args);
-
-    return result;
 }
 
 module.exports = pipe;

@@ -4,8 +4,7 @@
 
 'use strict';
 
-const ERROR_NONE = null;
-const DATA_NONE = undefined;
+const ERROR_NULL = null;
 
 /**
  * to do
@@ -22,9 +21,9 @@ function safe(func, ...partialargs) {
     return function _safe(...args) {
 
         try {
-            return [ ERROR_NONE, func.call(this, ...partialargs, ...args) ];
+            return [ ERROR_NULL, func.call(this, ...partialargs, ...args) ];
         } catch(error) {
-            return [ error, DATA_NONE ];
+            return [ error ];
         }
 
     }

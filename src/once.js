@@ -27,7 +27,7 @@ function once(func, ...partialargs) {
 
     let result = VIRGIN_RESULT;
 
-    return function _oncefunction(...args) {
+    return function _once(...args) {
 
         return (result === VIRGIN_RESULT)
              ? (result = func.call(this, ...partialargs, ...args))

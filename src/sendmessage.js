@@ -20,8 +20,8 @@ function sendmessage(message, ...args) {
     const target = args.pop();
 
     return isfunction(message)
-         ? message.call(target, ...partialargs, ...args)
-         : target[message](...partialargs, ...args);
+         ? message.call(target, ...args)
+         : target[message](...args);
 }
 
 module.exports = curry(1, sendmessage);

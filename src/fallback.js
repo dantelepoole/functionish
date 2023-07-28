@@ -4,9 +4,10 @@
 
 'use strict';
 
+const RESULT_UNDEFINED = undefined;
+
 const id = require('./id');
-const isdefined = require('./types/isdefined');
-const isempty = require('./arrays/isempty');
+const isvoid = require('./types/isvoid');
 
 /**
  * Return a function that passes its arguments to each *func* in order and returns the return value
@@ -15,6 +16,8 @@ const isempty = require('./arrays/isempty');
  * <abbr title="null, undefined or NaN">void</abbr> value, the returned function returns `undefined`.
  * 
  * If the *funcs* array is empty, the returned function returns its first argument.
+ * 
+ * [to do: this]
  * 
  * @example <caption>Example usage of `fallback()`</caption>
  * 
@@ -27,25 +30,30 @@ const isempty = require('./arrays/isempty');
  */
 function fallback(...funcs) {
 
-    if( isempty(funcs) ) return id;
-
-    const lastfallback = funcs.pop();
+    const finalfunc = funcs.pop() ?? id;
 
     return function _fallback(...args) {
+        return attemptall(this, funcs, args) ?? finalfunc.call(this, ...args);
+    }
+}
 
-        for(let i = 0; i < funcs.length; i += 1) {
+function attemptall(context, funcs, args) {
 
-            try {
+    for(let i = 0; i < funcs.length; i += 1) {
 
-                const result = funcs[i].call(this, ...args);
-                if( isdefined(result) ) return result;
+        const result = attempt(context, funcs[i], args);
+        if( isvoid(result) ) continue;
 
-            } catch(error) {
-                // no-op
-            }
-        }
+        return result;
+    }
+}
 
-        return lastfallback.call(this, ...args);
+function attempt(context, func, args) {
+
+    try {
+        return func.call(context, ...args);
+    } catch (error) {
+        return RESULT_UNDEFINED;
     }
 }
 

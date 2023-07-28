@@ -4,11 +4,10 @@
 
 'use strict';
 
+const ZERO_COUNT = 0;
+
 /**
- * Return `true` if *indexable* has a `length` or `size` property equal to `0`. Otherwise, return `false`.
- * 
- * This function is the counterpart of {@link module:arrays/isempty isempty()} and 
- * {@link module:arrays/hasitems hasitems()}.
+ * [to do]
  * 
  * @example <caption>Example usage of `isempty()`</caption>
  * 
@@ -24,17 +23,14 @@
  * isempty( ' ' ); // returns false
  * 
  * @function isempty
- * @see {@link module:hasitems hasitems()}
+ * @see {@link module:arrays/hasitems hasitems()}
  * @see {@link module:arrays/isempty isempty()}
  * @param {any} collection The collection to check
  * @returns {boolean}
  * 
  */
 function isempty(collection) {
-
-    const itemcount = (collection.length ?? collection.size ?? NaN);
-
-    return (itemcount === 0);
+    return (ZERO_COUNT === (collection.length ?? collection.size));
 }
 
 module.exports = isempty;

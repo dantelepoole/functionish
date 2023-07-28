@@ -4,32 +4,38 @@
 
 'use strict';
 
-const collect = require('./arrays/collect');
+const RESTFUNC_NULL = null;
+
 const head = require('./arrays/head');
 const id = require('./id');
 const isarray = require('./types/isarray');
+const isfunction = require('./types/isfunction');
 const tail = require('./arrays/tail');
+
+const functionmapper = funcs => applynextargument => funcs.map(applynextargument);
 
 function juxtapose(...funcs) {
 
+    const restfunc = isarray( tail(funcs) )
+                   ? head( funcs.pop() )
+                   : RESTFUNC_NULL;
+
+    const mapfunctions = functionmapper(funcs);
+
     return function _juxtapose(...args) {
 
-        const restfunc = isarray( tail(args) )
-                       ? head( args.pop() )
-                       : collect;
-
         let argindex = 0;
-        const applynext = func => (func ?? id).call(this, args[argindex++]);
+        const applynextargument = func => (func ?? id).call(this, args[argindex++]);
 
-        const result = funcs.map(applynext);
+        const results = mapfunctions(applynextargument);
 
-        if(argindex < args.length) {
+        if( isfunction(restfunc) ) {
             const restargs = args.slice(argindex);
-            const restresult = restfunc.call(this, ...restargs);
-            result.push(...restresult);
+            const restresults = restfunc.call(this, ...restargs);
+            results.push(...restresults);
         }
 
-        return result;
+        return results;
     }
 }
 

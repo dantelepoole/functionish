@@ -10,10 +10,12 @@ const format = require('./misc/format');
 const partial = require('./partial');
 const raise = require('./raise');
 
-const badarity = partial(format, ERROR_BAD_ARITY);
 const isinteger = Number.isSafeInteger;
-const raisebadarity = arity => raise( new TypeError( badarity(arity) ) );
-const validatearity = arity => (isinteger(arity) && arity > 0) || raisebadarity(arity);
+const ispositiveinteger = x => isinteger(x) && (x > 0);
+
+const badaritymessage = partial(format, ERROR_BAD_ARITY);
+const badarityerror = arity => raise( new TypeError( badaritymessage(arity) ) );
+const validatearity = arity => ispositiveinteger(arity) || badarityerror(arity);
 
 /**
  * to do
@@ -28,18 +30,21 @@ const validatearity = arity => (isinteger(arity) && arity > 0) || raisebadarity(
  * @returns {function}
  */
 function curry(arity, func) {
-    return validatearity(arity) && initcurry(arity, func);
+    
+    validatearity(arity);
+
+    return initcurry(arity, func, []);
 }
 
-function initcurry(arity, targetfunc, ...curriedargs) {
+function initcurry(arity, target, curriedargs) {
 
     return function _curriedfunction(...args) {
 
         const argcount = curriedargs.length + args.length;
         
-        return (arity < argcount) ? targetfunc.call(this, ...curriedargs, ...args)
-             : (arity === argcount) ? partial(targetfunc, ...curriedargs, ...args)
-             : initcurry(arity, targetfunc, ...curriedargs, ...args);
+        return (arity < argcount) ? target.call(this, ...curriedargs, ...args)
+             : (arity === argcount) ? partial(target, ...curriedargs, ...args)
+             : initcurry(arity, target, [...curriedargs, ...args]);
     }
 }
 

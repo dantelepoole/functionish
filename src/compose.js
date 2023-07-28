@@ -4,6 +4,8 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
 const id = require('./id');
 
 /**
@@ -33,16 +35,14 @@ function compose(...funcs) {
 
     const firstfunc = funcs.pop() ?? id;
 
-    return _composed.bind(firstfunc, funcs);
-}
+    return function _compose(...args) {
 
-function _composed(firstfunc, funcs, ...args) {
-
-    let result = firstfunc(...args);
-
-    for(let i = funcs.length - 1; i >= 0; i -= 1) result = funcs[i](...args);
-
-    return result;
+        let result = firstfunc.call(this, ...args);
+    
+        for(let i = funcs.length - 1; i >= 0; i -= 1) result = funcs[i].call(this, ...args);
+    
+        return result;
+    }
 }
 
 module.exports = compose;

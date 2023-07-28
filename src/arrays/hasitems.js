@@ -4,11 +4,10 @@
 
 'use strict';
 
+const ZERO_COUNT = 0;
+
 /**
- * Return `true` if *collection* has a numeric `length` or `size` property that is not `0`. Otherwise, return `false`.
- * 
- * This function is the counterpart of {@link module:arrays/isempty isempty()} and functions identically
- * to {@link module:arrays/notempty notempty()}.
+ * [to do]
  * 
  * @example <caption>Example usage of `hasitems()`</caption>
  * 
@@ -34,10 +33,7 @@
  * @returns {boolean}
  */
 function hasitems(collection) {
-    
-    const itemcount = (collection.length ?? collection.size ?? NaN);
-
-    return (itemcount > 0);
+    return (ZERO_COUNT < (collection.length ?? collection.size));
 }
 
 module.exports = hasitems;

@@ -10,6 +10,8 @@ const isfunction = require('./types/isfunction');
  * If *expression* is a function, pass *args* to it and return the result. Otherwise, ignore *args* and just return
  * *expression*.
  * 
+ * [to do: use 'this']
+ * 
  * @example <caption>Example usage of `evaluate()`</caption>
  *     
  * const { evaluate } = require('functionish')

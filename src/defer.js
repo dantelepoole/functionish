@@ -8,6 +8,8 @@
  * Return a function that calls *func* with the specified *args*. This function behaves very similar to
  * {@link module:partial partial()} except that the returned function disregards its own arguments.
  * 
+ * [to do: this-value of defer() instead of this-value of returned function]
+ * 
  * @example <caption>Example usage of `defer()`</caption>
  * 
  * const { defer } = require('functionish');

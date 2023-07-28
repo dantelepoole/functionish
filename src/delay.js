@@ -4,7 +4,7 @@
 
 'use strict';
 
-const CONTEXT_NONE = null;
+const THIS_NULL = null;
 
 const curry = require('./curry');
 const defer = require('./defer');
@@ -36,7 +36,7 @@ function delay(delayms, func, ...args) {
     const deferredfunc = defer.call(this, func, ...args);
     const timeoutid = setTimeout(deferredfunc, delayms);
     
-    return clearTimeout.bind(CONTEXT_NONE, timeoutid);
+    return clearTimeout.bind(THIS_NULL, timeoutid);
 }
 
 module.exports = curry(1, delay);

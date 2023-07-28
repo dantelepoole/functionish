@@ -24,9 +24,11 @@ const curry = require('./curry');
  */
 function repeat(count, func, ...args) {
 
+    func = func.bind(this, ...args);
+
     let result = undefined;
 
-    while(count-- > 0) result = func.call(this, ...args);
+    while(count-- > 0) result = func();
 
     return result;
 }

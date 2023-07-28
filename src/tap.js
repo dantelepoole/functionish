@@ -24,7 +24,7 @@
  */
 function tap(func, ...partialargs) {
 
-    return function _tapped(...args) {
+    return function _tap(...args) {
 
         func.call(this, ...partialargs, ...args);
 
