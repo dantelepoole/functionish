@@ -4,6 +4,8 @@
 
 'use strict';
 
+const isiterable = require('./types/isiterable');
+
 /**
  * Return a function that accepts an iterable as its only argument and passes the iterable's items to the *func* function
  * as a spread parameter.
@@ -30,7 +32,10 @@
  */
 module.exports = function uniadic(func, ...partialargs) {
 
-    return function _uniadicfunction(list) {
-        return func.call(this, ...partialargs, ...list);
+    return function _uniadic(arg) {
+
+        return isiterable(arg)
+             ? func.call(this, ...partialargs, ...arg)
+             : func.call(this, ...partialargs, arg);
     }
 }

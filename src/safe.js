@@ -21,7 +21,8 @@ function safe(func, ...partialargs) {
     return function _safe(...args) {
 
         try {
-            return [ ERROR_NULL, func.call(this, ...partialargs, ...args) ];
+            const data = func.call(this, ...partialargs, ...args);
+            return [ ERROR_NULL, data ];
         } catch(error) {
             return [ error ];
         }

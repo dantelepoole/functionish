@@ -4,8 +4,7 @@
 
 'use strict';
 
-const noop = require('./noop');
-const sequence = require('./sequence');
+const partial = require('./partial');
 
 /**
  * [to do]
@@ -15,16 +14,33 @@ const sequence = require('./sequence');
  * [to do]
  * 
  */
-function fork(joinfunc=noop, ...funcs) {
+function fork(...funcs) {
 
-    const runsequence = sequence(...funcs);
+    const forked = partial(_forked, funcs);
 
-    return function _fork(...args) {
+    forked.join = joinfork.bind(funcs);
 
-        const sequenceresults = runsequence.call(this, ...args);
+    return forked;
+}
 
-        return joinfunc.call(this, ...sequenceresults);
+function joinfork(forkfuncs, joinfunc, ...partialargs) {
+
+    return function _forkjoin(...args) {
+
+        const forkresults = _forked.call(this, forkfuncs, ...args);
+
+        return joinfunc.call(this, ...partialargs, ...forkresults);
     }
+
+}
+
+function _forked(funcs, ...args) {
+
+    const results = new Array(funcs.length);
+
+    for(let i = 0; i < funcs.length; i += 1) results[i] = funcs[i].call(this, ...args);
+
+    return results;
 }
 
 module.exports = fork;

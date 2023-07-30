@@ -4,7 +4,10 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
 const curry = require('./curry');
+const partial = require('./partial');
 
 /**
  * to do
@@ -14,25 +17,24 @@ const curry = require('./curry');
  * to do
  * 
  * @function wrap
- * @param {function} wrapperfunc The function to wrap *func* with
- * @param {function} func The function to wrap
+ * @param {function} wrapperfunc The function to wrap *targetfunc* with
+ * @param {function} targetfunc The function to wrap
  * @returns {function}
  */
-function wrap(wrapperfunc, func, ...partialargs) {
+function wrap(wrapperfunc, targetfunc, ...partialargs) {
 
-    if( isarray(wrapperfunc) ) return _wrapmany.bind(null, wrapperfunc, func, ...partialargs);
+    return isarray(wrapperfunc)
+         ? _wrappedcompose.bind(THIS_NULL, wrapperfunc, targetfunc, ...partialargs)
+         : partial(wrapperfunc, targetfunc, ...partialargs);
 
-    return function _wrap(...args) {
-        return wrapperfunc(func, ...partialargs, ...args);
-    }
 }
 
-function _wrapmany(wrapfuncs, targetfunc, ...args) {
+function _wrappedcompose(wrappers, targetfunc, ...args) {
 
     let index = 0;
-    const next = (...nextargs) => (index === wrapfuncs.length)
-                                ? targetfunc.call(this, ...partialargs, ...nextargs)
-                                : wrapfuncs[index++].call(this, next, ...nextargs);
+    const next = (...nextargs) => (index === wrappers.length)
+                                ? targetfunc(...nextargs)
+                                : wrappers[index++](next, ...nextargs);
 
     return next(...args);
 }

@@ -31,7 +31,7 @@
  */
 function variadic(func, ...partialargs) {
     
-    return function _variadicfunction(...args) {
+    return function _variadic(...args) {
         return func.call(this, ...partialargs, args);
     }
 }

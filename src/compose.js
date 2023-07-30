@@ -35,14 +35,16 @@ function compose(...funcs) {
 
     const firstfunc = funcs.pop() ?? id;
 
-    return function _compose(...args) {
+    return runcompose.bind(THIS_NULL, firstfunc, funcs);
+}
 
-        let result = firstfunc.call(this, ...args);
-    
-        for(let i = funcs.length - 1; i >= 0; i -= 1) result = funcs[i].call(this, ...args);
-    
-        return result;
-    }
+function runcompose(firstfunc, funcs, ...args) {
+
+    let result = firstfunc(...args);
+
+    for(let i = funcs.length; i >= 0; i -= 1) result = funcs[i](result);
+
+    return result;
 }
 
 module.exports = compose;

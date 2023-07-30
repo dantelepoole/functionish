@@ -7,7 +7,8 @@
 const RESULT_UNDEFINED = undefined;
 
 const id = require('./id');
-const isvoid = require('./types/isvoid');
+const partial = require('./partial');
+const notvoid = require('./types/notvoid');
 
 /**
  * Return a function that passes its arguments to each *func* in order and returns the return value
@@ -32,29 +33,29 @@ function fallback(...funcs) {
 
     const finalfunc = funcs.pop() ?? id;
 
-    return function _fallback(...args) {
-        return attemptall(this, funcs, args) ?? finalfunc.call(this, ...args);
-    }
+    return partial(_fallback, finalfunc, funcs);
 }
 
-function attemptall(context, funcs, args) {
+function _fallback(finalfunc, funcs, ...args) {
 
     for(let i = 0; i < funcs.length; i += 1) {
 
-        const result = attempt(context, funcs[i], args);
-        if( isvoid(result) ) continue;
+        const result = attempt(this, funcs[i], args);
 
-        return result;
+        if( notvoid(result) ) return result;
     }
+
+    return finalfunc.call(this, ...args);
 }
 
-function attempt(context, func, args) {
+function attempt(thiscontext, func, args) {
 
     try {
-        return func.call(context, ...args);
+        return func.call(thiscontext, ...args);
     } catch (error) {
         return RESULT_UNDEFINED;
     }
+
 }
 
 module.exports = fallback;

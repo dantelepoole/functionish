@@ -6,6 +6,9 @@
 
 const curry = require('./curry');
 
+const hasnumbertype = x => (typeof x === 'number');
+const ispositiveinteger = x => (x >= 0) && Number.isSafeInteger(x);
+
 /**
  * Set the arity (number of parameters) for *func*. This function returns a new function that always passes *arity*
  * number of arguments to *func*, regardless of the number of arguments it actually receives. 
@@ -37,12 +40,24 @@ const curry = require('./curry');
  */
 function witharity(arity, func) {
 
+    validatearity(arity);
+
     return function _witharity(...args) {
         
         args.length = arity;
 
         return func.call(this, ...args);
     }
+}
+
+function validatearity(arity) {
+
+    if( ispositiveinteger(arity) ) return arity;
+
+    const explanation = hasnumbertype(arity) ? `is ${arity}` : `has type ${typeof arity}`;
+
+    const errormessage = `witharity(): The arity ${explanation}. Expected a positive integer.`;
+    throw new TypeError(errormessage);
 }
 
 module.exports = curry(1, witharity);

@@ -4,13 +4,11 @@
 
 'use strict';
 
-const ERROR_NONE = null;
-const FINALLY_RESULT_NONE = undefined;
+const ERROR_NULL = null;
+const NOT_RESOLVED = Symbol.for('functionish/tryfinally/#NOT_RESOLVED');
 
 const curry = require('./curry');
 const raise = require('./misc/raise');
-const safe = require('./safe');
-const trycatch = require('./trycatch');
 
 /**
  * to do
@@ -24,21 +22,30 @@ const trycatch = require('./trycatch');
  * @param {function} func The function to run
  * @returns {any}
  */
-function tryfinally(onerror=raise, onfinally, func, ...partialargs) {
-
-    const safefunc = safe(
-        trycatch(onerror, func, ...partialargs)
-    )
+function tryfinally(onfinally, func, ...partialargs) {
 
     return function _tryfinally(...args) {
 
-        const [error, data] = safefunc.call(this, ...args);
+        let resolvedresult = NOT_RESOLVED;
+        const resolve = value => (resolvedresult = value);
+        
+        const [data, iserror] = runsafe(this, func, ...partialargs, ...args);
 
-        const finallyresult = onfinally.call(this, error, data);
+        onfinally.call(this, data, iserror, resolve);
 
-        return (finallyresult !== FINALLY_RESULT_NONE) ? finallyresult
-             : (error === ERROR_NONE) ? data
-             : raise(error);
+        return (resolvedresult !== NOT_RESOLVED) ? resolvedresult
+             : iserror ? raise(data)
+             : data;
+    }
+}
+
+function runsafe(thiscontext, func, ...args) {
+
+    try {
+        const data = func.call(thiscontext, ...args);
+        return [data, false];
+    } catch(error) {
+        return [error, true];
     }
 }
 

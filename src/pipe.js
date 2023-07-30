@@ -34,15 +34,16 @@ function pipe(...funcs) {
 
     const firstfunc = funcs.shift() ?? id;
 
-    return function _pipe(...args) {
+    return runpipe.bind(THIS_NULL, firstfunc, funcs);
+}
 
-        let result = firstfunc.call(this, ...args);
+function runpipe(firstfunc, funcs, ...args) {
 
-        for(let i = 0; i < funcs.length; i += 1) result = funcs[i].call(this, ...args);
+    let result = firstfunc(...args);
 
-        return result;
-    }
+    for(let i = 0; i < funcs.length; i += 1) result = funcs[i](result);
 
+    return result;
 }
 
 module.exports = pipe;

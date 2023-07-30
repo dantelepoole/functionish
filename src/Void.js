@@ -16,8 +16,8 @@ const isfunction = require('./types/isfunction');
  * @function Void
  * @returns {function}
  */
-function Void(value, ...args) {
-    isfunction(value) && value.call(this, ...args);
+function Void(expression, ...args) {
+    isfunction(expression) && expression.call(this, ...args);
 }
 
 module.exports = Void;
