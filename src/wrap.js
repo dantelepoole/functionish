@@ -33,7 +33,7 @@ function _wrappedcompose(wrappers, targetfunc, ...args) {
 
     let index = 0;
     const next = (...nextargs) => (index === wrappers.length)
-                                ? targetfunc(...nextargs)
+                                ? targetfunc(...args, ...nextargs)
                                 : wrappers[index++](next, ...nextargs);
 
     return next(...args);

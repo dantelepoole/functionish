@@ -4,10 +4,7 @@
 
 'use strict';
 
-const RESULT_UNDEFINED = undefined;
-
 const id = require('./id');
-const partial = require('./partial');
 const notvoid = require('./types/notvoid');
 
 /**
@@ -33,19 +30,21 @@ function fallback(...funcs) {
 
     const finalfunc = funcs.pop() ?? id;
 
-    return partial(_fallback, finalfunc, funcs);
+    return function _fallback(...args) {
+        return _runfallback(this, finalfunc, funcs, args);
+    }
 }
 
-function _fallback(finalfunc, funcs, ...args) {
+function _runfallback(thiscontext, finalfunc, funcs, args) {
 
     for(let i = 0; i < funcs.length; i += 1) {
 
-        const result = attempt(this, funcs[i], args);
+        const result = attempt(thiscontext, funcs[i], args);
 
         if( notvoid(result) ) return result;
     }
 
-    return finalfunc.call(this, ...args);
+    return finalfunc.call(thiscontext, ...args);
 }
 
 function attempt(thiscontext, func, args) {
@@ -53,7 +52,7 @@ function attempt(thiscontext, func, args) {
     try {
         return func.call(thiscontext, ...args);
     } catch (error) {
-        return RESULT_UNDEFINED;
+        return undefined;
     }
 
 }

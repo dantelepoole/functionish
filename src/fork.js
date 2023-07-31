@@ -16,25 +16,27 @@ const partial = require('./partial');
  */
 function fork(...funcs) {
 
-    const forked = partial(_forked, funcs);
+    function _forked(...args) {
+        return _runfork.call(this, funcs, args);
+    }
 
-    forked.join = joinfork.bind(funcs);
+    _forked.join = joinfork.bind(funcs);
 
-    return forked;
+    return _forked;
 }
 
 function joinfork(forkfuncs, joinfunc, ...partialargs) {
 
-    return function _forkjoin(...args) {
+    return function _runforkjoin(...args) {
 
-        const forkresults = _forked.call(this, forkfuncs, ...args);
+        const forkresults = _runfork.call(this, forkfuncs, args);
 
         return joinfunc.call(this, ...partialargs, ...forkresults);
     }
 
 }
 
-function _forked(funcs, ...args) {
+function _runfork(funcs, args) {
 
     const results = new Array(funcs.length);
 

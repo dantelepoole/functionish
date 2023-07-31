@@ -4,10 +4,10 @@
 
 'use strict';
 
-const ERROR_NULL = null;
 const NOT_RESOLVED = Symbol.for('functionish/tryfinally/#NOT_RESOLVED');
 
 const curry = require('./curry');
+const isfunction = require('./types/isfunction');
 const raise = require('./misc/raise');
 
 /**
@@ -23,6 +23,8 @@ const raise = require('./misc/raise');
  * @returns {any}
  */
 function tryfinally(onfinally, func, ...partialargs) {
+
+    validatefunction(func);
 
     return function _tryfinally(...args) {
 
@@ -47,6 +49,14 @@ function runsafe(thiscontext, func, ...args) {
     } catch(error) {
         return [error, true];
     }
+}
+
+function validatefunction(func) {
+
+    if( isfunction(func) ) return func;
+
+    const errormessage = `tryfinally(): The function has type ${typeof func}. Expected a function.`;
+    throw new TypeError(errormessage);
 }
 
 module.exports = curry(2, tryfinally);
