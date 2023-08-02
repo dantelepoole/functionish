@@ -4,6 +4,8 @@
 
 'use strict';
 
+const isfunction = require('./types/isfunction');
+
 /** 
  * to do
  * 
@@ -14,7 +16,10 @@
  * @function False
  * @returns {function}
  */
-function False() {
+function False(expression, ...args) {
+
+    isfunction(expression) && expression.call(this, ...args);
+
     return false;
 }
 

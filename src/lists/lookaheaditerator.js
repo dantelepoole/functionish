@@ -25,9 +25,7 @@ class LookAheadIterator {
 
     }
     
-    #updatenextitem() {
-
-        if( this.#nextitem.done ) return;
+    #advanceiterator() {
 
         this.#nextitem = this.#iterator.next();
         this.#count += 1;
@@ -37,9 +35,13 @@ class LookAheadIterator {
 
         const currentitem = this.#nextitem;
 
-        this.#updatenextitem();
+        currentitem.done || this.#advanceiterator();
 
         return currentitem;
+    }
+
+    nextvalue() {
+        return this.next().value;
     }
 
     get done() {
@@ -54,6 +56,9 @@ class LookAheadIterator {
         return this.#count;
     }
 
+    [Symbol.iterator]() {
+        return this;
+    }
 }
 
 /**

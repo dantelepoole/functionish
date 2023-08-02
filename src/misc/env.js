@@ -7,7 +7,7 @@
 const environment = process.env;
 
 /**
- * Return the value of the environment variable with the specified *name* or `undefined` if no
+ * Return the value of the environment variable with the specified *varname* or `undefined` if no
  * such environment variable has been set.
  * 
  * If called without arguments, returns an object containing all environment variables.
@@ -22,14 +22,14 @@ const environment = process.env;
  * environment.SHELL; // "/bin/bash" or whatever the value of the SHELL environment variable is on your machine
  * 
  * @function env
- * @param {string} key The name of the environment variable
- * @returns 
+ * @param {string} varname The name of the environment variable to return
+ * @returns {string|object}
  */
-function env(key) {
+function env(varname) {
     
-    return key
+    return (arguments.length === 0)
          ? environment
-         : environment[key];
+         : environment[varname];
 }
 
 module.exports = env;

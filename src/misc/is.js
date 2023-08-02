@@ -7,9 +7,8 @@
 const curry = require('../curry');
 
 /**
- * Alias for {@link external:Object.is Object.is()}.
- * 
- * `is()` is curried by default with unary arity.
+ * [to do]
+ * [warning: no NaN]
  * 
  * @example <caption>Example usage of `is()`</caption>
  *     
@@ -22,11 +21,12 @@ const curry = require('../curry');
  * 
  * @function is
  * @see {@link module:isnot isnot()} 
- * @see {@link module:isequal isequal()} 
  * @param {any} a The value to compare with *b*
  * @param  {any} b The value to compare with *a*
  * @returns {boolean}
  */
-const is = Object.is;
+function is(a, b) {
+    return (a === b);
+}
 
 module.exports = curry(1, is);

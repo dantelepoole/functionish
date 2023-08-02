@@ -48,7 +48,7 @@ function maplist(mapfunc, list) {
 
     return {
         [Symbol.iterator] : function* () {
-            for(const value of list) yield mapfunc(value);
+            for(const item of list) yield mapfunc(item);
         }
     }
 }

@@ -7,7 +7,9 @@
 const curry = require('../curry');
 
 /**
- * Return `true` if and only if *a* is deep equal to *b*. Otherwise, return `false`.
+ * Return `true` if and only if *a* is deep strict equal to *b*. Otherwise, return `false`.
+ * 
+ * [Warning: +0 != -0]
  * 
  * `islike()` is curried by default with unary arity.
  * 
@@ -26,7 +28,6 @@ const curry = require('../curry');
  * 
  * @function islike
  * @see {@link module:misc/notlike notlike()} 
- * @see {@link module:misc/isdeepequal isdeepequal()} 
  * @param {any} a The value to compare with *b*
  * @param  {any} b The value to compare with *a*
  * @returns {boolean}

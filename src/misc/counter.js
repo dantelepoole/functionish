@@ -4,6 +4,9 @@
 
 'use strict';
 
+const isinteger = Number.isSafeInteger;
+const isnumber = require('../types/isnumber');
+
 /**
  * to do
  * 
@@ -14,13 +17,30 @@
  * @function counter
  * @returns {function}
  */
-function counter(value=0) {
+function counter(initialvalue=0) {
     
-    const _counter = () => value++;
+    validateinitialvalue(initialvalue);
 
-    _counter.peek = () => value;
+    let countervalue = initialvalue;
+
+    const _counter = () => countervalue++;
+
+    _counter.peek = () => countervalue;
 
     return _counter;
+}
+
+function validateinitialvalue(initialvalue) {
+
+    if( isinteger(initialvalue) ) return initialvalue;
+
+    const valuefault = isnumber(initialvalue)
+                     ? `is ${initialvalue}`
+                     : `has type ${typeof initialvalue}`;
+
+    const errormessage = `counter(): The initialvalue ${valuefault}. Expected an integer number.`;
+
+    return new TypeError(errormessage);
 }
 
 module.exports = counter;

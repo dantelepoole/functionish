@@ -4,6 +4,12 @@
 
 'use strict';
 
+const FILTER_DUPLICATE_VALUE = false;
+const FILTER_UNIQUE_VALUE = true;
+
+const compose = require('../compose');
+const isfunction = require('../types/isfunction');
+
 /**
  * Return a filter function that accepts only unique values and rejects duplicates. If no *hashfunc*
  * is passed, the filter compares values using strict equality. Otherwise, it compare values by the
@@ -36,11 +42,15 @@
  */
 function dedupfilter(hashfunc) {
 
-    const dedup = new Set();
+    const dedupset = new Set();
 
-    return (typeof hashfunc === TYPE_FUNCTION)
-         ? value => (dedup.size !== dedup.add( hashfunc(value) ).size)
-         : value => (dedup.size !== dedup.add(value).size);
+    const _dedupfilter = value => ! (dedupset.has(value) || void(dedupset.add(value)));
+
+    return isfunction(hashfunc)
+         ? compose(_dedupfilter, hashfunc)
+         : _dedupfilter;
+
 }
+
 
 module.exports = dedupfilter;

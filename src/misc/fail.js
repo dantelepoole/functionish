@@ -5,6 +5,7 @@
 'use strict';
 
 const format = require('util').format;
+const isstring = require('../types/isstring');
 
 const INDEX_NOT_FOUND = -1;
 const NAME_NONE = undefined;
@@ -25,29 +26,31 @@ const NAME_SEPARATOR = '~';
  * fail('FortyTwoError~The value %s is not 42', 'foobar');
  * 
  * @function fail
- * @param {string} formatmsg The formatted error message
- * @param  {...any} formatargs The arguments to *formatmsg*
+ * @param {string} messageformat The formatted error message
+ * @param  {...any} messageargs The arguments to *formatmsg*
  * @throws {any}
  */
-function fail(formatmsg, ...formatargs) {
+function fail(messageformat, ...messageargs) {
 
-    const formattedmessage = format(formatmsg, ...formatargs);
-    const [name, message] = parseformatmsg(formattedmessage);
+    const formattedmessage = format(messageformat, ...messageargs);
+
+    const {name, message} = parsemessage(formattedmessage);
 
     const error = new Error(message);
 
-    if(name !== NAME_NONE) error.name = name;
+    isstring(name) && (error.name = name);
 
     throw error;
 }
 
-function parseformatmsg(formatmsg) {
+function parsemessage(message) {
 
-    const index = formatmsg.indexOf(NAME_SEPARATOR);
+    const index = message.indexOf(NAME_SEPARATOR);
 
     return (index === INDEX_NOT_FOUND)
-         ? [NAME_NONE, formatmsg]
-         : [formatmsg.slice(0, index), formatmsg.slice(index+1)];
+         ? { message }
+         : { errorname:message.slice(0, index), message:message.slice(index + 1) }
+
 }
 
 module.exports = fail;

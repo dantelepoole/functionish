@@ -7,7 +7,8 @@
 const curry = require('../curry');
 
 /**
- * Functional variant of {@link external:String.prototype.endsWith String.prototype.endsWith()}.
+ * Functional variant of {@link external:String.prototype.endsWith String.prototype.endsWith()}. Return `true` if
+ * ths string *source* contains the *searchstring*.
  * 
  * If *source* is not a string, an error is thrown.
  * 
@@ -22,12 +23,12 @@ const curry = require('../curry');
  * @function endswith
  * @see {@link external:String.prototype.endsWith String.prototype.endsWith()}
  * @see {@link module:misc/startswith startswith()}
- * @param {string} target The target string to check for
+ * @param {string} searchstring The target string to search for
  * @param {string} source The source string to check
  * @returns {boolean}
  */
-function endswith(target, source) {
-    return source.endsWith(target);
+function endswith(searchstring, source) {
+    return source.endsWith(searchstring);
 }
 
 module.exports = curry(1, endswith);

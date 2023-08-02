@@ -7,7 +7,8 @@
 const curry = require('./curry');
 
 /**
- * Return `true` if *object* has a property under the specified *key* with a value that is not `undefined`.
+ * Return `true` if *source* has a property under the specified *key* with a value that is not `undefined`. This
+ * function checks both own properties and inherited properties of *source*.
  * 
  * `haskey()` is curried by default with unary arity.
  * 
@@ -22,11 +23,11 @@ const curry = require('./curry');
  * 
  * @function haskey
  * @param {any} key The key to search for
- * @param {object} object The object to search
+ * @param {object} source The object to search
  * @returns {boolean}
  */
-function haskey(key, object) {
-    return (object[key] !== undefined);
+function haskey(key, source) {
+    return (source[key] !== undefined);
 }
 
 module.exports = curry(1, haskey);

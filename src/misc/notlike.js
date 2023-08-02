@@ -10,6 +10,8 @@ const islike = require('./islike');
 /**
  * Return `true` if and only if *a* is deep equal to *b*. Otherwise, return `false`.
  * 
+ * [Warning: +0 != -0]
+ * 
  * `islike()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `notlike()`</caption>

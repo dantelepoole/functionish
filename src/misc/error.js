@@ -4,13 +4,9 @@
 
 'use strict';
 
-const EMPTY_STRING = '';
-const NAME_DEFAULT = 'Error';
-
 const curry = require('../curry');
 const format = require('./format');
-
-const tostring = str => String(str ?? EMPTY_STRING);
+const isstring = require('../types/isstring') 
 
 /**
  * to do
@@ -21,14 +17,17 @@ const tostring = str => String(str ?? EMPTY_STRING);
  * 
  * @function error
  */
-function error(name=NAME_DEFAULT, message, ...messageargs) {
+function error(errorname, messageformat, ...messageargs) {
     
-    const formattedmessage = format(message, ...messageargs);
-    const err = new Error(formattedmessage);
+    const errormessage = (messageargs.length > 0)
+                       ? format(messageformat, ...messageargs)
+                       : messageformat;
 
-    (name === NAME_DEFAULT) || (err.name = tostring(name));
+    const errorinstance = new Error(errormessage);
 
-    return err;
+    isstring(errorname) && (errorinstance.name = errorname);
+
+    return errorinstance;
 }
 
 module.exports = curry(1, error);

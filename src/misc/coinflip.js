@@ -4,8 +4,10 @@
 
 'use strict';
 
+const random = Math.random;
+
 /**
- * Return either `true` of `false` with 50/50% probability. Pass a number between 0
+ * Return either `true` or `false` with 50/50% probability. Pass a number between 0
  * and 1 (inclusive) to adjust the probability of returning `true`.
  * 
  * @example <caption>Example usage of `coalesce()`</caption>
@@ -23,7 +25,7 @@
  * @returns {boolean}
  */
 function coinflip(probability=0.5) {
-    return (Math.random() < probability);
+    return (random() < probability);
 }
 
 module.exports = coinflip;

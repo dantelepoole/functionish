@@ -5,12 +5,14 @@
 'use strict';
 
 const curry = require('./curry');
+const isfunction = require('../types/isfunction');
 
 const hasownproperty_native = Object.prototype.hasOwnProperty;
 
+const hasownexists = isfunction(Object.hasOwn);
+
 /**
- * Alias for {@link external:Object.prototype.hasOwnProperty Object.property.hasOwnProperty()}
- * with flipped parameters.
+ * [to do]
  * 
  * `hasownproperty()` is curried by default with unary arity.
  * 
@@ -20,7 +22,10 @@ const hasownproperty_native = Object.prototype.hasOwnProperty;
  * @returns {boolean}
  */
 function hasownproperty(key, object) {
-    return hasownproperty_native.call(object, key)
+
+    return hasownexists
+         ? Object.hasOwn(object, key)
+         : hasownproperty_native.call(object, key);
 }
 
 module.exports = curry(1, hasownproperty);

@@ -22,7 +22,6 @@ const curry = require('../curry');
  * 
  * @function isnot
  * @see {@link module:misc/is is()}
- * @see {@link module:misc/notequal notequal()} 
  * @param {any} a The value to compare with *b*
  * @param  {any} b The value to compare with *a*
  * @returns {boolean}
