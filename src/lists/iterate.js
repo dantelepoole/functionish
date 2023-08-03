@@ -4,6 +4,8 @@
 
 'use strict';
 
+const RESULT_NONE = Symbol.for('functionish/lists/iterate/NOT_ABORTED');
+
 const curry = require('../curry');
 
 /**
@@ -25,7 +27,15 @@ const curry = require('../curry');
  */
 function iterate(func, list) {
 
-    for(const value of list) func(value);
+    let result = RESULT_NONE;
+    const abort = data => (result = data);
+
+    for(const item of list) {
+        
+        func(item, abort);
+
+        if(result !== RESULT_NONE) return result;
+    }
 
     return list;
 }

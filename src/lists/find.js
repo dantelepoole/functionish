@@ -29,7 +29,7 @@ const curry = require('../curry');
  * @returns {any}
  */
 function find(predicate, list) {
-    for(const value of list) if( predicate(value) ) return value;
+    for(const item of list) if( predicate(item) ) return item;
 }
 
 module.exports = curry(1, find);

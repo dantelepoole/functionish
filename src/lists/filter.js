@@ -51,7 +51,7 @@ function filteriterable(predicate, list) {
 
     return {
         *[Symbol.iterator]() {
-            for(const value of list) predicate(value) && (yield value);
+            for(const item of list) if( predicate(item) ) yield item;
         }
     }
 }

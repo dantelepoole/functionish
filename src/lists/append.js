@@ -5,7 +5,8 @@
 'use strict';
 
 const EMPTY_STRING = '';
-const TYPE_STRING = 'string';
+
+const isstring = require('../types/isstring');
 
 /**
  * to do
@@ -14,7 +15,7 @@ const TYPE_STRING = 'string';
  */
 function append(base, ...items) {
 
-    return (typeof base === TYPE_STRING)
+    return isstring(base)
          ? base + items.join(EMPTY_STRING)
          : appenditerable(base, items);
 }

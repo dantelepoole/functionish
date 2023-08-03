@@ -44,20 +44,20 @@ function batchiterable(batchsize, list) {
     
         [Symbol.iterator] : function* () {
 
-            let batch = [];
+            const batch = [];
 
             for(const item of list) {
         
-                batch.push(item);
+                const itemcount = batch.push(item);
         
-                if(batch.length < batchsize) continue;
+                if(itemcount === batchsize) {
+                    yield batch.slice();
+                    batch.length = 0;
+                }
 
-                yield batch;
-                
-                batch = [];
             }
         
-            batch.length && (yield batch);
+            if(batch.length > 0) yield batch;
         }
     }
 }

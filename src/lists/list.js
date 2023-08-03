@@ -4,7 +4,7 @@
 
 'use strict';
 
-const List = require('../../lib/List');
+// const List = require('../../lib/List');
 
 const isfunction = require('../types/isfunction');
 
@@ -13,8 +13,8 @@ const raisenotiterable = () => { throw new TypeError(`The argument is not iterab
 
 function list(source) {
     
-    return isfunction(source) ? new List( { [Symbol.iterator]:source } )
-         : isiterable(source) ? new List(source)
+    return isfunction(source) ? { [Symbol.iterator]:source } // new List( { [Symbol.iterator]:source } )
+         : isiterable(source) ? { [Symbol.iterator]:source[Symbol.iterator] } // new List(source)
          : raisenotiterable();
 }
 
