@@ -1,5 +1,5 @@
 /**
- * @module arrays/notempty
+ * @module misc/notempty
  */
 
 'use strict';

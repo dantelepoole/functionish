@@ -1,5 +1,5 @@
 /**
-* @module arrays/hasitems
+* @module misc/hasitems
 */
 
 'use strict';

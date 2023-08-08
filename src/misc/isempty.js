@@ -1,5 +1,5 @@
 /**
- * @module arrays/isempty
+ * @module misc/isempty
  */
 
 'use strict';
