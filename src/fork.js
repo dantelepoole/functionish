@@ -4,8 +4,6 @@
 
 'use strict';
 
-const partial = require('./partial');
-
 /**
  * [to do]
  * 

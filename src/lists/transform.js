@@ -4,31 +4,32 @@
 
 'use strict';
 
-const THIS_NULL = null;
 const FILTER_ACCEPT = true;
-const FILTER_REJECT = false;
+const FILTER_DISCARD = false;
+const THIS_NULL = null;
+const TRANSFORM_DISCARD = null;
+
+const curry = require('../curry');
 
 const isfunction = require('../types/isfunction');
 
-function transform(...transformations) {
+function transform(transformations, source) {
 
-    const valuetransformer = transformvalue.bind(THIS_NULL, transformations);
+    const transformer = transformvalue.bind(THIS_NULL, transformations);
 
-    const _transform = source => isfunction(source)
-                               ? transformreducer.bind(THIS_NULL, valuetransformer, source)
-                               : transformlist(valuetransformer, source);
-
-    return _transform;
+    return isfunction(source)
+         ? transformreducer.bind(THIS_NULL, transformer, source)
+         : transformlist(transformer, source);
 }
 
 function transformvalue(transformations, value) {
 
-    for(const transformation of transformations) {
+    for(let index = 0; index < transformations.length; index += 1) {
 
-        const transformedvalue = transformation(value);
+        const transformedvalue = transformations[index](value);
 
+        if(transformedvalue === FILTER_DISCARD) return TRANSFORM_DISCARD;
         if(transformedvalue === FILTER_ACCEPT) continue;
-        if(transformedvalue === FILTER_REJECT) return null;
 
         value = transformedvalue;
     }
@@ -45,7 +46,7 @@ function transformlist(transformer, list) {
 
                 const transformresult = transformer(item);
 
-                if(transformresult !== null) yield transformresult.value;
+                if(transformresult !== TRANSFORM_DISCARD) yield transformresult.value;
             }
         }
     }
@@ -55,9 +56,9 @@ function transformreducer(transformer, reducer, accumulator, value) {
 
     const transformresult = transformer(value);
 
-    return (transformresult === null)
+    return (transformresult === TRANSFORM_DISCARD)
          ? accumulator
          : reducer(accumulator, transformresult.value);
 }
 
-module.exports = transform;
+module.exports = curry(1, transform);

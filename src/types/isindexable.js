@@ -4,7 +4,11 @@
 
 'use strict';
 
+const isempty = require('../arrays/isempty');
+const isstring = require('../types/isstring');
+
 const hasownproperty = Object.prototype.hasOwnProperty;
+const isarray = Array.isArray;
 
 /**
  * Return `true` if *value* is an indexable object
@@ -36,9 +40,9 @@ const hasownproperty = Object.prototype.hasOwnProperty;
 
 module.exports = function isindexable(indexable) {
 
-    return Array.isArray(indexable)
+    return isarray(indexable)
             ||
-           typeof indexable === 'string'
+           isstring(indexable)
             ||
            iscustomindexable(indexable);
 }
@@ -48,15 +52,12 @@ function hasnumericlengthproperty(indexable) {
 }
 
 function hasextremeindexproperties(indexable) {
-
-    return (indexable.length === 0)
-            ||
-           (hasownproperty(indexable, 0) && hasownproperty(indexable, indexable.length - 1));
+    return hasownproperty(indexable, 0) && hasownproperty(indexable, indexable.length - 1);
 }
 
 function iscustomindexable(indexable) {
 
     return hasnumericlengthproperty(indexable)
             &&
-           hasextremeindexproperties(indexable);
+           (isempty(indexable) || hasextremeindexproperties(indexable));
 }

@@ -28,7 +28,7 @@ function repeat(count, func, ...args) {
 
     let result = undefined;
 
-    while(count-- > 0) result = func();
+    for(; count > 0; count -= 1 ) result = func();
 
     return result;
 }

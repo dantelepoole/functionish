@@ -6,6 +6,8 @@
 
 const THIS_NULL = null;
 
+const id = require('./id');
+
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
  * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
@@ -32,16 +34,16 @@ const THIS_NULL = null;
  */
 function pipe(...funcs) {
 
-    const firstfunc = funcs.shift() ?? id;
-
-    return runpipe.bind(THIS_NULL, firstfunc, funcs);
+    return (funcs.length > 0)
+         ? _pipe.bind(THIS_NULL, funcs)
+         : id;
 }
 
-function runpipe(firstfunc, funcs, ...args) {
+function _pipe(funcs, ...args) {
 
-    let result = firstfunc(...args);
+    let result = funcs[0](...args);
 
-    for(let i = 0; i < funcs.length; i += 1) result = funcs[i](result);
+    for(let index = 1; index < funcs.length; index += 1) result = funcs[index](result);
 
     return result;
 }

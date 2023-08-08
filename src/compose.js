@@ -33,18 +33,20 @@ const id = require('./id');
  */
 function compose(...funcs) {
 
-    const firstfunc = funcs.pop() ?? id;
-
-    return runcompose.bind(THIS_NULL, firstfunc, funcs);
+    return (funcs.length > 0)
+         ? _compose.bind(THIS_NULL, funcs)
+         : id;
 }
 
-function runcompose(firstfunc, funcs, ...args) {
+function _compose(funcs, ...args) {
 
-    let result = firstfunc(...args);
+    let index = funcs.length - 1;
+    let result = funcs[index](...args);
 
-    for(let i = funcs.length; i >= 0; i -= 1) result = funcs[i](result);
+    for(index -= 1; index >= 0; index -= 1) result = funcs[index](result);
 
     return result;
 }
+
 
 module.exports = compose;

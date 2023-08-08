@@ -21,14 +21,14 @@ const notfunction = require('./types/notfunction');
  * @function when
  * @returns {function}
  */
-function when(condition, truebranch, falsebranch=id) {
+function when(condition, truebranch, falsebranch) {
 
     return isfunction(condition) ? whenfactory(condition, truebranch, falsebranch)
          : condition ? truebranch
          : falsebranch;
 }
 
-function whenfactory(condition, truebranch, falsebranch) {
+function whenfactory(condition, truebranch, falsebranch=id) {
 
     function _when(...args) {
 
