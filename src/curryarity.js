@@ -18,7 +18,7 @@ const CurryArity = require('../curry').CurryArity;
  * @returns {number}
  */
 function curryarity(func) {
-    return +(func?.[CurryArity]);
+    return (func[CurryArity] ?? NaN);
 }
 
 module.exports = curryarity;

@@ -40,14 +40,16 @@ function pipe(...funcs) {
             ||
            (funcs.length === 2 && bipipe(funcs[0], funcs[1]))
             ||
-           (funcs[0] ?? id);
+           (funcs.length === 1 && funcs[0])
+            ||
+           id;
 }
 
 function _pipe(firstfunc, funcs, ...args) {
 
     let result = firstfunc(...args);
 
-    for(let index = 0; index < funcs.length; index += 1) result = funcs[index](result);
+    for(let i = 0; i < funcs.length; i += 1) result = funcs[i](result);
 
     return result;
 }

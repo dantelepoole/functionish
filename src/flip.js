@@ -4,13 +4,9 @@
 
 'use strict';
 
-const CurryArity = require('./curry').CurryArity;
-
 const curry = require('./curry');
 const curryarity = require('./curryarity');
-const iscurriedfunction = require('./types/iscurriedfunction');
-
-const copycurry = (source, target) => curry( curryarity(source), target );
+const iscurried = require('./types/iscurried');
 
 /**
  * to do
@@ -25,13 +21,11 @@ const copycurry = (source, target) => curry( curryarity(source), target );
  */
 function flip(targetfunc) {
     
-    function flippedfunction(a, b, ...args) {
-        return targetfunc.call(this, b, a, ...args);
-    }
+    const flippedfunction = (a, b, ...args) => targetfunc(b, a, ...args);
     
-    iscurriedfunction(targetfunc) && copycurry(targetfunc, flippedfunction);
-
-    return flippedfunction;
+    return iscurried(targetfunc)
+         ? curry( curryarity(targetfunc), flippedfunction )
+         : flippedfunction;
 }
 
 module.exports = flip;

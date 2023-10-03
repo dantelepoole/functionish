@@ -4,6 +4,10 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
+const curryarity = require('./curryarity');
+
 /**
  * [to do: this value]
  * 
@@ -25,9 +29,10 @@
  */
 function partial(targetfunc, ...partialargs) {
 
-    return function _partial(...args) {
-        return targetfunc.call(this, ...partialargs, ...args);
-    }
+    return (partialargs.length === 0) ? targetfunc
+         : (partialargs.length <= curryarity(targetfunc)) ? targetfunc(...partialargs)
+         : targetfunc.bind(THIS_NULL, ...partialargs);
+
 }
 
 module.exports = partial;

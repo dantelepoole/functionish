@@ -51,14 +51,14 @@ function _curried(func, arity, ...args) {
 
     arity -= args.length;
 
-    return (arity < 0) ? func.call(this, ...args)
-         : (arity === 0) ? partial(func, ...args)
+    return (arity < 0) ? func(...args)
+         : (arity === 0) ? func.bind(THIS_NULL, ...args)
          : applycurry(func, arity, args);
 }
 
 function applycurry(func, arity, curriedargs=[]) {
 
-    const curried = partial(_curried, func, arity, ...curriedargs);
+    const curried = _curried.bind(THIS_NULL, func, arity, ...curriedargs);
 
     curried[CurryArity] = arity;
 

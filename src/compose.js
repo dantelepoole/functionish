@@ -39,14 +39,16 @@ function compose(...funcs) {
             ||
            (funcs.length === 2 && bicompose(funcs[0], funcs[1]))
             ||
-           (funcs[0] ?? id);
+           (funcs.length === 1 && funcs[0])
+            ||
+           id;
 }
 
 function _compose(firstfunc, funcs, ...args) {
 
     let result = firstfunc(...args);
 
-    for(let index = funcs.length - 1; index >= 0; index -= 1) result = funcs[index](result);
+    for(let i = funcs.length - 1; i >= 0; i -= 1) result = funcs[i](result);
 
     return result;
 }
