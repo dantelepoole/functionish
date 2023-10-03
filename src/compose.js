@@ -8,6 +8,8 @@ const THIS_NULL = null;
 
 const id = require('./id');
 
+const bicompose = (f,g) => (...args) => f( g(...args) );
+
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
  * from right to left. See {@link module:pipe pipe()} for further details.
@@ -33,17 +35,18 @@ const id = require('./id');
  */
 function compose(...funcs) {
 
-    return (funcs.length > 0)
-         ? _compose.bind(THIS_NULL, funcs)
-         : id;
+    return (funcs.length > 2 && _compose.bind(THIS_NULL, funcs.pop(), funcs))
+            ||
+           (funcs.length === 2 && bicompose(funcs[0], funcs[1]))
+            ||
+           (funcs[0] ?? id);
 }
 
-function _compose(funcs, ...args) {
+function _compose(firstfunc, funcs, ...args) {
 
-    let index = funcs.length - 1;
-    let result = funcs[index](...args);
+    let result = firstfunc(...args);
 
-    for(index -= 1; index >= 0; index -= 1) result = funcs[index](result);
+    for(let index = funcs.length - 1; index >= 0; index -= 1) result = funcs[index](result);
 
     return result;
 }

@@ -5,8 +5,6 @@
 'use strict';
 
 /**
- * Partial apply the *targetfunc*-function by binding to *partialargs*.  
- * 
  * [to do: this value]
  * 
  * @example <caption>Example usage of `partial()`</caption>
@@ -30,7 +28,6 @@ function partial(targetfunc, ...partialargs) {
     return function _partial(...args) {
         return targetfunc.call(this, ...partialargs, ...args);
     }
-
 }
 
 module.exports = partial;

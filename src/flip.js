@@ -4,31 +4,34 @@
 
 'use strict';
 
+const CurryArity = require('./curry').CurryArity;
+
 const curry = require('./curry');
+const curryarity = require('./curryarity');
+const iscurriedfunction = require('./types/iscurriedfunction');
+
+const copycurry = (source, target) => curry( curryarity(source), target );
 
 /**
  * to do
  * 
  * @example <caption>Example usage of `flip()`</caption>
  * 
- * const flip = require('functionish/flip');
- * 
- * const isgreaterthan = (x,y) => (x > y);
- * const islessthanorequal = flip(isgreaterthan);
- * 
- * isgreaterthan(1,42);     // returns false
- * islessthanorequal(1,42); // returns true
+ * [to do]
  * 
  * @function flip
- * @param {function} func The function to flip the arguments for
- * @param {...any[]} partialargs Optional arguments to pass to *func* before the flipped arguments
+ * @param {function} targetfunc The function to flip the arguments for
  * @returns {function}
  */
-function flip(func, ...partialargs) {
+function flip(targetfunc) {
     
-    return function _flip(a, b, ...args) {
-        return func.call(this, ...partialargs, b, a, ...args);
+    function flippedfunction(a, b, ...args) {
+        return targetfunc.call(this, b, a, ...args);
     }
+    
+    iscurriedfunction(targetfunc) && copycurry(targetfunc, flippedfunction);
+
+    return flippedfunction;
 }
 
 module.exports = flip;

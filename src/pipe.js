@@ -8,6 +8,8 @@ const THIS_NULL = null;
 
 const id = require('./id');
 
+const bipipe = (f, g) => (...args) => g( f(...args) );
+
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
  * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
@@ -34,16 +36,18 @@ const id = require('./id');
  */
 function pipe(...funcs) {
 
-    return (funcs.length > 0)
-         ? _pipe.bind(THIS_NULL, funcs)
-         : id;
+    return (funcs.length > 2 && _pipe.bind(THIS_NULL, funcs.shift(), funcs))
+            ||
+           (funcs.length === 2 && bipipe(funcs[0], funcs[1]))
+            ||
+           (funcs[0] ?? id);
 }
 
-function _pipe(funcs, ...args) {
+function _pipe(firstfunc, funcs, ...args) {
 
-    let result = funcs[0](...args);
+    let result = firstfunc(...args);
 
-    for(let index = 1; index < funcs.length; index += 1) result = funcs[index](result);
+    for(let index = 0; index < funcs.length; index += 1) result = funcs[index](result);
 
     return result;
 }

@@ -4,6 +4,20 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
+const applicable = require('./applicable');
+const isempty = require('./misc/isempty');
+const partial = require('./partial');
+
+const runfork = (funcs, args) => funcs.map( applicable(...args) );
+
+const buildfork = funcs => (...args) => runfork(funcs, args);
+const buildforkjoin = (funcs, joinfunc) => (...forkargs) => joinfunc( ...runfork(funcs, forkargs) );
+const initforkjoin = funcs => (joinfunc, ...partialargs) => isempty(partialargs)
+                                                          ? buildforkjoin(funcs, joinfunc)
+                                                          : buildforkjoin(funcs, partial(joinfunc, ...partialargs));
+
 /**
  * [to do]
  * 
@@ -14,33 +28,11 @@
  */
 function fork(...funcs) {
 
-    function _forked(...args) {
-        return _runfork.call(this, funcs, args);
-    }
+    const _forked = buildfork(funcs);
 
-    _forked.join = joinfork.bind(funcs);
+    _forked.join = initforkjoin(funcs);
 
     return _forked;
-}
-
-function joinfork(forkfuncs, joinfunc, ...partialargs) {
-
-    return function _runforkjoin(...args) {
-
-        const forkresults = _runfork.call(this, forkfuncs, args);
-
-        return joinfunc.call(this, ...partialargs, ...forkresults);
-    }
-
-}
-
-function _runfork(funcs, args) {
-
-    const results = new Array(funcs.length);
-
-    for(let i = 0; i < funcs.length; i += 1) results[i] = funcs[i].call(this, ...args);
-
-    return results;
 }
 
 module.exports = fork;
