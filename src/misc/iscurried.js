@@ -1,5 +1,5 @@
 /**
- * @module types/iscurried
+ * @module misc/iscurried
  */
 
 'use strict';
@@ -18,7 +18,7 @@ const CurryArity = require('../curry').CurryArity;
  * @returns {boolean}
  */
 function iscurried(func) {
-    return (func?.[CurryArity] > 0);
+    return !!(func?.[CurryArity]);
 }
 
 module.exports = iscurried;
