@@ -36,29 +36,31 @@ const validatefunction = func => isfunction(func) || badfunctionerror(func);
  * to do
  * 
  * @function curry
- * @param {number} arity The number of arguments to curry (one less than the minimum number of parameters required by *func*)
- * @param {function} func The function to curry
+ * @param {number} arity The number of arguments to curry (one less than the minimum number of parameters required by *targetfunc*)
+ * @param {function} targetfunc The function to curry
  * @returns {function}
  */
-function curry(arity, func) {
+function curry(arity, targetfunc) {
 
-    validatearity(arity) && validatefunction(func);
+    validatearity(arity) && validatefunction(targetfunc);
 
-    return (arity === 0) ? func : applycurry(func, arity);
+    return (arity === 0 && targetfunc) || applycurry(targetfunc, arity);
 }
 
-function _curried(func, arity, ...args) {
+function _curried(targetfunc, arity, ...args) {
 
     arity -= args.length;
 
-    return (arity < 0) ? func(...args)
-         : (arity === 0) ? func.bind(THIS_NULL, ...args)
-         : applycurry(func, arity, args);
+    return (arity < 0)
+         ? targetfunc(...args)
+         : (arity === 0 && targetfunc.bind(THIS_NULL, ...args))
+            ||
+           applycurry(targetfunc, arity, args);
 }
 
-function applycurry(func, arity, curriedargs=[]) {
+function applycurry(targetfunc, arity, curriedargs=[]) {
 
-    const curried = _curried.bind(THIS_NULL, func, arity, ...curriedargs);
+    const curried = _curried.bind(THIS_NULL, targetfunc, arity, ...curriedargs);
 
     curried[CurryArity] = arity;
 

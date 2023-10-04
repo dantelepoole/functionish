@@ -6,7 +6,9 @@
 
 const curry = require('./curry');
 const curryarity = require('./curryarity');
-const iscurried = require('./types/iscurried');
+const iscurried = require('./misc/iscurried');
+
+const matchcurry = (source, target) => curry( curryarity(source), target );
 
 /**
  * to do
@@ -16,16 +18,14 @@ const iscurried = require('./types/iscurried');
  * [to do]
  * 
  * @function flip
- * @param {function} targetfunc The function to flip the arguments for
+ * @param {function} targetfunc The function to flip the arguments of
  * @returns {function}
  */
 function flip(targetfunc) {
-    
-    const flippedfunction = (a, b, ...args) => targetfunc(b, a, ...args);
-    
-    return iscurried(targetfunc)
-         ? curry( curryarity(targetfunc), flippedfunction )
-         : flippedfunction;
+
+    const flippedfunc = (a, b, ...args) => targetfunc(b, a, ...args);
+
+    return iscurried(targetfunc) && matchcurry(targetfunc, flippedfunc) || flippedfunc;
 }
 
 module.exports = flip;

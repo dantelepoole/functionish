@@ -6,7 +6,9 @@
 
 const THIS_NULL = null;
 
-const curryarity = require('./curryarity');
+const curryarity = require('./misc/curryarity');
+
+const willcurry = (func, argcount) => (curryarity(func) >= argcount);
 
 /**
  * [to do: this value]
@@ -29,9 +31,9 @@ const curryarity = require('./curryarity');
  */
 function partial(targetfunc, ...partialargs) {
 
-    return (partialargs.length === 0) ? targetfunc
-         : (partialargs.length <= curryarity(targetfunc)) ? targetfunc(...partialargs)
-         : targetfunc.bind(THIS_NULL, ...partialargs);
+    return (willcurry(targetfunc, partialargs.length) && targetfunc(...partialargs))
+            ||
+           targetfunc.bind(THIS_NULL, ...partialargs);
 
 }
 
