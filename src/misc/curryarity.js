@@ -1,5 +1,5 @@
 /**
- * @module curryarity
+ * @module misc/curryarity
  */
 
 'use strict';
