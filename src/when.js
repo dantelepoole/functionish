@@ -27,7 +27,7 @@ const conditional = (condition, truebranch, falsebranch, ...args) => condition(.
 function when(condition, truebranch, falsebranch) {
 
     return notfunction(condition) ? condition ? truebranch : falsebranch
-         : (arguments.length >= 3) ? buildconditional(condition, truebranch, falsebranch)
+         : (arguments.length > 2) ? buildconditional(condition, truebranch, falsebranch)
          : buildconditional(condition, truebranch, id);
 }
 
@@ -36,7 +36,11 @@ function buildconditional(condition, truebranch, falsebranch) {
     isfunction(truebranch) || (truebranch = always(truebranch));
     isfunction(falsebranch) || (falsebranch = always(falsebranch));
 
-    return conditional.bind(THIS_NULL, condition, truebranch, falsebranch);
+    const runconditional = conditional.bind(THIS_NULL, condition, truebranch, falsebranch);
+
+    runconditional.for = (...args) => condition(...args) ? truebranch : falsebranch;
+
+    return runconditional;
 }
 
 module.exports = curry(1, when);
