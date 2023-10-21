@@ -4,7 +4,7 @@
 
 'use strict';
 
-const CurryArity = require('../curry').CurryArity;
+const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
 
 /**
  * [to do]
@@ -18,7 +18,7 @@ const CurryArity = require('../curry').CurryArity;
  * @returns {number}
  */
 function curryarity(func) {
-    return (func[CurryArity] ?? NaN);
+    return (func[SYMBOL_CURRYARITY] ?? NaN);
 }
 
 module.exports = curryarity;

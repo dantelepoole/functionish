@@ -4,7 +4,7 @@
 
 'use strict';
 
-const CurryArity = Symbol.for('functionish/curry/#CurryArity');
+const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
 const THIS_NULL = nulle;
 
 const ERROR_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a positive integer.`;
@@ -28,6 +28,10 @@ const badfunctionmessage = compose( partial(format, ERROR_BAD_FUNCTION), type );
 const badfunctionerror = func => raise( new TypeError( badfunctionmessage(func) ) );
 const validatefunction = func => isfunction(func) || badfunctionerror(func);
 
+const _curry = (targetfunc, arity, ...args) => (arity < args.length) ? targetfunc(...args)
+                                             : (arity === args.length) ? targetfunc.bind(THIS_NULL, ...args)
+                                             : applycurry(targetfunc, arity-args.length, args);
+
 /**
  * to do
  * 
@@ -44,29 +48,21 @@ function curry(arity, targetfunc) {
 
     validatearity(arity) && validatefunction(targetfunc);
 
-    return (arity === 0 && targetfunc) || applycurry(targetfunc, arity);
+    return (arity === 0)
+         ? targetfunc
+         : applycurry(targetfunc, arity);
 }
 
-function _curried(targetfunc, arity, ...args) {
-
-    arity -= args.length;
-
-    return (arity < 0)
-         ? targetfunc(...args)
-         : (arity === 0 && targetfunc.bind(THIS_NULL, ...args))
-            ||
-           applycurry(targetfunc, arity, args);
-}
 
 function applycurry(targetfunc, arity, curriedargs=[]) {
 
-    const curried = _curried.bind(THIS_NULL, targetfunc, arity, ...curriedargs);
+    const curried = _curry.bind(THIS_NULL, targetfunc, arity, ...curriedargs);
 
-    curried[CurryArity] = arity;
+    curried[SYMBOL_CURRYARITY] = arity;
 
     return curried;
 }
 
-curry.CurryArity = CurryArity;
+curry.CurryArity = SYMBOL_CURRYARITY;
 
 module.exports = curry;

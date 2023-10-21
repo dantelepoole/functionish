@@ -29,11 +29,8 @@
  * @param {...any[]} partialargs Optional arguments to pass to *func*
  * @returns {function}
  */
-function variadic(func, ...partialargs) {
-    
-    return function _variadic(...args) {
-        return func.call(this, ...partialargs, args);
-    }
+function variadic(func, ...partialargs) {   
+    return (...items) => func(...partialargs, items);
 }
 
 module.exports = variadic;

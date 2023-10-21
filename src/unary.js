@@ -25,10 +25,7 @@
  * @returns {function}
  */
 function unary(func, ...partialargs) {
-
-    return function _unaryfunction(x) {
-        return func.call(this, ...partialargs, x);
-    }
+    return x => func(...partialargs, x);
 }
 
 module.exports = unary;

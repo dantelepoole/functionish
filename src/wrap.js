@@ -7,7 +7,11 @@
 const THIS_NULL = null;
 
 const curry = require('./curry');
+const isfunction = require('./types/isfunction');
 const partial = require('./partial');
+
+
+const wrapreducer = (nextwrapper, wrapper) => wrapper.bind(THIS_NULL, nextwrapper);
 
 /**
  * to do
@@ -17,26 +21,18 @@ const partial = require('./partial');
  * to do
  * 
  * @function wrap
- * @param {function} wrapperfunc The function to wrap *targetfunc* with
+ * @param {function} wrapper The function or array of functions to wrap *targetfunc* with
  * @param {function} targetfunc The function to wrap
  * @returns {function}
  */
-function wrap(wrapperfunc, targetfunc, ...partialargs) {
+function wrap(wrapper, targetfunc, ...partialargs) {
 
-    return isarray(wrapperfunc)
-         ? _wrappedcompose.bind(THIS_NULL, wrapperfunc, targetfunc, ...partialargs)
-         : partial(wrapperfunc, targetfunc, ...partialargs);
+    targetfunc = partial(targetfunc, ...partialargs);
 
-}
+    return isfunction(wrapper)
+         ? wrapper.bind(THIS_NULL, targetfunc)
+         : wrapper.reduceRight(wrapreducer, targetfunc);
 
-function _wrappedcompose(wrappers, targetfunc, ...args) {
-
-    let index = 0;
-    const next = (...nextargs) => (index === wrappers.length)
-                                ? targetfunc(...nextargs)
-                                : wrappers[index++](next, ...nextargs);
-
-    return next(...args);
 }
 
 module.exports = curry(1, wrap);

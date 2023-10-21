@@ -32,10 +32,7 @@ const isiterable = require('./types/isiterable');
  */
 module.exports = function uniadic(func, ...partialargs) {
 
-    return function _uniadic(arg) {
-
-        return isiterable(arg)
-             ? func.call(this, ...partialargs, ...arg)
-             : func.call(this, ...partialargs, arg);
-    }
+    return item => isiterable(item)
+                 ? func(...partialargs, ...item)
+                 : func(...partialargs, item);
 }

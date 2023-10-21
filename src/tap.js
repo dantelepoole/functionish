@@ -19,18 +19,10 @@
  * log(42); // prints 42 to the screen and returns 42
  * 
  * @param {function} func The function to tap
- * @param {...any[]} partialargs Optional arguments to partial apply to *func*
  * @returns {function}
  */
 function tap(func, ...partialargs) {
-
-    return function _tap(...args) {
-
-        func.call(this, ...partialargs, ...args);
-
-        return args[0];
-    }
-
+    return (...args) => (func(...partialargs, ...args), args[0]);
 }
 
 module.exports = tap;

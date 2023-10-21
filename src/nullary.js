@@ -25,11 +25,8 @@
  * @returns {function}
  */
 
-function nullary(func) {
-
-    return function _nullary() {
-        return func.call(this);
-    }
+function nullary(func, ...partialargs) {
+    return () => func(...partialargs);
 }
 
 module.exports = nullary;

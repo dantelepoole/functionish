@@ -24,11 +24,9 @@ const curry = require('./curry');
  */
 function repeat(count, func, ...args) {
 
-    func = func.bind(this, ...args);
-
     let result = undefined;
 
-    for(; count > 0; count -= 1 ) result = func();
+    for( /* noop */; count > 0; count -= 1 ) result = func(...args);
 
     return result;
 }

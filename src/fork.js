@@ -5,11 +5,11 @@
 'use strict';
 
 const applicable = require('./applicable');
-const isempty = require('./misc/isempty');
+const compose = require('./compose');
 const partial = require('./partial');
 
 const runfork = (funcs, args) => funcs.map( applicable(...args) );
-const buildfork = funcs => (...args) => runfork(funcs, args);
+const buildfork = funcs => compose(funcs.map.bind(funcs), applicable);
 const buildforkjoin = (funcs, joinfunc) => (...forkargs) => joinfunc( ...runfork(funcs, forkargs) );
 const prepareforkjoin = funcs => (joinfunc, ...partialargs) => buildforkjoin(funcs, partial(joinfunc, ...partialargs));
 

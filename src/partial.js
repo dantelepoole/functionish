@@ -31,9 +31,11 @@ const willcurry = (func, argcount) => (curryarity(func) >= argcount);
  */
 function partial(targetfunc, ...partialargs) {
 
-    return (willcurry(targetfunc, partialargs.length) && targetfunc(...partialargs))
-            ||
-           targetfunc.bind(THIS_NULL, ...partialargs);
+    const argcount = partialargs.length;
+
+    return (argcount === 0) ? targetfunc
+         : willcurry(targetfunc, argcount) ? targetfunc(...partialargs)
+         : targetfunc.bind(THIS_NULL, ...partialargs);
 
 }
 

@@ -4,10 +4,7 @@
 
 'use strict';
 
-const VIRGIN_RESULT = Symbol();
-
 const always = require('./always');
-const curry = require('./curry');
 
 /**
  * Return a function that passes its arguments to *func* on its first invocation and caches the result. On subsequent
@@ -19,20 +16,15 @@ const curry = require('./curry');
  * [to do:partialargs]
  * 
  * @function once
- * @param {function} func The function to run
+ * @param {function} targetfunc The function to run
  * @param {...any[]} partialargs Optional arguments to partially apply to *func*
  * @returns {function}
  */
-function once(func, ...partialargs) {
+function once(targetfunc, ...partialargs) {
 
-    let result = VIRGIN_RESULT;
+    let oncefunc = (...args) => (oncefunc = always( targetfunc(...partialargs, ...args) ))();
 
-    return function _once(...args) {
-
-        return (result === VIRGIN_RESULT)
-             ? (result = func.call(this, ...partialargs, ...args))
-             : result;
-    }
+    return (...args) => oncefunc(...args);
 
 }
 

@@ -4,11 +4,7 @@
 
 'use strict';
 
-const curry = require('./curry');
-const curryarity = require('./curryarity');
-const iscurried = require('./misc/iscurried');
-
-const matchcurry = (source, target) => curry( curryarity(source), target );
+const THIS_NULL = null;
 
 /**
  * to do
@@ -21,11 +17,14 @@ const matchcurry = (source, target) => curry( curryarity(source), target );
  * @param {function} targetfunc The function to flip the arguments of
  * @returns {function}
  */
-function flip(targetfunc) {
+function flip(targetfunc, a) {
 
-    const flippedfunc = (a, b, ...args) => targetfunc(b, a, ...args);
+    const flippedfunc = (a, b, ...args) => targetfunc(b, a, ...args)
 
-    return iscurried(targetfunc) && matchcurry(targetfunc, flippedfunc) || flippedfunc;
+    return (arguments.length === 1)
+         ? flippedfunc
+         : flippedfunc.bind(THIS_NULL, a);
+
 }
 
 module.exports = flip;

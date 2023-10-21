@@ -4,11 +4,23 @@
 
 'use strict';
 
-const THIS_NULL = null;
+const MAX_PIPE_LEN = 5;
 
+const always = require('./always');
+const head = require('./head');
 const id = require('./id');
 
-const bipipe = (f, g) => (...args) => g( f(...args) );
+const pipecomposermap = Object.freeze([
+    always(id),
+    head,
+    ([f1,f2]) = (...args) => f2(f1(...args)),
+    ([f1,f2,f3]) = (...args) => f3(f2(f1(...args))),
+    ([f1,f2,f3,f4]) = (...args) => f4(f3(f2(f1(...args)))),
+    ([f1,f2,f3,f4,f5]) = (...args) => f5(f4(f3(f2(f1(...args))))),
+]);
+
+const bipipecomposer = pipecomposermap[2];
+const maxpipecomposer = pipecomposermap[MAX_PIPE_LEN];
 
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
@@ -31,27 +43,25 @@ const bipipe = (f, g) => (...args) => g( f(...args) );
  * 
  * @function pipe
  * @see {@link module:compose compose()}
- * @param  {...function} funcs One or more functions to pipe
+ * @param {...function} funcs One or more functions to pipe
  * @returns {function}
  */
 function pipe(...funcs) {
 
-    return (funcs.length > 2 && _pipe.bind(THIS_NULL, funcs.shift(), funcs))
-            ||
-           (funcs.length === 2 && bipipe(funcs[0], funcs[1]))
-            ||
-           (funcs.length === 1 && funcs[0])
-            ||
-           id;
+    const pipecomposer = (pipecomposermap[funcs.length] ?? largepipecomposer);
+
+    return pipecomposer(funcs);
 }
 
-function _pipe(firstfunc, funcs, ...args) {
+function largepipecomposer(funcs) {
 
-    let result = firstfunc(...args);
+    const maxfuncs = funcs.slice(0, MAX_PIPE_LEN);
+    const f1 = maxpipecomposer(maxfuncs);
 
-    for(let i = 0; i < funcs.length; i += 1) result = funcs[i](result);
+    const restfuncs = funcs.slice(MAX_PIPE_LEN);
+    const f2 = pipe(...restfuncs);
 
-    return result;
+    return bipipecomposer( [f1, f2] );
 }
 
 module.exports = pipe;

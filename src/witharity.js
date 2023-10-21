@@ -43,10 +43,10 @@ function witharity(arity, func) {
     validatearity(arity);
 
     return function _witharity(...args) {
-        
-        args.length = arity;
+    
+        (args.length === arity) || (args.length = arity);
 
-        return func.call(this, ...args);
+        return func(...args);
     }
 }
 

@@ -26,10 +26,7 @@
  * @returns {function}
  */
 function applicable(...args) {
-    
-    return function _applicable(func) {
-        return func.call(this, ...args);
-    }
+    return func => func(...args);
 }
 
 module.exports = applicable;

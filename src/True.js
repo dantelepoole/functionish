@@ -18,7 +18,7 @@ const isfunction = require('./types/isfunction');
  */
 function True(expression, ...args) {
 
-    isfunction(expression) && expression.call(this, ...args);
+    isfunction(expression) && expression(...args);
 
     return true;
 }

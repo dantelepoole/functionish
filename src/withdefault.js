@@ -4,8 +4,12 @@
 
 'use strict';
 
+const compose = require('./compose');
 const curry = require('./curry');
 const isvoid = require('./types/isvoid');
+const partial = require('./partial');
+
+const coalesce = defaultvalue => value => isvoid(value) ? defaultvalue : value;
 
 /**
  * [to do]
@@ -29,13 +33,8 @@ const isvoid = require('./types/isvoid');
  * @returns {function}
  */
 function withdefault(defaultvalue, func, ...partialargs) {
-
-    return function _withdefault(...args) {
-
-        const result = func.call(this, ...partialargs, ...args);
-        
-        return isvoid(result) ? defaultvalue : result;
-    }
+    return compose( coalesce(defaultvalue), partial(func, ...partialargs) );
 }
+
 
 module.exports = curry(1, withdefault);
