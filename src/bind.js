@@ -33,9 +33,10 @@ const isfunction = require('./types/isfunction');
  */
 function bind(func, context, ...args) {
 
-    isfunction(func) || (func = context[func]);
+    return isfunction(func)
+         ? func.bind(context, ...args)
+         : context[func].bind(context, ...args);
 
-    return func.bind(context, ...args);
 }
 
 module.exports = curry(1, bind);

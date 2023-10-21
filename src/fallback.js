@@ -4,8 +4,10 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
 const id = require('./id');
-const notvoid = require('./types/notvoid');
+const isvoid = require('./types/isvoid');
 
 /**
  * Return a function that passes its arguments to each *func* in order and returns the return value
@@ -30,29 +32,29 @@ function fallback(...funcs) {
 
     const finalfunc = funcs.pop() ?? id;
 
-    return function _fallback(...args) {
-        return _runfallback(this, finalfunc, funcs, args);
-    }
+    return runfallback.bind(THIS_NULL, finalfunc, funcs);
 }
 
-function _runfallback(thiscontext, finalfunc, funcs, args) {
+function runfallback(finalfunc, funcs, ...args) {
 
     for(let i = 0; i < funcs.length; i += 1) {
 
-        const result = attempt(thiscontext, funcs[i], args);
+        const result = attempt(funcs[i], args);
 
-        if( notvoid(result) ) return result;
+        if( isvoid(result) ) continue;
+
+        return result;
     }
 
-    return finalfunc.call(thiscontext, ...args);
+    return finalfunc(...args);
 }
 
-function attempt(thiscontext, func, args) {
+function attempt(func, args) {
 
     try {
-        return func.call(thiscontext, ...args);
+        return func(...args);
     } catch (error) {
-        return undefined;
+        /* noop */
     }
 
 }

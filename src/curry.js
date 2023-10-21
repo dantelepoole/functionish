@@ -5,7 +5,7 @@
 'use strict';
 
 const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
-const THIS_NULL = nulle;
+const THIS_NULL = null;
 
 const ERROR_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a positive integer.`;
 const ERROR_BAD_FUNCTION = `functionish/curry(): The function has type %s. Expected a function.`;
@@ -62,7 +62,5 @@ function applycurry(targetfunc, arity, curriedargs=[]) {
 
     return curried;
 }
-
-curry.CurryArity = SYMBOL_CURRYARITY;
 
 module.exports = curry;

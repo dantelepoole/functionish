@@ -31,7 +31,7 @@ const isfunction = require('./types/isfunction');
 function evaluate(expression, ...args) {
 
     return isfunction(expression)
-         ? expression.call(this, ...args)
+         ? expression(...args)
          : expression;
 }
 

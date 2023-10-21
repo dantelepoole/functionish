@@ -27,7 +27,10 @@ const isfunction = require('./types/isfunction');
  * @returns {function}
  */
 function callable(source) {
-    return isfunction(source) && source || always(source);
+    
+    return isfunction(source)
+         ? source
+         : always(source);
 }
 
 module.exports = callable;
