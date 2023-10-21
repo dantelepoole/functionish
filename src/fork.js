@@ -6,12 +6,12 @@
 
 const applicable = require('./applicable');
 const compose = require('./compose');
-const partial = require('./partial');
+const curry1 = require('./curry1');
+const isfunction = require('./types/isfunction');
 
-const runfork = (funcs, args) => funcs.map( applicable(...args) );
-const buildfork = funcs => compose(funcs.map.bind(funcs), applicable);
-const buildforkjoin = (funcs, joinfunc) => (...forkargs) => joinfunc( ...runfork(funcs, forkargs) );
-const prepareforkjoin = funcs => (joinfunc, ...partialargs) => buildforkjoin(funcs, partial(joinfunc, ...partialargs));
+const runfork = curry1(
+    (funcs, ...args) => funcs.map( applicable(...args) )
+);
 
 /**
  * [to do]
@@ -21,13 +21,11 @@ const prepareforkjoin = funcs => (joinfunc, ...partialargs) => buildforkjoin(fun
  * [to do]
  * 
  */
-function fork(...funcs) {
+function fork(joinfunc, ...funcs) {
 
-    const _forked = buildfork(funcs);
-
-    _forked.join = prepareforkjoin(funcs);
-
-    return _forked;
+    return isfunction(joinfunc)
+         ? compose( joinfunc, runfork(funcs) )
+         : runfork(funcs);
 }
 
 module.exports = fork;

@@ -2,41 +2,46 @@
  * module juxtapose
  */
 
+const THIS_NULL = null;
+
 'use strict';
 
-const RESTFUNC_NULL = null;
-
+const compose = require('./compose');
 const head = require('./arrays/head');
-const id = require('./id');
 const isarray = require('./types/isarray');
-const isfunction = require('./types/isfunction');
+const isempty = require('./misc/isempty');
+const pop = require('./arrays/pop');
+const push = require('./arrays/push');
 const tail = require('./arrays/tail');
 
-const functionmapper = funcs => applynextargument => funcs.map(applynextargument);
+const minvalue = (a, b) => (a <= b) ? a : b;
+
+const hasrestfunc = compose(isarray, tail);
+const poprestfunc = compose(head, pop);
+const getrestfunc = funcs => hasrestfunc(funcs) ? poprestfunc(funcs) : null;
 
 function juxtapose(...funcs) {
+    return runjuxtapose.bind(THIS_NULL, getrestfunc(funcs), funcs);
+}
 
-    const restfunc = isarray( tail(funcs) )
-                   ? head( funcs.pop() )
-                   : RESTFUNC_NULL;
+function runjuxtapose(restfunc, funcs, ...args) {
 
-    const mapfunctions = functionmapper(funcs);
+    const stopshort = minvalue(funcs.length, args.length);
 
-    return function _juxtapose(...args) {
+    if(funcs.length > args.length) args.length = funcs.length;
 
-        let argindex = 0;
-        const applynextargument = func => (func ?? id).call(this, args[argindex++]);
+    let i;
 
-        const results = mapfunctions(applynextargument);
+    for( i = 0; i < stopshort; i += 1) args[i] = funcs[i]( args[i] );
+    for( /* noop */; i < funcs.length; i += 1) args[i] = funcs[i]();
 
-        if( isfunction(restfunc) ) {
-            const restargs = args.slice(argindex);
-            const restresults = restfunc.call(this, ...restargs);
-            results.push(...restresults);
-        }
-
-        return results;
+    if(restfunc !== null) {
+        const restargs = restfunc( args.slice(i) );
+        (args.length <= i) || (args.length = i);
+        isempty(restargs) || push(args, ...restargs);
     }
+
+    return args;
 }
 
 module.exports = juxtapose;

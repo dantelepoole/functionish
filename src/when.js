@@ -6,10 +6,13 @@
 
 const always = require('./always');
 const curry = require('./curry');
-const evaluate = require('./evaluate');
 const id = require('./id');
 const isfunction = require('./types/isfunction');
 const notfunction = require('./types/notfunction');
+
+const conditional = (condition, truebranch, falsebranch, ...args) => condition(...args)
+                                                                   ? truebranch(...args)
+                                                                   : falsebranch(...args);
 
 /**
  * to do
@@ -23,39 +26,17 @@ const notfunction = require('./types/notfunction');
  */
 function when(condition, truebranch, falsebranch) {
 
-    return isfunction(condition) ? whenfactory(condition, truebranch, falsebranch)
-         : condition ? truebranch
-         : falsebranch;
+    return notfunction(condition) ? condition ? truebranch : falsebranch
+         : (arguments.length >= 3) ? buildconditional(condition, truebranch, falsebranch)
+         : buildconditional(condition, truebranch, id);
 }
 
-function whenfactory(condition, truebranch, falsebranch=id) {
+function buildconditional(condition, truebranch, falsebranch) {
 
-    function _when(...args) {
+    isfunction(truebranch) || (truebranch = always(truebranch));
+    isfunction(falsebranch) || (falsebranch = always(falsebranch));
 
-        const selectedbranch = condition.call(this, ...args) ? truebranch : falsebranch;
-
-        return selectedbranch.call(this, ...args);
-    }
-
-    _when.for = whenforfactory(condition, truebranch, falsebranch);
-
-    return _when;
+    return conditional.bind(THIS_NULL, condition, truebranch, falsebranch);
 }
-
-function whenforfactory(condition, truebranch, falsebranch) {
-
-    return function _whenfor(...conditionargs) {
-        
-        const conditionthis = this;
-
-        return function _when(...branchargs) {
-
-            const selectedbranch = condition.call(conditionthis, ...conditionargs) ? truebranch : falsebranch;
-
-            return selectedbranch.call(this, ...branchargs);
-        }
-    }
-}
-
 
 module.exports = curry(1, when);
