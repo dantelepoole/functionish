@@ -18,7 +18,6 @@
  * isnumber(42n); // returns false
  * 
  * @function isnumber
- * @see {@link module:types/notnumber notnumber()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

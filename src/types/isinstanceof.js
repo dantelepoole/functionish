@@ -22,7 +22,6 @@ const curry = require('../curry');
  * isinstanceof(Object, 42); // returns false
  * 
  * @function isinstanceof
- * @see {@link module:types/notinstanceof notinstanceof()}
  * @param {function} targetclass The class to check against
  * @param {object} instance The object to check the class for
  * @returns {boolean}

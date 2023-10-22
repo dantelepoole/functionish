@@ -27,7 +27,6 @@ const VOID = Symbol();
  * 
  * @function isdefined
  * @see {@link module:types/isvoid isvoid()}
- * @see {@link module:types/notdefined notdefined()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

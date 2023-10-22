@@ -18,7 +18,6 @@
  * isboolean(0); // returns false
  * 
  * @function isboolean
- * @see {@link module:types/notboolean notboolean()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

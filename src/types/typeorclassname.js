@@ -43,7 +43,9 @@ function typeorclassname(value) {
 
     const valuetype = type(value);
 
-    return (valuetype === TYPE_OBJECT) ? classname(value) : valuetype;
+    return (valuetype === TYPE_OBJECT)
+         ? classname(value)
+         : valuetype;
 }
 
 module.exports = typeorclassname;

@@ -28,7 +28,6 @@
  * isprimitive(isprimitive); // returns false
  * 
  * @function isprimitive
- * @see {@link module:types/notprimitive notprimitive()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

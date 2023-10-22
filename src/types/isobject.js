@@ -16,7 +16,6 @@
  * isobject( null ); // returns false
  * 
  * @function isobject
- * @see {@link module:types/notobject notobject()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

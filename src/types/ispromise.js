@@ -18,7 +18,6 @@
  * ispromise(Promise); // returns false
  * 
  * @function ispromise
- * @see {@link module:types/notpromise notpromise()}
  * @param {promise} promise The promise to check
  * @returns {boolean}
  */

@@ -18,7 +18,6 @@
  * issymbol('symbol'); // returns false
  * 
  * @function issymbol
- * @see {@link module:types/notsymbol notsymbol()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

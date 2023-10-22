@@ -16,7 +16,6 @@
  * 
  * @function isarray
  * @see {@link external:Array#isArray Array.isArray()}
- * @see {@link module:types/notarray notarray()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

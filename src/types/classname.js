@@ -11,7 +11,7 @@ const CLASS_OBJECT = 'Object';
 const objectstring = Object.prototype.toString.call.bind(Object.prototype.toString);
 const getclassname = obj => objectstring(obj).slice(8,-1);
 const getprototype = Object.getPrototypeOf;
-const constructorname = obj => getprototype(obj).constructor.name;
+const constructorname = obj => getprototype(obj)?.constructor?.name;
 
 /**
  * Return the name of the class (constructor) of *value*. If *value* is primitive, the name of its object constructor

@@ -33,7 +33,6 @@ const isarray = Array.isArray;
  * isindexable( { length:2, [0]:42 } ); // returns false
  * 
  * @function isindexable
- * @see {@link module:types/notindexable notindexable()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

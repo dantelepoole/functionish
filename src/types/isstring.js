@@ -19,7 +19,6 @@
  * isstring(42); // returns false
  * 
  * @function isstring
- * @see {@link module:types/notstring notstring()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

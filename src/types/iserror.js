@@ -23,7 +23,6 @@
  * iserror(Error); // returns false
  * 
  * @function iserror
- * @see {@link module:types/noterror noterror()}
  * @param {any} value The value to check
  * @returns {boolean}
  */

@@ -19,7 +19,6 @@
  * isundefined(42); // returns false
  * 
  * @function isundefined
- * @see {@link module:types/notundefined notundefined()}
  * @param {any} value The value to check
  * @returns {boolean}
  */
