@@ -5,10 +5,12 @@
 'use strict';
 
 const isarray = require('../types/isarray');
-const notobject = require('../types/notobject');
+
+const notobject = obj => (typeof obj !== 'object' || obj === null);
 
 /**
  * to do
+ * [only string-keyed object properties]
  * 
  * @example <caption>Example usage of `clone()`</caption>
  * 
@@ -20,7 +22,7 @@ const notobject = require('../types/notobject');
  */
 function clone(source) {
 
-    const objectcache = new Set();
+    const objectcache = new Map();
 
     return _clone(objectcache, source);
 }
@@ -51,7 +53,7 @@ function clonearray(cache, clone, source) {
 
     cache.set(source, target);
 
-    for(let index = 0; index < source.length; index += 1) target[index] = clone(cache, source[index]);
+    for(let i = 0; i < source.length; i += 1) target[i] = clone(cache, source[i]);
 
     return target;
 }
