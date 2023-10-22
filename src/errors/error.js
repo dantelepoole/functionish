@@ -5,7 +5,7 @@
 'use strict';
 
 const curry = require('../curry');
-const format = require('./format');
+const format = require('../misc/format');
 const isstring = require('../types/isstring') 
 
 /**
