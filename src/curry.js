@@ -7,30 +7,30 @@
 const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
 const THIS_NULL = null;
 
-const ERROR_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a positive integer.`;
-const ERROR_BAD_FUNCTION = `functionish/curry(): The function has type %s. Expected a function.`;
+const ERRORMSG_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a positive integer.`;
+const ERRORMSG_BAD_FUNCTION = `functionish/curry(): The function has type %s. Expected a function.`;
 
 const compose = require('./compose');
+const error = require('./errors/error');
 const format = require('./misc/format');
 const isfunction = require('./types/isfunction');
-const partial = require('./partial');
-const raise = require('./raise');
+const raise = require('./errors/raise');
 const type = require('./types/type');
+
+const defineproperty = Object.defineProperty;
 
 const isinteger = Number.isSafeInteger;
 const ispositiveinteger = x => isinteger(x) && (x >= 0);
 
-const badaritymessage = partial(format, ERROR_BAD_ARITY);
-const badarityerror = arity => raise( new TypeError( badaritymessage(arity) ) );
+const badarityerror = compose(raise, error.Type(ERRORMSG_BAD_ARITY));
 const validatearity = arity => ispositiveinteger(arity) || badarityerror(arity);
 
-const badfunctionmessage = compose( partial(format, ERROR_BAD_FUNCTION), type );
-const badfunctionerror = func => raise( new TypeError( badfunctionmessage(func) ) );
+const badfunctionerror = compose(raise, error.Type(ERRORMSG_BAD_FUNCTION), type);
 const validatefunction = func => isfunction(func) || badfunctionerror(func);
 
 const _curry = (targetfunc, arity, ...args) => (arity < args.length) ? targetfunc(...args)
                                              : (arity === args.length) ? targetfunc.bind(THIS_NULL, ...args)
-                                             : applycurry(targetfunc, arity-args.length, args);
+                                             : applycurry(targetfunc, (arity - args.length), args);
 
 /**
  * to do
@@ -58,7 +58,7 @@ function applycurry(targetfunc, arity, curriedargs=[]) {
 
     const curried = _curry.bind(THIS_NULL, targetfunc, arity, ...curriedargs);
 
-    curried[SYMBOL_CURRYARITY] = arity;
+    defineproperty(curried, SYMBOL_CURRYARITY, { value:arity, writable:false, enumerable:false, configurable:false });
 
     return curried;
 }

@@ -4,11 +4,9 @@
 
 'use strict';
 
-const isiterable = require('./types/isiterable');
-
 /**
- * Return a function that accepts an iterable as its only argument and passes the iterable's items to the *func* function
- * as a spread parameter.
+ * Return a function that accepts an iterable as its only argument and passes the iterable's items to the *func*
+ * function as a spread parameter.
  * 
  * Use this function to convert a variadic function that accepts variable number of arguments to a uniadic function
  * whose parameter list consists of a single parameter, which must be iterable.
@@ -26,13 +24,11 @@ const isiterable = require('./types/isiterable');
  * 
  * @function uniadic
  * @see {@link module:variadic variadic()}
- * @param {function} func The function to apply
- * @param {...any[]} partialargs One or more arguments to partially apply *func* to before passing the argument list
+ * @param {function} targetfunc The function to apply
  * @returns {function}
  */
-module.exports = function uniadic(func, ...partialargs) {
-
-    return item => isiterable(item)
-                 ? func(...partialargs, ...item)
-                 : func(...partialargs, item);
+function uniadic(targetfunc) {
+    return arglist => targetfunc(...arglist);
 }
+
+module.exports = uniadic;

@@ -8,11 +8,9 @@ const always = require('./always');
 const curry = require('./curry');
 const id = require('./id');
 const isfunction = require('./types/isfunction');
-const notfunction = require('./types/notfunction');
+const not = require('./logic/not');
 
-const conditional = (condition, truebranch, falsebranch, ...args) => condition(...args)
-                                                                   ? truebranch(...args)
-                                                                   : falsebranch(...args);
+const notfunction = not(isfunction);
 
 /**
  * to do
@@ -27,8 +25,8 @@ const conditional = (condition, truebranch, falsebranch, ...args) => condition(.
 function when(condition, truebranch, falsebranch) {
 
     return notfunction(condition) ? condition ? truebranch : falsebranch
-         : (arguments.length > 2) ? buildconditional(condition, truebranch, falsebranch)
-         : buildconditional(condition, truebranch, id);
+         : (arguments.length < 3) ? buildconditional(condition, truebranch, id)
+         : buildconditional(condition, truebranch, falsebranch);
 }
 
 function buildconditional(condition, truebranch, falsebranch) {
@@ -36,11 +34,10 @@ function buildconditional(condition, truebranch, falsebranch) {
     isfunction(truebranch) || (truebranch = always(truebranch));
     isfunction(falsebranch) || (falsebranch = always(falsebranch));
 
-    const runconditional = conditional.bind(THIS_NULL, condition, truebranch, falsebranch);
+    return (...args) => condition(...args)
+                      ? truebranch(...args)
+                      : falsebranch(...args);
 
-    runconditional.for = (...args) => condition(...args) ? truebranch : falsebranch;
-
-    return runconditional;
 }
 
 module.exports = curry(1, when);

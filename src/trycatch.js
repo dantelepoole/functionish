@@ -4,6 +4,8 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
 const curry = require('./curry');
 const isfunction = require('./types/isfunction');
 
@@ -19,30 +21,21 @@ const isfunction = require('./types/isfunction');
  * @param {function} func The function to run
  * @returns {any}
  */
-function trycatch(onerror, func, ...partialargs) {
-
-    validatefunction(func);
-
-    return function _trycatch(...args) {
-
-        try {
-            return func.call(this, ...partialargs, ...args);
-        } catch(error) {
-            
-            return isfunction(onerror)
-                 ? onerror.call(this, error, func, [...partialargs, ...args])
-                 : onerror;
-        }
-    }
+function trycatch(onerror, func) {
+    return _trycatch.bind(THIS_NULL, onerror, func);
 }
 
+function _trycatch(errorhandler, targetfunc, ...args) {
 
-function validatefunction(func) {
+    try {
+        return targetfunc(...args);
+    } catch(error) {
+        
+        return isfunction(errorhandler)
+             ? errorhandler(error, targetfunc, args)
+             : errorhandler;
+    }
 
-    if( isfunction(func) ) return func;
-
-    const errormessage = `trycatch(): The function has type ${typeof func}. Expected a function.`;
-    throw new TypeError(errormessage);
 }
 
 module.exports = curry(1, trycatch);

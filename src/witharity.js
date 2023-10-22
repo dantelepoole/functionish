@@ -56,7 +56,7 @@ function validatearity(arity) {
 
     const explanation = hasnumbertype(arity) ? `is ${arity}` : `has type ${typeof arity}`;
 
-    const errormessage = `witharity(): The arity ${explanation}. Expected a positive integer.`;
+    const errormessage = `functionish/witharity(): The arity ${explanation}. Expected a positive integer.`;
     throw new TypeError(errormessage);
 }
 

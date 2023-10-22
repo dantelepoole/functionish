@@ -1,5 +1,5 @@
 /**
- * @module misc/raise
+ * @module errors/raise
  */
 
 'use strict';

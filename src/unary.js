@@ -24,8 +24,8 @@
  * @param {...any[]} partialargs Optional arguments to pass to *func*
  * @returns {function}
  */
-function unary(func, ...partialargs) {
-    return x => func(...partialargs, x);
+function unary(func) {
+    return x => func(x);
 }
 
 module.exports = unary;

@@ -1,5 +1,5 @@
 /**
- * @module misc/fail
+ * @module errors/fail
  */
 
 'use strict';
@@ -8,7 +8,6 @@ const format = require('util').format;
 const isstring = require('../types/isstring');
 
 const INDEX_NOT_FOUND = -1;
-const NAME_NONE = undefined;
 const NAME_SEPARATOR = '~';
 
 /**
@@ -20,7 +19,7 @@ const NAME_SEPARATOR = '~';
  * 
  * @example <caption>Example usage of `fail()`</caption>
  * 
- * const fail = require('functionish/misc');
+ * const fail = require('functionish/errors');
  * 
  * // Throw an error with the name 'FortyTwoError' and the message: "The value foobar is not 42"
  * fail('FortyTwoError~The value %s is not 42', 'foobar');

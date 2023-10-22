@@ -4,12 +4,13 @@
 
 'use strict';
 
+const always = require('./always');
 const curry = require('./curry');
 const id = require('./id');
+const isfunction = require('./types/isfunction');
+const not = require('./logic/not');
 
-const conditional = (condition, truebranch, falsebranch, conditionarg, ...branchargs) => condition(conditionarg)
-                                                                                       ? truebranch(...branchargs)
-                                                                                       : falsebranch(...branchargs);
+const notfunction = not(isfunction);
 
 /**
  * to do
@@ -23,9 +24,9 @@ const conditional = (condition, truebranch, falsebranch, conditionarg, ...branch
  */
 function whenx(condition, truebranch, falsebranch) {
 
-    return (arguments.length > 2)
-         ? buildconditional(condition, truebranch, falsebranch)
-         : buildconditional(condition, truebranch, id);
+    return notfunction(condition) ? condition ? truebranch : falsebranch
+         : (arguments.length < 3) ? buildconditional(condition, truebranch, id)
+         : buildconditional(condition, truebranch, falsebranch);
 }
 
 function buildconditional(condition, truebranch, falsebranch) {
@@ -33,11 +34,15 @@ function buildconditional(condition, truebranch, falsebranch) {
     isfunction(truebranch) || (truebranch = always(truebranch));
     isfunction(falsebranch) || (falsebranch = always(falsebranch));
 
-    const runconditional = conditional.bind(THIS_NULL, condition, truebranch, falsebranch);
+    const _whenx = (conditionarg, ...branchargs) => condition(conditionarg)
+                                                  ? truebranch(...branchargs)
+                                                  : falsebranch(...branchargs);
 
-    runconditional.for = (...args) => condition(...args) ? truebranch : falsebranch;
+    _whenx.for = (...conditionargs) => condition(...conditionargs)
+                                     ? truebranch
+                                     : falsebranch;
 
-    return runconditional;
+    return _whenx;
 }
 
 module.exports = curry(1, whenx);

@@ -8,10 +8,9 @@ const THIS_NULL = null;
 
 const curry = require('./curry');
 const isfunction = require('./types/isfunction');
-const partial = require('./partial');
 
 
-const wrapreducer = (nextwrapper, wrapper) => wrapper.bind(THIS_NULL, nextwrapper);
+const wrapreducer = (next, wrapper) => wrapper.bind(THIS_NULL, next);
 
 /**
  * to do
@@ -25,9 +24,7 @@ const wrapreducer = (nextwrapper, wrapper) => wrapper.bind(THIS_NULL, nextwrappe
  * @param {function} targetfunc The function to wrap
  * @returns {function}
  */
-function wrap(wrapper, targetfunc, ...partialargs) {
-
-    targetfunc = partial(targetfunc, ...partialargs);
+function wrap(wrapper, targetfunc) {
 
     return isfunction(wrapper)
          ? wrapper.bind(THIS_NULL, targetfunc)

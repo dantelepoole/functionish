@@ -4,11 +4,8 @@
 
 'use strict';
 
+const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
 const THIS_NULL = null;
-
-const curryarity = require('./misc/curryarity');
-
-const willcurry = (func, argcount) => (curryarity(func) >= argcount);
 
 /**
  * [to do: this value]
@@ -31,10 +28,10 @@ const willcurry = (func, argcount) => (curryarity(func) >= argcount);
  */
 function partial(targetfunc, ...partialargs) {
 
-    const argcount = partialargs.length;
+    const willcurry = (func[SYMBOL_CURRYARITY] >= partialargs.length);
 
-    return (argcount === 0) ? targetfunc
-         : willcurry(targetfunc, argcount) ? targetfunc(...partialargs)
+    return willcurry
+         ? targetfunc(...partialargs)
          : targetfunc.bind(THIS_NULL, ...partialargs);
 
 }

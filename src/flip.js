@@ -21,7 +21,7 @@ function flip(targetfunc, a) {
 
     const flippedfunc = (a, b, ...args) => targetfunc(b, a, ...args)
 
-    return (arguments.length === 1)
+    return (arguments.length < 2)
          ? flippedfunc
          : flippedfunc.bind(THIS_NULL, a);
 

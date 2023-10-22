@@ -11,6 +11,9 @@
  * Use this function to convert a uniadic function that accepts a single array argument to a variadic function with
  * a spread parameter list.
  * 
+ * If *targetfunc* is not a function, the returned function will throw an error. If the returned function is called
+ * without any arguments, *targetfunc* will be invoked with an empty array.
+ * 
  * @example <caption>Example usage of `variadic()`</caption>
  * 
  * const { variadic } = require('functionish');
@@ -25,12 +28,11 @@
  * 
  * @function variadic
  * @see {@link module:uniadic uniadic()}
- * @param {function} func The function to make variadic
- * @param {...any[]} partialargs Optional arguments to pass to *func*
+ * @param {function} targetfunc The function to make variadic
  * @returns {function}
  */
-function variadic(func, ...partialargs) {   
-    return (...items) => func(...partialargs, items);
+function variadic(targetfunc) {   
+    return (...args) => targetfunc(args);
 }
 
 module.exports = variadic;

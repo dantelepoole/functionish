@@ -7,7 +7,6 @@
 const compose = require('./compose');
 const curry = require('./curry');
 const isvoid = require('./types/isvoid');
-const partial = require('./partial');
 
 const coalesce = defaultvalue => value => isvoid(value) ? defaultvalue : value;
 
@@ -28,12 +27,11 @@ const coalesce = defaultvalue => value => isvoid(value) ? defaultvalue : value;
  * 
  * @function withdefault
  * @param {any} defaultvalue The value to return if *func* returns a void value
- * @param {function} func The target function
- * @param {...any[]} partialargs Optional arguments to pass to *func*
+ * @param {function} targetfunc The target function
  * @returns {function}
  */
-function withdefault(defaultvalue, func, ...partialargs) {
-    return compose( coalesce(defaultvalue), partial(func, ...partialargs) );
+function withdefault(defaultvalue, targetfunc) {
+    return compose( coalesce(defaultvalue), targetfunc );
 }
 
 

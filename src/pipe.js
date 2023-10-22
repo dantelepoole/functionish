@@ -4,7 +4,7 @@
 
 'use strict';
 
-const MAX_PIPE_LEN = 5;
+const THIS_NULL = null;
 
 const always = require('./always');
 const head = require('./head');
@@ -19,8 +19,7 @@ const pipecomposermap = Object.freeze([
     ([f1,f2,f3,f4,f5]) = (...args) => f5(f4(f3(f2(f1(...args))))),
 ]);
 
-const bipipecomposer = pipecomposermap[2];
-const maxpipecomposer = pipecomposermap[MAX_PIPE_LEN];
+const largepipecomposer = funcs => runpipe.bind(THIS_NULL, funcs);
 
 /**
  * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
@@ -53,15 +52,13 @@ function pipe(...funcs) {
     return pipecomposer(funcs);
 }
 
-function largepipecomposer(funcs) {
+function runpipe(funcs, ...args) {
 
-    const maxfuncs = funcs.slice(0, MAX_PIPE_LEN);
-    const f1 = maxpipecomposer(maxfuncs);
+    let result = funcs[0](...args);
 
-    const restfuncs = funcs.slice(MAX_PIPE_LEN);
-    const f2 = pipe(...restfuncs);
+    for(let i = 1; i < funcs.length; i += 1) result = funcs[i](result);
 
-    return bipipecomposer( [f1, f2] );
+    return result;
 }
 
 module.exports = pipe;

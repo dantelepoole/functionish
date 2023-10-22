@@ -4,14 +4,13 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
 const applicable = require('./applicable');
 const compose = require('./compose');
-const curry1 = require('./curry1');
 const isfunction = require('./types/isfunction');
 
-const runfork = curry1(
-    (funcs, ...args) => funcs.map( applicable(...args) )
-);
+const runfork = (funcs, ...args) => funcs.map( applicable(...args) )
 
 /**
  * [to do]
@@ -23,9 +22,11 @@ const runfork = curry1(
  */
 function fork(joinfunc, ...funcs) {
 
+    const forkrunner = runfork.bind(THIS_NULL, funcs);
+
     return isfunction(joinfunc)
-         ? compose( joinfunc, runfork(funcs) )
-         : runfork(funcs);
+         ? compose(joinfunc, forkrunner)
+         : forkrunner;
 }
 
 module.exports = fork;

@@ -4,13 +4,13 @@
 
 'use strict';
 
-function recurse(func, ...args) {
+function recurse(targetfunc, ...args) {
 
     const recurse = (...recurseargs) => (args = recurseargs);
 
-    let result = args;
+    let result = targetfunc(recurse, ...args);
 
-    while(result === args) result = func(recurse, ...args);
+    while(result === args) result = targetfunc(recurse, ...args);
 
     return result;
 }

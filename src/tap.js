@@ -21,8 +21,8 @@
  * @param {function} func The function to tap
  * @returns {function}
  */
-function tap(func, ...partialargs) {
-    return (...args) => (func(...partialargs, ...args), args[0]);
+function tap(func) {
+    return (...args) => (func(...args), args[0]);
 }
 
 module.exports = tap;

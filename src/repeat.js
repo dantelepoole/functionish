@@ -4,7 +4,26 @@
 
 'use strict';
 
-const curry = require('./curry');
+const ERROR_BAD_COUNT = `functionish/repeat(): The count argument is %s. Expected a positive integer number.`;
+const ERROR_BAD_COUNT_TYPE = `functionish/repeat(): The count argument has type %s. Expected a positive integer number.`;
+
+const format = require('./misc/format');
+const partial = require('./partial');
+const raise = require('./errors/raise');
+
+const isinteger = Number.isSafeInteger;
+const isnumber = x => (typeof x === 'number');
+const ispositiveinteger = x => isinteger(x) && (x >= 0);
+
+const badcountmessage = partial(format, ERROR_BAD_COUNT);
+const raisebadcounterror = count => raise( new TypeError( badcountmessage(count) ) );
+
+const badcounttypemessage = partial(format, ERROR_BAD_COUNT_TYPE);
+const raisebadcounttypeerror = counttype => raise( new TypeError( badcounttypemessage(counttype) ) );
+
+const validatecount = count => ispositiveinteger(count)
+                               || (isnumber(count) && raisebadcounterror(count))
+                               || raisebadcounttypeerror(typeof count);
 
 /**
  * Invoke *func* *count* number of times, passing *args* at each invocation, and return the result of
@@ -24,6 +43,8 @@ const curry = require('./curry');
  */
 function repeat(count, func, ...args) {
 
+    validatecount(count);
+
     let result = undefined;
 
     for( /* noop */; count > 0; count -= 1 ) result = func(...args);
@@ -31,4 +52,4 @@ function repeat(count, func, ...args) {
     return result;
 }
 
-module.exports = curry(1, repeat);
+module.exports = repeat;

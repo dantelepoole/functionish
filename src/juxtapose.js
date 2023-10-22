@@ -37,7 +37,7 @@ function runjuxtapose(restfunc, funcs, ...args) {
 
     if(restfunc !== null) {
         const restargs = restfunc( args.slice(i) );
-        (args.length <= i) || (args.length = i);
+        (args.length > i) && (args.length = i);
         isempty(restargs) || push(args, ...restargs);
     }
 

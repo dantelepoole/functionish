@@ -4,7 +4,7 @@
 
 'use strict';
 
-const MAX_COMPOSE_LEN = 5;
+const THIS_NULL = null;
 
 const always = require('./always');
 const head = require('./head');
@@ -19,8 +19,7 @@ const composermap = Object.freeze([
     ([f1,f2,f3,f4,f5]) = (...args) => f1(f2(f3(f4(f5(...args))))),
 ]);
 
-const bicomposer = composermap[2];
-const maxcomposer = composermap[MAX_COMPOSE_LEN];
+const largecomposer = funcs => runcompose.bind(THIS_NULL, funcs);
 
 /**
  * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
@@ -52,15 +51,14 @@ function compose(...funcs) {
     return composer(funcs);
 }
 
-function largecomposer(funcs) {
+function runcompose(funcs, ...args) {
 
-    const maxfuncs = funcs.slice(0, MAX_COMPOSE_LEN);
-    const f1 = maxcomposer(maxfuncs);
+    let i = funcs.length - 1;
+    let result = funcs[i](...args);
 
-    const restfuncs = funcs.slice(MAX_COMPOSE_LEN);
-    const f2 = compose(...restfuncs);
+    for(i -= 1; i >= 0; i -= 1) result = funcs[i](result);
 
-    return bicomposer( [f1, f2] );
+    return result;
 }
 
 module.exports = compose;
