@@ -21,7 +21,7 @@ const random = Math.random;
  * coinflip(1);    // always returns true
  * 
  * @function coinflip
- * @param {number} [probability=0.5] The probability of returning `true` (0=0%, 1=100%).
+ * @param {number} [probability=0.5] The probability of returning `true` (0.0=0%, 1.0=100%).
  * @returns {boolean}
  */
 function coinflip(probability=0.5) {

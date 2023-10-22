@@ -7,16 +7,16 @@
 const THIS_NULL = null;
 
 const always = require('./always');
-const head = require('./head');
+const head = require('./arrays/head');
 const id = require('./id');
 
 const composermap = Object.freeze([
     always(id),
     head,
-    ([f1,f2]) = (...args) => f1(f2(...args)),
-    ([f1,f2,f3]) = (...args) => f1(f2(f3(...args))),
-    ([f1,f2,f3,f4]) = (...args) => f1(f2(f3(f4(...args)))),
-    ([f1,f2,f3,f4,f5]) = (...args) => f1(f2(f3(f4(f5(...args))))),
+    ([f1,f2]) => (...args) => f1(f2(...args)),
+    ([f1,f2,f3]) => (...args) => f1(f2(f3(...args))),
+    ([f1,f2,f3,f4]) => (...args) => f1(f2(f3(f4(...args)))),
+    ([f1,f2,f3,f4,f5]) => (...args) => f1(f2(f3(f4(f5(...args))))),
 ]);
 
 const largecomposer = funcs => runcompose.bind(THIS_NULL, funcs);

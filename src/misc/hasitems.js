@@ -4,8 +4,6 @@
 
 'use strict';
 
-const ZERO_COUNT = 0;
-
 /**
  * [to do]
  * 
@@ -27,13 +25,12 @@ const ZERO_COUNT = 0;
  * hasitems( {} ); // returns false
  * 
  * @function hasitems
- * @see {@link module:types/isempty isempty()}
- * @see {@link module:types/notempty notempty()}
+ * @see {@link module:misc/isempty isempty()}
  * @param {any} collection The collection to check
  * @returns {boolean}
  */
 function hasitems(collection) {
-    return (ZERO_COUNT < (collection.length ?? collection.size));
+    return (collection.length ?? collection.size) > 0;
 }
 
 module.exports = hasitems;

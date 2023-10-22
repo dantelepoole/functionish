@@ -4,11 +4,11 @@
 
 'use strict';
 
-const CONTEXT_NONE = undefined;
+const defer = require('../defer');
 
 /**
- * Invoke *func* from the microtask queue, similar to {@link external:queueMicrotask queueMicrotask()} except that this
- * function also allows you to provide arguments to pass to *func* when it is invoked.
+ * Invoke *targetfunc* from the microtask queue, similar to {@link external:queueMicrotask queueMicrotask()} except that
+ * this function also allows you to provide arguments to pass to *targetfunc* when it is invoked.
  * 
  * @example <caption>Example usage of `queuemicrotask()`</caption>
  * 
@@ -23,14 +23,14 @@ const CONTEXT_NONE = undefined;
  * 
  * @function queuemicrotask
  * @see {@link external:queueMicrotask queueMicrotask()}
- * @param {function} func The function to run from the microtask queue
- * @param  {...any} boundargs The arguments to pass to *func*
+ * @param {function} targetfunc The function to run from the microtask queue
+ * @param  {...any} args The arguments to pass to *targetfunc*
  */
-function queuemicrotask(func, ...boundargs) {
+function queuemicrotask(targetfunc, ...args) {
 
-    if(boundargs.length > 0) func = func.bind(CONTEXT_NONE, ...boundargs);
+    const deferredfunc = defer(targetfunc, ...args);
 
-    queueMicrotask(func);
+    queueMicrotask(deferredfunc);
 }
 
 module.exports = queuemicrotask;

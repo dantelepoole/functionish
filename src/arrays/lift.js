@@ -1,5 +1,5 @@
 /**
- * @module misc/lift
+ * @module arrays/lift
  */
 
 'use strict';
@@ -19,6 +19,8 @@
  * @param {any} value The value to lift
  * @returns {any[]}
  */
-module.exports = function lift(value) {
+function lift(value) {
     return (value === undefined) ? [] : [value];
 }
+
+module.exports = lift;

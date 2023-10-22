@@ -7,16 +7,16 @@
 const THIS_NULL = null;
 
 const always = require('./always');
-const head = require('./head');
+const head = require('./arrays/head');
 const id = require('./id');
 
 const pipecomposermap = Object.freeze([
     always(id),
     head,
-    ([f1,f2]) = (...args) => f2(f1(...args)),
-    ([f1,f2,f3]) = (...args) => f3(f2(f1(...args))),
-    ([f1,f2,f3,f4]) = (...args) => f4(f3(f2(f1(...args)))),
-    ([f1,f2,f3,f4,f5]) = (...args) => f5(f4(f3(f2(f1(...args))))),
+    ([f1,f2]) => (...args) => f2(f1(...args)),
+    ([f1,f2,f3]) => (...args) => f3(f2(f1(...args))),
+    ([f1,f2,f3,f4]) => (...args) => f4(f3(f2(f1(...args)))),
+    ([f1,f2,f3,f4,f5]) => (...args) => f5(f4(f3(f2(f1(...args))))),
 ]);
 
 const largepipecomposer = funcs => runpipe.bind(THIS_NULL, funcs);

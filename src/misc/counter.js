@@ -25,7 +25,7 @@ function counter(initialvalue=0) {
 
     const _counter = () => countervalue++;
 
-    _counter.peek = () => countervalue;
+    _counter.current = () => countervalue;
 
     return _counter;
 }
@@ -38,7 +38,7 @@ function validateinitialvalue(initialvalue) {
                      ? `is ${initialvalue}`
                      : `has type ${typeof initialvalue}`;
 
-    const errormessage = `counter(): The initialvalue ${valuefault}. Expected an integer number.`;
+    const errormessage = `functionish/misc/counter(): The initialvalue ${valuefault}. Expected an integer number.`;
 
     return new TypeError(errormessage);
 }

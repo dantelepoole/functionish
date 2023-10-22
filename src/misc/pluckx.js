@@ -8,10 +8,10 @@ const SEPARATOR_CHAR = '.';
 const SOURCE_VOID = undefined;
 
 const curry = require('../curry');
-const isarray = require('../types/isarray');
 const isstring = require('../types/isstring');
+const isvoid = require('../types/isvoid');
 
-const pluckreducer = (source, key) => (source === null || source === undefined)
+const pluckreducer = (source, key) => isvoid(source)
                                     ? SOURCE_VOID
                                     : source[key];
 
@@ -66,9 +66,10 @@ const pluckreducer = (source, key) => (source === null || source === undefined)
  */
 function pluckx(path, source) {
 
-    return isstring(path) ? path.split(SEPARATOR_CHAR).reduce(pluckreducer, source)
-         : isarray(path) ? path.reduce(pluckreducer, source)
-         : [path].reduce(pluckreducer, source);
+    isstring(path) && (path = path.split(SEPARATOR_CHAR));
+
+    return path.reduce(pluckreducer, source);
+
 }
 
 module.exports = curry(1, pluckx);

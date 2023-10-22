@@ -4,9 +4,6 @@
 
 'use strict';
 
-const FILTER_DUPLICATE_VALUE = false;
-const FILTER_UNIQUE_VALUE = true;
-
 const compose = require('../compose');
 const isfunction = require('../types/isfunction');
 
@@ -42,13 +39,13 @@ const isfunction = require('../types/isfunction');
  */
 function dedupfilter(hashfunc) {
 
-    const dedupset = new Set();
+    const duplicates = new Set();
 
-    const _dedupfilter = value => ! (dedupset.has(value) || void(dedupset.add(value)));
+    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value)
 
     return isfunction(hashfunc)
-         ? compose(_dedupfilter, hashfunc)
-         : _dedupfilter;
+         ? compose(isuniq, hashfunc)
+         : isuniq;
 
 }
 

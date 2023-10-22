@@ -4,18 +4,32 @@
 
 'use strict';
 
+const ERRORMSG_BAD_RANGE = `functionish/misc/range(): The argument %s. Expected an integer number.`;
+
 const EMPTY_ITERABLE = { [Symbol.iterator]: function* () {} };
 const STEP_DECREMENT = -1;
 const STEP_INCREMENT = 1;
 
-const isvoid = require('../types/isvoid');
+const compose = require('../compose');
+const error = require('../errors/error');
+const isinteger = require('../types/isinteger');
+const or = require('../logic/or');
+const raise = require('../errors/raise');
+
+const badrangeerror = error.Type(ERRORMSG_BAD_RANGE);
+const buildbadrangeerror = count => (typeof count === 'number')
+                                  ? badrangeerror(`is ${count}`)
+                                  : badrangeerror(`has type ${typeof count}`);
+const raisebadrange = compose(raise, buildbadrangeerror);
+const validaterange = or(isinteger, raisebadrange);
 
 /**
- * If passed a single argument, return an iterable that produces the number `1` through the specified number (inclusive).
- * If the argument is less than `1`, an empty iterable is returned.
+ * If passed a single argument, return an iterable that produces the number `1` through the specified integer (inclusive)
+ * or `-1` through the specified integer (inclusive) if the argument is negative.If the argument is 0, an
+ * empty iterable is returned.
  * 
  * If passed two arguments, return an iterable that produces the range of numbers starting at *start*
- * through *end* (both inclusive). Both arguments must be integers, but don't have to be positive.
+ * through *end* (both inclusive). Both arguments must be integers.
  * 
  * @example <caption>Example usage of `range()` with a single argument</caption>
  * 
@@ -41,19 +55,19 @@ const isvoid = require('../types/isvoid');
  */
 function range(start, end) {
 
-    return isvoid(end) ? simplerange(start)
-         : (start <= end) ? rangeiterable(start, end, STEP_INCREMENT)
+    return validaterange(start) && (arguments.length === 1) ? simplerange(start)
+         : validaterange(end) && (start <= end) ? rangeiterable(start, end, STEP_INCREMENT)
          : rangeiterable(start, end, STEP_DECREMENT);
 }
 
 function rangeiterable(start, end, increment) {
 
-    const rangeend = (increment + end);
+    end += increment;
 
     return {
 
         [Symbol.iterator]: function* () {
-            for(let counter = start; counter !== rangeend; counter += increment) yield counter;
+            for(let i = start; i !== end; i += increment) yield i;
         }
     }
 }

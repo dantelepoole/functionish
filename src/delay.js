@@ -10,8 +10,8 @@ const curry = require('./curry');
 const defer = require('./defer');
 
 /**
- * Call *func* with the specified *args* after at least *delay* milliseconds have passed and return a function that
- * cancels the delayed *func* invocation.
+ * Call *targetfunc* with the specified *args* after at least *delay* milliseconds have passed and return a function
+ * that cancels the delayed *targetfunc* invocation.
  * 
  * `delay()` is curried by default with unary arity.
  * 
@@ -26,14 +26,14 @@ const defer = require('./defer');
  * 
  * @function delay
  * @see {@link external:setTimeout setTimeout()}
- * @param {integer} delayms The number of milliseconds to delay the invocation of *func*
- * @param {function} func The function to invoke
- * @param  {...any} args The arguments to pass to *func*
+ * @param {integer} delayms The number of milliseconds to delay the invocation of *targetfunc*
+ * @param {function} targetfunc The function to invoke
+ * @param  {...any} args The arguments to pass to *targetfunc*
  * @returns {function} A function to clear the pending delayed function
  */
-function delay(delayms, func, ...args) {
+function delay(delayms, targetfunc, ...args) {
 
-    const deferredfunc = defer(func, ...args);
+    const deferredfunc = defer(targetfunc, ...args);
     const timeoutid = setTimeout(deferredfunc, delayms);
     
     return clearTimeout.bind(THIS_NULL, timeoutid);

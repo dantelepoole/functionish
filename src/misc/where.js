@@ -4,13 +4,9 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-
 const curry = require('../curry');
+const isfunction = require('../types/isfunction');
 
-const testproperty = (predicate, property) => (typeof predicate === TYPE_FUNCTION)
-                                            ? predicate(property)
-                                            : (predicate === property);
 /**
  * Match the *subject* object to the rules specified by the *specification* object and return an array
  * holding the keys and values for the failing properties.
@@ -47,18 +43,18 @@ const testproperty = (predicate, property) => (typeof predicate === TYPE_FUNCTIO
  */
 function where(specification, subject) {
 
-    subject = Object(subject);
-
     const errors = [];
 
     for(const key in specification)  {
         
-        const predicate = specification[key];
+        const rule = specification[key];
         const property = subject[key];
 
-        const result = testproperty(predicate, property);
+        const success = isfunction(rule)
+                      ? rule(property)
+                      : (rule === property);
 
-        if( ! result ) errors.push( [key, property] );
+        success || errors.push( [key,property] );
     }
 
     return errors;

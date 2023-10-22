@@ -18,7 +18,7 @@ const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
  * @returns {boolean}
  */
 function iscurried(func) {
-    return !!(func?.[SYMBOL_CURRYARITY]);
+    return (func?.[SYMBOL_CURRYARITY] > 0);
 }
 
 module.exports = iscurried;

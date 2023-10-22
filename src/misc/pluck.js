@@ -46,7 +46,7 @@ const curry = require('../curry');
  * @returns {any}
  */
 function pluck(key, source) {
-    return source[key];
+    return source?.[key];
 }
 
 module.exports = curry(1, pluck);

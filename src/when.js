@@ -4,9 +4,9 @@
 
 'use strict';
 
-const always = require('./always');
+const THIS_NULL = null;
+
 const curry = require('./curry');
-const id = require('./id');
 const isfunction = require('./types/isfunction');
 const not = require('./logic/not');
 
@@ -24,20 +24,18 @@ const notfunction = not(isfunction);
  */
 function when(condition, truebranch, falsebranch) {
 
-    return notfunction(condition) ? condition ? truebranch : falsebranch
-         : (arguments.length < 3) ? buildconditional(condition, truebranch, id)
-         : buildconditional(condition, truebranch, falsebranch);
+    return isfunction(condition) ? _when.bind(THIS_NULL, condition, truebranch, falsebranch)
+         : condition ? truebranch
+         : falsebranch;
 }
 
-function buildconditional(condition, truebranch, falsebranch) {
+function _when(condition, truebranch, falsebranch, ...args) {
 
-    isfunction(truebranch) || (truebranch = always(truebranch));
-    isfunction(falsebranch) || (falsebranch = always(falsebranch));
+    const selectedbranch = condition(...args) ? truebranch : falsebranch;
 
-    return (...args) => condition(...args)
-                      ? truebranch(...args)
-                      : falsebranch(...args);
-
+    return isfunction(selectedbranch)
+         ? selectedbranch(...args)
+         : selectedbranch;
 }
 
 module.exports = curry(1, when);

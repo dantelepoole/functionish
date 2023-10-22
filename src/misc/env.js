@@ -4,7 +4,7 @@
 
 'use strict';
 
-const environment = process.env;
+const ENVIRONMENT = process.env;
 
 /**
  * Return the value of the environment variable with the specified *varname* or `undefined` if no
@@ -23,13 +23,13 @@ const environment = process.env;
  * 
  * @function env
  * @param {string} varname The name of the environment variable to return
- * @returns {string|object}
+ * @returns {string|object|undefined}
  */
 function env(varname) {
     
     return (arguments.length === 0)
-         ? environment
-         : environment[varname];
+         ? ENVIRONMENT
+         : ENVIRONMENT[varname];
 }
 
 module.exports = env;

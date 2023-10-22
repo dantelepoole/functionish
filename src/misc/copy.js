@@ -5,8 +5,8 @@
 'use strict';
 
 const isarray = require('../types/isarray');
-const isobject = require('../types/isobject');
-const notobject = require('../types/notobject');
+
+const notobject = obj => (typeof obj !== 'object' || obj === null);
 
 /**
  * Create a shallow copy of *source*. If *source* has a primitive type (number, boolean, string, null, bigint
@@ -39,9 +39,9 @@ function copy(source) {
 function copyobject(source) {
 
     const prototype = Object.getPrototypeOf(source);
-    const clone = Object.create(prototype);
+    const target = Object.create(prototype);
     
-    return Object.assign(clone, source);
+    return Object.assign(target, source);
 }
 
 module.exports = copy;
