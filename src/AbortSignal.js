@@ -40,8 +40,14 @@ function setsignaleventproperties(signal) {
 
     const events = new EventEmitter();
 
-    function addEventListener(eventname, handler) { events.addListener(eventname, handler) }
-    function removeEventListener(eventname,handler) { events.removeListener(eventname, handler) }
+    function addEventListener(eventname, handler) { 
+        events.addListener(eventname, handler)
+    }
+
+    function removeEventListener(eventname,handler) { 
+        events.removeListener(eventname, handler)
+    }
+    
     function dispatchEvent(eventname) {
 
         const signal = this;
