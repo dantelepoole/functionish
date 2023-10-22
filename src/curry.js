@@ -4,7 +4,7 @@
 
 'use strict';
 
-const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
+// const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
 const THIS_NULL = null;
 
 const ERRORMSG_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a positive integer.`;
@@ -12,12 +12,12 @@ const ERRORMSG_BAD_FUNCTION = `functionish/curry(): The function has type %s. Ex
 
 const compose = require('./compose');
 const error = require('./errors/error');
-const format = require('./misc/format');
 const isfunction = require('./types/isfunction');
 const raise = require('./errors/raise');
+const tagcurryarity = require('../lib/tagcurryarity');
 const type = require('./types/type');
 
-const defineproperty = Object.defineProperty;
+// const defineproperty = Object.defineProperty;
 
 const isinteger = Number.isSafeInteger;
 const ispositiveinteger = x => isinteger(x) && (x >= 0);
@@ -58,9 +58,11 @@ function applycurry(targetfunc, arity, curriedargs=[]) {
 
     const curried = _curry.bind(THIS_NULL, targetfunc, arity, ...curriedargs);
 
-    defineproperty(curried, SYMBOL_CURRYARITY, { value:arity, writable:false, enumerable:false, configurable:false });
+    return tagcurryarity(curried, arity);
 
-    return curried;
+    //defineproperty(curried, SYMBOL_CURRYARITY, { value:arity, writable:false, enumerable:false, configurable:false });
+
+    // return curried;
 }
 
 module.exports = curry;
