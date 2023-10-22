@@ -4,12 +4,10 @@
 
 'use strict';
 
-const VOID = Symbol();
-
 /**
- * Return `true` if value is not <abbr title="null, undefined or NaN">void</abbr>. Otherwise, return `false`.
+ * Return `true` if value is neither `null` nor `undefined`. Otherwise, return `false`.
  * 
- * Despite its name, this function checks for `null` and `NaN` as well as `undefined`. So it is not the counterpart
+ * Despite its name, this function checks for `null` as well as `undefined`. So it is not the counterpart
  * to {@link module:types/isundefined isundefined()} (which only checks for `undefined`) but in fact the counterpart to
  * {@link module:types/isvoid isvoid()}.
  * 
@@ -23,7 +21,7 @@ const VOID = Symbol();
  * 
  * isdefined(undefined); // returns false
  * isdefined(null); // returns false
- * isdefined(NaN); // returns false
+ * isdefined(NaN); // returns true
  * 
  * @function isdefined
  * @see {@link module:types/isvoid isvoid()}
@@ -31,7 +29,7 @@ const VOID = Symbol();
  * @returns {boolean}
  */
 function isdefined(value) {
-    return (value ?? VOID) === value;
+    return (value !== null && value !== undefined);
 }
 
 module.exports = isdefined;

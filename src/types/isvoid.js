@@ -4,11 +4,8 @@
 
 'use strict';
 
-const VOID_MARKER = Symbol();
-
 /**
- * Return `true` if *value* is <abbr title="null, undefined or NaN">void</abbr>, i.e. `null`, `undefined` or `NaN`.
- * Otherwise, return `false`.
+ * to do
  * 
  * @example <caption>Example usage of `isvoid()`</caption>
  * 
@@ -16,7 +13,7 @@ const VOID_MARKER = Symbol();
  * 
  * isvoid(undefined); // returns true
  * isvoid(null); // returns true
- * isvoid(NaN); // returns true
+ * isvoid(NaN); // returns false
  * 
  * isvoid(42); // returns false
  * 
@@ -26,7 +23,7 @@ const VOID_MARKER = Symbol();
  * @returns {boolean}
  */
 function isvoid(value) {
-    return (value ?? VOID_MARKER) !== value;
+    return (value === null || value === undefined);
 }
 
 module.exports = isvoid;
