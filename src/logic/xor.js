@@ -4,15 +4,12 @@
 
 'use strict';
 
-const callable = require('../callable');
 const curry = require('../curry');
 
 /**
  * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `true` and only if
  * the return values are boolean complements, i.e. if either one returns a truthy value and the other returns a falsy
- * value. If both return a truthy value or both return a falsy value, `false` is returned.
- * 
- * If either predicate is not a function, its value is evaluated directly instead.
+ * value. If both return the same boolish value, `false` is returned.
  * 
  * [to do: curried]
  * 
@@ -32,14 +29,9 @@ const curry = require('../curry');
  */
 function xor(predicate1, predicate2) {
 
-    predicate1 = callable(predicate1);
-    predicate2 = callable(predicate2);
-
-    const _xor = (...args) => predicate1(...args) 
-                            ? !predicate2(...args)
-                            : !!predicate2(...args);
-
-    return _xor;
+    return (...args) => predicate1(...args) 
+                      ? !predicate2(...args)
+                      : !!predicate2(...args);
 }
 
 module.exports = curry(1, xor);

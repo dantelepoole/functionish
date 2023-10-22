@@ -4,6 +4,22 @@
 
 'use strict';
 
+const THIS_NULL = null;
+
+const always = require('../always');
+const head = require('../arrays/head');
+
+const disjunctormap = Object.freeze([
+    always(false),
+    head,
+    ([f1, f2]) => (...args) => f1(...args) || f2(...args),
+    ([f1, f2, f3]) => (...args) => f1(...args) || f2(...args) || f3(...args),
+    ([f1, f2, f3, f4]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args),
+    ([f1, f2, f3, f4, f5]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args)
+]);
+
+const largedisjunctor = predicates => rundisjunction.bind(THIS_NULL, predicates);
+
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
  * *predicate* and returns the return value of the first *predicate* that returns a truthy value or, if all
@@ -37,15 +53,19 @@
  * @returns {any} The return value of the first predicate to return a truthy value
  */
 function or(...predicates) {
-    
-    return function _or(...args) {
 
-        let result = false;
+    const disjunctor = disjunctormap[predicates.length] ?? largedisjunctor;
 
-        for(let i = 0; i < predicates.length; i += 1) if( result = predicates[i](...args) ) return result;
+    return disjunctor(predicates);
+}
 
-        return result;
-    }
+function rundisjunction(predicates, ...args) {
+
+    let result = false;
+
+    for(let i = 0; result || i < predicates.length; i += 1) result = predicates[i](...args);
+
+    return result;
 }
 
 module.exports = or;

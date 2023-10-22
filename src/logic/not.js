@@ -8,8 +8,6 @@
  * Return a function that passes it arguments to *func* and returns the boolean complement
  * of *func*'s return value.
  * 
- * [to do: negate argument if it is not a function]
- * 
  * @example <caption>Example usage of `not()`</caption>
  * 
  * const { not } = require('functionish/logic');
@@ -25,12 +23,7 @@
  * @returns {function}
  */
 function not(func) {
-    
-    if(typeof func !== 'function') return !func;
-
-    const _not = (...args) => !func(...args);
-
-    return _not;
+    return (...args) => ! func(...args);
 }
 
 module.exports = not;
