@@ -1,33 +1,30 @@
 /**
- * @module safe
+ * @module nothrow
  */
 
 'use strict';
 
-const ERROR_NULL = null;
-
 /**
  * to do
  * 
- * @example <caption>Example usage of `safe()`</caption>
+ * @example <caption>Example usage of `nothrow()`</caption>
  * 
  * to do
  * 
- * @function safe
+ * @function nothrow
  * @returns {any}
  */
-function safe(func, ...partialargs) {
+function nothrow(func) {
 
-    return function _safe(...args) {
+    return function _nothrow(...args) {
 
         try {
-            const data = func(...partialargs, ...args);
-            return [ ERROR_NULL, data ];
+            return { iserror:false, data:func(...args) }
         } catch(error) {
-            return [ error ];
+            return { iserror:true, data:error };
         }
 
     }
 }
 
-module.exports = safe;
+module.exports = nothrow;
