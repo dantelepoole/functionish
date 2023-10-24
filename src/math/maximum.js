@@ -4,8 +4,10 @@
 
 'use strict';
 
+const isnumberornan = require('../types/isnumberornan');
+
 /**
- * Return the highest value in the *values* list or `NaN` if the *values* list is empty.
+ * Return the highest value in the *values* list or `undefined` if the *values* list is empty.
  * 
  * [to do: edit doc for null, undefined or NaN values]
  * 
@@ -24,18 +26,9 @@ function maximum(values) {
 
     let maxvalue = NaN;
 
-    for(const value of values) {
+    for(const value of values) (maxvalue >= value) || (maxvalue = value);
 
-        if(typeof value !== 'number') return NaN
-        
-        else if (maxvalue >= value) continue;
-        
-        else if (maxvalue < value || maxvalue !== maxvalue) maxvalue = value;
-        
-        else return NaN;
-    }
-
-    return maxvalue;
+    return isnumberornan(maxvalue) ? maxvalue : NaN;
 }
 
 module.exports = maximum;

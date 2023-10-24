@@ -5,9 +5,12 @@
 'use strict';
 
 const isarray = require('../types/isarray');
+const isinteger = require('../types/isinteger');
 
 const isodd = x => (x%2) === 1;
 const numericsort = (a,b) => (a-b);
+
+const mediansorted = values => [...values].sort(numericsort);
 
 /**
  * Return the median value of the values in the *values* list.
@@ -27,19 +30,17 @@ const numericsort = (a,b) => (a-b);
  * @param {iterable} values The values to calculate the median of
  * @returns {number}
  */
-function median(sort, values) {
+function median(values) {
 
-    (arguments.length === 1) && ([sort, values] = [true, sort]);
+    const array = isarray(values) && values || Array.from(values);
 
-    isarray(values) || (values = Array.from(values));
+    const midindex = (array.length / 2);
 
-    sort && values.sort(numericsort);
-
-    const midindex = (values.length/2);
-
-    return (values.length === 0) ? 0
-         : isodd(values.length) ? values[ Math.floor(midindex) ]
-         : (values[midindex] + values[midindex-1]) / 2;
+    return (array.length === 0) ? NaN
+         : isinteger(midindex) ? (array[midindex-1] + array[midindex]) / 2
+         : array[ Math.floor(midindex) ]
 }
+
+median.sort = mediansorted;
 
 module.exports = median;
