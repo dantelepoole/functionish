@@ -19,7 +19,7 @@ const curry = require('../curry');
  * @returns {number}
  */
 function atleast(lowerbound, value) {
-    return (lowerbound < value) ? lowerbound : value;
+    return (lowerbound < value) ? value : lowerbound;
 }
 
 module.exports = curry(1, atleast);

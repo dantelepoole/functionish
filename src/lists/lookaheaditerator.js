@@ -4,13 +4,18 @@
 
 'use strict';
 
-const ERR_BAD_ITERABLE = `lookaheaditerator(): Expected an iterable object, an iterator object or a function.`;
+const ERR_BAD_SOURCE = `functionish/lists/lookaheaditerator(): The source argument has type %s. Expected an iterable object, an iterator object or a function.`;
 
+const compose = require('../compose');
+const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
+const raise = require('../errors/raise');
+const typeorclassname = require('../types/typeorclassname');
 
-const isiterable = iterable => isfunction( iterable[Symbol.iterator] );
-const isiterator = iterator => isfunction(iterator.next);
-const raisebaditerable = () => { throw new TypeError(ERR_BAD_ITERABLE) }
+const isiterable = source => isfunction(source?.[Symbol.iterator]);
+const isiterator = source => isfunction(source?.next);
+
+const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassname);
 
 class LookAheadIterator {
 
@@ -40,8 +45,8 @@ class LookAheadIterator {
         return currentitem;
     }
 
-    nextvalue() {
-        return this.next().value;
+    peek() {
+        return this.#nextitem;
     }
 
     get done() {
@@ -77,7 +82,7 @@ function lookaheaditerator(source) {
     const iterator = isiterable(source) ? source[Symbol.iterator]()
                    : isiterator(source) ? source
                    : isfunction(source) ? source()
-                   : raisebaditerable();
+                   : raisebadsource(source);
 
     return new LookAheadIterator(iterator);
 }

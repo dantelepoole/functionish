@@ -5,13 +5,13 @@
 'use strict';
 
 const curry = require('../curry');
-const isvoid = require('../types/isvoid');
+
+const atleast = (lower, value) => (lower < value) ? value : lower;
+const atmost = (upper, value) => (upper > value) ? value : upper;
 
 /**
- * Return *value* if it lies between *lowerlimit* and *upperlimit* (both inclusive). Otherwise, return
- * the limit closest to *value*. If value
- * 
- * If *value* is `null`, `undefined` or `NaN`, `NaN` is returned.
+ * Return *value* if it lies between *lowerbound* and *upperbound* (both inclusive). Otherwise, return
+ * the limit closest to *value*. 
  * 
  * @example
  * const constrain = require('functionish/math/constrain');
@@ -31,11 +31,7 @@ const isvoid = require('../types/isvoid');
  * @returns {number}
  */
 function constrain(lowerbound, upperbound, value) {
-
-    return isvoid(value) ? NaN
-         : (lowerbound > value) ? lowerbound
-         : (upperbound < value) ? upperbound
-         : value;
+    return atleast(lowerbound, atmost(upperbound, value));
 }
 
 module.exports = curry(2, constrain);
