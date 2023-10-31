@@ -28,8 +28,12 @@ function rolldice(diecount=1) {
     return throwdice(diecount);
 }
 
-function* initializedice(diecount) {
-    for(let i = 0; i < diecount; i += 1) yield throwdie();
+function initializedice(diecount) {
+    return {
+        *[Symbol.iterator]() {
+            for(let i = 0; i < diecount; i += 1) yield throwdie();
+        }
+    }
 }
 
 module.exports = rolldice;

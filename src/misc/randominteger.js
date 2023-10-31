@@ -8,6 +8,8 @@
  * Alias for the `randomInt()` method of NodeJS's `crypto` package. Return a random integer
  * `n` such that `min <= n < max`.
  * 
+ * This function uses the blocking version of `randomInt()`.
+ * 
  * @example <caption>Example usage of `randominteger()`</caption>
  * 
  * const { randominteger } = require('functionish/misc');

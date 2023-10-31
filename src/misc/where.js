@@ -5,15 +5,13 @@
 'use strict';
 
 const curry = require('../curry');
-const isfunction = require('../types/isfunction');
 
 /**
  * Match the *subject* object to the rules specified by the *specification* object and return an array
  * holding the keys and values for the failing properties.
  * 
- * Each property of *specification* represents a rule. If a rule is a function, it is applied to the value of
- * corresponding property of *subject*. The rule matches if it returns a truthy value, otherwise the rule fails. If a
- * rule is not a function, it is compared to *subject*'s corresponding property for strict equality.
+ * Each property of *specification* represents a rule. The rule is applied to the value of
+ * corresponding property of *subject*. The rule matches if it returns a truthy value, otherwise the rule fails.
  * 
  * Only *specification*'s own, enumerable properties are matched.
  * 
@@ -50,11 +48,7 @@ function where(specification, subject) {
         const rule = specification[key];
         const property = subject[key];
 
-        const success = isfunction(rule)
-                      ? rule(property)
-                      : (rule === property);
-
-        success || errors.push( [key,property] );
+        rule(property) || errors.push( [key,property] );
     }
 
     return errors;
