@@ -4,6 +4,8 @@
 
 'use strict';
 
+const objectfromentries = Object.fromEntries;
+
 /**
  * to do
  * 
@@ -14,7 +16,7 @@
  * @function objectfrom
  */
 function objectfrom(...keys) {
-    return (...values) => Object.fromEntries( zipentries(keys, values) );
+    return (...values) => objectfromentries( zipentries(keys, values) );
 }
 
 function* zipentries(keys, values) {
