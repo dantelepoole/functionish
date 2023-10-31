@@ -41,11 +41,11 @@ function dedupfilter(hashfunc) {
 
     const duplicates = new Set();
 
-    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value)
+    const _dedupfilter = value => !duplicates.has(value) && !!duplicates.add(value)
 
     return isfunction(hashfunc)
-         ? compose(isuniq, hashfunc)
-         : isuniq;
+         ? compose(_dedupfilter, hashfunc)
+         : _dedupfilter;
 
 }
 

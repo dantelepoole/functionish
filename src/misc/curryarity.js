@@ -18,7 +18,7 @@ const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
  * @returns {number}
  */
 function curryarity(func) {
-    return (func[SYMBOL_CURRYARITY] ?? NaN);
+    return func[SYMBOL_CURRYARITY];
 }
 
 module.exports = curryarity;
