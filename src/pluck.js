@@ -1,5 +1,5 @@
 /**
- * @module misc/pluck
+ * @module pluck
  */
 
 'use strict';
