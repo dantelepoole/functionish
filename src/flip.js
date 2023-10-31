@@ -6,6 +6,8 @@
 
 const THIS_NULL = null;
 
+const haveinitialarg = args => (args.length > 1);
+
 /**
  * to do
  * 
@@ -17,13 +19,13 @@ const THIS_NULL = null;
  * @param {function} targetfunc The function to flip the arguments of
  * @returns {function}
  */
-function flip(targetfunc, a) {
+function flip(targetfunc, initialarg) {
 
     const flippedfunc = (a, b, ...args) => targetfunc(b, a, ...args)
 
-    return (arguments.length < 2)
-         ? flippedfunc
-         : flippedfunc.bind(THIS_NULL, a);
+    return haveinitialarg(arguments)
+         ? flippedfunc.bind(THIS_NULL, initialarg)
+         : flippedfunc;
 
 }
 

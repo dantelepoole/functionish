@@ -8,9 +8,6 @@ const THIS_NULL = null;
 
 const curry = require('./curry');
 const isfunction = require('./types/isfunction');
-const not = require('./logic/not');
-
-const notfunction = not(isfunction);
 
 /**
  * to do

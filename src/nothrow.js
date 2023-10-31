@@ -1,5 +1,5 @@
 /**
- * @module safe
+ * @module nothrow
  */
 
 'use strict';
@@ -9,19 +9,19 @@ const ERROR_NULL = null;
 /**
  * to do
  * 
- * @example <caption>Example usage of `safe()`</caption>
+ * @example <caption>Example usage of `nothrow()`</caption>
  * 
  * to do
  * 
- * @function safe
+ * @function nothrow
  * @returns {any}
  */
-function safe(func) {
+function nothrow(targetfunc) {
 
     return function _safe(...args) {
 
         try {
-            return [ ERROR_NULL, func(...args) ];
+            return [ ERROR_NULL, targetfunc(...args) ];
         } catch(error) {
             return [ error ];
         }
@@ -29,4 +29,4 @@ function safe(func) {
     }
 }
 
-module.exports = safe;
+module.exports = nothrow;

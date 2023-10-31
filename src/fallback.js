@@ -7,6 +7,7 @@
 const THIS_NULL = null;
 
 const id = require('./id');
+const isdefined = require('./types/isdefined');
 const isvoid = require('./types/isvoid');
 
 /**
@@ -37,16 +38,13 @@ function fallback(...funcs) {
 
 function runfallback(finalfunc, funcs, ...args) {
 
-    for(let i = 0; i < funcs.length; i += 1) {
+    let result = undefined;
 
-        const result = attempt(funcs[i], args);
-
-        if( isvoid(result) ) continue;
-
-        return result;
+    for(let i = 0; isvoid(result) && (i < funcs.length); i += 1) {
+        result = attempt(funcs[i], args);
     }
 
-    return finalfunc(...args);
+    return isdefined(result) ? result : finalfunc(...args);
 }
 
 function attempt(func, args) {

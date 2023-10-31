@@ -28,7 +28,7 @@
  * @returns {function}
  */
 function uniadic(targetfunc) {
-    return arglist => targetfunc(...arglist);
+    return args => targetfunc(...args);
 }
 
 module.exports = uniadic;

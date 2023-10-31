@@ -4,7 +4,6 @@
 
 'use strict';
 
-const NOT_RESOLVED = Symbol.for('functionish/tryfinally/#NOT_RESOLVED');
 const THIS_NULL = null;
 
 const curry = require('./curry');
@@ -28,7 +27,7 @@ function tryfinally(onfinally, func) {
 
 function _tryfinally(finallyhandler, targetfunc, ...args) {
 
-    const {data, iserror} = runsafe(targetfunc, ...args);
+    const {data, iserror} = nothrow(targetfunc, ...args);
 
     const result = finallyhandler(data, iserror);
 
@@ -37,7 +36,7 @@ function _tryfinally(finallyhandler, targetfunc, ...args) {
          : data;
 }
 
-function runsafe(targetfunc, ...args) {
+function nothrow(targetfunc, ...args) {
 
     try {
         return { data:targetfunc(...args), iserror:false }

@@ -10,6 +10,7 @@ const id = require('./id');
 const isfunction = require('./types/isfunction');
 const not = require('./logic/not');
 
+const havefalsebranch = args => (args.length >= 3);
 const notfunction = not(isfunction);
 
 /**
@@ -25,8 +26,8 @@ const notfunction = not(isfunction);
 function whenx(condition, truebranch, falsebranch) {
 
     return notfunction(condition) ? condition ? truebranch : falsebranch
-         : (arguments.length < 3) ? buildconditional(condition, truebranch, id)
-         : buildconditional(condition, truebranch, falsebranch);
+         : havefalsebranch(arguments) ? buildconditional(condition, truebranch, falsebranch)
+         : buildconditional(condition, truebranch, id);
 }
 
 function buildconditional(condition, truebranch, falsebranch) {

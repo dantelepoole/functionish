@@ -7,8 +7,9 @@
 const THIS_NULL = null;
 
 const always = require('./always');
-const head = require('./arrays/head');
 const id = require('./id');
+
+const head = array => array[0];
 
 const composermap = Object.freeze([
     always(id),
@@ -53,10 +54,9 @@ function compose(...funcs) {
 
 function runcompose(funcs, ...args) {
 
-    let i = funcs.length - 1;
-    let result = funcs[i](...args);
+    let result = funcs[funcs.length - 1](...args);
 
-    for(i -= 1; i >= 0; i -= 1) result = funcs[i](result);
+    for(let i = funcs.length - 2; i >= 0; i -= 1) result = funcs[i](result);
 
     return result;
 }

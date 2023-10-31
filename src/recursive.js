@@ -16,12 +16,12 @@ const recurse = require('./recurse');
  * to do
  * 
  * @function recursive
- * @param {function} func The recursive function
+ * @param {function} targetfunc The recursive function
  * @param {...any[]} partialargs Optional arguments to partially apply to *func*
  * @returns {function}
  */
-function recursive(func, ...partialargs) {
-    return recurse.bind(THIS_NULL, func, ...partialargs);
+function recursive(targetfunc, ...partialargs) {
+    return recurse.bind(THIS_NULL, targetfunc, ...partialargs);
 }
 
 module.exports = recursive;

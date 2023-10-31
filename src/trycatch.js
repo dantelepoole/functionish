@@ -18,11 +18,11 @@ const isfunction = require('./types/isfunction');
  * 
  * @function trycatch
  * @param {(function|any)} onerror The function to call or the value to return if *func* throws
- * @param {function} func The function to run
+ * @param {function} targetfunc The function to run
  * @returns {any}
  */
-function trycatch(onerror, func) {
-    return _trycatch.bind(THIS_NULL, onerror, func);
+function trycatch(onerror, targetfunc) {
+    return _trycatch.bind(THIS_NULL, onerror, targetfunc);
 }
 
 function _trycatch(errorhandler, targetfunc, ...args) {

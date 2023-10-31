@@ -8,7 +8,6 @@ const THIS_NULL = null;
 
 const applicable = require('./applicable');
 const compose = require('./compose');
-const isfunction = require('./types/isfunction');
 
 const runfork = (funcs, ...args) => funcs.map( applicable(...args) )
 
@@ -20,13 +19,13 @@ const runfork = (funcs, ...args) => funcs.map( applicable(...args) )
  * [to do]
  * 
  */
-function fork(joinfunc, ...funcs) {
+function fork(...targetfuncs) {
+    
+    const forkrunner = runfork.bind(THIS_NULL, targetfuncs);
 
-    const forkrunner = runfork.bind(THIS_NULL, funcs);
+    forkrunner.join = joinfunc => compose(joinfunc, forkrunner);
 
-    return isfunction(joinfunc)
-         ? compose(joinfunc, forkrunner)
-         : forkrunner;
+    return forkrunner;
 }
 
 module.exports = fork;

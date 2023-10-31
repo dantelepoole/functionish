@@ -28,7 +28,7 @@ const THIS_NULL = null;
  */
 function partial(targetfunc, ...partialargs) {
 
-    const willcurry = (func[SYMBOL_CURRYARITY] >= partialargs.length);
+    const willcurry = (targetfunc[SYMBOL_CURRYARITY] >= partialargs.length);
 
     return willcurry
          ? targetfunc(...partialargs)

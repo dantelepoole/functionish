@@ -1,5 +1,5 @@
 /**
- * @module withdefault
+ * @module defaultto
  */
 
 'use strict';
@@ -13,26 +13,26 @@ const coalesce = defaultvalue => value => isvoid(value) ? defaultvalue : value;
 /**
  * [to do]
  * 
- * `withdefault()` is curried by default with unary arity.
+ * `defaultto()` is curried by default with unary arity.
  * 
- * @example <caption>Example usage of `withdefault()`</caption>
+ * @example <caption>Example usage of `defaultto()`</caption>
  *     
- * const { withdefault } = require('functionish');
+ * const { defaultto } = require('functionish');
  * 
  * function loaduser(userid) { ... }
  * 
- * const getuser = withdefault( new AnonymousUser(), loaduser );
+ * const getuser = defaultto( new AnonymousUser(), loaduser );
  * 
  * getuser(42);
  * 
- * @function withdefault
+ * @function defaultto
  * @param {any} defaultvalue The value to return if *func* returns a void value
  * @param {function} targetfunc The target function
  * @returns {function}
  */
-function withdefault(defaultvalue, targetfunc) {
+function defaultto(defaultvalue, targetfunc) {
     return compose( coalesce(defaultvalue), targetfunc );
 }
 
 
-module.exports = curry(1, withdefault);
+module.exports = curry(1, defaultto);
