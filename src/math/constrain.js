@@ -6,9 +6,6 @@
 
 const curry = require('../curry');
 
-const atleast = (lower, value) => (lower < value) ? value : lower;
-const atmost = (upper, value) => (upper > value) ? value : upper;
-
 /**
  * Return *value* if it lies between *lowerbound* and *upperbound* (both inclusive). Otherwise, return
  * the limit closest to *value*. 
@@ -31,7 +28,10 @@ const atmost = (upper, value) => (upper > value) ? value : upper;
  * @returns {number}
  */
 function constrain(lowerbound, upperbound, value) {
-    return atleast(lowerbound, atmost(upperbound, value));
+    
+    return (value < lowerbound) ? lowerbound
+         : (value > upperbound) ? upperbound
+         : value;
 }
 
 module.exports = curry(2, constrain);

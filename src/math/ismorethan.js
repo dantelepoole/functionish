@@ -1,5 +1,5 @@
 /**
- * @module math/isgreaterthan
+ * @module math/ismorethan
  */
 
 'use strict';
@@ -9,21 +9,21 @@ const curry = require('../curry');
 /**
  * Return `true` if *b* is greater than *a*. Otherwise, return `false`.
  * 
- * `isgreaterthan()` is curried by default with unary arity.
+ * `ismorethan()` is curried by default with unary arity.
  * 
  * @example
- * const isgreaterthan = require('functionish/math/isgreaterthan');
+ * const ismorethan = require('functionish/math/ismorethan');
  * 
- * isgreaterthan(1, 42); // returns true;
- * isgreaterthan(1, 0); // returns false;
+ * ismorethan(1, 42); // returns true;
+ * ismorethan(1, 0); // returns false;
  * 
- * @function isgreaterthan
+ * @function isgreaismorethanterthan
  * @param {number} a The value to compare against
  * @param {number} b The value to compare
  * @returns {boolean}
  */
-function isgreaterthan(a,b) {
+function ismorethan(a,b) {
     return (b > a)
 }
 
-module.exports = curry(1, isgreaterthan);
+module.exports = curry(1, ismorethan);

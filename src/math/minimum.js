@@ -4,8 +4,6 @@
 
 'use strict';
 
-const isnumberornan = require('../types/isnumberornan');
-
 /**
  * Return the lowest value in the *values* list or `NaN` if the *values* list is empty.
  * 
@@ -22,13 +20,4 @@ const isnumberornan = require('../types/isnumberornan');
  * @param {iterable} values The list of values to check.
  * @returns {number}
  */
-function minimum(values) {
-
-    let minvalue = NaN;
-
-    for(const value of values) (minvalue <= value) || (minvalue = value);
-
-    return isnumberornan(minvalue) ? minvalue : NaN;
-}
-
-module.exports = minimum;
+module.exports = Math.min;

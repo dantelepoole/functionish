@@ -21,7 +21,10 @@ function average(values) {
     let total = 0;
     let count = 0;
 
-    for(const number of values) (total += number, count += 1);
+    for(const value of values) {
+        total += value;
+        count += 1
+    }
 
     return (count > 0) ? (total/count) : 0;
 }

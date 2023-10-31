@@ -19,7 +19,7 @@
  * @returns {boolean}
  */
 function iseven(value) {
-    return (value % 2) === 0;
+    return !(+value & 1);
 }
 
 module.exports = iseven;

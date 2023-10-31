@@ -4,12 +4,8 @@
 
 'use strict';
 
-const isnumberornan = require('../types/isnumberornan');
-
 /**
- * Return the highest value in the *values* list or `undefined` if the *values* list is empty.
- * 
- * [to do: edit doc for null, undefined or NaN values]
+ * to do
  * 
  * @example
  * const maximum = require('functionish/math/maximum');
@@ -22,13 +18,4 @@ const isnumberornan = require('../types/isnumberornan');
  * @param {iterable} values The list of values to check.
  * @returns {number}
  */
-function maximum(values) {
-
-    let maxvalue = NaN;
-
-    for(const value of values) (maxvalue >= value) || (maxvalue = value);
-
-    return isnumberornan(maxvalue) ? maxvalue : NaN;
-}
-
-module.exports = maximum;
+module.exports = Math.max;

@@ -4,10 +4,7 @@
 
 'use strict';
 
-const reduce = require('../lists/reduce');
-
 const multiply = (a,b) => (a*b);
-const calculateproduct = reduce.bootstrap(multiply);
 
 /**
  * Return the product of the values in the *factors* list.
@@ -22,7 +19,18 @@ const calculateproduct = reduce.bootstrap(multiply);
  * @returns {number}
  */
 function product(factors) {
-    return calculateproduct(factors) ?? 0;
+    
+    let total = 1;
+    let havefactor = false;
+
+    for(const factor of factors) {
+
+        havefactor || (havefactor = true);
+
+        total *= factor;
+    }
+
+    return havefactor ? total : 0;
 }
 
 module.exports = product;
