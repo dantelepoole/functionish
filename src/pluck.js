@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry = require('../curry');
+const curry = require('./curry');
 
 /**
  * Return the value of the property of *source* specified by *key* or `undefined` if the *key* does not exist on
