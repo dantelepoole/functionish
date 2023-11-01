@@ -5,8 +5,8 @@
 'use strict';
 
 /**
- * Return a function that passes it arguments to *func* and returns the boolean complement
- * of *func*'s return value.
+ * Return a function that passes it arguments to *targetfunc* and returns the boolean complement
+ * of *targetfunc*'s return value.
  * 
  * @example <caption>Example usage of `not()`</caption>
  * 
@@ -19,11 +19,11 @@
  * isodd(2); // returns false
  * 
  * @function not
- * @param {function} func The function to negate.
+ * @param {function} targetfunc The function to negate.
  * @returns {function}
  */
-function not(func) {
-    return (...args) => ! func(...args);
+function not(targetfunc) {
+    return (...args) => !targetfunc(...args);
 }
 
 module.exports = not;
