@@ -7,18 +7,19 @@
 const ERRORMSG_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a positive integer.`;
 const ERRORMSG_BAD_FUNCTION = `functionish/curry(): The function has type %s. Expected a function.`;
 
+const and = require('./logic/and');
 const compose = require('./compose');
 const error = require('./errors/error');
 const isfunction = require('./types/isfunction');
+const ispositiveorzero = require('./math/ispositiveorzero');
 const raise = require('./errors/raise');
 const tagcurryarity = require('../lib/tagcurryarity');
 const type = require('./types/type');
 
-const isinteger = Number.isSafeInteger;
-const ispositiveinteger = x => isinteger(x) && (x >= 0);
+const isvalidarity = and(Number.isSafeInteger, ispositiveorzero);
 
 const badarityerror = compose(raise, error.Type(ERRORMSG_BAD_ARITY));
-const validatearity = arity => ispositiveinteger(arity) || badarityerror(arity);
+const validatearity = arity => isvalidarity(arity) || badarityerror(arity);
 
 const badfunctionerror = compose(raise, error.Type(ERRORMSG_BAD_FUNCTION), type);
 const validatefunction = func => isfunction(func) || badfunctionerror(func);
