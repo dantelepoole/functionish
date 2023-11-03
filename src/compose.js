@@ -54,9 +54,9 @@ function compose(...funcs) {
 
 function runcompose(funcs, ...args) {
 
-    let result = funcs[funcs.length - 1](...args);
+    let result = funcs[funcs.length-1](...args);
 
-    for(let i = funcs.length - 2; i >= 0; i -= 1) result = funcs[i](result);
+    for(let i = funcs.length-2; i >= 0; i -= 1) result = funcs[i](result);
 
     return result;
 }
