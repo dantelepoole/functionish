@@ -1,5 +1,5 @@
 /**
- * @module collections/pop
+ * @module arrays/pop
  */
 
 'use strict';

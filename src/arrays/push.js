@@ -1,5 +1,5 @@
 /**
- * @module collections/push
+ * @module arrays/push
  */
 
 'use strict';

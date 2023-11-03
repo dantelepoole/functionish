@@ -1,5 +1,5 @@
 /**
- * @module arrays/issingle
+ * @module arrays/issingular
  */
 
 'use strict';
@@ -8,14 +8,14 @@ const SINGLE = 1;
 
 /**
  * to do
- * @example <caption>Example usage of `issingle()`</caption>
+ * @example <caption>Example usage of `issingular()`</caption>
  *     
  * to do
  * 
  * @function issingle
  */
-function issingle(collection) {
+function issingular(collection) {
     return (SINGLE === collection.length ?? collection.size);
 }
 
-module.exports = issingle;
+module.exports = issingular;

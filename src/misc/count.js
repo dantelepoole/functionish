@@ -1,5 +1,5 @@
 /**
- * @module arrays/count
+ * @module misc/count
  */
 
 'use strict';
@@ -11,7 +11,7 @@
  * 
  * @example <caption>Example usage of `count()`</caption>
  * 
- * const {count} = require('functionish/arrays');
+ * const {count} = require('functionish/misc');
  * 
  * count( [1,2,3,4,5] ); // returns 5
  * count( 'foobar' ); // returns 6

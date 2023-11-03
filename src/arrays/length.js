@@ -5,14 +5,14 @@
 'use strict';
 
 /**
- * Return the value of *collection*'s `length` or `size` property or `NaN` if it has neither.
+ * Return the value of *array*'s `length` property.
  * 
  * @function length
- * @param {object} collection The object to retrieve the `length` or `size` property from
+ * @param {object} array The object to retrieve the `length` property from
  * @returns {number}
  */
-function length(collection) {
-    return (collection.length ?? collection.size ?? NaN);
+function length(array) {
+    return array.length;
 }
 
 module.exports = length;

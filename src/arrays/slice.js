@@ -1,5 +1,5 @@
 /**
- * @module collections/slice
+ * @module arrays/slice
  */
 
 'use strict';
