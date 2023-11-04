@@ -45,8 +45,8 @@ function filter(predicate, source) {
 function filterlist(predicate, sourcelist) {
 
     return list(
-        function* () {
-            for(const item of sourcelist) if( predicate(item) ) yield item;
+        function* filteredlist() {
+            for(const item of sourcelist) predicate(item) && (yield item);
         }
     )
 }

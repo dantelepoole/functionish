@@ -4,8 +4,9 @@
 
 'use strict';
 
-const SYMBOL_CURRYARITY = Symbol.for('functionish/curry/#CurryArity');
 const THIS_NULL = null;
+
+const willcurry = require('./willcurry');
 
 /**
  * [to do: this value]
@@ -28,9 +29,7 @@ const THIS_NULL = null;
  */
 function partial(targetfunc, ...partialargs) {
 
-    const willcurry = (targetfunc[SYMBOL_CURRYARITY] >= partialargs.length);
-
-    return willcurry
+    return willcurry(targetfunc, partialargs.length)
          ? targetfunc(...partialargs)
          : targetfunc.bind(THIS_NULL, ...partialargs);
 
