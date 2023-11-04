@@ -25,12 +25,12 @@
  * getnext('foobar'); // returns 'foobar'
  * 
  * @function dispense
- * @param {iterable} list The list of items to dispense
+ * @param {iterable} sourcelist The list of items to dispense
  * @returns {function}
  */
-function dispense(list) {
+function dispense(sourcelist) {
 
-    const iterator = list[Symbol.iterator]();
+    const iterator = sourcelist[Symbol.iterator]();
 
     return function _dispense(terminationvalue=undefined) {
 

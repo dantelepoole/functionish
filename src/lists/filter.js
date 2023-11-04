@@ -4,25 +4,20 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
+const ERR_BAD_LIST = `functionish/lists/filter(): The source argument has type %s. Expected an iterable object.`;
 
 const curry = require('../curry');
+const error = require('../errors/error');
+const isfunction = require('../types/isfunction');
+const isiterable = require('../types/isiterable');
+const list = require('./list');
+const raise = require('../errors/raise');
+const typeorclassname = require('../types/typeorclassname');
 
-const isfunction = x => (typeof x === TYPE_FUNCTION);
+const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
 
 /**
- * Return an iterable object that produces only the values in *list* for which the
- * *predicate* returns a truthy value.
- * 
- * If *list* is an array, this function calls its {@link external:Array.prototype.filter Array.prototype.filter()}
- * method and returns the result. However, the *predicate* function will only ever be called with a single
- * argument (the current list item), not the additional arguments that {@link external:Array.prototype.filter Array.prototype.filter()}
- * passes to its function.
- * 
- * If *list* is not an array, it is presumed to be iterable and an iterable object is returned
- * that operates lazily.
- * 
- * `filter()` is curried by default with unary arity.
+ * to do
  * 
  * @example <caption>Example usage of `filter()`</caption>
  * 
@@ -37,23 +32,23 @@ const isfunction = x => (typeof x === TYPE_FUNCTION);
  * @function filter
  * @see {@link module:lists/array array()}
  * @param {function} predicate The predicate function
- * @param {iterable} list An iterable object
+ * @param {iterable} source An iterable object
  * @returns {iterable} 
  */
-function filter(predicate, list) {
+function filter(predicate, source) {
 
-    return isfunction(list.filter) 
-         ? list.filter( x => predicate(x) )
-         : filteriterable(predicate, list);
+    return isfunction(source.filter) ? source.filter(predicate)
+         : isiterable(source) ? filterlist(predicate, source)
+         : raisebadlisterror(source);
 }
 
-function filteriterable(predicate, list) {
+function filterlist(predicate, sourcelist) {
 
-    return {
-        *[Symbol.iterator]() {
-            for(const item of list) if( predicate(item) ) yield item;
+    return list(
+        function* () {
+            for(const item of sourcelist) if( predicate(item) ) yield item;
         }
-    }
+    )
 }
 
 module.exports = curry(1, filter);
