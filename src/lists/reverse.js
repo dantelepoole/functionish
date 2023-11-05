@@ -17,6 +17,7 @@ const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
+
 /**
  * to do
  * 

@@ -4,9 +4,32 @@
 
 'use strict';
 
-const VALUE_NONE = undefined;
+const ERR_BAD_MODE = `functionish/lists/zip(): The mode argument is '%s'. Expected 'left', 'right', 'long' or 'short'.`;
 
+const ZIP_MODES = {
+    LEFT  : 'left',
+    LONG  : 'long',
+    RIGHT : 'right',
+    SHORT : 'short'
+}
+
+const VALID_ZIP_MODES = [ZIP_MODES.LEFT, ZIP_MODES.LONG, ZIP_MODES.RIGHT, ZIP_MODES.SHORT];
+
+const compose = require('../compose');
 const curry = require('../curry');
+const error = require('../errors/error');
+const flip = require('../flip');
+const includes = require('./includes');
+const isstring = require('../types/isstring');
+const list = require('./list');
+const lowercase = require('../misc/lowercase');
+const raise = require('../errors/raise');
+const stringlimit = require('../misc/stringlimit');
+
+const raisebadmode = compose(raise, error.Type(ERR_BAD_MODE), stringlimit('...', 32));
+
+const isvalidmode = compose( flip(includes, VALID_ZIP_MODES), lowercase );
+const validatemode = mode => isstring(mode) && isvalidmode(mode) || raisebadmode(mode);
 
 /**
  * Return an iterable that produces 2-element arrays containing the next item from *list1* and
@@ -28,37 +51,25 @@ const curry = require('../curry');
  * @param {iterable} list2 The iterable to zip the items from *list1* with
  * @returns {iterable}
  */
-function zip(list1, list2) {
+function zip(mode=ZIP_MODES.SHORT, list1, list2) {
 
-    return {
+    validatemode(mode);
+}
 
-        [Symbol.iterator]() {
+function zipleft(list1, list2) {
 
-            const iterator1 = list1[Symbol.iterator]();
-            const iterator2 = list2[Symbol.iterator]();
+}
 
-            let done = false;
+function zipright(list1, list2) {
 
-            return { 
+}
 
-                next() {
-                    
-                    if(done) return { done:true }
+function ziplong(list1, list2) {
 
-                    const item1 = iterator1.next();
-                    const item2 = iterator2.next();
+}
 
-                    done = item1.done && item2.done;
+function zipshort(list1, list2) {
 
-                    const value1 = item1.done ? VALUE_NONE : item1.value;
-                    const value2 = item2.done ? VALUE_NONE : item2.value;
-                    const value = done ? VALUE_NONE : [value1, value2];
-
-                    return { done, value }
-                }
-            }
-        }
-    }
 }
 
 module.exports = curry(1, zip);
