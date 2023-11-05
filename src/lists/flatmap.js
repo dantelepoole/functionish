@@ -4,14 +4,11 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-const TYPE_STRING = 'string';
-
 const curry = require('../curry');
 
-const isflatMappable = x => (typeof x.flatMap === TYPE_FUNCTION);
-const isflatmappable = x => (typeof x.flatmap === TYPE_FUNCTION);
-const isiterable = x => (typeof x?.[Symbol.iterator] === TYPE_FUNCTION) && (typeof x !== TYPE_STRING);
+const isfunction = require('../types/isfunction');
+const isiterablenotstring = require('../types/isiterablenotstring');
+const list = require('./list');
 
 /**
  * Return an iterable object that passes each value in *list* to the *mapfunc* function and flattens the result by one
@@ -44,29 +41,30 @@ const isiterable = x => (typeof x?.[Symbol.iterator] === TYPE_FUNCTION) && (type
  * 
  * @function flatmap
  * @param {function} mapfunc The mapping function
- * @param {iterable} list An iterable object
+ * @param {iterable} targetlist An iterable object
  * @returns {iterable}
  */
-function flatmap(mapfunc, list) {
+function flatmap(mapfunc, targetlist) {
 
-    return isflatMappable(list) ? list.flatMap( x => mapfunc(x) )
-         : isflatmappable(list) ? list.flatmap( x => mapfunc(x) )
-         : flatmaplist(mapfunc, list);
+    return isfunction(targetlist.flatMap)
+         ? targetlist.flatMap(mapfunc)
+         : flatmaplist(mapfunc, targetlist);
 }
 
-function flatmaplist(mapfunc, list) {
+function flatmaplist(mapfunc, targetlist) {
 
-    return {
-        *[Symbol.iterator]() {
+    return list(
 
-            for(const value of list) {
+        function* () {
+
+            for(const value of targetlist) {
 
                 const mapresult = mapfunc(value);
 
-                isiterable(mapresult) ? yield* mapresult : yield mapresult;
+                isiterablenotstring(mapresult) ? yield* mapresult : yield mapresult;
             }
         }
-    }
+    )
 }
 
 module.exports = curry(1, flatmap);

@@ -4,39 +4,40 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
+const isfunction = require('../types/isfunction');
+const list = require('./list');
 
-const isarray = require('../types/isarray');
-
-const sortarray = (sortfunc, array) => (typeof sortfunc === TYPE_FUNCTION)
-                                     ? array.slice().sort(sortfunc)
-                                     : array.slice().sort();
+const sortself = (sortfunc, sortable) => isfunction(sortfunc)
+                                       ? sortable.slice().sort(sortfunc)
+                                       : sortable.slice().sort();
 
 /**
  * to do
  * 
  * @function sort
- * @param {iterable} list An iterable object producing the items to sort
+ * @param {iterable} targetlist An iterable object producing the items to sort
  * @returns {iterable}
  */
-function sort(sortfunc, list) {
+function sort(sortfunc, targetlist) {
 
-    return isarray(list)
-         ? sortarray(sortfunc, list)
-         : sortlist(sortfunc, list);
+    return isfunction(targetlist.sort)
+         ? sortself(sortfunc, targetlist)
+         : sortlist(sortfunc, targetlist);
 }
 
-function sortlist(sortfunc, list) {
+function sortlist(sortfunc, targetlist) {
 
-    return {
+    return list(
 
-        *[Symbol.iterator]() {
+        function* () {
             
-            yield* (typeof sortfunc === TYPE_FUNCTION)
-                 ? Array.from(list).sort(sortfunc)
-                 : Array.from(list).sort();
+            const sortable = Array.from(targetlist);
+            
+            yield* isfunction(sortfunc)
+                 ? sortable.sort(sortfunc)
+                 : sortable.sort();
         }
-   }
+    )
 }
 
 module.exports = sort;

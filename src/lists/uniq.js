@@ -4,52 +4,24 @@
 
 'use strict';
 
-const HASH_NONE = undefined;
-
 const curry = require('../curry');
-const isarray = require('../types/isarray');
-const isvoid = require('../isvoid');
+const filter = require('./filter');
+const uniqfilter = require('../misc/uniqfilter');
 
 /**
- * [to do]
+ * to do
+ * 
+ * @example <caption>Example usage of `uniq()`</caption>
+ * 
+ * to do
  * 
  * @function uniq
- * @param {(function|string)} hashfunc The hashing function or `'strict'` to use strict equality
- * @param {iterable} list An iterable object producing the items to remove duplicates from
+ * @param {function} [hashfunc] An optional hashing function
+ * @param {iterable} sourcelist An iterable object producing the items to deduplicate
  * @returns {iterable}
  */
-function uniq(list) {
-    return uniqlist(HASH_NONE, list);
+function uniq(hashfunc, sourcelist) {
+    return filter( uniqfilter(hashfunc), sourcelist );
 }
 
-function uniqusing(hashfunc, list) {
-    return uniqlist(hashfunc, list);
-}
-
-function uniqlist(hashfunc, list) {
-
-    return {
-        
-        [Symbol.iterator] : function* () {
-
-            const isuniq = isuniqfactory(hashfunc);
-            
-            for(const value of list) isuniq(value) && (yield value);
-        }
-    }
-}
-
-function isuniqfactory(hashfunc=HASH_NONE) {
-
-    const dedup = new Set();
-
-    const isuniq = (hashfunc === HASH_NONE)
-                 ? value => (dedup.size < dedup.add(value).size)
-                 : value => (dedup.size < dedup.add( hashfunc(value) ).size);
-
-    return isuniq;
-}
-
-uniq.using = curry(1, uniqusing);
-
-module.exports = uniq;
+module.exports = curry(1, uniq);

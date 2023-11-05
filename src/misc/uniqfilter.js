@@ -31,6 +31,7 @@ const isfunction = require('../types/isfunction');
  * 
  * @function uniqfilter
  * @param {function} [hashfunc] The hashing function
+ * @param {Set} [duplicates] A Set of initial duplicate items
  * @returns {function}
  */
 function uniqfilter(hashfunc, duplicates=new Set()) {

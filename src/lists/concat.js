@@ -4,12 +4,9 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-const TYPE_STRING = 'string';
-
 const isarray = require('../types/isarray');
-
-const isiterable = x => (typeof x?.[Symbol.iterator] === TYPE_FUNCTION) && (typeof x !== TYPE_STRING);
+const isiterablenotstring = require('../types/isiterablenotstring');
+const list = require('../lists/list');
 
 /**
  * Return an iterable object that flattens each *list* in *lists* in order. If a *list* is not iterable,
@@ -35,16 +32,16 @@ function concat(...lists) {
     
     return isarray(lists[0])
          ? lists[0].concat( ...lists.slice(1) )
-         : concatiterable(lists);
+         : concatlists(lists);
 }
 
-function concatiterable(lists) {
+function concatlists(lists) {
 
-    return {
-        [Symbol.iterator] : function* () {
-            for(const list of lists) isiterable(list) ? yield* list : yield list;
+    return list(
+        function* () {
+            for(const list of lists) isiterablenotstring(list) ? yield* list : yield list;
         }
-    }
+    )
 }
 
 module.exports = concat;

@@ -4,8 +4,6 @@
 
 'use strict';
 
-const THIS_NULL = null;
-
 const curry = require('../curry');
 const parseinteger = require('../math/parseinteger');
 const list = require('./list');
@@ -27,10 +25,11 @@ function take(itemcount, targetlist) {
     itemcount = parseinteger(itemcount);
 
     return list(
+
         function* () {
 
             for(const item of targetlist) {
-                if(itemcount-- > 0) yield item;
+                if(0 < itemcount--) yield item;
                 else break;
             }
         }

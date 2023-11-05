@@ -5,6 +5,7 @@
 'use strict';
 
 const curry = require('../curry');
+const isfunction = require('../types/isfunction');
 
 /**
  * [to do]
@@ -20,17 +21,11 @@ const curry = require('../curry');
  */
 function includes(targetvalue, list) {
 
+    if( isfunction(list.includes) ) return list.includes(targetvalue);
+    
     for(const value of list) if(value === targetvalue) return true;
 
     return false;
 }
 
-function includesusing(comparator, targetvalue, list) {
-
-    for(const value of list) if(comparator(value) === targetvalue) return true;
-
-    return false;    
-}
-
 module.exports = curry(1, includes);
-module.exports.using = curry(2, includesusing);

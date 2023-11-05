@@ -9,35 +9,30 @@ const RESULT_NONE = Symbol.for('functionish/lists/iterate/NOT_ABORTED');
 const curry = require('../curry');
 
 /**
- * Pass each item in *list* to the *func* function and return the *list*.
- * 
- * 
- * `iterate()` is curried by default with unary arity.
+ * to do
  * 
  * @example <caption>Example usage of `iterate()`</caption>
  *     
- * const { iterate } = require('functionish/lists');
- * 
- * iterate(console.log, [1,2,3]); // prints `2`, `4` and `6`
+ * to do
  *     
  * @function iterate
  * @param {function} func The function to apply to each item in *list*
- * @param {iterable} list An iterable object
- * @returns {iterable} *list*
+ * @param {iterable} sourcelist An iterable object
+ * @returns {iterable} 
  */
-function iterate(func, list) {
+function iterate(func, sourcelist) {
 
-    let result = RESULT_NONE;
+    let result = sourcelist;
     const abort = data => (result = data);
 
-    for(const item of list) {
+    for(const item of sourcelist) {
         
         func(item, abort);
 
-        if(result !== RESULT_NONE) return result;
+        if(result !== sourcelist) break;
     }
 
-    return list;
+    return result;
 }
 
 module.exports = curry(1, iterate);

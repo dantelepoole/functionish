@@ -34,7 +34,9 @@ const errorctormap = Object.freeze({
 function error(errorname=ERROR_NAME_GENERIC, messageformat) {
 
     const errorctor = errorctormap[errorname] ?? customerrorctor.bind(THIS_NULL, errorname);
-    const messageformatter = isfunction(messageformat) && messageformat || format.bind(THIS_NULL, messageformat);
+    const messageformatter = isfunction(messageformat) && messageformat
+                              ||
+                             format.bind(THIS_NULL, messageformat);
 
     return compose(errorctor, messageformatter);
 }
@@ -52,4 +54,4 @@ error.Range = error.bind(THIS_NULL, ERROR_NAME_RANGE);
 error.Reference = error.bind(THIS_NULL, ERROR_NAME_REFERENCE); 
 error.Type = error.bind(THIS_NULL, ERROR_NAME_TYPE);
 
-module.exports = error
+module.exports = error;

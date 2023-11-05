@@ -5,6 +5,7 @@
 'use strict';
 
 const curry = require('../curry');
+const isfunction = require('../types/isfunction');
 
 /**
  * Return the first value in *list* for which the *predicate* function returns a truthy value, or
@@ -29,6 +30,9 @@ const curry = require('../curry');
  * @returns {any}
  */
 function find(predicate, list) {
+
+    if( isfunction(list.find) ) return list.find(predicate);
+
     for(const item of list) if( predicate(item) ) return item;
 }
 

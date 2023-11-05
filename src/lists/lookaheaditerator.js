@@ -4,7 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_SOURCE = `functionish/lists/lookaheaditerator(): The source argument has type %s. Expected an iterable object, an iterator object or a function.`;
+const ERR_BAD_SOURCE = `functionish/lists/lookaheaditerator(): The source argument has type %s. Expected an iterable or iterator object.`;
 
 const compose = require('../compose');
 const error = require('../errors/error');
@@ -81,7 +81,6 @@ function lookaheaditerator(source) {
 
     const iterator = isiterable(source) ? source[Symbol.iterator]()
                    : isiterator(source) ? source
-                   : isfunction(source) ? source()
                    : raisebadsource(source);
 
     return new LookAheadIterator(iterator);

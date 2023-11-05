@@ -7,6 +7,7 @@
 const INDEX_NOT_FOUND = -1;
 
 const curry = require('../curry');
+const isfunction = require('../isfunction');
 
 /**
  * Return the index of the first value in *list* for which the *predicate* function returns a truthy value, or
@@ -32,11 +33,16 @@ const curry = require('../curry');
  */
 function findindex(predicate, list) {
 
-    let index = 0;
+    if( isfunction(list.findIndex) ) return list.findIndex(predicate);
 
-    for(const value of list) if( predicate(value) ) return index++;
+    let index = INDEX_NOT_FOUND;
 
-    return INDEX_NOT_FOUND;
+    for(const value of list) {
+        index += 1;
+        if( predicate(value) ) break;
+    }
+
+    return index;
 }
 
 module.exports = curry(1, findindex);

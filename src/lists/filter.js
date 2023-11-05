@@ -6,6 +6,7 @@
 
 const ERR_BAD_LIST = `functionish/lists/filter(): The source argument has type %s. Expected an iterable object.`;
 
+const and = require('../logic/and');
 const curry = require('../curry');
 const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
@@ -32,14 +33,16 @@ const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassna
  * @function filter
  * @see {@link module:lists/array array()}
  * @param {function} predicate The predicate function
- * @param {iterable} source An iterable object
+ * @param {iterable} sourcelist An iterable object
  * @returns {iterable} 
  */
-function filter(predicate, source) {
+function filter(predicate, sourcelist) {
 
-    return isfunction(source.filter) ? source.filter(predicate)
-         : isiterable(source) ? filterlist(predicate, source)
-         : raisebadlisterror(source);
+    isfunction(predicate) || (predicate = and(...predicate));
+
+    return isfunction(sourcelist.filter) ? sourcelist.filter(predicate)
+         : isiterable(sourcelist) ? filterlist(predicate, sourcelist)
+         : raisebadlisterror(sourcelist);
 }
 
 function filterlist(predicate, sourcelist) {

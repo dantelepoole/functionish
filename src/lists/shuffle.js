@@ -4,7 +4,7 @@
 
 'use strict';
 
-const randomcomparator = () => (Math.random() - 0.5);
+const coinflip = require('../misc/coinflip');
 
 /**
  * [to do]
@@ -12,7 +12,7 @@ const randomcomparator = () => (Math.random() - 0.5);
  * @function shuffle
  */
 function shuffle(list) {
-    return Array.from(list).sort(randomcomparator);
+    return Array.from(list).sort(coinflip);
 }
 
 module.exports = shuffle;

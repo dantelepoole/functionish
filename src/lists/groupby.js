@@ -58,14 +58,14 @@ const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
  * 
  * @function groupby
  * @param {func} keyselector A function that returns a key for a given item
- * @param {iterable} list An iterable object producing the items to group
+ * @param {iterable} sourcelist An iterable object producing the items to group
  * @returns {object} 
  */
-function groupby(keyselector, list) {
+function groupby(keyselector, sourcelist) {
 
     const target = {};
 
-    for(const item of list) {
+    for(const item of sourcelist) {
 
         const key = keyselector(item);
         const group = getgroup(target, key);

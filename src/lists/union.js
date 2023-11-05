@@ -4,9 +4,13 @@
 
 'use strict';
 
-const HASH_NONE = undefined;
-
+const compose = require('../compose');
 const curry = require('../curry');
+const list = require('./list');
+const partial = require('../partial');
+const uniq = require('./uniq');
+
+const unionlist = compose(list, concatlists);
 
 /**
  * [to do]
@@ -22,43 +26,15 @@ const curry = require('../curry');
  * @param {iterable} list2 The second iterable of items to combine
  * @returns {iterable}
  */
-function union(list1, list2) {
-    return unionusing(HASH_NONE, list1, list2);
+function union(hashfunc, ...lists) {
+    return uniq(hashfunc, unionlist(lists));
 }
 
-function unionusing(hashfunc, list1, list2) {
-
-    const isuniq = isuniqfactory(hashfunc);
-    const concatenatedlist = concatlists(list1, list2);
-
-    return {
-        
-        *[Symbol.iterator]() {
-            for(const value of concatenatedlist) isuniq(value) && (yield value);
-        }
+function concatlists(lists) {
+ 
+    return function* () {
+        for(let i = 0; i < lists.length; i += 1) yield* lists[i];
     }
-}
-
-function concatlists(list1, list2) {
-
-    return {
-        *[Symbol.iterator]() {
-            yield* list1;
-            yield* list2;
-        }
-    }
-}
-
-function isuniqfactory(hashfunc) {
-
-    const dedup = new Set();
-
-    const isuniq = (hashfunc === HASH_NONE)
-                 ? value => (dedup.size < dedup.add(value).size)
-                 : value => (dedup.size < dedup.add( hashfunc(value) ).size);
-
-    return isuniq;
 }
 
 module.exports = curry(1, union);
-module.exports.using = curry(2, unionusing);

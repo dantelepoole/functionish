@@ -4,11 +4,18 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
+const ERR_BAD_LIST = `functionish/lists/map(): The source argument has type %s. Expected an iterable object.`;
 
+const compose = require('../compose');
 const curry = require('../curry');
+const error = require('../errors/error');
+const isfunction = require('../types/isfunction');
+const isiterable = require('../types/isiterable');
+const list = require('./list');
+const raise = require('../errors/raise');
+const typeorclassname = require('../types/typeorclassname');
 
-const isfunction = x => (typeof x === TYPE_FUNCTION);
+const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
 
 /**
  * Return an iterable object that passes each value to the *mapfunc* function and produces the results.
@@ -34,23 +41,25 @@ const isfunction = x => (typeof x === TYPE_FUNCTION);
  *     
  * @function map
  * @param {function} mapfunc The function to apply to each item in *list*
- * @param {iterable} list An iterable object
+ * @param {iterable} sourcelist An iterable object
  * @returns {iterable}
  */
-function map(mapfunc, list) {
+function map(mapfunc, sourcelist) {
     
-    return isfunction(list.map)
-         ? list.map( x => mapfunc(x) )
-         : maplist(mapfunc, list);
+    isfunction(mapfunc) || (mapfunc = compose(...mapfunc));
+    
+    return isfunction(sourcelist.map) ? sourcelist.map(mapfunc)
+         : isiterable(sourcelist) ? maplist(mapfunc, sourcelist)
+         : raisebadlisterror(sourcelist);
 }
 
-function maplist(mapfunc, list) {
+function maplist(mapfunc, sourcelist) {
 
-    return {
-        [Symbol.iterator] : function* () {
-            for(const item of list) yield mapfunc(item);
+    return list(
+        function* mappedlist() {
+            for(const item of sourcelist) yield mapfunc(item);
         }
-    }
+    )
 }
 
 module.exports = curry(1, map);

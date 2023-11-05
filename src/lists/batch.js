@@ -7,7 +7,7 @@
 const MINIMUM_BATCHSIZE = 1;
 
 const curry = require('../curry');
-
+const list = require('./list');
 const maximum = Math.max;
 
 /**
@@ -28,14 +28,33 @@ const maximum = Math.max;
  * 
  * @function batch
  * @param {number} batchsize The maximum number of items in each batch
- * @param {iterable} list The iterable producing the items to batch
+ * @param {iterable} targetlist The iterable producing the items to batch
  * @returns {iterable}
  */
-function batch(batchsize, list) {
+function batch(batchsize, targetlist) {
 
     batchsize = maximum(batchsize, MINIMUM_BATCHSIZE);
 
-    return batchiterable(batchsize, list);
+    return list(
+
+        function* () {
+
+            let batch = [];
+
+            for(const item of targetlist) {
+        
+                const itemcount = batch.push(item);
+        
+                if(itemcount === batchsize) {
+                    yield batch;
+                    batch = [];
+                }
+
+            }
+        
+            if(batch.length > 0) yield batch;
+        }
+    )
 }
 
 function batchiterable(batchsize, list) {

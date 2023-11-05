@@ -4,11 +4,9 @@
 
 'use strict';
 
-const TYPE_FUNCTION = 'function';
-
-const curry = require('../curry');
-
-const isfunction = x => (typeof x === TYPE_FUNCTION);
+const isfunction = require('../types/isfunction');
+const list = require('./list');
+const isiterablenotstring = require('../types/isiterablenotstring');
 
 /**
  * Return an iterable object that flattens the values in *list* by one level, meaning that if any
@@ -27,23 +25,23 @@ const isfunction = x => (typeof x === TYPE_FUNCTION);
  * Array.from(flattened); // returns [1,2,3,4,5,6,7,8,9,[10]];
  * 
  * @function flat
- * @param {iterable} list An iterable object
+ * @param {iterable} targetlist An iterable object
  * @returns {iterable}
  */
-function flat(list) {
+function flat(targetlist) {
 
-    return isfunction(list.flat)
-         ? list.flat()
-         : flatiterable();
+    return isfunction(targetlist.flat)
+         ? targetlist.flat()
+         : flatlist(targetlist);
 }
 
-function flatiterable(list) {
+function flatlist(targetlist) {
 
-    return {
-        [Symbol.iterator] : function* () {
-            for(const value of list) isiterable(value) ? yield* value : yield value;
+    return list(
+        function* () {
+            for(const value of targetlist) isiterablenotstring(value) ? yield* value : yield value;
         }
-    }
+    )
 }
 
 module.exports = flat;

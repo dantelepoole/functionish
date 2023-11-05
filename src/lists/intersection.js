@@ -4,11 +4,14 @@
 
 'use strict';
 
+const bind = require('../bind');
+const compose = require('../compose');
 const curry = require('../curry');
-const isarray = require('../types/isarray');
-const isvoid = require('../types/isvoid');
+const filter = require('./filter');
+const hashset = require('../misc/hashset');
+const uniqfilter = require('../misc/uniqfilter');
 
-const HASH_STRICT = 'strict';
+const intersectfilter = compose( bind('has'), hashset );
 
 /**
  * Return an iterable producing all items common to both *list1* and *list2*, but without duplicates.
@@ -38,51 +41,12 @@ const HASH_STRICT = 'strict';
  */
 function intersection(hashfunc, list1, list2) {
 
-    const resultlist = isvoid(hashfunc) || (hashfunc === HASH_STRICT)
-                     ? intersectionstrict(list1, list2)
-                     : intersectionhash(hashfunc, list1, list2);
+    const isintersect = intersectfilter(hashfunc, list2);
+    const isuniq = uniqfilter(hashfunc);
+    const predicate = [isintersect, isuniq];
 
-    return isarray(list1)
-         ? Array.from(resultlist)
-         : resultlist;
-}
+    return filter(predicate, list1);
 
-function intersectionhash(hashfunc, list1, list2) {
-
-    return {
-
-        [Symbol.iterator] : function* () {
-
-            const dedup = new Set( hashlist(hashfunc, list1) );
-            const intersectionfilter = value => dedup.delete( hashfunc(value) );
-            
-            for(const value of list2) intersectionfilter(value) && (yield value);
-        }
-    }
-}
-
-function intersectionstrict(list1, list2) {
-
-    return {
-
-        [Symbol.iterator] : function* () {
-
-            const dedup = new Set(list1);
-            const intersectionfilter = value => dedup.delete(value);
-
-            for(const value of list2) intersectionfilter(value) && (yield value);
-        }
-    }
-}
-
-function hashlist(hashfunc, list) {
-
-    return {
-        
-        [Symbol.iterator]: function* () {
-            for(const value of list) yield hashfunc(value);
-        }
-    }
 }
 
 module.exports = curry(2, intersection);
