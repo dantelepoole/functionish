@@ -1,5 +1,5 @@
 /**
- * @module misc/dedupfilter
+ * @module misc/uniqfilter
  */
 
 'use strict';
@@ -19,27 +19,21 @@ const isfunction = require('../types/isfunction');
  * For the same reason, a dedupfilter-instance is not reusable, since on subsequent runs it will recognize the values
  * from earlier runs as being duplicates.
  * 
- * @example <caption>Example usage of `dedupfilter()`</caption>
+ * @example <caption>Example usage of `uniqfilter()`</caption>
  * 
- * const { dedupfilter } = require('functionish/misc');
+ * const { uniqfilter } = require('functionish/misc');
  * 
- * [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5].filter( dedupfilter() ); // returns [1,2,3,4,5]
+ * [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5].filter( uniqfilter() ); // returns [1,2,3,4,5]
  * 
- * @example <caption>Example usage of `dedupfilter()` with a hashing function</caption>
+ * @example <caption>Example usage of `uniqfilter()` with a hashing function</caption>
  * 
- * const { dedupfilter } = require('functionish/misc');
+ * to do
  * 
- * function getuniqusers(users) {
- *     return users.filter( user => user.id );
- * }
- * 
- * @function dedupfilter
+ * @function uniqfilter
  * @param {function} [hashfunc] The hashing function
  * @returns {function}
  */
-function dedupfilter(hashfunc) {
-
-    const duplicates = new Set();
+function uniqfilter(hashfunc, duplicates=new Set()) {
 
     const isuniq = value => !duplicates.has(value) && !!duplicates.add(value)
 
@@ -50,4 +44,4 @@ function dedupfilter(hashfunc) {
 }
 
 
-module.exports = dedupfilter;
+module.exports = uniqfilter;
