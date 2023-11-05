@@ -21,7 +21,10 @@ const uniqfilter = require('../misc/uniqfilter');
  * @returns {iterable}
  */
 function uniq(hashfunc, sourcelist) {
-    return filter( uniqfilter(hashfunc), sourcelist );
+
+    const isuniq = uniqfilter(hashfunc);
+    
+    return filter(isuniq, sourcelist);
 }
 
 module.exports = curry(1, uniq);
