@@ -4,7 +4,13 @@
 
 'use strict';
 
+const bind = require('../bind');
 const curry = require('../curry');
+const filter = require('./filter');
+const hashset = require('../misc/hashset');
+const list = require('./list');
+const not = require('./not');
+const uniqfilter = require('./uniqfilter');
 
 /**
  * [to do]
@@ -14,75 +20,33 @@ const curry = require('../curry');
  * [to do]
  * 
  * @function symdiff
- * @param {(function|string)} hashfunc The hashing function or `'strict'` to use strict equality
+ * @param {function} [hashfunc] The hashing function
  * @param {iterable} list1 The first iterable
  * @param {iterable} list2 The second iterable
  * @returns {iterable}
  */
-function symdiff(list1, list2) {
+function symdiff(hashfunc,list1, list2) {
 
-    return {
+    const itemset2 = hashset(hashfunc, list2);
+    const list2diff = list( bind('values', itemset2) );
+    
+    const isintersect = bind('delete', itemset2);
+    const isuniq = uniqfilter(hashfunc);
 
-        [Symbol.iterator] : function* () {
+    const list1filter = [isuniq, not(isintersect)];
+    const list1diff = filter(list1filter, list1 );
 
-            const set2 = new Set(list2);
-            const isuniqdiff = isuniqdiff_factory(set2);
-        
-            for(const value of list1) isuniqdiff(value) && (yield value);
-        
-            yield* set2;
-        }
-    }
+    return concatlists(list1diff, list2diff)
 }
 
-function symdiffusing(hashfunc, list1, list2) {
+function concatlists(list1, list2) {
 
-    return {
-
-        [Symbol.iterator] : function* () {
-
-            const map2 = hashmapfactory(list2, hashfunc);
-            const isuniqdiff = isuniqdiff_factory_hash(map2, hashfunc);
-
-            for(const value of list1) isuniqdiff(value) && (yield value);
-
-            yield* map2.values();
-        }
-    }
-
-}
-
-function isuniqdiff_factory(valueset) {
-
-    const dedup = new Set();
-
-    const isuniqdiff = value => !valueset.delete(value) && (dedup.size < dedup.add(value).size);
-
-    return isuniqdiff;
-}
-
-function isuniqdiff_factory_hash(map, hashfunc) {
-
-    const dedup = new Set();
-
-    return function isuniqdiff(value) {
-
-        const hashvalue = hashfunc(value);
-
-        return (! map.delete(hashvalue)) && (dedup.size < dedup.add(hashvalue).size);
-    }
-}
-
-function hashmapfactory(list, hashfunc) {
-
-    return new Map(
-        {
-            [Symbol.iterator]: function* () {
-                for(const value of list) yield [ hashfunc(value), value ];
-            }
+    return list(
+        function* (){
+            yield* list1diff,
+            yield* list2diff
         }
     )
 }
 
-module.exports = curry(1, symdiff);
-module.exports.using = curry(2, symdiffusing);
+module.exports = curry(2, symdiff);

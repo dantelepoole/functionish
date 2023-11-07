@@ -5,7 +5,6 @@
 'use strict';
 
 const EMPTY_STRING = '';
-const THIS_NULL = '';
 
 const isstring = require('../types/isstring');
 const list = require('./list');
