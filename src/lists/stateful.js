@@ -4,6 +4,7 @@
 
 'use strict';
 
+const always = require('../always');
 const iterator = require('./iterator');
 const list = require('./list');
 
@@ -20,11 +21,9 @@ const list = require('./list');
  */
 function stateful(targetlist) {
 
-    let targetiterator = undefined;
+    let targetiterator = iterator(targetlist);
 
-    return list(
-        () => targetiterator ?? (targetiterator = iterator(targetlist))
-    )
+    return list( always(targetiterator) );
 }
 
 module.exports = stateful;
