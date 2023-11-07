@@ -1,5 +1,5 @@
 /**
- * @module pluckx
+ * @module objecs/pluckx
  */
 
 'use strict';
@@ -7,9 +7,9 @@
 const SEPARATOR_CHAR = '.';
 const SOURCE_VOID = undefined;
 
-const curry = require('./curry');
-const isstring = require('./types/isstring');
-const isvoid = require('./types/isvoid');
+const curry = require('../curry');
+const isstring = require('../types/isstring');
+const isvoid = require('../types/isvoid');
 
 const pluckreducer = (source, key) => isvoid(source)
                                     ? SOURCE_VOID
