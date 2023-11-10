@@ -1,10 +1,10 @@
 /**
- * @module willcurry
+ * @module misc/willcurry
  */
 
 'use strict';
 
-const { CurryArity } = require('../lib/FSymbol');
+const { CurryArity } = require('../../lib/FSymbol');
 
 /**
  * to do
