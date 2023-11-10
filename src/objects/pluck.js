@@ -4,15 +4,27 @@
 
 'use strict';
 
-const curry = require('../curry');
+const INDEX_NOT_FOUND = -1;
+const SEPARATOR_CHAR = '.';
+const SOURCE_VOID = {};
+
+const isarray = require('../types/isarray');
+const isstring = require('../types/isstring');
+const tagcurryarity = require('../../lib/tagcurryarity');
+
+const pluckkey = key => source => source[key];
+const pluckreducer = (source, key) => (source ?? SOURCE_VOID)[key];
+const pluckpath = path => path.reduce.bind(path, pluckreducer);
+
+const parsepath = path => path.split(SEPARATOR_CHAR);
+
+const iscomposite = path => (path.indexOf(SEPARATOR_CHAR) !== INDEX_NOT_FOUND);
+const buildstringpluck = path => iscomposite(path)
+                               ? pluckpath( parsepath(path) )
+                               : pluckkey(path);
 
 /**
- * Return the value of the property of *source* specified by *key* or `undefined` if the *key* does not exist on
- * the *source* object.
- * 
- * See {@link module:misc/pluckx pluckx()} for a version that allows plucking properties with compound keys.
- * 
- * `pluck()` is curried by default with unary arity.
+ * to do
  *  
  * @example <caption>Example usage of `pluck()`</caption>
  * 
@@ -41,12 +53,21 @@ const curry = require('../curry');
  * 
  * @function pluck
  * @see {@link module:misc/pluckx pluckx()}
- * @param {(string|number|symbol)} key The key of the property to retrieve
+ * @param {(string|number|symbol)} path The key of the property to retrieve
  * @param {object} source The object pluck the property from
  * @returns {any}
  */
-function pluck(key, source) {
-    return source?.[key];
+function pluck(path, source) {
+
+    const plucker = isstring(path) ? buildstringpluck(path)
+                  : isarray(path) ? pluckpath(path)
+                  : pluckkey(path);
+
+    return (arguments.length < 2)
+         ? plucker
+         : plucker(source);
 }
 
-module.exports = curry(1, pluck);
+tagcurryarity(pluck, 1);
+
+module.exports = pluck;
