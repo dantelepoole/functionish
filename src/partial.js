@@ -6,7 +6,8 @@
 
 const THIS_NULL = null;
 
-const willcurry = require('./willcurry');
+const isempty = require('./misc/isempty');
+const willcurry = require('./misc/willcurry');
 
 /**
  * [to do: this value]
@@ -29,8 +30,8 @@ const willcurry = require('./willcurry');
  */
 function partial(targetfunc, ...partialargs) {
 
-    return willcurry(targetfunc, partialargs.length)
-         ? targetfunc(...partialargs)
+    return isempty(partialargs) ? targetfunc 
+         : willcurry(targetfunc, partialargs.length) ? targetfunc(...partialargs)
          : targetfunc.bind(THIS_NULL, ...partialargs);
 
 }
