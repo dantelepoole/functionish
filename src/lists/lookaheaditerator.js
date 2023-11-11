@@ -30,7 +30,7 @@ class LookAheadIterator {
 
     }
     
-    #advanceiterator() {
+    #advance() {
 
         this.#nextitem = this.#iterator.next();
         this.#count += 1;
@@ -40,7 +40,7 @@ class LookAheadIterator {
 
         const currentitem = this.#nextitem;
 
-        currentitem.done || this.#advanceiterator();
+        currentitem.done || this.#advance();
 
         return currentitem;
     }

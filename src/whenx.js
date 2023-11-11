@@ -8,10 +8,7 @@ const always = require('./always');
 const curry = require('./curry');
 const id = require('./id');
 const isfunction = require('./types/isfunction');
-const not = require('./logic/not');
 
-const havefalsebranch = args => (args.length >= 3);
-const notfunction = not(isfunction);
 
 /**
  * to do
@@ -25,12 +22,20 @@ const notfunction = not(isfunction);
  */
 function whenx(condition, truebranch, falsebranch) {
 
-    return notfunction(condition) ? condition ? truebranch : falsebranch
-         : havefalsebranch(arguments) ? buildconditional(condition, truebranch, falsebranch)
-         : buildconditional(condition, truebranch, id);
+    return isfunction(condition) ? dynamicwhenx(...arguments)
+         : condition ? truebranch
+         : falsebranch;
 }
 
-function buildconditional(condition, truebranch, falsebranch) {
+function dynamicwhenx(condition, truebranch, falsebranch) {
+
+    return (arguments.length >= 3)
+         ? buildwhenx(condition, truebranch, falsebranch)
+         : buildwhenx(condition, truebranch, id);
+         
+}
+
+function buildwhenx(condition, truebranch, falsebranch) {
 
     isfunction(truebranch) || (truebranch = always(truebranch));
     isfunction(falsebranch) || (falsebranch = always(falsebranch));

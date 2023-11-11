@@ -42,8 +42,7 @@ const intersectfilter = compose( bind('has'), hashset );
 function intersection(hashfunc, list1, list2) {
 
     const isintersect = intersectfilter(hashfunc, list2);
-    const isuniq = uniqfilter(hashfunc);
-    const predicate = [isintersect, isuniq];
+    const predicate = [ isintersect, uniqfilter(hashfunc) ];
 
     return filter(predicate, list1);
 

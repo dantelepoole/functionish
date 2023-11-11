@@ -7,6 +7,8 @@
 const THIS_NULL = null;
 
 const curry = require('./curry');
+const id = require('./id');
+
 const isfunction = require('./types/isfunction');
 
 /**
@@ -21,9 +23,16 @@ const isfunction = require('./types/isfunction');
  */
 function when(condition, truebranch, falsebranch) {
 
-    return isfunction(condition) ? _when.bind(THIS_NULL, condition, truebranch, falsebranch)
+    return isfunction(condition) ? dynamicwhen(...arguments)
          : condition ? truebranch
          : falsebranch;
+}
+
+function dynamicwhen(condition, truebranch, falsebranch) {
+
+    return (arguments.length > 3)
+         ? _when.bind(THIS_NULL, condition, truebranch, falsebranch)
+         : _when.bind(THIS_NULL, condition, truebranch, id);
 }
 
 function _when(condition, truebranch, falsebranch, ...args) {

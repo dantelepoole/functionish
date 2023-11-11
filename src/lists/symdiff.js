@@ -5,12 +5,16 @@
 'use strict';
 
 const bind = require('../bind');
+const compose = require('../compose');
 const curry = require('../curry');
 const filter = require('./filter');
 const hashset = require('../misc/hashset');
 const list = require('./list');
 const not = require('./not');
 const uniqfilter = require('./uniqfilter');
+
+const binddelete = bind('delete');
+const difflistfromset = compose(list, bind('values'));
 
 /**
  * [to do]
@@ -28,23 +32,21 @@ const uniqfilter = require('./uniqfilter');
 function symdiff(hashfunc,list1, list2) {
 
     const itemset2 = hashset(hashfunc, list2);
-    const list2diff = list( bind('values', itemset2) );
+    const difflist2 = difflistfromset(itemset2);
     
-    const isintersect = bind('delete', itemset2);
-    const isuniq = uniqfilter(hashfunc);
+    const isintersect = binddelete(itemset2);
+    const list1filter = [ uniqfilter(hashfunc), not(isintersect) ];
+    const difflist1 = filter(list1filter, list1);
 
-    const list1filter = [isuniq, not(isintersect)];
-    const list1diff = filter(list1filter, list1 );
-
-    return concatlists(list1diff, list2diff)
+    return concatlists(difflist1, difflist2)
 }
 
 function concatlists(list1, list2) {
 
     return list(
         function* (){
-            yield* list1diff,
-            yield* list2diff
+            yield* list1,
+            yield* list2
         }
     )
 }
