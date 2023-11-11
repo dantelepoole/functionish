@@ -18,11 +18,13 @@ const reduceright = require('./reduceright');
  */
 function autoreduceright(reducer, list) {
 
-    let autoreducer = (_, firstvalue) => (autoreducer = reducer, firstvalue);
+    let started = false;
 
-    const _reducer = (accumulator, nextvalue) => autoreducer(accumulator, nextvalue);
-
-    return reduceright(_reducer, undefined, list);
+    const autoreducer = (accumulator, nextvalue) => started
+                                                  ? reducer(accumulator, nextvalue)
+                                                  : (started = true, nextvalue);
+    
+    return reduceright(autoreducer, undefined, list);
 }
 
 module.exports = curry(1, autoreduceright);

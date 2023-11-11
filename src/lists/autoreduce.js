@@ -18,11 +18,13 @@ const reduce = require('./reduce');
  */
 function autoreduce(reducer, list) {
 
-    let autoreducer = (_, firstvalue) => (autoreducer = reducer, firstvalue);
+    let started = false;
 
-    const _reducer = (accumulator, nextvalue) => autoreducer(accumulator, nextvalue);
+    const autoreducer = (accumulator, nextvalue) => started
+                                                  ? reducer(accumulator, nextvalue)
+                                                  : (started = true, nextvalue);
 
-    return reduce(_reducer, undefined, list);
+    return reduce(autoreducer, undefined, list);
 }
 
 module.exports = curry(1, autoreduce);
