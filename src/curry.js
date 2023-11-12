@@ -13,7 +13,6 @@ const error = require('./errors/error');
 const isfunction = require('./types/isfunction');
 const ispositiveorzero = require('./math/ispositiveorzero');
 const raise = require('./errors/raise');
-const tagcurryarity = require('../lib/tagcurryarity');
 const type = require('./types/type');
 
 const isvalidarity = and(Number.isSafeInteger, ispositiveorzero);
@@ -49,15 +48,14 @@ function curry(arity, targetfunc) {
          : applycurry(targetfunc, arity);
 }
 
-
 function applycurry(targetfunc, arity, curriedargs=[]) {
 
-    arity -= curriedargs.length;
-
-    const curried = _curry.bind(THIS_NULL, targetfunc, arity, ...curriedargs);
-
-    return tagcurryarity(curried, arity);
-
+    return _curry.bind(
+        THIS_NULL,
+        targetfunc,
+        arity - curriedargs.length,
+        ...curriedargs
+    );
 }
 
 module.exports = curry;
