@@ -6,16 +6,12 @@
 
 const THIS_NULL = null;
 
-const isempty = require('./misc/isempty');
-const willcurry = require('./misc/willcurry');
-
 /**
  * [to do: this value]
  * 
  * @example <caption>Example usage of `partial()`</caption>
  * 
  * const partial = require('functionish/partial')
- * 
  * function sum(a,b) {
  *     return (a+b)
  * }
@@ -30,10 +26,9 @@ const willcurry = require('./misc/willcurry');
  */
 function partial(targetfunc, ...partialargs) {
 
-    return isempty(partialargs) ? targetfunc 
-         : willcurry(targetfunc, partialargs.length) ? targetfunc(...partialargs)
-         : targetfunc.bind(THIS_NULL, ...partialargs);
-
+    return (partialargs.length > 0) && targetfunc.bind(THIS_NULL, ...partialargs) 
+            ||
+           targetfunc; 
 }
 
 module.exports = partial;

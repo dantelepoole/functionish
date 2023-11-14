@@ -6,8 +6,6 @@
 
 const THIS_NULL = null;
 
-const haveinitialarg = args => (args.length > 1);
-
 /**
  * to do
  * 
@@ -23,9 +21,9 @@ function flip(targetfunc, initialarg) {
 
     const flippedfunc = (a, b, ...args) => targetfunc(b, a, ...args)
 
-    return haveinitialarg(arguments)
-         ? flippedfunc.bind(THIS_NULL, initialarg)
-         : flippedfunc;
+    return (arguments.length > 1) && flippedfunc.bind(THIS_NULL, initialarg)
+            ||
+           flippedfunc;
 
 }
 
