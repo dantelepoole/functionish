@@ -4,8 +4,6 @@
 
 'use strict';
 
-const THIS_NULL = null;
-
 /**
  * to do
  * 
@@ -17,13 +15,14 @@ const THIS_NULL = null;
  * @param {function} targetfunc The function to flip the arguments of
  * @returns {function}
  */
-function flip(targetfunc, initialarg) {
+function flip(targetfunc) {
 
-    const flippedfunc = (a, b, ...args) => targetfunc(b, a, ...args)
+    return function _flip(a, b, ...args) {
 
-    return (arguments.length > 1) && flippedfunc.bind(THIS_NULL, initialarg)
-            ||
-           flippedfunc;
+        return (arguments.length === 1)
+             ? (b, ...args) => targetfunc(b, a, ...args)
+             : targetfunc(b, a, ...args);
+    }
 
 }
 

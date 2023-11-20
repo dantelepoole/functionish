@@ -4,9 +4,8 @@
 
 'use strict';
 
-const TYPE_STRING = 'string';
-
 const curry = require('../curry');
+const isstring = require('../types/isstring');
 
 /**
  * [to do]
@@ -22,9 +21,9 @@ const curry = require('../curry');
  */
 function split(index, array) {
 
-    return (typeof array === TYPE_STRING) ? array.split(index)
-         : (index >= 0) ? [ array.slice(0, index), array.slice(index) ] 
-         : [ array.slice(0, index + array.length), array.slice(index + array.length)];
+    return isstring(array)
+         ? array.split(index)
+         : [ array.slice(0, index), array.slice(index) ];
 }
 
 module.exports = curry(1, split);

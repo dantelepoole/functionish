@@ -30,9 +30,9 @@ function when(condition, truebranch, falsebranch) {
 
 function dynamicwhen(condition, truebranch, falsebranch) {
 
-    return (arguments.length > 3)
-         ? _when.bind(THIS_NULL, condition, truebranch, falsebranch)
-         : _when.bind(THIS_NULL, condition, truebranch, id);
+    (arguments.length >= 3) || (falsebranch = id);
+
+    return _when.bind(THIS_NULL, condition, truebranch, falsebranch);
 }
 
 function _when(condition, truebranch, falsebranch, ...args) {

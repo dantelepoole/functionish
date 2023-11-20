@@ -8,6 +8,7 @@ const ERRORMSG_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a pos
 const ERRORMSG_BAD_FUNCTION = `functionish/curry(): The function has type %s. Expected a function.`;
 
 const and = require('./logic/and');
+const bind = require('./bind');
 const compose = require('./compose');
 const error = require('./errors/error');
 const isfunction = require('./types/isfunction');
@@ -49,13 +50,7 @@ function curry(arity, targetfunc) {
 }
 
 function applycurry(targetfunc, arity, curriedargs=[]) {
-
-    return _curry.bind(
-        THIS_NULL,
-        targetfunc,
-        arity - curriedargs.length,
-        ...curriedargs
-    );
+    return bind(_curry, null, targetfunc, arity - curriedargs.length, ...curriedargs);
 }
 
 module.exports = curry;

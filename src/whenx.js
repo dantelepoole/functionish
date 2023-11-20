@@ -22,17 +22,16 @@ const isfunction = require('./types/isfunction');
  */
 function whenx(condition, truebranch, falsebranch) {
 
-    return isfunction(condition) ? dynamicwhenx(...arguments)
+    return isfunction(condition) ? _whenx(...arguments)
          : condition ? truebranch
          : falsebranch;
 }
 
-function dynamicwhenx(condition, truebranch, falsebranch) {
+function _whenx(condition, truebranch, falsebranch) {
 
-    return (arguments.length >= 3)
-         ? buildwhenx(condition, truebranch, falsebranch)
-         : buildwhenx(condition, truebranch, id);
-         
+    (arguments.length < 3) && (falsebranch = id);
+
+    return buildwhenx(condition, truebranch, falsebranch);        
 }
 
 function buildwhenx(condition, truebranch, falsebranch) {
