@@ -11,11 +11,11 @@
  * 
  * const { applicable } = require('functionish');
  * 
+ * const fortytwo = applicable(42);
+ * 
  * const iseven = x => (x%2) === 0;
  * const isodd = x => (x%2) !== 0;
  * const isnumber = x => (typeof x === 'number');
- * 
- * const fortytwo = applicable(42);
  * 
  * fortytwo(iseven);    // true
  * fortytwo(isnumber);  // true
