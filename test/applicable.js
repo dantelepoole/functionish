@@ -17,7 +17,7 @@ describe( 'applicable()', function() {
 
         describe( 'The result function', function() {
 
-            it('should call its first argument as a function and pass all arguments passed to applicable() in order',
+            it('should call its first argument as a function with the arguments passed to applicable()',
                 function() {
                     const apply1 = applicable(UNIQTHING);
                     expect( apply1(id) ).to.equal(UNIQTHING);
@@ -28,6 +28,7 @@ describe( 'applicable()', function() {
 
                     const apply3 = applicable();
                     expect( apply3(countargs) ).to.equal(0);
+                    expect( apply2(countargs) ).to.equal(4);
                 }
             )
 
