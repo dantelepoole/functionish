@@ -6,7 +6,6 @@ const ARG_A = {'label':'ARG_A'}
 const ARG_B = {'label':'ARG_B'}
 
 const collectargs = (...args) => args;
-const fakecollectargs = sinon.fake(collectargs);
 
 const countargs = (...args) => args.length;
 const fakecountargs = sinon.fake(countargs);
