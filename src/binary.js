@@ -5,8 +5,10 @@
 'use strict';
 
 /**
- * More specifically, return a function that accepts exactly two arguments
- * and passes them both *func*, effectively coercing *func* to have exactly two arguments.
+ * Return a function that always invokes *targetfunc* with exactly two arguments, regardless of the actual
+ * number of arguments it receives. If it receives less than two arguments, it passes `undefined` to
+ * *targetfunc* for the missing arguments. If it receives more than two arguments, it passes only the
+ * first two arguments and discards the others.
  * 
  * @example <caption>Example usage of `binary()`</caption>
  * 
@@ -19,11 +21,11 @@
  * 
  * @function binary
  * @see {@link module:unary unary()}
- * @param {function} func The target function
+ * @param {function} targetfunc The target function
  * @returns {function}
  */
-function binary(func) {
-    return (a,b) => func(a, b);
+function binary(targetfunc) {
+    return (a,b) => targetfunc(a, b);
 }
 
 module.exports = binary;
