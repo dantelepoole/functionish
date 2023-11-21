@@ -17,7 +17,7 @@ describe( 'apply()', function() {
             sinon.reset();
         })
 
-        it(`should call the 'apply()' method of its first argument`,
+        it(`should call the 'apply()' method of the target function`,
 
             function() {
                 expect(fakeapplycollectargs.callCount).to.equal(0);
@@ -26,7 +26,7 @@ describe( 'apply()', function() {
             }
         )
 
-        it(`should pass its own 'this' value' as the first argument to the 'apply()' method of its first argument`,
+        it(`should pass its own 'this' value' as the first argument to the 'apply()' method of the target function`,
 
             function() {
                 const isthis = apply.call(THIS, isTHIS, []);
@@ -34,7 +34,7 @@ describe( 'apply()', function() {
             }
         )
 
-        it(`should pass its second argument as the second argument to the 'apply()' method of its first argument`,
+        it(`should pass its second argument as the second argument to the 'apply()' method of the target function`,
 
             function() {
                 const argarray = ['fubar', 42, {}];
@@ -43,7 +43,7 @@ describe( 'apply()', function() {
             }
         )
 
-        it(`should return the return value of the call to the 'apply()' method of its first argument`,
+        it(`should return the return value of the call to the 'apply()' method of the target function`,
 
             function() {
                 const argarray = ['fubar', 42, {}];
