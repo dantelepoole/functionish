@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * Return a function that applies its argument function to *args* and returns the result. 
+ * Return a function that passes *args* to its argument function and returns the result. 
  * 
  * @example <caption>Example usage of `applicable()`</caption>
  * 
