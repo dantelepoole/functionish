@@ -4,13 +4,12 @@
 
 'use strict';
 
-const curry = require('./curry');
+const curry1 = require('./curry1');
 
 /**
- * Pass *args* to *func* and return the result.
- * 
- * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()} except it does not provide
- * for passing a custom `this`-obejct - the `this`-object that `apply()` itself is invoked with is used instead.
+ * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()}.
+ * Pass *args* to *targetfunc* and return the result. `apply()` passes its own `this` value to
+ * *targetfunc*.
  * 
  * `apply()` is curried by default with unary arity.
  * 
@@ -26,12 +25,15 @@ const curry = require('./curry');
  * 
  * @function apply
  * @see {@link module:applicable applicable()}
- * @param {function} func The function to apply to *args*
- * @param {any[]} args An array with the arguments to pass to *func*
+ * @param {function} targetfunc The function to apply to *args*
+ * @param {any[]} args An array with the arguments to pass to *targetfunc*
  * @returns {any}
  */
-function apply(func, args) {
-    return func.apply(this, args);
-}
+const apply = curry1(
 
-module.exports = curry(1, apply);
+    function apply(targetfunc, args) {
+        return targetfunc.apply(this, args);
+    }
+)
+
+module.exports = apply;
