@@ -15,11 +15,11 @@
  * const { binary } = require('functionish');
  * 
  * const printargs_binary = binary( console.log.bind.console );
- * 
- * console.log( 1,2,3,4,5 );      // prints `[1,2,3,4,5]`
- * printargs_binary( 1,2,3,4,5 ); // prints `[1,2]`
+ * printargs_binary( 1,2,3,4,5 ); // prints `1 2`
+ * printargs_binary(); // prints `undefined undefined`
  * 
  * @function binary
+ * @see {@link module:nullary nullary()}
  * @see {@link module:unary unary()}
  * @param {function} targetfunc The target function
  * @returns {function}

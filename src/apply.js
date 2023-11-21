@@ -8,7 +8,7 @@
  * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()}.
  * Pass *args* to *targetfunc* and return the result.
  * 
- * `apply()` passes its own `this` value to *targetfunc*.
+ * Unlike most functionish functions, `apply()` forwards its own `this` value to *targetfunc*.
  * 
  * `apply()` is curried by default with unary arity.
  * 
@@ -23,10 +23,9 @@
  * apply(isodd, [41]);  // false
  * 
  * @function apply
- * @see {@link module:applicable applicable()}
  * @param {function} targetfunc The function to apply to *args*
  * @param {any[]} argarray An array with the arguments to pass to *targetfunc*
- * @returns {any}
+ * @returns {any} *targetfunc*'s return value
  */
 function apply(targetfunc, argarray) {
 
