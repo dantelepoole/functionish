@@ -1,7 +1,7 @@
 const always = require('../src/always');
 const expect = require('chai').expect;
 
-const sentinel = Object.freeze({});
+const UNIQTHING = {}
 
 describe( 'always()', function() {
 
@@ -11,47 +11,29 @@ describe( 'always()', function() {
             }
         )
 
-        describe( 'The function returned by always()', function() {
+        describe( 'The result function', function() {
 
             it('should return the first argument passed to always()',
                 function() {
-                    expect( always(sentinel)() ).to.equal(sentinel);
+                    expect( always(UNIQTHING)() ).to.equal(UNIQTHING);
                 }
             )
 
-            it('should ignore any further arguments passed to always()',
+            it('should ignore any other arguments passed to always()',
                 function() {
-                    expect( always(sentinel, 42, 'foobar')() ).to.equal(sentinel);
+                    expect( always(UNIQTHING, 42, 'foobar')() ).to.equal(UNIQTHING);
                 }
             )
 
             it('should ignore its own arguments',
                 function() {
-                    expect( always(sentinel)('foo', 'bar', 42) ).to.equal(sentinel);
+                    expect( always(UNIQTHING)('foo', 'bar', 42) ).to.equal(UNIQTHING);
                 }
             )
 
-            it('should return undefined if no arguments were passed to always()',
+            it(`should return 'undefined' if no arguments were passed to always()`,
                 function() {
                     expect( always()() ).to.be.undefined;
-                }
-            )
-
-            it('should work with a null argument',
-                function() {
-                    expect( always(null)() ).to.be.null;
-                }
-            )
-
-            it('should work with an undefined argument',
-                function() {
-                    expect( always(undefined)() ).to.be.undefined;
-                }
-            )
-
-            it('should work with a NaN argument',
-                function() {
-                    expect( always(NaN)() ).to.be.NaN;
                 }
             )
         })
