@@ -23,6 +23,10 @@ describe( 'apply()', function() {
             expect(fakeapplycollectargs.callCount).to.equal(1);
         })
 
+        it(`should throw if the target function is not a function`, function() {
+            expect( () => apply() ).to.throw();
+        })
+
         it(`should pass its own 'this' value' as the first argument to the 'apply()' method of the target function`, function() {
             const isthis = apply.call(THIS, isTHIS, []);
             expect(isthis).to.be.true;
