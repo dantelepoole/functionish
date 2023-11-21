@@ -6,8 +6,9 @@
 
 /**
  * Functional variant of {@link external:Function.prototype.apply Function.prototype.apply()}.
- * Pass *args* to *targetfunc* and return the result. `apply()` passes its own `this` value to
- * *targetfunc*.
+ * Pass *args* to *targetfunc* and return the result.
+ * 
+ * `apply()` passes its own `this` value to *targetfunc*.
  * 
  * `apply()` is curried by default with unary arity.
  * 
@@ -24,14 +25,14 @@
  * @function apply
  * @see {@link module:applicable applicable()}
  * @param {function} targetfunc The function to apply to *args*
- * @param {any[]} args An array with the arguments to pass to *targetfunc*
+ * @param {any[]} argarray An array with the arguments to pass to *targetfunc*
  * @returns {any}
  */
-function apply(targetfunc, args) {
+function apply(targetfunc, argarray) {
 
     return (arguments.length === 1)
          ? function _apply(argarray) { return targetfunc.apply(this, argarray) }
-         : targetfunc.apply(this, args);
+         : targetfunc.apply(this, argarray);
 }
 
 module.exports = apply;
