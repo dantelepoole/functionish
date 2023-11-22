@@ -6,7 +6,7 @@
 
 const THIS_NULL = null;
 
-const curry = require('./curry');
+const curry1 = require('./curry1');
 const id = require('./id');
 
 const isfunction = require('./types/isfunction');
@@ -21,12 +21,12 @@ const isfunction = require('./types/isfunction');
  * @function when
  * @returns {function}
  */
-function when(condition, truebranch, falsebranch) {
+const when = curry1(function when(condition, truebranch, falsebranch) {
 
     return isfunction(condition) ? dynamicwhen(...arguments)
          : condition ? truebranch
          : falsebranch;
-}
+})
 
 function dynamicwhen(condition, truebranch, falsebranch) {
 
@@ -44,4 +44,4 @@ function _when(condition, truebranch, falsebranch, ...args) {
          : selectedbranch;
 }
 
-module.exports = curry(1, when);
+module.exports = when;
