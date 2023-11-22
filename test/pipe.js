@@ -47,8 +47,8 @@ describe( 'pipe()', function() {
                 expect(calllog).to.be.deep.equal( [fakeadd, fakedouble, fakeid] );
             })
 
-            it('should work with up to 10 target functions', function() {
-                testpiperange(10);
+            it('should work with any number of target functions', function() {
+                testpiperange(20);
             })
 
         })
