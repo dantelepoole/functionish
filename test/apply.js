@@ -14,7 +14,8 @@ function isTHIS() {
 describe( 'apply()', function() {
 
         beforeEach(function () {
-            sinon.reset();
+            sinon.resetHistory();
+            fakeapplycollectargs.resetHistory();
         })
 
         it(`should call the 'apply()' method of the target function`, function() {

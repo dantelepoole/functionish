@@ -9,12 +9,12 @@ const collectargs = (...args) => args;
 const fakecollectargs = sinon.fake(collectargs);
 
 const countargs = (...args) => args.length;
-const fakecountargs = sinon.fake(countargs);
 
 describe( 'binary()', function() {
 
         beforeEach(function () {
-            sinon.reset();
+            sinon.resetHistory();
+            fakecollectargs.resetHistory();
         })
 
         it(`should return a function`, function() {

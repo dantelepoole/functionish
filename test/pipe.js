@@ -17,6 +17,13 @@ const initcalllog = array => func => (...args) => (array.push(func), func(...arg
 
 describe( 'pipe()', function() {
 
+        beforeEach(function () {
+            sinon.resetHistory();
+            fakeadd.resetHistory();
+            fakedouble.resetHistory();
+            fakeid.resetHistory();
+        })
+
         it('should return a function', function() {
             expect( pipe(double, id, double) ).to.be.a('function');
         })
@@ -26,10 +33,6 @@ describe( 'pipe()', function() {
         })
 
         describe( 'The result function', function() {
-
-            beforeEach(function () {
-                sinon.restore();
-            })
 
             it('should call each target func once in order', function() {
                 

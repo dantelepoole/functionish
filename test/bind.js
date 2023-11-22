@@ -10,14 +10,14 @@ const collect = (...args) => args;
 function getthis() { return this }
 
 const fakecontainercollect = sinon.replace(container, 'collect', sinon.fake(collect))
-const fakecollect = sinon.fake(collect);
-const fakegetthis = sinon.fake(getthis);
 const fakecollectbind = sinon.replace(collect, 'bind', sinon.fake(collect.bind));
 
 describe( 'bind()', function() {
 
         beforeEach(function () {
-            sinon.reset();
+            sinon.resetHistory();
+            fakecontainercollect.resetHistory();
+            fakecollectbind.resetHistory();
         })
 
         it(`should return a function`, function() {

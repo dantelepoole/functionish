@@ -14,7 +14,8 @@ function isTHIS() {
 describe( 'call()', function() {
 
         beforeEach(function () {
-            sinon.reset();
+            sinon.resetHistory();
+            fakecallcollectargs.resetHistory();
         })
 
         it(`should call the 'call()' method of the target function`, function() {
