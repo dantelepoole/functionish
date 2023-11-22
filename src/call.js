@@ -5,10 +5,10 @@
  'use strict';
 
  /**
-  * Pass *args* to *func* and return the result.
+  * Functional variant of {@link external:Function.prototype.call Function.prototype.call()}. Pass *args* to
+  * *targetfunc* and return the result.
   * 
-  * Functional variant of {@link external:Function.prototype.call Function.prototype.call()} except it does not provide
-  * for passing a custom `this`-object - the `this`-object that `call()` itself is invoked with is used instead.
+  * Unlike most functionish functions, `call()` forwards its own `this` value to *targetfunc*.
   * 
   * @example <caption>Example usage of `call()`</caption>
   * 
@@ -20,12 +20,12 @@
   * call(sum, 1,2,3,4,5,6,7,8,9,10); // returns 55
   * 
   * @function call
-  * @param {function} func The function to call 
+  * @param {function} targetfunc The function to call 
   * @param {...any} args The arguments to pass to *func*
-  * @returns {any}
+  * @returns {any} *targetfunc*'s return value
   */
- function call(func, ...args) {
-    return func.call(this, ...args);
+ function call(targetfunc, ...args) {
+    return targetfunc.call(this, ...args);
  }
 
  module.exports = call;
