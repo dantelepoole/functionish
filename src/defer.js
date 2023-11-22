@@ -5,10 +5,8 @@
 'use strict';
 
 /**
- * Return a function that calls *func* with the specified *args*. This function behaves very similar to
+ * Return a function that calls *targetfunc* with the specified *args*. This function behaves very similar to
  * {@link module:partial partial()} except that the returned function disregards its own arguments.
- * 
- * [to do: this-value of defer() instead of this-value of returned function]
  * 
  * @example <caption>Example usage of `defer()`</caption>
  * 
@@ -23,12 +21,12 @@
  * addition(4,5,6); // returns 3 (the arguments to addition() are ignored)
  * 
  * @function defer
- * @param {function} func The function to call
+ * @param {function} targetfunc The function to call
  * @param  {...any} args The arguments to pass to *func*
  * @returns {function}
  */
-function defer(func, ...args) {
-    return () => func(...args);
+function defer(targetfunc, ...args) {
+    return () => targetfunc(...args);
 }
 
 module.exports = defer;
