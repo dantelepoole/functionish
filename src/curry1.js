@@ -7,16 +7,15 @@
 const curry = require('./curry');
 
 /**
- * Convenience function that simply passes *func* to {@link module:curry curry()} with an arity of `1`.
- * See {@link module:curry curry()} for more details and example usage.
+ * Convenience function that passes *targetfunc* to {@link module:curry curry()} with an arity of `1`.
  * 
  * @function curry1
  * @see {@link module:curry curry()}
- * @param {function} func The function to curry
+ * @param {function} targetfunc The function to curry
  * @returns {function}
  */
-function curry1(func) {
-    return curry(1, func);
+function curry1(targetfunc) {
+    return curry(1, targetfunc);
 }
 
 module.exports = curry1;
