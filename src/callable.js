@@ -18,8 +18,8 @@ const isfunction = require('./types/isfunction');
  * const fortytwo = callable(42);
  * fortytwo(); // returns 42
  * 
- * const random = callable(Math.random);
- * random(); // call Math.random()
+ * const double = x => (2*x);
+ * callablefunc(42); // returns `84`
  * 
  * @function callable
  * @see {@link module:evaluate evaluate()}
