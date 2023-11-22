@@ -24,7 +24,7 @@ const badfunctionerror = compose(raise, error.Type(ERRORMSG_BAD_FUNCTION), type)
 const validatefunction = func => isfunction(func) || badfunctionerror(func);
 
 const _curry = (targetfunc, arity, ...args) => (arity < args.length) ? targetfunc(...args)
-                                             : (arity === args.length) ? targetfunc.bind(THIS_NULL, ...args)
+                                             : (arity === args.length) ? targetfunc.bind(null, ...args)
                                              : applycurry(targetfunc, arity, args);
 
 /**
