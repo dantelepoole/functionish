@@ -4,39 +4,42 @@
 
 'use strict';
 
-const curry = require('./curry');
+const curry1 = require('./curry1');
 const isfunction = require('./types/isfunction');
 
 /**
- * Functional variant of {@link external:Function.prototype.bind Function.prototype.bind()}. Return a function that runs
- * *func* with *context* for its `this`-value and pre-bound to the *arg* arguments.
+ * Functional variant of {@link external:Function.prototype.bind Function.prototype.bind()}.
  * 
- * If *func* is a string or symbol instead of a function, the target function is looked up as a method on the
- * *context* object with the key *func*.
+ * If *target* is a function, it is bound to *thisvalue* and the *boundargs*. Otherwise, *target* is
+ * presumed to the key to a method of *thisvalue*, which method is then bound to *thisvalue* and the
+ * *boundargs*.
+ * 
+ * `bind()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `bind()`</caption>
  * 
  * const { bind } = require('functionish');
  * 
- * const log = bind(console.log, console);
- * // OR const log = bind('log', console);
+ * const log = bind(console.log, console); // OR: const log = bind('log', console);
  * 
- * log('foobar'); // send 'foobar' to the console.log() method
+ * log('foo', 'bar'); // prints `foo bar`
  * 
  * @function bind
- * @see {@link module:partial partial()}
  * @see {@link external:Function.prototype.bind Function.prototype.bind()}
- * @param {(function|string|symbol)} func The function or method key to bind to *context* and *args*
- * @param {object} context The value to assign to *func*'s `this` value
- * @param {...any} args The optional args to bind to *func*
+ * @param {(function|string|symbol)} target The function or method key to bind
+ * @param {any} thisvalue The value to use for the bound function's `this` value
+ * @param {...any} args The optional arguments to bind *target* with
  * @returns {function}
  */
-function bind(func, context, ...args) {
+const bind = curry1(
 
-    return isfunction(func)
-         ? func.bind(context, ...args)
-         : context[func].bind(context, ...args);
+    function bind(target, thisvalue, ...boundargs) {
 
-}
+        return isfunction(target)
+            ? target.bind(thisvalue, ...boundargs)
+            : thisvalue[target].bind(thisvalue, ...boundargs);
 
-module.exports = curry(1, bind);
+    }
+)
+
+module.exports = bind;
