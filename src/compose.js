@@ -4,15 +4,15 @@
 
 'use strict';
 
-const THIS_NULL = null;
-
-const always = require('./always');
-const id = require('./id');
+const ERR_MISSING_FUNCTIONS = `functionish/compose(): The targetfuncs argument array is empty. Expected at least one function.`;
 
 const head = array => array[0];
 
+const largecomposer = funcs => runcompose.bind(null, funcs);
+const raisemissingfunctionserror = () => { throw new TypeError(ERR_MISSING_FUNCTIONS); }
+
 const composermap = Object.freeze([
-    always(id),
+    raisemissingfunctionserror,
     head,
     ([f1,f2]) => (...args) => f1(f2(...args)),
     ([f1,f2,f3]) => (...args) => f1(f2(f3(...args))),
@@ -20,13 +20,12 @@ const composermap = Object.freeze([
     ([f1,f2,f3,f4,f5]) => (...args) => f1(f2(f3(f4(f5(...args))))),
 ]);
 
-const largecomposer = funcs => runcompose.bind(THIS_NULL, funcs);
 
 /**
- * Compose is similar to {@link module:pipe pipe()} except that it invokes *funcs* in reverse order, i.e.
- * from right to left. See {@link module:pipe pipe()} for further details.
+ * Return a function that runs each function in the *targetfuncs* array in reverse order (i.e. from last
+ * to first) passing the previous function's return value to the following function.
  * 
- * If the *funcs* array is empty, the returned function simply returns its first argument.
+ * If the *targetfuncs* array is empty, and error is thrown.
  * 
  * @example <caption>Example usage of `compose()`</caption>
  * 
@@ -42,21 +41,21 @@ const largecomposer = funcs => runcompose.bind(THIS_NULL, funcs);
  * 
  * @function compose
  * @see {@link module:pipe pipe()}
- * @param  {...function} funcs One or more functions to compose
+ * @param  {...function} targetfuncs One or more functions to compose
  * @returns {function}
  */
-function compose(...funcs) {
+function compose(...targetfuncs) {
 
-    const composer = (composermap[funcs.length] ?? largecomposer);
+    const composer = (composermap[targetfuncs.length] ?? largecomposer);
 
-    return composer(funcs);
+    return composer(targetfuncs);
 }
 
-function runcompose(funcs, ...args) {
+function runcompose(targetfuncs, ...args) {
 
-    let result = funcs[funcs.length-1](...args);
+    let result = targetfuncs[targetfuncs.length-1](...args);
 
-    for(let i = funcs.length-2; i >= 0; i -= 1) result = funcs[i](result);
+    for(let i = (targetfuncs.length-2); i >= 0; i -= 1) result = targetfuncs[i](result);
 
     return result;
 }
