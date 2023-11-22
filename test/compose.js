@@ -57,18 +57,15 @@ describe( 'compose()', function() {
 
 function testcompositionrange(count) {
 
-    
-    let composition, retval;
-    
     const targetfuncs = new Array(count).fill(fakeid);
     
     while(targetfuncs.length > 0) {
         
         fakeid.resetHistory();
 
-        composition = compose(...targetfuncs);
+        const composition = compose(...targetfuncs);
+        const retval = composition(UNIQTHING);
         
-        retval = composition(UNIQTHING);
         expect(retval).to.be.equal(UNIQTHING);
         expect(fakeid.callCount).to.be.equal(targetfuncs.length);
 
