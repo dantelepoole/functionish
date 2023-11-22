@@ -4,14 +4,16 @@
 
 'use strict';
 
-const THIS_NULL = null;
+const ERR_MISSING_FUNCTIONS = `functionish/pipe(): The targetfuncs argument array is empty. Expected at least one function.`;
 
-const always = require('./always');
 const head = require('./arrays/head');
 const id = require('./id');
 
+const largepipecomposer = funcs => runpipe.bind(null, funcs);
+const raisemissingfunctionserror = () => { throw new TypeError(ERR_MISSING_FUNCTIONS); }
+
 const pipecomposermap = Object.freeze([
-    always(id),
+    raisemissingfunctionserror,
     head,
     ([f1,f2]) => (...args) => f2(f1(...args)),
     ([f1,f2,f3]) => (...args) => f3(f2(f1(...args))),
@@ -19,14 +21,11 @@ const pipecomposermap = Object.freeze([
     ([f1,f2,f3,f4,f5]) => (...args) => f5(f4(f3(f2(f1(...args))))),
 ]);
 
-const largepipecomposer = funcs => runpipe.bind(THIS_NULL, funcs);
-
 /**
- * Return a function that feeds its arguments to the first function in *funcs*, then passes the result to the second
- * function in *funcs*, and so on, until all functions in *funcs* have been called, after which it returns the last
- * function's result.
+ * Return a function that runs each function in the *targetfuncs* array in order (i.e. from first
+ * to last) passing the previous function's return value to the following function each time.
  * 
- * If the *funcs* array is empty, the returned function simply returns its first argument.
+ * If the *targetfuncs* array is empty an error is thrown.
  * 
  * @example <caption>Example usage of `pipe()`</caption>
  * 
@@ -36,20 +35,20 @@ const largepipecomposer = funcs => runpipe.bind(THIS_NULL, funcs);
  * const double = x => (x*2);
  * const negate = x => -x;
  * 
- * const allthree = pipe(negate, double, increment);
+ * const calculate = pipe(negate, double, increment);
  * 
- * allthree(42); // returns `-83`
+ * calculate(42); // returns `-83`
  * 
  * @function pipe
  * @see {@link module:compose compose()}
- * @param {...function} funcs One or more functions to pipe
+ * @param {...function} targetfuncs One or more functions to pipe
  * @returns {function}
  */
-function pipe(...funcs) {
+function pipe(...targetfuncs) {
 
-    const pipecomposer = (pipecomposermap[funcs.length] ?? largepipecomposer);
+    const pipecomposer = (pipecomposermap[targetfuncs.length] ?? largepipecomposer);
 
-    return pipecomposer(funcs);
+    return pipecomposer(targetfuncs);
 }
 
 function runpipe(funcs, ...args) {
