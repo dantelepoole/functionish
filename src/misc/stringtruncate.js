@@ -1,22 +1,24 @@
 /**
- * @module misc/stringlimit
+ * @module misc/stringtruncate
  */
 
 'use strict';
 
 const ELLIPSIS = '...';
-const ERRORMSG_MAXCHARS = `functionish/misc/stringlimit(): The maxcharacters argument %s. Expected a positive integer of 1 or more.`;
+const ERRORMSG_MAXCHARS = `functionish/misc/stringtruncate(): The maxcharacters argument is %s. Expected a positive integer of 1 or more.`;
 
 const compose = require('../compose');
-const curry = require('../curry');
+const curry2 = require('../curry2');
 const error = require('../errors/error');
 const isinteger = require('../types/isinteger');
 const isnumberornan = require('../types/isnumberornan');
+const isstring = require('../types/isstring');
 const not = require('../logic/not');
 const or = require('../logic/or');
 const raise = require('../errors/raise');
 const when = require('../when');
 
+const normalize = compose(JSON.stringify, String);
 const lessthan1 = x => (x < 1);
 const maxcharserror = error.Type(ERRORMSG_MAXCHARS);
 const buildmaxcharserror = max => isnumberornan(max)
@@ -29,20 +31,24 @@ const validatemaxchars = when(isbadmaxchars, raisemaxcharserror);
 /**
  * to do
  * 
- * @example <caption>Example usage of `stringlimit()`</caption>
+ * @example <caption>Example usage of `stringtruncate()`</caption>
  *
  * to do 
  * 
- * @function stringlimit
+ * @function stringtruncate
  * @returns {string}
  */
-function stringlimit(limitmarker=ELLIPSIS, maxcharacters, string) {
+const stringtruncate = curry2(function stringtruncate(limitmarker=ELLIPSIS, maxcharacters, string) {
     
     validatemaxchars(maxcharacters);
 
-    return (string.length <= maxcharacters) ? string
-         : (maxcharacters <= limitmarker.length) ? string.slice(0, maxcharacters)
-         : string.slice(0, maxcharacters - limitmarker.length) + limitmarker;
-}
+    isstring(limitmarker) || (limitmarker = normalize(limitmarker))
+    
+    const normalized = normalize(string);
 
-module.exports = curry(2, stringlimit);
+    return (normalized.length <= maxcharacters) ? normalized
+         : (maxcharacters <= limitmarker.length) ? normalized.slice(0, maxcharacters)
+         : normalized.slice(0, maxcharacters - limitmarker.length) + limitmarker;
+})
+
+module.exports = stringtruncate;
