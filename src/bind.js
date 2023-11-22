@@ -31,15 +31,12 @@ const isfunction = require('./types/isfunction');
  * @param {...any} args The optional arguments to bind *target* with
  * @returns {function}
  */
-const bind = curry1(
+const bind = curry1(function bind(target, thisvalue, ...boundargs) {
 
-    function bind(target, thisvalue, ...boundargs) {
+    return isfunction(target)
+        ? target.bind(thisvalue, ...boundargs)
+        : thisvalue[target].bind(thisvalue, ...boundargs);
 
-        return isfunction(target)
-            ? target.bind(thisvalue, ...boundargs)
-            : thisvalue[target].bind(thisvalue, ...boundargs);
-
-    }
-)
+})
 
 module.exports = bind;
