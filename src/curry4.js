@@ -12,7 +12,7 @@ const curry = require('./curry');
  * @function curry1
  * @see {@link module:curry curry()}
  * @param {function} targetfunc The function to curry
- * @returns {function}
+ * @returns {function} A currying function
  */
 function curry4(targetfunc) {
     return curry(4, targetfunc);
