@@ -20,12 +20,11 @@ const composermap = Object.freeze([
     ([f1,f2,f3,f4,f5]) => (...args) => f1(f2(f3(f4(f5(...args))))),
 ]);
 
-
 /**
  * Return a function that runs each function in the *targetfuncs* array in reverse order (i.e. from last
- * to first) passing the previous function's return value to the following function.
+ * to first) passing the previous function's return value to the following function each time.
  * 
- * If the *targetfuncs* array is empty, and error is thrown.
+ * If the *targetfuncs* array is empty an error is thrown.
  * 
  * @example <caption>Example usage of `compose()`</caption>
  * 
