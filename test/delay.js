@@ -56,7 +56,7 @@ describe( 'delay()', function() {
                 done(error);
             }
 
-            const delayms = 10;
+            const delayms = 100;
             delay(delayms, callback, delayms, Date.now());
         })
 
