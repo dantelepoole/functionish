@@ -14,7 +14,7 @@ describe( 'nullary()', function() {
         })
 
         it(`should return a function`, function() {
-            expect( nullary(countargs) ).to.be.a('function');
+            expect( nullary(collectargs) ).to.be.a('function');
         })
 
         describe( 'The result function', function() {
@@ -25,7 +25,7 @@ describe( 'nullary()', function() {
                 expect( () => badnullary() ).to.throw();
             })
 
-            it(`should always invoke the target function without arguments`, function() {
+            it(`should always invoke the target function without arguments regardless of the number of arguments passed`, function() {
                 
                 const nullarycollectargs = nullary(collectargs);
                 
@@ -37,38 +37,12 @@ describe( 'nullary()', function() {
 
             })
 
-            it(`should pass its own first two to arguments to the target function`, function() {
-                
-                const binarycollectargs = nullary(collectargs);
-
-                let retval = binarycollectargs();
-                expect(retval).to.be.deep.equal([undefined, undefined]);
-
-                retval = binarycollectargs(ARG_A);
-                expect(retval).to.be.deep.equal([ARG_A, undefined]);
-
-                retval = binarycollectargs(ARG_A, ARG_B);
-                expect(retval).to.be.deep.equal([ARG_A, ARG_B]);
-
-                retval = binarycollectargs(ARG_A, ARG_B, ARG_A);
-                expect(retval).to.be.deep.equal([ARG_A, ARG_B]);
-            })
-
             it(`should return the target function's return value`, function() {
                 
-                const binarycollectargs = nullary(collectargs);
-
-                let retval = binarycollectargs();
-                expect(retval).to.be.deep.equal([undefined, undefined]);
-
-                retval = binarycollectargs(ARG_A);
-                expect(retval).to.be.deep.equal([ARG_A, undefined]);
-
-                retval = binarycollectargs(ARG_A, ARG_B);
-                expect(retval).to.be.deep.equal([ARG_A, ARG_B]);
-
-                retval = binarycollectargs(ARG_A, ARG_B, ARG_A);
-                expect(retval).to.be.deep.equal([ARG_A, ARG_B]);
+                const nullarycollectargs = nullary(collectargs);
+                
+                const result = nullarycollectargs(42, 'fubar', UNIQTHING);
+                expect(result.length).to.equal(0);
             })
         })
     }
