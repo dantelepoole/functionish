@@ -5,9 +5,10 @@
 'use strict';
 
 /**
- * Do nothing. Return undefined.
+ * Do nothing.
  * 
  * @function noop
+ * @returns undefined
  */
 function noop() {}
 
