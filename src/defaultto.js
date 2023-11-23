@@ -12,7 +12,7 @@ const coalesce = defaultvalue => value => isvoid(value) ? defaultvalue : value;
 
 /**
  * Return a function that passes its arguments to *targetfunc* and returns its return value. If the return value
- * is <abbrev caption="null or undefined">void</abbrev>, *defaultvalue* is returned instead.
+ * is <abbr title="null or undefined">void</abbr>, *defaultvalue* is returned instead.
  * 
  * `defaultto()` is curried by default with unary arity.
  * 
