@@ -1,8 +1,6 @@
 /**
- * module juxtapose
+ * @module juxtapose
  */
-
-const THIS_NULL = null;
 
 'use strict';
 
@@ -21,23 +19,21 @@ const poprestfunc = compose(head, pop);
 const getrestfunc = funcs => hasrestfunc(funcs) ? poprestfunc(funcs) : null;
 
 function juxtapose(...funcs) {
-    return runjuxtapose.bind(THIS_NULL, getrestfunc(funcs), funcs);
+    return runjuxtapose.bind(null, getrestfunc(funcs), funcs);
 }
 
 function runjuxtapose(restfunc, funcs, ...args) {
 
     const stopshort = minvalue(funcs.length, args.length);
 
-    if(funcs.length > args.length) args.length = funcs.length;
+    (funcs.length <= args.length) || (args.length = funcs.length);
 
-    let i;
+    for(let i = 0; i < funcs.length; i += 1) args[i] = (i < stopshort) ? funcs[i]( args[i] ) : funcs[i]();
 
-    for( i = 0; i < stopshort; i += 1) args[i] = funcs[i]( args[i] );
-    for( /* noop */; i < funcs.length; i += 1) args[i] = funcs[i]();
-
-    if(restfunc !== null) {
-        const restargs = restfunc( args.slice(i) );
-        (args.length > i) && (args.length = i);
+    if(restfunc) {
+        const restindex = funcs.length;
+        const restargs = restfunc( ...args.slice(restindex) );
+        (args.length <= restindex) || (args.length = restindex);
         isempty(restargs) || push(args, ...restargs);
     }
 
