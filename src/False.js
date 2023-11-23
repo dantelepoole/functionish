@@ -7,14 +7,20 @@
 const isfunction = require('./types/isfunction');
 
 /** 
- * to do
+ * Always return the boolean `false`. If *expression* is a function, it is called with *args* and its return value is
+ * ignored.
  * 
  * @example <caption>Example usage of `False()`</caption>
  * 
- * to do
+ * const { False } = require('functionish');
+ * 
+ * False(); // returns false
+ * False(console.log, 'fubar'); // prints `fubar` to stdout and returns false
  * 
  * @function False
- * @returns {function}
+ * @param {any} expression A function to call or any other value
+ * @param {...any[]} args The arguments to pass to *expression* if it is a function
+ * @returns {boolean} Always boolean `false`
  */
 function False(expression, ...args) {
 
