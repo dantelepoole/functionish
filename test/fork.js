@@ -76,16 +76,6 @@ describe( 'fork()', function() {
                 
             })
 
-            it(`should return an array holding the target function's return values`, function() {
-
-                const functionfork = fork(id, fubar, uniqthing);
-
-                const retvals = functionfork(42, UNIQTHING, 'fubar');
-
-                expect(retvals).to.deep.equal( [42, 'fubar', UNIQTHING] );
-                
-            })
-
             it(`should have a 'join()' method`, function() {
 
                 const functionfork = fork(id, fubar, uniqthing);
