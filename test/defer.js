@@ -29,7 +29,7 @@ describe( 'defer()', function() {
                 expect(fakecollect.callCount).to.be.equal(1);
             })
 
-            it('should return the return the arguments passed to defer()', function() {
+            it(`should pass the arguments passed to defer() to the target function`, function() {
                 
                 const deferredcollect = defer(fakecollect, UNIQTHING);
                 const retval = deferredcollect();
