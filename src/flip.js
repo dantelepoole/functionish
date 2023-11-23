@@ -4,6 +4,12 @@
 
 'use strict';
 
+const ERR_BAD_TARGETFUNCTION = `functionish/flip(): The target function has type %'s'. Expected a function.`;
+
+const format = require('./misc/format');
+const isfunction = require('./types/isfunction');
+const typeorclassname = require('./types/typeorclassname');
+
 /**
  * Return a function that calls *targetfunc* with its first two arguments swapped. Any further
  * arguments passed to the flipped function are forwarded unchanged.
@@ -32,6 +38,8 @@
  */
 function flip(targetfunc) {
 
+    validatetargetfunction(targetfunc);
+
     return function _flip(a, b, ...args) {
 
         return (arguments.length === 1)
@@ -39,6 +47,14 @@ function flip(targetfunc) {
              : targetfunc(b, a, ...args);
     }
 
+}
+
+function validatetargetfunction(targetfunc) {
+
+    if( isfunction(targetfunc) ) return targetfunc;
+
+    const errormessage = format(ERR_BAD_TARGETFUNCTION, typeorclassname(targetfunc));
+    throw new TypeError(errormessage);
 }
 
 module.exports = flip;
