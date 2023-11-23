@@ -50,7 +50,9 @@ const validatedelayms = delayms => (isinteger(delayms) && (delayms > 0)) || rais
  */
 const debounce = curry2(function debounce(mode=MODE_LEADING, delayms, targetfunc) {
 
-    validatemode(mode) && validatedelayms(delayms) && validatetargetfunction(targetfunc);
+    validatemode(mode);
+    validatedelayms(delayms);
+    validatetargetfunction(targetfunc);
 
     const ismodeleading = (mode === MODE_LEADING);
 

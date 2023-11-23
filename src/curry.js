@@ -46,7 +46,8 @@ const _curry = (targetfunc, arity, ...args) => (arity < args.length) ? targetfun
  */
 function curry(arity, targetfunc) {
 
-    validatearity(arity) && validatefunction(targetfunc);
+    validatearity(arity);
+    validatefunction(targetfunc);
 
     return (arity === 0)
          ? targetfunc
