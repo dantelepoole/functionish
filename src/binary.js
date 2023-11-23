@@ -19,6 +19,7 @@
  * printargs_binary(); // prints `undefined undefined`
  * 
  * @function binary
+ * @see {@link module:witharity witharity()}
  * @see {@link module:nullary nullary()}
  * @see {@link module:unary unary()}
  * @param {function} targetfunc The target function

@@ -5,8 +5,8 @@
 'use strict';
 
 /**
- * Coerce *func* to have nullary arity. More specifically, return a function that ignores its arguments and calls
- * *func* without any arguments.
+ * Return a function that always invokes *targetfunc* with no arguments, regardless of the actual
+ * number of arguments it receives. Any arguments passed are silently discarded before invoking *targetfunc*.
  * 
  * @example <caption>Example usage of `nullary()`</caption>
  * 
@@ -21,12 +21,12 @@
  * @see {@link module:witharity witharity()}
  * @see {@link module:unary unary()}
  * @see {@link module:binary binary()}
- * @param {function} func The function to invoke without arguments
+ * @param {function} targetfunc The function to invoke without arguments
  * @returns {function}
  */
 
-function nullary(func) {
-    return () => func();
+function nullary(targetfunc) {
+    return () => targetfunc();
 }
 
 module.exports = nullary;
