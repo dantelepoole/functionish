@@ -10,8 +10,6 @@ const isfunction = require('./types/isfunction');
  * If *expression* is a function, pass *args* to it and return the result. Otherwise, ignore *args* and just return
  * *expression*.
  * 
- * [to do: use 'this']
- * 
  * @example <caption>Example usage of `evaluate()`</caption>
  *     
  * const { evaluate } = require('functionish')
@@ -26,7 +24,7 @@ const isfunction = require('./types/isfunction');
  * @see {@link module:callable callable()} 
  * @param {any} expression The function or value to evaluate
  * @param  {...any} args The arguments to pass to *expression* if it is a function
- * @returns {function}
+ * @returns {any}
  */
 function evaluate(expression, ...args) {
 
