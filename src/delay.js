@@ -4,10 +4,15 @@
 
 'use strict';
 
-const THIS_NULL = null;
+const ERR_BAD_DELAYMS = `functionish/delay(): The delayms argument is %s. Expected an integer of 0 or greater.`;
+const ERR_BAD_TARGETFUNCTION = `functionish/delay(): The target function has type %. Expected a function.`;
 
 const curry = require('./curry');
 const defer = require('./defer');
+const format = require('./misc/format');
+const isfunction = require('./types/isfunction');
+const isnumberornan = require('./types/isnumberornan');
+const typeorclassname = require('./types/typeorclassname');
 
 /**
  * Call *targetfunc* with the specified *args* after at least *delay* milliseconds have passed and return a function
@@ -33,10 +38,34 @@ const defer = require('./defer');
  */
 function delay(delayms, targetfunc, ...args) {
 
+    validatedelayms(delayms);
+    validatetargetfunction(targetfunc);
+
     const deferredfunc = defer(targetfunc, ...args);
     const timeoutid = setTimeout(deferredfunc, delayms);
     
-    return clearTimeout.bind(THIS_NULL, timeoutid);
+    return clearTimeout.bind(null, timeoutid);
+}
+
+function validatetargetfunction(targetfunc) {
+
+    if( isfunction(targetfunc) ) return targetfunc;
+
+    const errormessage = format(ERR_BAD_TARGETFUNCTION, typeorclassname(targetfunc));
+    throw new TypeError(errormessage);
+}
+
+function validatedelayms(delayms) {
+
+    if(Number.isSafeInteger(delayms) && delayms >= 0) return delayms;
+
+    const messagepart = isnumberornan(delayms)
+                      ? String(delayms)
+                      : typeorclassname(delayms);
+
+    const errormessage = format(ERR_BAD_DELAYMS, messagepart);
+
+    throw new TypeError(errormessage);
 }
 
 module.exports = curry(1, delay);
