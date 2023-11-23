@@ -15,7 +15,7 @@
  * 
  * @function id
  * @param {any} value The value to return
- * @returns {any}
+ * @returns {any} *value*
  */
 function id(value) {
     return value;
