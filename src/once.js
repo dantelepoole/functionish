@@ -17,12 +17,11 @@ const always = require('./always');
  * 
  * @function once
  * @param {function} targetfunc The function to run
- * @param {...any[]} partialargs Optional arguments to partially apply to *func*
  * @returns {function}
  */
-function once(targetfunc, ...partialargs) {
+function once(targetfunc) {
 
-    let oncefunc = (...args) => (oncefunc = always( targetfunc(...partialargs, ...args) ))();
+    let oncefunc = (...args) => (oncefunc = always( targetfunc(...args) ))();
 
     return (...args) => oncefunc(...args);
 
