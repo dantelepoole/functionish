@@ -6,7 +6,7 @@
 
 const ERR_BAD_TARGETFUNCTION = `functionish/flip(): The target function has type '%s'. Expected a function.`;
 
-const curry = require('./curry');
+const curry1 = require('./curry1');
 const format = require('./misc/format');
 const isfunction = require('./types/isfunction');
 const typeorclassname = require('./types/typeorclassname');
@@ -35,13 +35,14 @@ const typeorclassname = require('./types/typeorclassname');
  * @param {any} onerror The function to call or the value to return if *targetfunc* throws
  * @param {function} targetfunc The function to run
  * @returns {any} function
+ * @throws {TypeError} if *targetfunc* is not a function
  */
-function trycatch(onerror, targetfunc) {
+const trycatch = curry1(function trycatch(onerror, targetfunc) {
 
     validatetargetfunction(targetfunc);
 
     return _trycatch.bind(null, onerror, targetfunc);
-}
+})
 
 function _trycatch(onerror, targetfunc, ...args) {
 
@@ -64,4 +65,4 @@ function validatetargetfunction(targetfunc) {
     throw new TypeError(errormessage);
 }
 
-module.exports = curry(1, trycatch);
+module.exports = trycatch;
