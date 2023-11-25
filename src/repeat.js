@@ -26,8 +26,8 @@ const validatecount = count => ispositiveinteger(count)
                                || raisebadcounttypeerror(typeof count);
 
 /**
- * Invoke *func* *count* number of times, passing *args* at each invocation, and return the result of
- * the last invocation or `undefined` is *func* is never called.
+ * Invoke *targetfunc* *count* number of times and return the return value of the final call or `undefined` if
+ * *targetfunc* is never called.
  * 
  * @example <caption>Example usage of `repeat()`</caption>
  * 
@@ -36,18 +36,21 @@ const validatecount = count => ispositiveinteger(count)
  * repeat(3, console.log, 'foobar'); // prints 'foobar' to the screen three times in a row
  * 
  * @function repeat
- * @param {number} count The number of times to call *func*
- * @param {function} func The function to invoke
- * @param {...any} args The arguments to pass to *func*
- * @returns {any}
+ * @param {number} count The number of times to call *targetfunc*
+ * @param {function} targetfunc The function to invoke
+ * @param {...any} args The arguments to pass to *targetfunc*
+ * @returns {any} The final call's return value
  */
-function repeat(count, func, ...args) {
+function repeat(count, targetfunc, ...args) {
 
     validatecount(count);
 
     let result = undefined;
 
-    for( /* noop */; count > 0; count -= 1 ) result = func(...args);
+    while(count > 0) {
+        result = targetfunc(...args);
+        count -= 1;
+    }
 
     return result;
 }
