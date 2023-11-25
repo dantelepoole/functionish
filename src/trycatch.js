@@ -25,9 +25,9 @@ const typeorclassname = require('./types/typeorclassname');
  * const { trycatch } = require('functionish');
  * 
  * const onerror = (err,func,args) = { console.error(err.message, func.name, args); return 'fubar' }
- * const dosomething = () => { throw new Error('something went wrong') }
+ * const dosomething = trycatch(onerror, () => { throw new Error('something went wrong') });
  * 
- * const result = trycatch(onerror, dosomething, 42);
+ * const result = dosomething(42);
  * // prints 'something went wrong', 'dosomething', [42]
  * // result = 'fubar'
  * 
