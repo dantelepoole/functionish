@@ -93,6 +93,14 @@ describe( 'fork()', function() {
 
                     expect( forkedandjoinedfunctions ).to.be.a('function');
                 })
+
+                it('should throw if its argument is not a function', function() {
+    
+                    const forkedfunctions = fork(id, fubar, uniqthing);
+
+                    expect( () => forkedfunctions.join() ).to.throw;
+                    expect( () => forkedfunctions.join(UNIQTHING) ).to.throw;
+                })
     
                 describe( `The join() method's result function`, function() {
 
@@ -142,14 +150,6 @@ describe( 'fork()', function() {
                         const retval = forkedandjoinedfunctions(42, UNIQTHING, 'fubar');
 
                         expect(retval).to.deep.equal( [42,'fubar',UNIQTHING] );
-                    })
-
-                    it(`should throw if the join-function is not a function`, function() {
-        
-                        const forkedfunctions = fork(id, fubar, uniqthing);
-                        const forkedandjoinedfunctions = forkedfunctions.join(UNIQTHING);
-                        
-                        expect(forkedandjoinedfunctions).to.throw;
                     })
                 })
             })
