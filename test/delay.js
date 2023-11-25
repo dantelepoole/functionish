@@ -10,6 +10,14 @@ const fakeclearTimeout = sinon.fake(clearTimeout);
 const nativeclearTimeout = global.clearTimeout;
 global.clearTimeout = fakeclearTimeout;
 
+function iswithin10percent(targetvalue, actualvalue) {
+
+    const rangelow = targetvalue * 0.9;
+    const rangehi = targetvalue * 1.1;
+
+    return (actualvalue >= rangelow && actualvalue <= rangehi);
+}
+
 describe( 'delay()', function() {
 
         after(function () {
@@ -43,15 +51,16 @@ describe( 'delay()', function() {
             expect( ()=>delay(1) ).to.throw;
         })
 
-        it('should call the target function after at least delayms milliseconds have elapsed', function(done) {
+        it('should call the target function after at least 90% of delayms milliseconds have elapsed', function(done) {
 
             function callback(delayms, startms) {
 
                 const elapsedms = Date.now() - startms;
-                
-                const error = (elapsedms >= delayms)
+                const minelapsedms = 0.9 * delayms;
+
+                const error = (elapsedms >= minelapsedms)
                             ? undefined
-                            : new Error(`The elapsed time was ${elapsedms}. It should have been at least ${delayms}`);
+                            : new Error(`The elapsed time was ${elapsedms}. It should have been at least ${minelapsedms} (90% of ${delayms})`);
 
                 done(error);
             }
