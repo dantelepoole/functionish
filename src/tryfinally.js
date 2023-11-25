@@ -48,16 +48,18 @@ const tryfinally = curry1(function tryfinally(onfinally, targetfunc) {
     validatefinallyhandler(onfinally);
     validatetargetfunction(targetfunc);
 
-    return _tryfinally.bind(null, onfinally, nothrow(targetfunc));
+    targetfunc = nothrow(targetfunc);
+
+    return _tryfinally.bind(null, onfinally, targetfunc);
 })
 
 function _tryfinally(finallyhandler, targetfunc, ...args) {
 
-    const [data, error] = targetfunc(targetfunc, ...args);
+    const [data, error] = targetfunc(...args);
 
     const result = finallyhandler(error, data);
 
-    (result === error) && raise(error);
+    result && (result === error) && raise(error);
 
     return result;
 }
@@ -78,4 +80,4 @@ function validatetargetfunction(targetfunc) {
     throw new TypeError(errormessage);
 }
 
-module.exports = curry1(1, tryfinally);
+module.exports = tryfinally;
