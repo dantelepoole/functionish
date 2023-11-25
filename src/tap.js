@@ -4,7 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_TARGETFUNCTION = `functionish/tap(): The target function has type %'s'. Expected a function.`;
+const ERR_BAD_TARGETFUNCTION = `functionish/tap(): The target function has type '%s'. Expected a function.`;
 
 const format = require('./misc/format');
 const isfunction = require('./types/isfunction');

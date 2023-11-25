@@ -4,7 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_TARGETFUNCTION = `functionish/recursive(): The target function has type %'s'. Expected a function.`;
+const ERR_BAD_TARGETFUNCTION = `functionish/recursive(): The target function has type '%s'. Expected a function.`;
 const ERR_BOUND_TARGETFUNCTION = `functionish/recursive(): The target function may not be bound.`;
 
 const FLAG_RECURSE = Symbol('functionish/recursive/#FLAG_RECURSE');
