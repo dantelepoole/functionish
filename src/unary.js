@@ -5,8 +5,9 @@
 'use strict';
 
 /**
- * Return a function that accepts exactly one parameter and passes it to *func*. Any other arguments
- * passed to the returned function are ignored.
+ * Return a function that accepts exactly one argument and passes it to *targetfunc*. Any other arguments
+ * passed to the returned function are ignored. When called without any arguments, the argument passed to *targetfunc*
+ * will be `undefined`.
  * 
  * @example <caption>Example usage of `unary()`</caption>
  * 
@@ -18,14 +19,13 @@
  * 
  * @function unary
  * @see {@link module:witharity witharity()}
- * @see {@link module:unary unary()}
+ * @see {@link module:nullary nullary()}
  * @see {@link module:binary binary()}
- * @param {function} func The function to invoke with a single argument
- * @param {...any[]} partialargs Optional arguments to pass to *func*
+ * @param {function} targetfunc The function to call with exactly one argument
  * @returns {function}
  */
-function unary(func) {
-    return x => func(x);
+function unary(targetfunc) {
+    return x => targetfunc(x);
 }
 
 module.exports = unary;
