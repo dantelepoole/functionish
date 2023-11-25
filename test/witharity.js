@@ -28,6 +28,10 @@ describe( 'witharity()', function() {
             expect( () => witharity(42) ).to.throw;
         })
 
+        it.skip(`should be curried with unary arity`, function() {
+            // to do
+        })
+
         describe( 'The result function', function() {
 
             it(`should invoke the target function with specified number of arguments`, function() {
