@@ -4,32 +4,76 @@
 
 'use strict';
 
-const THIS_NULL = null;
+const ERR_BAD_COMPOSITEWRAPPER = `functionish/wrap(): One or more of the items in the wrapper-array is not a function or the wrapper-array is empty.`;
+const ERR_BAD_WRAPPER = `functionish/wrap(): The wrapper argument has type '%s'. Expected a function or function-array.`;
+const ERR_BAD_TARGETFUNCTION = `functionish/wrap(): The target function has type '%s'. Expected a function.`;
 
-const curry = require('./curry');
+const curry1 = require('./curry1');
+const format = require('./misc/format');
+const isarray = require('./types/isarray');
 const isfunction = require('./types/isfunction');
+const typeorclassname = require('./types/typeorclassname');
 
-
-const wrapreducer = (next, wrapper) => wrapper.bind(THIS_NULL, next);
+const iscompositewrapper = wrapper => isarray(wrapper) && wrapper.every(isfunction) && (wrapper.length > 0);
+const wrapreducer = (nextwrapper, wrapper) => wrapper.bind(null, nextwrapper);
 
 /**
- * to do
+ * Wrap a target function with one or more wrapper functions.
+ * 
+ * A wrapper function accepts the target function and a list of arguments and can manipulate the arguments before
+ * passing them to the target function and/or manipulate the target function's return value before passing it back
+ * to the caller.
+ * 
+ * The wrapper argument may be either a function or an array of wrapper functions. In the latter case, the wrapper
+ * functions are called in order.
+ * 
+ * `wrap()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `wrap()`</caption>
  *     
- * to do
+ * const { wrap } = require('functionish');
+ * 
+ * const sum => (...numbers) => numbers.reduce( (a,b)=>(a+b), 0 );
+ * const double = (targetfunc, ...numbers) => 2 * targetfunc(...numbers);
+ * const onlyodd = (targetfunc, ...numbers) => targetfunc( ...numbers.filter(x => x%2 === 1) );
+ * 
+ * const sumanddoubleonlyodd = wrap( [double, onlyodd], sum );
+ * 
+ * sumanddoubleonlyodd(1,2,3,4,5); // returns 18
  * 
  * @function wrap
- * @param {function} wrapper The function or array of functions to wrap *targetfunc* with
+ * @param {(function|function[])} wrapper The function or array of functions to wrap *targetfunc* with
  * @param {function} targetfunc The function to wrap
  * @returns {function}
  */
-function wrap(wrapper, targetfunc) {
+const wrap = curry1(function wrap(wrapper, targetfunc) {
+
+    validatewrapper(wrapper);
+    validatetargetfunction(targetfunc);
 
     return isfunction(wrapper)
-         ? wrapper.bind(THIS_NULL, targetfunc)
+         ? wrapper.bind(null, targetfunc)
          : wrapper.reduceRight(wrapreducer, targetfunc);
 
+})
+
+function validatetargetfunction(targetfunc) {
+
+    if( isfunction(targetfunc) ) return targetfunc;
+
+    const errormessage = format(ERR_BAD_TARGETFUNCTION, typeorclassname(targetfunc));
+    throw new TypeError(errormessage);
 }
 
-module.exports = curry(1, wrap);
+function validatewrapper(wrapper) {
+
+    if( isfunction(wrapper) ) return wrapper;
+    
+    else if ( iscompositewrapper(wrapper) ) return wrapper;
+
+    else if( isarray(wrapper) ) throw new TypeError(ERR_BAD_COMPOSITEWRAPPER);
+
+    else throw new TypeError( format(ERR_BAD_WRAPPER, typeorclassname(wrapper)) );
+}
+
+module.exports = wrap;
