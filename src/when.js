@@ -56,6 +56,7 @@ const isfunction = require('./types/isfunction');
  * doublewheneven(43); // returns 43 
  * 
  * @function when
+ * @see {@link module:whenx whenx()}
  * @param {any} condition The condition function or value
  * @param {any} truebranch The function to call or value to return if the *condition* evalues to a truthy value
  * @param {any} falsebranch The function to call or value to return if the *condition* evalues to a falsy value
