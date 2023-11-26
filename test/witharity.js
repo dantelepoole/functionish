@@ -14,7 +14,7 @@ describe( 'witharity()', function() {
         })
 
         it(`should return a function`, function() {
-            expect( witharity(collect) ).to.be.a('function');
+            expect( witharity(1, collect) ).to.be.a('function');
         })
 
         it(`should throw if the arity is not an integer of 0 or higher`, function() {
@@ -28,8 +28,16 @@ describe( 'witharity()', function() {
             expect( () => witharity(42) ).to.throw;
         })
 
-        it.skip(`should be curried with unary arity`, function() {
-            // to do
+        it(`should be curried with unary arity`, function() {
+            
+            const withunaryarity = witharity(1);
+            expect(withunaryarity).to.be.a('function');
+
+            const unarycollect = withunaryarity(collect);
+            expect(unarycollect).to.be.a('function');
+
+            const retval = unarycollect(42);
+            expect(retval).to.be.deep.equal([42]);
         })
 
         describe( 'The result function', function() {
