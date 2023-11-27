@@ -11,7 +11,7 @@ const isfunction = require('./types/isfunction');
 
 /**
  * Return a function that encapsulates an if-then-else statement. The function first passes its arguments to the
- * *condition* and subsequently to either *truebranch* or *falsebranch* depending on whether the *condition&* returned
+ * *condition* and subsequently to either *truebranch* or *falsebranch* depending on whether the *condition* returned
  * a truthy or falsy value.
  * 
  * The *condition*, *truebranch and *falsebranch* may each be either a function or another value type. If the
