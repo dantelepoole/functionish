@@ -28,10 +28,10 @@ const typeorclassname = require('./types/typeorclassname');
  * const iseven = x => (x%2 === 0);
  * const square = x => (x*x);
  * 
- * const squareifeven = unlessx(iseven, square);
+ * const squareifodd = unlessx(iseven, square);
  * 
- * squareifeven( 42, 3 ); // returns 9
- * squareifeven( 41, 3 ); // returns 3
+ * squareifodd( 42, 3 ); // returns 3
+ * squareifodd( 41, 3 ); // returns 9
  * 
  * @function unlessx
  * @see {@link module:unless unless()}
