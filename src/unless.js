@@ -6,7 +6,7 @@
 
 const ERR_BAD_CONDITION = `functionish/unless(): The condition argument has type '%s'. Expected a function.`;
 
-const always = require('./always)');
+const always = require('./always');
 const curry1 = require('./curry1');
 const format = require('./misc/format');
 const isfunction = require('./types/isfunction');
