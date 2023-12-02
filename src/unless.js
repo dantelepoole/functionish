@@ -11,7 +11,6 @@ const curry1 = require('./curry1');
 const format = require('./misc/format');
 const isfunction = require('./types/isfunction');
 const typeorclassname = require('./types/typeorclassname');
-const when = require('./when');
 
 /**
  * Return a function that pass its arguments to the *condition* function and then calls the *branch* function (with the

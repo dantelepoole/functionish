@@ -11,7 +11,6 @@ const curry1 = require('./curry1');
 const format = require('./misc/format');
 const isfunction = require('./types/isfunction');
 const typeorclassname = require('./types/typeorclassname');
-const when = require('./when');
 
 /**
  * Operates the same as {@link module:unless unless()} except that the returned function only passes its first argument
