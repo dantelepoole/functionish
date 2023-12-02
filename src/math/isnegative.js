@@ -5,22 +5,27 @@
 'use strict';
 
 /**
- * Return `true` if *value* is less than `0`.
+ * Return `true` if *number* is less than `0`. Otherwise, return `false`.
+ *
+ * This function does not verify the argument type, so its behaviour is unpredictable if passed anything other than a
+ * number type.
  * 
- * @example
- * const isnegative = require('functionish/math/isnegative');
+ * `isnegative()` is curried by default with unary arity.
+ *  
+ * @example <caption>Example usage of `isnegative()`</caption>
  * 
- * isnegative(-42); // returns true;
- * isnegative(0); // returns false;
- * isnegative(-0); // returns false;
- * isnegative(1); // returns false;
+ * const { isnegative } = require('functionish');
+ * 
+ * isnegative(42); // returns false
+ * isnegative(-42); // returns true
+ * isnegative(0); // returns false
  * 
  * @function isnegative
- * @param {number} value The value to check
+ * @param {number} a The number to check
  * @returns {boolean}
  */
-function isnegative(value) {
-    return (value < 0);
+function isnegative(number) {
+    return (number < 0);
 }
 
 module.exports = isnegative;

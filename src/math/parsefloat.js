@@ -5,13 +5,11 @@
 'use strict';
 
 /**
- * [to do]
- * 
- * @example
- * [to do]
+ * Parse the *stringvalue* and return a floating point number. This function is merely an alias for the {@link external:Number.parseFloat Number.parseFloat()} method.
  * 
  * @function parsefloat
- * @param {number} value The value to parse as a floating point number
- * @returns {number} An floating point number or NaN if *value* could not be parsed
+ * @see {@link external:Number.parseFloat Number.parseFloat()}
+ * @param {string} stringvalue The string to parse
+ * @returns {number} The parsed floating point number
  */
 module.exports = Number.parseFloat;

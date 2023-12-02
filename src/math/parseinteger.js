@@ -4,15 +4,18 @@
 
 'use strict';
 
+const flip = require('../flip');
+
 /**
- * [to do]
+ * Parse the *stringvalue* and return an integer number with the specified *radix*.
+ * This function forwards the arguments to {@link external:Number.parseInt Number.parseInt()} method.
  * 
- * @example
- * [to do]
+ * `parseinteger()` is curried by default with unary arity.
  * 
  * @function parseinteger
- * @param {number} value The value to parse as an integer
- * @param {number} [radix=10] An integer the represents *values*'s radix
- * @returns {number} An integer number or NaN if *value* could not be parsed
+ * @see {@link external:Number.parseInt Number.parseInt()}
+ * @param {number} radix The radix (between 2 and 36)
+ * @param {string} stringvalue The string to parse
+ * @returns {number} The parsed integer
  */
-module.exports = Number.parseInt;
+module.exports = flip(Number.parseInt);

@@ -4,29 +4,29 @@
 
 'use strict';
 
+const sumreducer = (a,b) => (a+b);
+
 /**
- * Return the average of the values in the *values* list.
+ * Return the average value of the *numbers*.
  * 
- * @example
- * const average = require('functionish/math/average');
+ * This function does not check its argument types, so its behaviour will be
+ * unpredicatble if passed any arguments with a type other than number.
  * 
- * average( [0, 41, 43, 84] ); // returns 42
+ * @example <caption>Example usage of `average()`</caption>
+ * 
+ * const { average } = require('functionish');
+ * 
+ * average(0, 41, 43, 84); // returns 42
  * 
  * @function average
- * @param {iterable} values The list of values to average
+ * @param {...number[]} numbers The values to average
  * @returns {number}
  */
-function average(values) {
+function average(...numbers) {
+    
+    const sum = numbers.reduce(sumreducer, 0);
 
-    let total = 0;
-    let count = 0;
-
-    for(const value of values) {
-        total += value;
-        count += 1
-    }
-
-    return (count > 0) ? (total/count) : 0;
+    return (sum/numbers.length) || 0;
 }
 
 module.exports = average;

@@ -5,19 +5,12 @@
 'use strict';
 
 /**
- * [to do]
- * 
- * This function is an alias for {@link external:Math.trunc Math.trunc()}.
- * 
- * @example
- * const truncate = require('functionish/math/truncate');
- * 
- * truncate(42.1); // returns 42
- * truncate(-42.1); // returns -42;
+ * Return the integer part of a number by removing any fractional digits.
+ * This function is merely a proxy for the {@link external:Math.trunc Math.trunc()} method.
  * 
  * @function truncate
- * @see {@link external:Math.truncate Math.truncate()}
- * @param {number} value The value to truncate
- * @returns {number}
+ * @see {@link external:Math.trunc Math.trunc()}
+ * @param {number} number The value to truncate
+ * @returns {number} The trunated value
  */
 module.exports = Math.trunc;

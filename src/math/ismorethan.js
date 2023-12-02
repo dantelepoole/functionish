@@ -4,26 +4,30 @@
 
 'use strict';
 
-const curry = require('../curry');
+const curry1 = require('../curry1');
 
 /**
  * Return `true` if *b* is greater than *a*. Otherwise, return `false`.
+ *
+ * This function does not verify the argument types, so its behaviour is unpredictable if passed anything other than
+ * number types.
  * 
  * `ismorethan()` is curried by default with unary arity.
+ *  
+ * @example <caption>Example usage of `ismorethan()`</caption>
  * 
- * @example
- * const ismorethan = require('functionish/math/ismorethan');
+ * const { ismorethan } = require('functionish');
  * 
- * ismorethan(1, 42); // returns true;
- * ismorethan(1, 0); // returns false;
+ * ismorethan(42, 1); // returns false;
+ * ismorethan(0, 1); // returns true;
  * 
- * @function isgreaismorethanterthan
+ * @function ismorethan
  * @param {number} a The value to compare against
  * @param {number} b The value to compare
  * @returns {boolean}
  */
-function ismorethan(a,b) {
+const ismorethan = curry1(function ismorethan(a,b) {
     return (b > a)
-}
+});
 
-module.exports = curry(1, ismorethan);
+module.exports = ismorethan;

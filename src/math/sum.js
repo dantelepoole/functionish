@@ -4,25 +4,26 @@
 
 'use strict';
 
+const sumreducer = (a,b) => (a+b);
+
 /**
- * Return the sum of the values in the *values* list.
+ * Return the sum of *numbers*. If the *numbers* array is empty, `0` is returned.
  * 
- * @example
- * const sum = require('functionish/math/sum');
+ * This function does not check its argument types, so its behaviour will be
+ * unpredicatble if passed any arguments with a type other than number.
  * 
- * sum(30, 10, 2); // returns 42
+ * @example <caption>Example usage of `sum()`</caption>
+ * 
+ * const { sum } = require('functionish');
+ * 
+ * sum(14, 20, 8); // returns 42
  * 
  * @function sum 
- * @param {iterable} factors The list of values to sum
+ * @param {...number[]} numbes The values to sum
  * @returns {number}
  */
-function sum(values) {
-    
-    let total = 0;
-
-    for(const value of values) total += value;
-
-    return total;
+function sum(...numbers) {
+    return numbers.reduce(sumreducer, 0);
 }
 
 module.exports = sum;

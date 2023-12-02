@@ -7,17 +7,11 @@
 /**
  * Round *value* down to the largest integer less than or equal to *value*.
  * 
- * This function is an alias for {@link external:Math.floor Math.floor()}.
- * 
- * @example
- * const floor = require('functionish/math/floor');
- * 
- * floor(42.1); // returns 42
- * floor(42.99); // returns 42;
+ * This function is merely an alias for the {@link external:Math.floor Math.floor()} method.
  * 
  * @function floor
  * @see {@link external:Math.floor Math.floor()}
- * @param {number} value The value to round down.
- * @returns {number}
+ * @param {number} number The value to round down.
+ * @returns {number} The rounded number
  */
 module.exports = Math.floor;

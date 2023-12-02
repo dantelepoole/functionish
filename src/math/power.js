@@ -4,24 +4,18 @@
 
 'use strict';
 
-const curry = require('../curry');
+const flip = require('../flip');
 
 /**
- * [to do]
+ * Return the value of *base* raised to the power of *exponent*.
+ * This function forwards the arguments to {@link external:Math.pow Math.pow()} method.
  * 
- * @example
- * const power = require('functionish/math/power');
- * 
- * power(2, 3); // returns 9
- * power(3, 2); // returns 8;
+ * `parseinteger()` is curried by default with unary arity.
  * 
  * @function power
- * @param {number} exponent The exponent to raise *base* to the power of
- * @param {number} base The value to raise to the power of *exponent*
+ * @see {@link external:Math.pow Math.pow()}
+ * @param {number} exponent The exponent
+ * @param {number} base The base number
  * @returns {number}
  */
-function power(exponent, base) {
-    return Math.pow(base, exponent);
-}
-
-module.exports = curry(1, power);
+module.exports = flip(Math.pow);

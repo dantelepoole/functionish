@@ -4,33 +4,29 @@
 
 'use strict';
 
-const multiply = (a,b) => (a*b);
+const productreducer = (a,b)=>(a*b);
 
 /**
- * Return the product of the values in the *factors* list.
+ * Return the product of the *factors*. If the *factors* array is empty, `0` is returned.
  * 
- * @example
- * const product = require('functionish/math/product');
+ * This function does not check its argument types, so its behaviour will be
+ * unpredicatble if passed any arguments with a type other than number.
+ * 
+ * @example <caption>Example usage of `product()`</caption>
+ * 
+ * const { product } = require('functionish');
  * 
  * product(14, 1, 3); // returns 42
  * 
  * @function product 
- * @param {iterable} factors The list of values to multiply
+ * @param {...number[]} factors The values to multiply
  * @returns {number}
  */
-function product(factors) {
+function product(...factors) {
     
-    let total = 1;
-    let havefactor = false;
-
-    for(const factor of factors) {
-
-        havefactor || (havefactor = true);
-
-        total *= factor;
-    }
-
-    return havefactor ? total : 0;
+    return (factors.length > 0)
+         ? factors.reduce(productreducer, 1)
+         : 0;
 }
 
 module.exports = product;

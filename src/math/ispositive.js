@@ -5,22 +5,27 @@
 'use strict';
 
 /**
- * Return `true` if *value* is greater than `0`.
+ * Return `true` if *number* is greater than `0`. Otherwise, return `false`.
+ *
+ * This function does not verify the argument type, so its behaviour is unpredictable if passed anything other than a
+ * number type.
  * 
- * @example
- * const ispositive = require('functionish/math/ispositive');
+ * `ispositive()` is curried by default with unary arity.
+ *  
+ * @example <caption>Example usage of `ispositive()`</caption>
  * 
- * ispositive(42); // returns true;
- * ispositive(0); // returns false;
- * ispositive(-0); // returns false;
- * ispositive(-1); // returns false;
+ * const { ispositive } = require('functionish');
+ * 
+ * ispositive(42); // returns true
+ * ispositive(-42); // returns false
+ * ispositive(0); // returns false
  * 
  * @function ispositive
- * @param {number} value The value to check
+ * @param {number} a The number to check
  * @returns {boolean}
  */
-function ispositive(value) {
-    return (value > 0);
+function ispositive(number) {
+    return (number > 0);
 }
 
 module.exports = ispositive;
