@@ -1,5 +1,5 @@
 /**
- * @module debounce
+ * @module misc/debounce
  */
 
 'use strict';
@@ -11,14 +11,14 @@ const MODE_LEADING = 'leading';
 const MODE_TRAILING = 'trailing';
 const TIMER_IDLE = undefined;
 
-const compose = require('./compose');
-const curry2 = require('./curry2');
-const format = require('./misc/format');
-const isfunction = require('./types/isfunction');
+const compose = require('../compose');
+const curry2 = require('../curry2');
+const format = require('./format');
+const isfunction = require('../types/isfunction');
 const isinteger = Number.isSafeInteger;
-const partial = require('./partial');
+const partial = require('../partial');
 const raise = require('./raise');
-const typeorclassname = require('./types/typeorclassname');
+const typeorclassname = require('../types/typeorclassname');
 
 const canceltimer = clearTimeout;
 const starttimer = setTimeout;
@@ -38,7 +38,7 @@ const validatedelayms = delayms => (isinteger(delayms) && (delayms > 0)) || rais
 /**
  * to do
  * 
- * @example <caption>Example usage of `curry()`</caption>
+ * @example <caption>Example usage of `()`</caption>
  * 
  * to do
  * 
