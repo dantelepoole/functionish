@@ -29,16 +29,20 @@ const isfunction = require('./types/isfunction');
  * 
  * @example <caption>Example usage of `whenx()`</caption> 
  * 
+ * const { whenx } = require('functionish');
+ * 
  * const iseven = x => (x%2) === 0;
  * const product = (...numbers) => numbers.reduce( (a,b) => (a*b), 1 );
  * const sum = (...numbers) => numbers.reduce( (a,b)=>(a+b), 0 );
  * 
  * const productorsum = whenx(iseven, product, sum);
  * 
- * productorsum(42, 1, 2, 3, 4, 5); // returns 120
- * productorsum(41, 1, 2, 3, 4, 5); // returns 15
+ * productorsum(42, 1, 2, 3, 4, 5); // follows the true branch and returns the product of 120
+ * productorsum(41, 1, 2, 3, 4, 5); // follows the false branch and returns the sum of 15
  * 
  * @example <caption>Example usage of the `whenx().for()` method</caption> 
+ * 
+ * const { whenx } = require('functionish');
  * 
  * const iseven = x => (x%2) === 0;
  * const product = (...numbers) => numbers.reduce( (a,b) => (a*b), 1 );
@@ -49,14 +53,14 @@ const isfunction = require('./types/isfunction');
  * const productorsum42 = productorsum.for(42);
  * const productorsum41 = productorsum.for(41);
  * 
- * productorsum42(1,2,3,4,5); // returns 120
- * productorsum41(1,2,3,4,5); // returns 15
+ * productorsum42(1,2,3,4,5); // follows the true branch and returns the product of 120
+ * productorsum41(1,2,3,4,5); // follows the false branch and returns the sum of 15
  * 
  * @function whenx
  * @see {@link module:when when()}
  * @param {any} condition The condition function or value
- * @param {any} truebranch The function to call or value to return if the *condition* evalues to a truthy value
- * @param {any} falsebranch The function to call or value to return if the *condition* evalues to a falsy value
+ * @param {any} truebranch The function to call or value to return if the *condition* evaluates to a truthy value
+ * @param {any} falsebranch The function to call or value to return if the *condition* evaluates to a falsy value
  * @returns {function}
  */
 const whenx = curry1(function whenx(condition, truebranch, falsebranch) {

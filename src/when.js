@@ -28,6 +28,19 @@ const isfunction = require('./types/isfunction');
  * 
  * `when()` is curried by default with unary arity.
  * 
+ * @example <caption>Example usage of `when()`</caption> 
+ * 
+ * const { when } = require('functionish');
+ * 
+ * const isallnumeric = (...args) => args.every( x => (typeof x === 'number') );
+ * const product = (...numbers) => numbers.reduce( (a,b) => (a*b), 1 );
+ * const join = (...args) => args.join( ' ' );
+ * 
+ * const productorjoin = when(isallnumeric, product, join);
+ * 
+ * productorjoin(1, 2, 3, 4, 5); // follows the true branch and returns the product of 120
+ * productorjoin('1', '2', '3', '4', '5'); // follows the false branch and returns "1 2 3 4 5"
+ * 
  * @example <caption>Example usage of `when()` with a static condition</caption> 
  *     
  * const { when } = require('functionish');
@@ -36,30 +49,23 @@ const isfunction = require('./types/isfunction');
  * when(false, 42, 43); // returns 43
  * when(false, 42); // returns undefined
  * 
- * @example <caption>Example usage of `when()` with a condition function</caption> 
- * 
- * const id = x => x;
- * const lift = x => [x];
- * 
- * const toarray = when(Array.isArray, id, lift);
- * toarray( [1,2,3] ); // returns [1,2,3]
- * toarray( 'fubar' ); // returns ['fubar']
- * 
  * @example <caption>Example usage of `when()` with the false-branch omitted</caption> 
  * 
- * const iseven = x => (x%2 === 0)
- * const double = x => (x*2)
+ * const { when } = require('functionish');
  * 
- * const doublewheneven = when(iseven, double);
+ * const notuppercase = str => (str.toUpperCase() !== str);
+ * const uppercase = str => str.toUpperCase(); 
  * 
- * doublewheneven(42); // returns 84
- * doublewheneven(43); // returns 43 
+ * const touppercase = when(notuppercase, uppercase);
+ * 
+ * touppercase('fubar'); // follows the true branch and returns 'FUBAR'
+ * touppercase('FUBAR'); // false branch is omitted so the first argument is returned
  * 
  * @function when
  * @see {@link module:whenx whenx()}
  * @param {any} condition The condition function or value
- * @param {any} truebranch The function to call or value to return if the *condition* evalues to a truthy value
- * @param {any} falsebranch The function to call or value to return if the *condition* evalues to a falsy value
+ * @param {any} truebranch The function to call or value to return if the *condition* evaluates to a truthy value
+ * @param {any} falsebranch The function to call or value to return if the *condition* evaluates to a falsy value
  * @returns {function}
  */
 const when = curry1(function when(condition, truebranch, falsebranch) {
