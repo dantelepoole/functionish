@@ -4,46 +4,61 @@
 
 'use strict';
 
-const always = require('./always');
-const curry = require('./curry');
-const id = require('./id');
-const isfunction = require('./types/isfunction');
-const not = require('./logic/not');
+const ERR_BAD_CONDITION = `functionish/unlessx(): The condition argument has type '%s'. Expected a function.`;
 
-const havefalsebranch = args => (args.length >= 3);
-const notfunction = not(isfunction);
+const always = require('./always');
+const curry1 = require('./curry1');
+const format = require('./misc/format');
+const isfunction = require('./types/isfunction');
+const typeorclassname = require('./types/typeorclassname');
+const when = require('./when');
 
 /**
- * to do
+ * Operates the same as {@link module:unless unless()} except that the returned function only passes its first argument
+ * to *condition* and passes its other arguments to the *branch*.
+ * 
+ * The *condition* must be a function, otherwise an error is thrown. The *branch* may be any value. If the *branch* is
+ * not a function and the *condition* returns a falsy value, the *branch*'s value is returned.
+ * 
+ * `unlessx()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `unlessx()`</caption> 
  *     
- * to do
+ * const { unlessx } = require('functionish');
+ * 
+ * const iseven = x => (x%2 === 0);
+ * const square = x => (x*x);
+ * 
+ * const squareifeven = unlessx(iseven, square);
+ * 
+ * squareifeven( 42, 3 ); // returns 9
+ * squareifeven( 41, 3 ); // returns 3
  * 
  * @function unlessx
+ * @see {@link module:unless unless()}
+ * @see {@link module:whenx whenx()}
+ * @param {function} condition The condition function
+ * @param {any} branch The function to call or value to return if the *condition* evaluates to a falsy value
  * @returns {function}
  */
-function unlessx(condition, falsebranch, truebranch) {
+const unlessx = curry1(function unlessx(condition, branch) {
 
-    return notfunction(condition) ? condition ? truebranch : falsebranch
-         : havefalsebranch(arguments) ? buildconditional(condition, truebranch, falsebranch)
-         : buildconditional(condition, truebranch, id);
+    validatecondition(condition);
+
+    isfunction(branch) || (branch = always(branch));
+    
+    return (conditionarg, ...branchargs) => condition(conditionarg)
+                                          ? branchargs[0]
+                                          : branch(...branchargs);
+
+});
+
+function validatecondition(condition) {
+
+    if( isfunction(condition) ) return condition;
+
+    const errormessage = format(ERR_BAD_CONDITION, typeorclassname(condition));
+    throw new TypeError(errormessage);
 }
 
-function buildconditional(condition, falsebranch, truebranch) {
-
-    isfunction(truebranch) || (truebranch = always(truebranch));
-    isfunction(falsebranch) || (falsebranch = always(falsebranch));
-
-    const _unless = (conditionarg, ...branchargs) => condition(conditionarg)
-                                                   ? truebranch(...branchargs)
-                                                   : falsebranch(...branchargs);
-
-    _unless.for = (...conditionargs) => condition(...conditionargs)
-                                      ? truebranch
-                                      : falsebranch;
-
-    return _unless;
-}
-
-module.exports = curry(1, unlessx);
+module.exports = unlessx;
