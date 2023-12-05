@@ -16,7 +16,7 @@ const curry1 = require('../curry1');
  *  
  * @example <caption>Example usage of `ismorethan()`</caption>
  * 
- * const { ismorethan } = require('functionish');
+ * const { ismorethan } = require('functionish/math');
  * 
  * ismorethan(42, 1); // returns false;
  * ismorethan(0, 1); // returns true;

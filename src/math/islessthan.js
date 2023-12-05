@@ -16,7 +16,7 @@ const curry1 = require('../curry1');
  *  
  * @example <caption>Example usage of `isbetween()`</caption>
  * 
- * const { islessthan } = require('functionish');
+ * const { islessthan } = require('functionish/math');
  * 
  * islessthan(42, 1); // returns true;
  * islessthan(0, 1); // returns true;

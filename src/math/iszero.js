@@ -11,7 +11,7 @@
  * 
  * @example <caption>Example usage of `iszero()`</caption>
  * 
- * const { iszero } = require('functionish');
+ * const { iszero } = require('functionish/math');
  * 
  * iszero(42); // returns false
  * iszero(0); // returns true

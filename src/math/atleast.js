@@ -16,7 +16,7 @@ const curry1 = require('../curry1');
  * 
  * @example <caption>Example usage of `atleast()`</caption>
  * 
- * const { atleast } = require('functionish');
+ * const { atleast } = require('functionish/math');
  * 
  * const atleast42 = atleast(42); // curried
  * 

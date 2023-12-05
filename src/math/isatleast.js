@@ -16,7 +16,7 @@ const curry1 = require('../curry1');
  * 
  * @example <caption>Example usage of `isatleast()`</caption>
  * 
- * const { isatleast } = require('functionish');
+ * const { isatleast } = require('functionish/math');
  * 
  * isatleast(1, 1); // returns true;
  * isatleast(1, 42); // returns true;

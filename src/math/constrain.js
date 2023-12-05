@@ -17,7 +17,7 @@ const curry2 = require('../curry2');
  * 
  * @example <caption>Example usage of `constrain()`</caption>
  * 
- * const { constrain } = require('functionish');
+ * const { constrain } = require('functionish/math');
  * 
  * constrain(0, 10, 5); // returns 5
  * constrain(0, 10, -1); // returns 0

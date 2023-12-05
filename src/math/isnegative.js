@@ -14,7 +14,7 @@
  *  
  * @example <caption>Example usage of `isnegative()`</caption>
  * 
- * const { isnegative } = require('functionish');
+ * const { isnegative } = require('functionish/math');
  * 
  * isnegative(42); // returns false
  * isnegative(-42); // returns true

@@ -14,7 +14,7 @@ const sumreducer = (a,b) => (a+b);
  * 
  * @example <caption>Example usage of `sum()`</caption>
  * 
- * const { sum } = require('functionish');
+ * const { sum } = require('functionish/math');
  * 
  * sum(14, 20, 8); // returns 42
  * 

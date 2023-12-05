@@ -24,7 +24,7 @@ const mediansorted = values => [...values].sort(numericsort);
  * 
  * @example <caption>Example usage of `median()`</caption>
  * 
- * const { median } = require('functionish');
+ * const { median } = require('functionish/math');
  * 
  * median(true, 84, 0, 43, 41); // sorts the arguments and returns 42
  * median(false, 0, 41, 42, 43, 84); // returns 42 without first sorting the input

@@ -14,7 +14,7 @@ const sumreducer = (a,b) => (a+b);
  * 
  * @example <caption>Example usage of `average()`</caption>
  * 
- * const { average } = require('functionish');
+ * const { average } = require('functionish/math');
  * 
  * average(0, 41, 43, 84); // returns 42
  * 

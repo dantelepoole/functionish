@@ -9,7 +9,7 @@
  * 
  * @example <caption>Example usage of `isodd()`</caption>
  * 
- * const { isodd } = require('functionish');
+ * const { isodd } = require('functionish/math');
  * 
  * isodd(42); // returns false
  * isodd(1); // returns true

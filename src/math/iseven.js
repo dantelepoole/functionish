@@ -12,7 +12,7 @@
  * 
  * @example <caption>Example usage of `iseven()`</caption>
  * 
- * const { iseven } = require('functionish');
+ * const { iseven } = require('functionish/math');
  * 
  * iseven(42); // returns true
  * iseven(1); // returns false

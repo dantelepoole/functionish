@@ -14,7 +14,7 @@ const productreducer = (a,b)=>(a*b);
  * 
  * @example <caption>Example usage of `product()`</caption>
  * 
- * const { product } = require('functionish');
+ * const { product } = require('functionish/math');
  * 
  * product(14, 1, 3); // returns 42
  * 

@@ -14,7 +14,7 @@
  *  
  * @example <caption>Example usage of `ispositiveorzero()`</caption>
  * 
- * const { ispositiveorzero } = require('functionish');
+ * const { ispositiveorzero } = require('functionish/math');
  * 
  * ispositiveorzero(42); // returns true
  * ispositiveorzero(-42); // returns false

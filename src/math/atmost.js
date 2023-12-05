@@ -16,7 +16,7 @@ const curry1 = require('../curry1');
  * 
  * @example <caption>Example usage of `atmost()`</caption>
  * 
- * const { atmost } = require('functionish');
+ * const { atmost } = require('functionish/math');
  * 
  * const atmost42 = atmost(42); // curried
  * 
