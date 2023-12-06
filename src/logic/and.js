@@ -9,8 +9,10 @@ const THIS_NULL = null;
 const always = require('../always');
 const head = require('../arrays/head');
 
+const alwaystrue = always(true);
+
 const conjunctormap = Object.freeze([
-    always(true),
+    always(alwaystrue),
     head,
     ([f1, f2]) => (...args) => f1(...args) && f2(...args),
     ([f1, f2, f3]) => (...args) => f1(...args) && f2(...args) && f3(...args),
@@ -42,10 +44,13 @@ const largeconjunctor = predicates => runconjunction.bind(THIS_NULL, predicates)
  * isevennumber(42); // returns true
  * isevennumber(41); // returns false
  * 
+ * and()(); // returns true;
+ * 
  * @function and
  * @see {@link module:logic/or or()}
  * @param {...any[]} predicates The predicate functions
  * @returns {any} The return value of the first predicate to return a falsy value
+ * @throws {Error} if any *predicate* is not a function
  */
 function and(...predicates) {
 
