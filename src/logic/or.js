@@ -4,13 +4,17 @@
 
 'use strict';
 
+const ALWAYS_FALSE = ()=>false;
 const THIS_NULL = null;
 
 const always = require('../always');
+const callable = require('../callable');
 const head = require('../arrays/head');
 
+const allcallable = array => array.map(callable);
+
 const disjunctormap = Object.freeze([
-    always(false),
+    always(ALWAYS_FALSE),
     head,
     ([f1, f2]) => (...args) => f1(...args) || f2(...args),
     ([f1, f2, f3]) => (...args) => f1(...args) || f2(...args) || f3(...args),
@@ -27,9 +31,6 @@ const largedisjunctor = predicates => rundisjunction.bind(THIS_NULL, predicates)
  * 
  * Like the `||` operator, `or()` is short-circuited, so it aborts as soon as a *predicate* returns a truthy
  * value, without evaluating the remaining *predicates*.
- * 
- * A *predicate* may be either a function to be called or any other value. In the latter case, the value
- * is evaluated directly.
  * 
  * If the *predicates* array is empty, the function returns `false`.
  * 
@@ -56,7 +57,7 @@ function or(...predicates) {
 
     const disjunctor = disjunctormap[predicates.length] ?? largedisjunctor;
 
-    return disjunctor(predicates);
+    return disjunctor( allcallable(predicates) );
 }
 
 function rundisjunction(predicates, ...args) {
