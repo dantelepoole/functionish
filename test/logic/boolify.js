@@ -1,10 +1,10 @@
 const boolify = require('../../src/logic/boolify');
 const expect = require('chai').expect;
+const sinon = require('sinon');
 
-const sandbox = require('sinon').createSandbox();
-const spy = sandbox.spy.bind(sandbox);
+const UNIQTHING = { label:'UNIQTHING' }
 
-const id = spy(x => x);
+const id = sinon.fake(x=>x);
 
 describe('boolify()', function() {
 
@@ -20,45 +20,51 @@ describe('boolify()', function() {
 
     describe('The function returned by boolify()', function() {
 
-        beforeEach(
-            function() {
-                id.resetHistory();
-            }
-        )
+        it('should pass its arguments to the target function', function() {
 
-        it('should pass its arguments to the function passed to not()', function() {
+            const booleanid = boolify(id);
 
-            const _id = boolify(id);
+            expect( id.callCount ).to.equal(0);
 
-            _id(42);
-            expect( id.callCount ).to.be.equal(1);
-            expect( id.getCall(0).args.length ).to.be.equal(1);
-            expect( id.getCall(0).args[0] ).to.be.equal(42);
+            booleanid(UNIQTHING, 42, Symbol.for('fubar'));
 
-            _id(null);
-            expect( id.callCount ).to.be.equal(2);
-            expect( id.getCall(1).args.length ).to.be.equal(1);
-            expect( id.getCall(1).args[0] ).to.be.equal(null);
+            expect( id.callCount ).to.equal(1);
+            expect( id.args[0] ).to.deep.equal( [UNIQTHING, 42, Symbol.for('fubar')] );
+
         }) 
 
-        it(`should convert the function's return value to a boolean value`, function() {
+        it('should return boolean true if passed a truthy value', function() {
 
-            const _id = boolify(id);
+            const booleanid = boolify(id);
 
-            expect( _id(true) ).to.be.true;
-            expect( _id(false) ).to.be.false;
-            expect( _id(null) ).to.be.false;
-            expect( _id(undefined) ).to.be.false;
-            expect( _id() ).to.be.false;
-            expect( _id(0) ).to.be.false;
-            expect( _id(NaN) ).to.be.false;
-            expect( _id('') ).to.be.false;
-            expect( _id(1) ).to.be.true;
-            expect( _id(-1) ).to.be.true;
-            expect( _id({}) ).to.be.true;
-            expect( _id([]) ).to.be.true;
-            expect( _id('foobar') ).to.be.true;
-            expect( _id(id) ).to.be.true;
+            expect( booleanid(true) ).to.be.true;
+            expect( booleanid('true') ).to.be.true;
+            expect( booleanid(1) ).to.be.true;
+            expect( booleanid({}) ).to.be.true;
+            expect( booleanid(id) ).to.be.true;
+
         }) 
+
+        it('should return boolean false if passed a falsy value', function() {
+
+            const booleanid = boolify(id);
+
+            expect( booleanid(false) ).to.be.false;
+            expect( booleanid('') ).to.be.false;
+            expect( booleanid(0) ).to.be.false;
+            expect( booleanid(null) ).to.be.false;
+
+        }) 
+
+        it('should return boolean false if called without arguments', function() {
+            expect( boolify(id)() ).to.be.false;
+        }) 
+
+        it('should throw if the target function is not a function', function() {
+
+            const booleannone = boolify();
+            
+            expect( booleannone ).to.throw();
+        })
     })
 })
