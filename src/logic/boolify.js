@@ -5,10 +5,7 @@
 'use strict';
 
 /**
- * Coerce *targetfunc*'s return value to type boolean.
- * 
- * This function returns a function that passes its arguments *targetfunc* and returns either `true` or `false`
- * depending on whether *targetfunc* returns a truthy or falsy value respectively.
+ * Return a function that passes its arguments to *targetfunc* and casts the return value to type `boolean`.
  * 
  * @example <caption>Example usage of `boolify()`</caption>
  * 
