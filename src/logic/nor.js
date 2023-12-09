@@ -4,7 +4,7 @@
 
 'use strict';
 
-const not = require('./not');
+const negate = require('./negate');
 const or = require('./or');
 
 /**
@@ -38,7 +38,7 @@ const or = require('./or');
  * @returns {boolean}
  */
 function nor(...predicates) {
-    return not( or(...predicates) );
+    return negate( or(...predicates) );
 }
 
 module.exports = nor;
