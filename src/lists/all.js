@@ -16,6 +16,8 @@ const isvoid = require('../types/isvoid');
  * individual *list* items instead. If *predicate* is neither <abbr title="null or undefined">void</abbr> nor a
  * function, an error is thrown.
  * 
+ * If the *list* is empty, `all()` returns `true`.
+ * 
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a falsy value, without
  * evaluating any remaining items in *list*.
  * 
