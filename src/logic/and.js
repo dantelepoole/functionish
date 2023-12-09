@@ -4,6 +4,7 @@
 
 'use strict';
 
+const ALWAYS_TRUE = x=>true;
 const THIS_NULL = null;
 
 const always = require('../always');
@@ -12,10 +13,8 @@ const head = require('../arrays/head');
 
 const allcallable = array => array.map(callable);
 
-const alwaystrue = always(true);
-
 const conjunctormap = Object.freeze([
-    always(alwaystrue),
+    always(ALWAYS_TRUE),
     head,
     ([f1, f2]) => (...args) => f1(...args) && f2(...args),
     ([f1, f2, f3]) => (...args) => f1(...args) && f2(...args) && f3(...args),
