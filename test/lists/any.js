@@ -1,86 +1,88 @@
 const any = require('../../src/lists/any');
-const expect = require('chai').expect;
+const fake = require('sinon').fake;
+const should = require('../../lib/test/should');
 
-const sandbox = require('sinon').createSandbox();
-const spy = sandbox.spy.bind(sandbox);
+const emptylist = { [Symbol.iterator]:Array.prototype.values.bind([]) }
+const list1to10 = { [Symbol.iterator]:Array.prototype.values.bind([1,2,3,4,5,6,7,8,9,10]) }
 
-const numbers1to10_array = [1,2,3,4,5,6,7,8,9,10];
-
-const isnumber = spy( function isnumber(x) { return typeof x === 'number'; } )
-const isstring = spy( function isstring(x) { return typeof x === 'string'; } )
-const isgreaterthan = spy( function isgreaterthan(num, x) { return (x > num); } )
+const is5 = fake(x => (x === 5));
+const isnumber = fake( x => typeof x ==='number' );
+const islessthan = fake( (num, x) => (x < num) );
+const isstring = fake(x => typeof x === 'string');
 
 describe('any()', function() {
 
     beforeEach(
         function() {
+            is5.resetHistory();
             isnumber.resetHistory();
-            isgreaterthan.resetHistory();
+            islessthan.resetHistory();
             isstring.resetHistory();
         }
     )
 
     it('should return false if the list is empty',
         function() {
-            expect( any(isnumber, []) ).to.be.false;
-            expect( isnumber.callCount ).to.be.equal(0);
+            should.return.false(any, isstring, emptylist)
+            should.not.be.called(isstring);
         }
     )
 
     it('should return true if the predicate returns true for any item in the list',
         function() {
-
-            const isgreaterthan5 = isgreaterthan.bind(null, 5);
-            expect( any(isgreaterthan5, numbers1to10_array) ).to.be.true;
-            expect( isgreaterthan.callCount ).to.be.equal(6);
+            should.return.true(any, is5,list1to10);
         }
     )
 
-    it('should return false if the predicate returns false for each item in the list',
+    it('should return false if the predicate returns false for all items in the list',
         function() {
-
-            const isgreaterthan10 = isgreaterthan.bind(null, 10);
-            expect( any(isgreaterthan10, numbers1to10_array) ).to.be.false;
-            expect( isgreaterthan.callCount ).to.be.equal(10);
-
+            should.return.false(any, isstring, list1to10);
         }
     )
 
-    it('should call the predicate once for each item in the list if the predicate returns false for each item',
+    it('should call the predicate once for each item in the list if any() returns false',
         function() {
-            const result = any(isstring, numbers1to10_array);
-            expect( result ).to.be.false;
-            expect( isstring.callCount ).to.be.equal(numbers1to10_array.length);
+            should.return.false(any, isstring, list1to10);
+            should.be(10, isstring.callCount);
         }
     )
 
-    it('should short-circuit if any predicate returns true',
+    it('should short-circuit as soon as the predicte returns true',
         function() {
-            const isgreaterthan5 = isgreaterthan.bind(null, 5);
-            const result = any(isgreaterthan5, numbers1to10_array);
-            expect( result ).to.be.true;
-            expect( isgreaterthan.callCount ).to.be.equal(6);
+
+            should.return.true(any, is5, list1to10);
+            should.be(5, is5.callCount);
         }
     )
 
     it('should be curried with unary arity',
         function () {
 
-            const result = any(isnumber);
-            expect(result).to.be.a('function');
-            expect( result(numbers1to10_array) ).to.be.true;
+            should.be.a.function( any(is5) );
+            should.return.a.boolean( any(is5), list1to10 );
+            
         }
     )
 
-    it('should throw if the predicate is not a function',
+    it(`should test the list item's boolish values if the predicate is null or undefined`,
         function () {
-            expect( () => any(42, [1,2,3]) ).to.throw();
+
+            should.return.true(any, null, list1to10);
+            should.return.true(any, undefined, list1to10);
+            should.return.false(any, null, [0,'',false,-0,0n]);
+            should.return.false(any, undefined, [0,'',false,-0,0n]);
+        }
+    )
+
+    it('should throw if the predicate is not a function nor null or undefined',
+        function () {
+            should.throw(any, 41, list1to10);
         }
     )
 
     it('should throw if the list is not iterable',
         function () {
-            expect( () => any(isnumber, {}) ).to.throw();
+            should.throw(any, isnumber, {});
         }
     )
 })
