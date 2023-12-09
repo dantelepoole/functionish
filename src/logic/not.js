@@ -5,25 +5,28 @@
 'use strict';
 
 /**
- * Return a function that passes it arguments to *targetfunc* and returns the boolean complement
- * of *targetfunc*'s return value.
+ * Return the boolean complement (`!`) of the *value*'s boolish value.
  * 
  * @example <caption>Example usage of `not()`</caption>
  * 
  * const { not } = require('functionish/logic');
  * 
- * const iseven = x => (x%2) === 0;
- * const isodd = not(iseven);
+ * not(true); // returns false
+ * not(false); // returns true
  * 
- * isodd(1); // returns true
- * isodd(2); // returns false
+ * not(''); // falsy argument so returns true
+ * not('false'); // truthy argument so returns false
+ * not(1); // truthy argument so returns false
+ * not(); // falsy argument so returns true
+ * not({}); // truthy argument so returns false
  * 
  * @function not
- * @param {function} targetfunc The function to negate.
- * @returns {function}
+ * @see {@link module:logic/negate negate()}
+ * @param {any} value The value to return the boolean complement for.
+ * @returns {boolean}
  */
-function not(targetfunc) {
-    return (...args) => !targetfunc(...args);
+function not(value) {
+    return !value;
 }
 
 module.exports = not;
