@@ -11,7 +11,11 @@ const isvoid = require('../types/isvoid');
  * Apply the *predicate* function to each item in *list* and return `true` if and only if *predicate* returns a falsy
  * value for each item. This function is the counterpart to {@link module:any any()}.
  * 
- * [to do: predicate is function or void]
+ * If the *predicate* is <abbr title="null or undefined">void</abbr>, `none()` evaluates the boolish values of the
+ * individual *list* items instead. If *predicate* is neither <abbr title="null or undefined">void</abbr> nor a
+ * function, an error is thrown.
+ * 
+ * If the *list* is empty, `none()` returns `true`.
  * 
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a truthy value, without
  * evaluating any remaining items in *list*.
@@ -26,11 +30,13 @@ const isvoid = require('../types/isvoid');
  *     
  * none(iseven, [1,3,7,42,9]); // returns false
  * none(iseven, [1,3,7,9]); // returns true
+ * none(null, [1,3,7,9]); // returns false because the list contains truthy items
+ * none(null, [0, '', -0, null, undefined, 0n, false]); // returns true because the list contains no truthy items
  *
  * @function none
  * @see {@link module:any any()}
  * @see {@link module:all all()}
- * @param {function} predicate The function to test the items in *list* with
+ * @param {function} [predicate] The predicate function
  * @param {iterable} list An iterable object producing the items to test
  * @returns {boolean} 
  */
