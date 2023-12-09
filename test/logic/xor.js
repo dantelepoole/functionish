@@ -11,7 +11,7 @@ const isnumber = sinon.fake( x => (typeof x === 'number') );
 const iseven = sinon.fake( x => (x%2) === 0 );
 const isstring = sinon.fake( x => (typeof x === 'string') );
 
-describe('xor()', function() {
+describe('logic/xor()', function() {
 
     beforeEach(
         function() {

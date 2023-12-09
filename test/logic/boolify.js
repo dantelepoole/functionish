@@ -6,7 +6,7 @@ const UNIQTHING = { label:'UNIQTHING' }
 
 const id = sinon.fake(x=>x);
 
-describe('boolify()', function() {
+describe('logic/boolify()', function() {
 
     beforeEach(
         function() {

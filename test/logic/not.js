@@ -7,7 +7,7 @@ const UNIQTHING = { label:'UNIQTHING' }
 const id = sinon.fake(x=>x);
 
 
-describe('not()', function() {
+describe('logic/not()', function() {
 
     beforeEach(
         function() {
