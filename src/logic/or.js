@@ -32,6 +32,9 @@ const largedisjunctor = predicates => rundisjunction.bind(THIS_NULL, predicates)
  * Like the `||` operator, `or()` is short-circuited, so it aborts as soon as a *predicate* returns a truthy
  * value, without evaluating the remaining *predicates*.
  * 
+ * A *predicate* may be a function or a non-function value. In the latter case, the *predicate*'s boolish value is
+ * evaluated.
+ * 
  * If the *predicates* array is empty, the function returns `false`.
  * 
  * @example <caption>Example usage of `or()`</caption>
