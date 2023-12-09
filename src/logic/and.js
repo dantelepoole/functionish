@@ -7,7 +7,10 @@
 const THIS_NULL = null;
 
 const always = require('../always');
+const callable = require('../callable');
 const head = require('../arrays/head');
+
+const allcallable = array => array.map(callable);
 
 const alwaystrue = always(true);
 
@@ -29,6 +32,9 @@ const largeconjunctor = predicates => runconjunction.bind(THIS_NULL, predicates)
  * 
  * Like the `&&` operator, `and()` is short-circuited, so it aborts as soon as a *predicate* returns a falsy
  * value, without evaluating the remaining *predicates*.
+ * 
+ * A *predicate* may be a function or a non-function value. In the latter case, the *predicate*'s boolish value is
+ * evaluated.
  * 
  * If the *predicates* array is empty, the function returns `true`.
  * 
@@ -56,7 +62,7 @@ function and(...predicates) {
 
     const conjunctor = conjunctormap[predicates.length] ?? largeconjunctor;
 
-    return conjunctor(predicates);
+    return conjunctor( allcallable(predicates) );
 }
 
 function runconjunction(predicates, ...args) {

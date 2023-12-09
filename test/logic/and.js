@@ -92,11 +92,10 @@ describe('and()', function() {
             expect( iseven.callCount ).to.equal(0);
         }) 
 
-        it('should throw if any predicate is not a function', function() {
+        it(`should evaluate a predicate's value if the predicate is not a function`, function() {
 
-            const conjunct = and(isnumber, 'foobar');
-            
-            expect( ()=>conjunct(42) ).to.throw();
+            expect( and(isnumber, iseven, TRUTHY_VALUE)(42) ).to.equal(TRUTHY_VALUE);
+            expect( and(isnumber, iseven, FALSY_VALUE)(42) ).to.equal(FALSY_VALUE);
         })
     })
 })
