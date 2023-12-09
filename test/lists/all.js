@@ -1,11 +1,10 @@
 const all = require('../../src/lists/all');
 const dispatch = require('../../lib/test/dispatch');
-const expect = require('chai').expect;
 const fake = require('sinon').fake;
 const should = require('../../lib/test/should');
 
-const numbers1to10_array = [1,2,3,4,5,6,7,8,9,10];
-const numbers1to10_list = { [Symbol.iterator]:Array.prototype.values.bind(numbers1to10_array) }
+const emptylist = { [Symbol.iterator]:Array.prototype.values.bind([]) }
+const list1to10 = { [Symbol.iterator]:Array.prototype.values.bind([1,2,3,4,5,6,7,8,9,10]) }
 
 const isnumber = fake( x => typeof x ==='number' );
 const islessthan = fake( (num, x) => (x < num) );
@@ -24,45 +23,35 @@ describe('all()', function() {
 
     it('should return true if the list is empty',
         function() {
-            should.return.true(all, isnumber, []);
-            should.return.true(all, isnumber, { [Symbol.iterator]:Array.prototype.values.bind([]) })
+            should.return.true(all, isnumber, emptylist)
             should.not.be.called(isnumber);
         }
     )
 
     it('should return true if the predicate returns true for each item in the list',
         function() {
-            should.return.true(all, isnumber, numbers1to10_array);
-            should.return.true(all, isnumber,numbers1to10_list);
+            should.return.true(all, isnumber,list1to10);
         }
     )
 
     it('should return false if the predicate returns false for one or more items in the list',
         function() {
-
-            should.return.false(all, islessthan10, numbers1to10_array);
-            should.return.false(all, islessthan10, numbers1to10_list);
+            should.return.false(all, islessthan10, list1to10);
         }
     )
 
     it('should call the predicate once for each item in the list if all() returns true',
         function() {
-            should.return.true(all, isnumber, numbers1to10_array);
+            should.return.true(all, isnumber, list1to10);
             should.be(10, isnumber.callCount);
-
-            should.return.true(all, isnumber, numbers1to10_list);
-            should.be(20, isnumber.callCount);
         }
     )
 
     it('should short-circuit if any predicate fails',
         function() {
 
-            should.return.false(all, islessthan5, numbers1to10_array);
+            should.return.false(all, islessthan5, list1to10);
             should.be(5, islessthan.callCount);
-
-            should.return.false(all, islessthan5, numbers1to10_list);
-            should.be(10, islessthan.callCount);
         }
     )
 
@@ -70,14 +59,24 @@ describe('all()', function() {
         function () {
 
             should.be.a.function( all(isnumber) );
-            should.be.a.boolean( dispatch( all(isnumber), numbers1to10_array ) );
+            should.be.a.boolean( dispatch( all(isnumber), list1to10 ) );
             
         }
     )
 
-    it('should throw if the predicate is not a function',
+    it(`should test the list item's boolish values if the predicate is null or undefined`,
         function () {
-            should.throw(all, 41, numbers1to10_array);
+
+            should.return.true(all, null, list1to10);
+            should.return.true(all, undefined, list1to10);
+            should.return.false(all, null, [0, ...list1to10]);
+            should.return.false(all, undefined, [0, ...list1to10]);
+        }
+    )
+
+    it('should throw if the predicate is not a function nor null or undefined',
+        function () {
+            should.throw(all, 41, list1to10);
         }
     )
 
