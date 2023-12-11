@@ -5,9 +5,13 @@
 'use strict';
 
 const EMPTY_STRING = '';
+const ERR_BAD_LIST = `functionish/lists/append(): The base list has type '%s'. Expected a string or iterable object.`;
 
+const format = require('../misc/format');
+const isiterable = require('../types/isiterable');
 const isstring = require('../types/isstring');
 const list = require('./list');
+const typeorclassname = require('../types/typeorclassname');
 
 /**
  * If *list* is a string, return a new string with the *newitems* appended to *list* in order. Otherwise, *list* should
@@ -31,9 +35,9 @@ const list = require('./list');
  */
 function append(list, ...newitems) {
 
-    return isstring(list)
-         ? list + newitems.join(EMPTY_STRING)
-         : appendlists(list, newitems);
+    return isstring(list) ? list + newitems.join(EMPTY_STRING)
+         : isiterable(list) ? appendlists(list, newitems)
+         : throwbadlist(list);
 }
 
 function appendlists(list1, list2) {
@@ -46,6 +50,10 @@ function appendlists(list1, list2) {
             yield* list2;
         }
     )
+}
+
+function throwbadlist(list) {
+    throw new TypeError( format( ERR_BAD_LIST, typeorclassname(list) ) );
 }
 
 module.exports = append;
