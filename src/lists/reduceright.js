@@ -6,6 +6,7 @@
 
 const ERR_BAD_SOURCELIST = `functionish/lists/reduceright(): The sourcelist argument has type %s. Expected an iterable object.`;
 
+const compose = require('../compose');
 const curry = require('../curry');
 const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
