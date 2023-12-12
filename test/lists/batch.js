@@ -67,20 +67,28 @@ describe( 'batch()', function() {
             
         describe( `if the number of list items is not a multiple of the batch size`, function() {
 
-            it(`the arrays produced by batch()'s return value should have a length equal to the batch size, except the last one`, function() {
-                
-                const batches = [...batch(5, list1to20)];
-                
-                batches.pop();
-
-                for(const batch of batches) should.be(5, batch.length);
-            })
-
-            it(`the last array produced by batch()'s return value should have a length less than the batch size`, function() {
+            it(`the arrays in the returned list should have a length equal to the batch size, except the last one`, function() {
                 
                 const batches = [...batch(7, list1to20)];
                 
-                should.be(6, batches.pop().length);
+                batches.pop();
+
+                for(const batch of batches) should.be(7, batch.length);
+            })
+
+            it(`the last array in the returned list should have a length equal to the remainder after dividing list's length by the batch size`, function() {
+                
+                let batches = [...batch(9, list1to20)];
+                should.be( (20%9), batches.pop().length);
+
+                batches = [...batch(8, list1to20)];
+                should.be( (20%8), batches.pop().length);
+
+                batches = [...batch(7, list1to20)];
+                should.be( (20%7), batches.pop().length);
+
+                batches = [...batch(6, list1to20)];
+                should.be( (20%6), batches.pop().length);
             })
         });
     }
