@@ -5,14 +5,28 @@
 'use strict';
 
 const MINIMUM_BATCHSIZE = 1;
+const ERR_BAD_BATCHSIZE = `functionish/lists/batch(): The batchsize %s. Expected an integer number of %d or higher.`;
+const ERR_BAD_LIST = `functionish/lists/batch(): The list has type '%s'. Expected an iterable object.`;
 
-const curry = require('../curry');
+const curry1 = require('../curry1');
+const format = require('../misc/format');
+const isatleast = require('../math/isatleast');
+const isinteger = require('../types/isinteger');
+const isiterable = require('../types/isiterable');
+const isnumber = require('../types/isnumber');
 const list = require('./list');
-const maximum = Math.max;
+const not = require('../logic/not');
+const typeorclassname = require('../types/typeorclassname');
+
+const hasminimumbatchsizevalue = isatleast(MINIMUM_BATCHSIZE);
+const notnumber = not(isnumber);
 
 /**
- * Return an iterable of arrays, each containing a maximum of *batch* items from *list*. If *batch* is less than `1`,
- * a batch size of `1` will be used.
+ * Return an iterable of arrays, each containing a maximum of *batchsize* items from *list*. If *batchsize* is less
+ * than `1`, an error is thrown.
+ * 
+ * If the number of items in the *list* is not a multiple of the *batchsize*, the size of the final batch will be
+ * less than the *batchsize*.
  * 
  * `batch()` is curried by default with unary arity.
  * 
@@ -31,9 +45,10 @@ const maximum = Math.max;
  * @param {iterable} targetlist The iterable producing the items to batch
  * @returns {iterable}
  */
-function batch(batchsize, targetlist) {
+const batch = curry1(function batch(batchsize, targetlist) {
 
-    batchsize = maximum(batchsize, MINIMUM_BATCHSIZE);
+    validatebatchsize(batchsize);
+    validatelist(targetlist);
 
     return list(
 
@@ -55,30 +70,25 @@ function batch(batchsize, targetlist) {
             if(batch.length > 0) yield batch;
         }
     )
+});
+
+function validatelist(list) {
+
+    if( isiterable(list) ) return list;
+
+    const errormessage = format(ERR_BAD_LIST, typeorclassname(list));
+    throw new TypeError(errormessage);
 }
 
-function batchiterable(batchsize, list) {
+function validatebatchsize(batchsize) {
 
-    return {
-    
-        [Symbol.iterator] : function* () {
+    if( isinteger(batchsize) && hasminimumbatchsizevalue(batchsize) ) return batchsize;
 
-            const batch = [];
+    const explainerror = notnumber(batchsize)
+                       ? ` has type '${typeorclassname(batchsize)}'`
+                       : ` is ${batchsize}`;
 
-            for(const item of list) {
-        
-                const itemcount = batch.push(item);
-        
-                if(itemcount === batchsize) {
-                    yield batch.slice();
-                    batch.length = 0;
-                }
-
-            }
-        
-            if(batch.length > 0) yield batch;
-        }
-    }
+    throw new TypeError( format(ERR_BAD_BATCHSIZE, explainerror, MINIMUM_BATCHSIZE) );
 }
 
-module.exports = curry(1, batch);
+module.exports = batch;
