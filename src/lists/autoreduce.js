@@ -4,19 +4,35 @@
 
 'use strict';
 
-const curry = require('../curry');
+const curry1 = require('../curry1');
 const reduce = require('./reduce');
 
 /**
- * to do
+ * Similar to {@link module:lists/reduce reduce()} except that no initial value is used. Instead, the first item in the
+ * *list* is passed to the *reducer* on the first call along with the *list*'s second item. 
+ * 
+ * If the *list* contains a single item, that item is returned as `autoreduce()`'s return value. If the *list* is
+ * empty, `undefined` is returned.
+ * 
+ * `autoreduce()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `autoreduce()`</caption>
  * 
- * to do
+ * const { autoreduce } = require('functionish/autoreduce');
+ * 
+ * const product = (a,b) => (a*b);
+ * 
+ * autoreduce(product, [1,2,4]); // returns 8
+ * autoreduce(product, [42]); // returns 42
+ * autoreduce(product, []); // returns undefined
  * 
  * @function autoreduce
+ * @see {@link module:lists/reduce reduce()}
+ * @param {function} reducer The reducer function
+ * @param {iterable} list The iterable object producing the items to reduce
+ * @returns {any}
  */
-function autoreduce(reducer, list) {
+const autoreduce = curry1(function autoreduce(reducer, list) {
 
     let started = false;
 
@@ -25,6 +41,6 @@ function autoreduce(reducer, list) {
                                                   : (started = true, nextvalue);
 
     return reduce(autoreducer, undefined, list);
-}
+});
 
-module.exports = curry(1, autoreduce);
+module.exports = autoreduce;
