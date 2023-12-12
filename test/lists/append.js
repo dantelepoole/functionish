@@ -1,16 +1,11 @@
 const append = require('../../src/lists/append');
-const dispatch = require('../../lib/test/dispatch');
 const should = require('../../lib/test/should');
 
-const UNIQTHING = {label:'UNIQTHING'}
-
-const isiterable = obj => (typeof obj?.[Symbol.iterator] === 'function');
 const appendandtoarray = (list, ...newitems) => [...append(list, ...newitems)];
 const array1to10 = [1,2,3,4,5,6,7,8,9,10];
 const array11to20 = [11,12,13,14,15,16,17,18,19,20];
 const list1to10 = { [Symbol.iterator]:Array.prototype.values.bind(array1to10) }
 const list11to20 = { [Symbol.iterator]:Array.prototype.values.bind(array11to20) }
-const emptylist = { [Symbol.iterator]:Array.prototype.values.bind([]) }
 
 describe( 'append()', function() {
 
