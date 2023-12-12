@@ -22,6 +22,13 @@ describe('autoreduce()', function() {
         }
     )
 
+    it('should be curried with unary arity',
+        function() {
+            should.return.a.function(autoreduce, product)
+            should.return(120, autoreduce(product), numbers1to5);
+        }
+    )
+
     it('should throw if the reducer is not a function',
         function() {
             should.throw(autoreduce, null, numbers1to5)
