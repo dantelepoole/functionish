@@ -20,10 +20,12 @@ class List {
     }
 
     [Symbol.iterator]
+
+    [Symbol.isConcatSpreadable] = true
 }
 
-const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassname);
 const islist = list => (list instanceof List);
+const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassname);
 
 /**
  * to do
