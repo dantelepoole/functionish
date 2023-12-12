@@ -42,7 +42,19 @@ describe( 'batch()', function() {
 
             for(const batch of batches) should.be.an.Array(batch);
         })
-        
+
+        it(`should return a lazy list`, function() {
+
+            const numbers = array1to10.slice();
+            const lazylist = batch(2, numbers);
+
+            should.be(5, [...lazylist].length);
+
+            numbers.length = 0;
+            
+            should.be(0, [...lazylist].length);
+        })
+
         describe( `if the number of list items is a multiple of the batch size`, function() {
 
             it(`the arrays produced by batch()'s return value should have a length equal to the batch size`, function() {

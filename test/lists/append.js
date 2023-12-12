@@ -31,6 +31,18 @@ describe( 'append()', function() {
             should.not.return.an.Array(append, array1to10, ...list1to10, ...array11to20);
         })
         
+        it(`should return a lazy list`, function() {
+
+            const numbers = [...list1to10];
+            const lazylist = append(numbers, ...list11to20);
+
+            should.be(20, [...lazylist].length);
+
+            numbers.length = 0;
+            
+            should.be(10, [...lazylist].length);
+        })
+
         describe( 'if the first argument is iterable, append()', function() {
 
             it('should return an iterable object', function() {
