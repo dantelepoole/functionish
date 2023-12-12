@@ -31,4 +31,4 @@ const isatleast = curry1(function isatleast(a,b) {
     return (b >= a)
 });
 
-module.exports = atleast;
+module.exports = isatleast;
