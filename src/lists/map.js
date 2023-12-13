@@ -47,7 +47,7 @@ const map = curry1(function map(mapfunc, sourcelist) {
     
     isfunction(mapfunc) || raisebadmapfuncerror(mapfunc);
     
-    return isfunction(sourcelist?.map) ? sourcelist.map(mapfunc)
+    return isfunction(sourcelist.map) ? sourcelist.map(mapfunc)
          : isiterablenotstring(sourcelist) ? maplist(mapfunc, sourcelist)
          : raisebadlisterror(sourcelist);
 });

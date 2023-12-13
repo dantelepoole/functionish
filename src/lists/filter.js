@@ -48,7 +48,7 @@ const filter = curry1(function filter(predicate, sourcelist) {
 
     isfunction(predicate) || raisebadpredicaterror(predicate);
 
-    return isfunction(sourcelist?.filter) ? sourcelist.filter(predicate)
+    return isfunction(sourcelist.filter) ? sourcelist.filter(predicate)
          : isiterablenotstring(sourcelist) ? filterlist(predicate, sourcelist)
          : raisebadlisterror(sourcelist);
 
