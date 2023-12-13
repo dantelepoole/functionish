@@ -17,9 +17,12 @@ const isconcatspreadable = obj => isarray(obj) || obj?.[Symbol.isConcatSpreadabl
  * concatenated.
  * 
  * If the first item is a string, the return value will also be a string containing the *items* in order. Otherwise,
- * an iterable object is returned that iterates over the *items*. In both cases, any *items* with a
+ * a lazy iterable object is returned that iterates over the *items*. In both cases, any *items* with a
  * `Symbol.isConcatSpreadable` property set to a truthy value are flattened by one level before being concatenated.
  *  
+ * The returned list will be lazy, meaning that any changes to the contents of iterable arguments will be reflected in
+ * subsequent iterations of the returned list.
+ * 
  * @example <caption>Example usage of `concat()`</caption>
  * 
  * const { concat } = require('functionish/lists');
