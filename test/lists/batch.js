@@ -10,7 +10,7 @@ describe( 'batch()', function() {
         it('should be curried with unary arity',
             function() {
                 should.return.a.function(batch, 2)
-                should.return.iterable( batch(2), list1to20 );
+                should.return.an.iterable( batch(2), list1to20 );
             }
         )
         
@@ -33,7 +33,7 @@ describe( 'batch()', function() {
         })
 
         it('should return an iterable', function() {
-            should.return.iterable(batch, 5, list1to20);
+            should.return.an.iterable(batch, 5, list1to20);
         })
 
         it('should return an iterable producing arrays', function() {

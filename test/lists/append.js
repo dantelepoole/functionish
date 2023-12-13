@@ -46,12 +46,12 @@ describe( 'append()', function() {
         describe( 'if the first argument is iterable, append()', function() {
 
             it('should return an iterable object', function() {
-                should.return.iterable(append, list1to10, ...list11to20);
+                should.return.an.iterable(append, list1to10, ...list11to20);
             })
             
             it('should return an iterable that produces the items of the first argument followed by the other arguments', function() {
                 
-                should.return.like(
+                should.return.a.value.like(
                     [...list1to10, ...array11to20],
                     appendandtoarray,
                     list1to10, ...array11to20
@@ -60,7 +60,7 @@ describe( 'append()', function() {
 
             it('should not flatten the other arguments if they are iterable', function() {
                 
-                should.return.like(
+                should.return.a.value.like(
                     [...list1to10, array11to20],
                     appendandtoarray,
                     list1to10, array11to20
