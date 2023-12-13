@@ -52,7 +52,7 @@ describe( 'batch()', function() {
 
             numbers.length = 0;
             
-            should.be(0, [...lazylist].length);
+            should.be.empty(lazylist);
         })
 
         describe( `if the number of list items is a multiple of the batch size`, function() {
