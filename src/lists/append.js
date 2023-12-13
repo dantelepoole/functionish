@@ -15,8 +15,8 @@ const typeorclassname = require('../types/typeorclassname');
 
 /**
  * If *list* is a string, return a new string with the *newitems* appended to *list* in order. Otherwise, *list* should
- * ben an iterable object, in which case a new list is returned with consists of the items *list* followed by *newitems*
- * in order.
+ * ben an iterable object, in which case a lazy list is returned with consists of the items *list* followed by each of
+ * the *newitems* in order.
  * 
  * `append()` always returns a list (i.e. iterable object), not an array, even if the input *list* is an array.
  * 
