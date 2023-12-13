@@ -4,42 +4,50 @@
 
 'use strict';
 
+const EMPTY_STRING = '';
+
 const isarray = require('../types/isarray');
-const isiterablenotstring = require('../types/isiterablenotstring');
+const isstring = require('../types/isstring');
 const list = require('../lists/list');
 
+const isconcatspreadable = obj => isarray(obj) || obj?.[Symbol.isConcatSpreadable];
+
 /**
- * Return an iterable object that flattens each *list* in *lists* in order. If a *list* is not iterable,
- * the returned iterable produces the *list* itself.
+ * Similar to {@link module:lists/append() append()} except that concat-spreadable *items* are flattened before being
+ * concatenated.
  * 
- * If the first list in the *lists* array is array, its {@link external:Array.prototype.concat Array.prototype.concat()}
- * method is called and the result is returned. Otherwise, the *lists* are presumed to be iterable objects
- * and a new iterable object is returned that operates lazily.
- * 
+ * If the first item is a string, the return value will also be a string containing the *items* in order. Otherwise,
+ * an iterable object is returned that iterates over the *items*. In both cases, any *items* with a
+ * `Symbol.isConcatSpreadable` property set to a truthy value are flattened by one level before being concatenated.
+ *  
  * @example <caption>Example usage of `concat()`</caption>
  * 
  * const { concat } = require('functionish/lists');
  * 
- * const list = concat([1,2], 3, 4, [5,6]); 
+ * const numberlist = concat([1,2], 3, 4, [5,6]); 
+ * [...numberlist]; // [1,2,3,4,5,6]
  * 
- * Array.from(lists); // returns '[1,2,3,4,5,6]'
+ * const numberlist2 = concat( [1,2], 3, [4, [5,6]] );
+ * [...numberlist2]; // [1,2,3,4,[5,6]] because the flattening does not recurse
+ * 
+ * concat( 'fu','bar', ['and', 'foo', 'bar'] ); // returns 'fubarandfoobar'
  * 
  * @function concat
- * @param  {...iterable[]} lists One or more iterable objects to flatten and concatenate
+ * @param  {...any[]} items The items to concatenate
  * @returns {iterable}
  */
-function concat(...lists) {
+function concat(...items) {
     
-    return isarray(lists[0])
-         ? lists[0].concat( ...lists.slice(1) )
-         : concatlists(lists);
+    return isstring(items[0]) 
+         ? items.flat(1).join(EMPTY_STRING)
+         : concatlists(items);
 }
 
-function concatlists(lists) {
+function concatlists(items) {
 
     return list(
         function* () {
-            for(const list of lists) isiterablenotstring(list) ? yield* list : yield list;
+            for(const item of items) isconcatspreadable(item) ? yield* item : yield item;
         }
     )
 }
