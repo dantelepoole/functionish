@@ -24,6 +24,9 @@ const raisebadpredicaterror = compose(raise, error.Type(ERR_BAD_PREDICATE), type
  * result. Otherwise, return a lazy iterable object that produces only those items from *sourcelist* for which the
  * *predicate* returns a truthy value.
  * 
+ * If the *sourcelist* has a `filter()`-method (e.g. an Array) the *predicate* is passed to this method and result
+ * is returned.
+ * 
  * `filter()` is curried by default with unary arity.
  * 
  * @example <caption>Example usage of `filter()`</caption>
@@ -45,7 +48,7 @@ const filter = curry1(function filter(predicate, sourcelist) {
 
     isfunction(predicate) || raisebadpredicaterror(predicate);
 
-    return isfunction(sourcelist.filter) ? sourcelist.filter(predicate)
+    return isfunction(sourcelist?.filter) ? sourcelist.filter(predicate)
          : isiterablenotstring(sourcelist) ? filterlist(predicate, sourcelist)
          : raisebadlisterror(sourcelist);
 
