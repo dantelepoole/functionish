@@ -37,7 +37,7 @@ const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassnam
  * If the *source* is already a list object, it is returned unaltered.
  * 
  * Otherwise, the *source* is itself assumed to be an iterable object, and the returned object bind's to *source*'s
- * \@\@iterator method, effectively masking the *source* object itself. The return value will perform lazy iteration,
+ * @@iterator method, effectively masking the *source* object itself. The return value will perform lazy iteration,
  * so it will reflects any changes to *source*'s contents in between iterations.
  * 
  * The returned object is also {@link external:Symbol.isConcatSpreadable concat-spreadable}.
