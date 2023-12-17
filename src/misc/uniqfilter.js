@@ -77,11 +77,12 @@ function buildisuniq(duplicates) {
 
 function buildhashedisuniq(hashfunc, duplicates) {
 
-    const isuniq = compose(value => !duplicates.has(value) && !!duplicates.add(value), hashfunc);
-    
-    isuniq.clear = duplicates.clear.bind(duplicates);
+    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value);
 
-    return isuniq;    
+    const _isuniq = compose(isuniq, hashfunc);    
+    _isuniq.clear = duplicates.clear.bind(duplicates);
+
+    return _isuniq;    
 }
 
 module.exports = uniqfilter;
