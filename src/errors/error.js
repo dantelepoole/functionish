@@ -29,8 +29,6 @@ const errorctormap = Object.freeze({
  * Note that the Error-instances returned are always instances of Javascript's native `Error` object type. Only the
  * object's `name` is updated with the *errorname*.
  * 
- * `error()` is curried by default with unary arity.
- * 
  * @example <caption>Example usage of `error()`</caption>
  * 
  * const { error } = require('functionish/errors');
@@ -56,27 +54,27 @@ const errorctormap = Object.freeze({
  * @param {string} messageformat The format of the errormessage
  * @returns {Error}
  */
-const error = curry1(function error(errorname='Error', messageformat) {
+function error(errorname='Error', messageformat) {
 
-    const errorctor = errorctormap[errorname] ?? customerrorctor(errorname);
+    const errorctor = errorctormap[errorname] ?? customerrorctor.bind(null, errorname);
     const messageformatter = isfunction(messageformat)
                            ? messageformat
                            : format.bind(null, messageformat);
 
     return compose(errorctor, messageformatter);
-});
+}
 
-const customerrorctor = curry1(function customerrorctor(errorname, errormessage) {
+function customerrorctor(errorname, errormessage) {
 
     const error = new Error(errormessage);
 
     error.name = String(errorname);
 
     return error;
-});
+}
 
-error.Range = error('RangeError');
-error.Reference = error('ReferenceError'); 
-error.Type = error('TypeError');
+error.Range = error.bind(null, 'RangeError');
+error.Reference = error.bind(null, 'ReferenceError'); 
+error.Type = error.bind(null, 'TypeError');
 
 module.exports = error;
