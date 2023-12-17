@@ -15,6 +15,7 @@ const raise = require('../errors/raise');
 const type = require('../types/type');
 const typeorclassname = require('../types/typeorclassname');
 
+const isset = x => (x instanceof Set);
 const throwhashfunctionerror = compose(raise, error.Type(ERR_BAD_HASHFUNCTION), type);
 const throwduplicateserror = compose(raise, error.Type(ERR_BAD_DUPLICATES), typeorclassname);
 
@@ -50,9 +51,9 @@ const throwduplicateserror = compose(raise, error.Type(ERR_BAD_DUPLICATES), type
  */
 function uniqfilter(hashfunc, duplicates=new Set()) {
 
-    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value)
+    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value);
 
-    (duplicates instanceof Set) || throwduplicateserror(duplicates);
+    isset(duplicates) || throwduplicateserror(duplicates);
     
     return isfunction(hashfunc) ? compose(isuniq, hashfunc)
          : isvoid(hashfunc) ? isuniq
