@@ -4,9 +4,18 @@
 
 'use strict';
 
+const ERR_BAD_SOURCELIST = `functionish/lists/uniq(): The source list has type %s. Expected an iterable object.`;
+
+const compose = require('../compose');
 const curry1 = require('../curry1');
-const filter = require('./filter');
+const error = require('../errors/error');
+const isiterablenotstring = require('../types/isiterablenotstring');
+const list = require('./list');
+const raise = require('../errors/raise');
+const typeorclassname = require('../types/typeorclassname');
 const uniqfilter = require('../misc/uniqfilter');
+
+const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), typeorclassname);
 
 /**
  * Return a lazy iterable object that discards any duplicate items in the *sourcelist*, using the optional *hashfunc*
@@ -43,7 +52,18 @@ const uniqfilter = require('../misc/uniqfilter');
  * @returns {iterable}
  */
 const uniq = curry1(function uniq(hashfunc=null, sourcelist) {
-    return filter( uniqfilter(hashfunc), sourcelist );
+
+    isiterablenotstring(sourcelist) || raisebadsourcelisterror(sourcelist);
+
+    const isuniq = uniqfilter(hashfunc);
+
+    return list(
+
+        function* () {
+            for(const item of sourcelist) isuniq(item) && (yield item);
+            isuniq.clear();
+        }
+    )
 });
 
 module.exports = uniq;
