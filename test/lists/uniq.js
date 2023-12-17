@@ -7,6 +7,10 @@ const numbers1to6 = [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,6];
 
 describe( 'uniq()', function() {
 
+        beforeEach(function () {
+            double.resetHistory();
+        })
+        
         it('should be curried with unary arity',
             function() {
                 should.return.a.function(uniq, double)
@@ -38,6 +42,13 @@ describe( 'uniq()', function() {
         })
 
         describe( 'The iterable returned by uniq()', function() {
+
+            it('should call the hashing function for each item in the source list if one was passed', function() {
+                
+                should.be.zero(double.callCount);
+                [...uniq(double, numbers1to6) ];
+                should.be(numbers1to6.length, double.callCount);
+            })
             
             it('should produce the non-duplicate items from the source list in order', function() {
                 
