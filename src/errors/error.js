@@ -4,10 +4,8 @@
 'use strict';
 
 const compose = require('../compose');
-const curry1 = require('../curry1');
 const format = require('../misc/format');
 const isfunction = require('../types/isfunction');
-const isvoid = require('../types/isvoid');
 
 const errorctormap = Object.freeze({
     ['Error']          : message => new Error(message), 
