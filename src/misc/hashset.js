@@ -11,8 +11,8 @@ const HashSet = require('../../lib/HashSet');
 const compose = require('../compose');
 const curry1 = require('../curry1');
 const error = require('../errors/error');
-const format = require('./format');
 const isfunction = require('../types/isfunction');
+const isvoid = require('../types/isvoid');
 const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
 
