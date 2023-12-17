@@ -41,6 +41,9 @@ describe( 'uniq()', function() {
             
             it('should produce the non-duplicate items from the source list in order', function() {
                 
+                should.be.like([1], [...uniq(null, [1,1,1,1,1,1,1,1,1,1,1])]);
+                should.be.like([1], [...uniq(double, [1,1,1,1,1,1,1,1,1,1,1])]);
+
                 should.be.like( [1,2,3,4,5,6], [...uniq(null, numbers1to6)] );
                 should.be.like( [1,2,3,4,5,6], [...uniq(double, numbers1to6)] );
             })
