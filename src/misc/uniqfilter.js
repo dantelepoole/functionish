@@ -24,12 +24,7 @@ const throwduplicateserror = compose(raise, error.Type(ERR_BAD_DUPLICATES), type
  * is passed, the filter compares values using strict equality. Otherwise, it compare values by the
  * hash values returned by *hashfunc*.
  * 
- * The returned filter function maintains a cache of all values passed through the filter. So you should never keep
- * a uniqfilter around indefinitely, that would cause a memory leak. Instead, call `uniqfilter()` to create a
- * new filter each time you need one.
- * 
- * For the same reason, a uniq-instance is not reusable, since on subsequent runs it will recognize the values
- * from earlier runs as being duplicates.
+ * The returned filter function has a `clear()` method to clear its internal cache of duplicate items.
  * 
  * @example <caption>Example usage of `uniqfilter()`</caption>
  * 
@@ -44,6 +39,19 @@ const throwduplicateserror = compose(raise, error.Type(ERR_BAD_DUPLICATES), type
  * const getid = x => x.id;
  * [ {id:42}, {id:43}, {id:42} ].filter( uniqfilter(getid) ); // returns [ {id:42}, {id:43} ]
  * 
+ * @example <caption>Example usage of `uniqfilter()` with the `clear() method</caption>
+ * 
+ * const { uniqfilter } = require('functionish/misc');
+ * 
+ * const dedup = uniqfilter();
+ * 
+ * [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5].filter( dedup ); // returns [1,2,3,4,5]
+ * 
+ * [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5].filter( dedup ); // returns []
+ * 
+ * dedup.clear();
+ * [1,2,2,3,3,3,4,4,4,4,5,5,5,5,5].filter( dedup ); // returns [1,2,3,4,5]
+ * 
  * @function uniqfilter
  * @param {function} [hashfunc=null] The hashing function
  * @param {Set} [duplicates] A Set containing the initial duplicate items
@@ -51,15 +59,29 @@ const throwduplicateserror = compose(raise, error.Type(ERR_BAD_DUPLICATES), type
  */
 function uniqfilter(hashfunc, duplicates=new Set()) {
 
-    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value);
-
     isset(duplicates) || throwduplicateserror(duplicates);
-    
-    return isfunction(hashfunc) ? compose(isuniq, hashfunc)
-         : isvoid(hashfunc) ? isuniq
-         : throwhashfunctionerror(hashfunc);
 
+    return isvoid(hashfunc) ? buildisuniq(duplicates)
+         : isfunction(hashfunc) ? buildhashedisuniq(hashfunc, duplicates)
+         : throwhashfunctionerror(hashfunc);
 }
 
+function buildisuniq(duplicates) {
+
+    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value);
+
+    isuniq.clear = duplicates.clear.bind(duplicates);
+    
+    return isuniq;
+}
+
+function buildhashedisuniq(hashfunc, duplicates) {
+
+    const isuniq = compose(value => !duplicates.has(value) && !!duplicates.add(value), hashfunc);
+    
+    isuniq.clear = duplicates.clear.bind(duplicates);
+
+    return isuniq;    
+}
 
 module.exports = uniqfilter;
