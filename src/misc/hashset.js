@@ -10,11 +10,13 @@ const HashSet = require('../../lib/HashSet');
 
 const compose = require('../compose');
 const curry1 = require('../curry1');
+const error = require('../errors/error');
 const format = require('./format');
 const isfunction = require('../types/isfunction');
+const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
 
-const throwbadhashfuncerror = compose(format(ERR_BAD_HASHFUNC), typeorclassname);
+const throwbadhashfuncerror = compose(raise, error.Type(ERR_BAD_HASHFUNC), typeorclassname);
 
 const hashset = curry1(function hashset(hashfunc, initialitems=[]) {
     
