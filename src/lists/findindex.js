@@ -6,14 +6,13 @@
 
 const INDEX_NOT_FOUND = -1;
 
-const curry = require('../curry');
-const isfunction = require('../isfunction');
+const curry1 = require('../curry1');
+const isfunction = require('../types/isfunction');
 
 /**
- * Return the index of the first value in *list* for which the *predicate* function returns a truthy value, or
- * `-1` if no such value is found.
- * 
- * If *list* is not an array, it is presumed to be an iterable object.
+ * If *list* has a `findIndex()` method, it is passed the *predicate* and the result is returned. Otherwise, return the
+ * index of the first value in *list* for which the *predicate* function returns a truthy value or `-1` if the
+ * *predicate* returns a falsy value for each item in the *list*.
  * 
  * `findindex()` is curried by default with unary arity.
  * 
@@ -31,7 +30,7 @@ const isfunction = require('../isfunction');
  * @param {iterable} list The list of items to search
  * @returns {any}
  */
-function findindex(predicate, list) {
+const findindex = curry1(function findindex(predicate, list) {
 
     if( isfunction(list.findIndex) ) return list.findIndex(predicate);
 
@@ -43,6 +42,6 @@ function findindex(predicate, list) {
     }
 
     return index;
-}
+});
 
-module.exports = curry(1, findindex);
+module.exports = findindex;
