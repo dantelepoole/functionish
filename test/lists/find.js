@@ -41,6 +41,18 @@ describe('find()', function() {
         }
     )
 
+    it(`should pass the predicate to the list's find() method if it has one`,
+        function() {
+            
+            const fakefind = fake(x => x);
+            const list = { find:fakefind }
+
+            should.return(iseven, find, iseven, list);
+            should.be.called(fakefind);
+            should.be.called.with([iseven], fakefind);
+        }
+    )
+
     it('should return undefined if the list is empty without calling the predicate',
         function() {
             should.return.undefined(find, iseven, []);
