@@ -4,14 +4,12 @@
 
 'use strict';
 
-const curry = require('../curry');
+const curry1 = require('../curry1');
 const isfunction = require('../types/isfunction');
 
 /**
- * Return the first value in *list* for which the *predicate* function returns a truthy value, or
- * `undefined` if no such value is found.
- * 
- * If *list* is not an array, it is presumed to be an iterable object.
+ * If *list* has a `find()` method, it is passed the *predicate* and the result is returned. Otherwise, return the first
+ * value in *list* for which the *predicate* function returns a truthy value, or `undefined` if no such value is found.
  * 
  * `find()` is curried by default with unary arity.
  * 
@@ -29,11 +27,11 @@ const isfunction = require('../types/isfunction');
  * @param {iterable} list The list of items to search
  * @returns {any}
  */
-function find(predicate, list) {
+const find = curry1(function find(predicate, list) {
 
     if( isfunction(list.find) ) return list.find(predicate);
 
     for(const item of list) if( predicate(item) ) return item;
-}
+});
 
-module.exports = curry(1, find);
+module.exports = find;
