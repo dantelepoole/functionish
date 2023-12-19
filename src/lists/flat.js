@@ -4,16 +4,25 @@
 
 'use strict';
 
+const ERR_BAD_LIST = `functionish/lists/flat(): The source list has type %s. Expected an iterable object.`;
+
+const compose = require('../compose');
+const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
 const list = require('./list');
 const isiterablenotstring = require('../types/isiterablenotstring');
+const raise = require('../errors/raise');
+const typeorclassname = require('../types/typeorclassname');
+
+const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
 
 /**
- * Return an iterable object that flattens the values in *list* by one level, meaning that if any
- * value in list is iterable, that value itself is expanded.
+ * Return an iterable object that flattens the values in *sourcelist* by one level, meaning that if any
+ * value in *sourcelist* is iterable, that value itself is expanded.
  * 
- * If *list* has a `flat()` method, this function calls it and returns the result. Otherwise, *list* is presumed to be
- * iterable and an iterable object is returned that operates lazily.
+ * If *sourcelist* has a `flat()` method, this function calls it and returns the result. Otherwise, return a lazy iterable
+ * object that flattens the values in *sourcelist* by one level (meaning that all items in *sourcelist* that are themselves
+ * iterable, will be expanded).
  * 
  * @example <caption>Example usage of `flat()`</caption>
  * 
@@ -25,14 +34,14 @@ const isiterablenotstring = require('../types/isiterablenotstring');
  * Array.from(flattened); // returns [1,2,3,4,5,6,7,8,9,[10]];
  * 
  * @function flat
- * @param {iterable} targetlist An iterable object
+ * @param {iterable} sourcelist An iterable object
  * @returns {iterable}
  */
-function flat(targetlist) {
+function flat(sourcelist) {
 
-    return isfunction(targetlist.flat)
-         ? targetlist.flat()
-         : flatlist(targetlist);
+    return isfunction(sourcelist.flat) ? sourcelist.flat()
+         : isiterablenotstring(sourcelist) ? flatlist(sourcelist)
+         : raisebadlisterror(sourcelist);
 }
 
 function flatlist(targetlist) {
