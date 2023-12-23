@@ -61,28 +61,28 @@ function uniqfilter(hashfunc, duplicates=new Set()) {
 
     isset(duplicates) || throwduplicateserror(duplicates);
 
-    return isvoid(hashfunc) ? buildisuniq(duplicates)
-         : isfunction(hashfunc) ? buildhashedisuniq(hashfunc, duplicates)
+    return isvoid(hashfunc) ? builduniqfilter(duplicates)
+         : isfunction(hashfunc) ? buildhashinguniqfilter(hashfunc, duplicates)
          : throwhashfunctionerror(hashfunc);
 }
 
-function buildisuniq(duplicates) {
+function builduniqfilter(duplicates) {
 
-    const isuniq = value => !duplicates.has(value) && !!duplicates.add(value);
+    const _uniqfilter = value => !duplicates.has(value) && !!duplicates.add(value);
 
-    isuniq.clear = duplicates.clear.bind(duplicates);
+    _uniqfilter.clear = duplicates.clear.bind(duplicates);
     
-    return isuniq;
+    return _uniqfilter;
 }
 
-function buildhashedisuniq(hashfunc, duplicates) {
+function buildhashinguniqfilter(hashfunc, duplicates) {
 
     const isuniq = value => !duplicates.has(value) && !!duplicates.add(value);
 
-    const _isuniq = compose(isuniq, hashfunc);    
-    _isuniq.clear = duplicates.clear.bind(duplicates);
+    const _uniqfilter = compose(isuniq, hashfunc);    
+    _uniqfilter.clear = duplicates.clear.bind(duplicates);
 
-    return _isuniq;    
+    return _uniqfilter;    
 }
 
 module.exports = uniqfilter;
