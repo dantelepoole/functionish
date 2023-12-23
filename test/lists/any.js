@@ -10,7 +10,7 @@ const isnumber = fake( x => typeof x ==='number' );
 const islessthan = fake( (num, x) => (x < num) );
 const isstring = fake(x => typeof x === 'string');
 
-describe('any()', function() {
+describe('lists/any()', function() {
 
     beforeEach(
         function() {

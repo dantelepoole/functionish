@@ -6,7 +6,7 @@ const multidimensionalarray = [1,2,3, [4,5, [6,7,8] ,9,10] ];
 const id = fake(x => x);
 const lift = fake(x => [x]);
 
-describe( 'flatmap()', function() {
+describe( 'lists/flatmap()', function() {
 
         beforeEach(function () {
             id.resetHistory();

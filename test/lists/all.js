@@ -12,7 +12,7 @@ const islessthan = fake( (num, x) => (x < num) );
 const islessthan10 = islessthan.bind(null, 10);
 const islessthan5 = islessthan.bind(null, 5);
 
-describe('all()', function() {
+describe('lists/all()', function() {
 
     beforeEach(
         function() {

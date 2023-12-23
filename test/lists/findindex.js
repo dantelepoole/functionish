@@ -10,7 +10,7 @@ const id = fake(x=>x);
 const iseven = fake(x => (x%2)===0);
 const isobject = fake(x => typeof x === 'object');
 
-describe('findindex()', function() {
+describe('lists/findindex()', function() {
 
     beforeEach(
         function() {

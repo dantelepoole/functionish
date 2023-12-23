@@ -10,7 +10,7 @@ const list1to5 = { [Symbol.iterator]:Array.prototype.values.bind(array1to5), [Sy
 const list6to10 = { [Symbol.iterator]:Array.prototype.values.bind(array6to10), [Symbol.isConcatSpreadable]:true  }
 const list11to15nospread = { [Symbol.iterator]:Array.prototype.values.bind(array11to15), [Symbol.isConcatSpreadable]:false }
 
-describe( 'concat()', function() {
+describe( 'lists/concat()', function() {
 
         describe( 'If the first argument is a string, concat()', function() {
 

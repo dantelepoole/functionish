@@ -7,7 +7,7 @@ const array11to20 = [11,12,13,14,15,16,17,18,19,20];
 const list1to10 = { [Symbol.iterator]:Array.prototype.values.bind(array1to10) }
 const list11to20 = { [Symbol.iterator]:Array.prototype.values.bind(array11to20) }
 
-describe( 'append()', function() {
+describe( 'lists/append()', function() {
 
         it('should throw if the first argument is not iterable', function() {
             

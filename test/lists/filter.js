@@ -6,7 +6,7 @@ const numbers1to10 = [1,2,3,4,5,6,7,8,9,10];
 const iseven = fake( x => (x%2) === 0 );
 const isnegative = fake(x => (x < 0));
 
-describe( 'filter()', function() {
+describe( 'lists/filter()', function() {
 
         beforeEach(function () {
             iseven.resetHistory();

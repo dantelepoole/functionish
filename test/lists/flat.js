@@ -4,7 +4,7 @@ const fake = require('sinon').fake;
 
 const multidimensionalarray = [1,2,3, [4,5, [6,7,8] ,9,10] ];
 
-describe( 'flat()', function() {
+describe( 'lists/flat()', function() {
 
         beforeEach(function () {
         })

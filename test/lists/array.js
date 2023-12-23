@@ -8,7 +8,7 @@ const array1to10 = [1,2,3,4,5,6,7,8,9,10];
 const list1to10 = { [Symbol.iterator]:Array.prototype.values.bind(array1to10) }
 const emptylist = { [Symbol.iterator]:Array.prototype.values.bind([]) }
 
-describe( 'array()', function() {
+describe( 'lists/array()', function() {
 
         it('should throw an error if the list is not an iterable object', function() {
             should.throw(array, {});

@@ -5,7 +5,7 @@ const fake = require('sinon').fake;
 const numbers1to10 = [1,2,3,4,5,6,7,8,9,10];
 const double = fake( x => (x*2) );
 
-describe( 'map()', function() {
+describe( 'lists/map()', function() {
 
         beforeEach(function () {
             double.resetHistory();

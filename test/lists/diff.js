@@ -15,7 +15,7 @@ const idlist2dups = list([...idarray2, { id:3 }, { id:5 } ]);
 // const getid = fake( obj=>(console.log('id:' + obj.id), obj.id) );
 const getid = fake( obj=>obj.id );1
 
-describe( 'diff()', function() {
+describe( 'lists/diff()', function() {
 
         beforeEach(function () {
             getid.resetHistory();

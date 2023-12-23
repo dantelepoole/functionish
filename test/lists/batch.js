@@ -5,7 +5,7 @@ const array1to10 = [1,2,3,4,5,6,7,8,9,10];
 const array11to20 = [11,12,13,14,15,16,17,18,19,20];
 const list1to20 = { [Symbol.iterator]:Array.prototype.values.bind( [...array1to10, ...array11to20 ]) }
 
-describe( 'batch()', function() {
+describe( 'lists/batch()', function() {
 
         it('should be curried with unary arity',
             function() {

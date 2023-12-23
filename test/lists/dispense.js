@@ -4,7 +4,7 @@ const should = require('../../lib/test/should');
 const UNIQTHING = { Label:'UNIQTHING' };
 const numbers1to5 = Object.freeze([1,2,3,4,5]);
 
-describe('dispense()', function() {
+describe('lists/dispense()', function() {
 
     it('should return a function',
         function() {

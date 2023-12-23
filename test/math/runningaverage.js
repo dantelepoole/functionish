@@ -2,7 +2,7 @@ const runningaverage = require('../../src/math/runningaverage');
 const expect = require('chai').expect;
 const sinon = require("sinon");
 
-describe( 'runningaverage()', function() {
+describe( 'math/runningaverage()', function() {
 
     beforeEach(function () {
         sinon.resetHistory();

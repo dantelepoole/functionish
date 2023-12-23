@@ -11,7 +11,7 @@ const product = fake( (a,b)=>(a*b) );
 const subtract = fake( (a,b)=>(a-b) );
 const sum = fake( (a,b)=>(a+b) );
 
-describe('autoreduce()', function() {
+describe('lists/autoreduce()', function() {
 
     beforeEach(
         function() {
