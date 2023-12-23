@@ -11,7 +11,7 @@ const compose = require('../compose');
 const curry1 = require('../curry1');
 const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
-const isiterablenotstring = require('../types/isiterablenotstring');
+const isiterable = require('../types/isiterable');
 const list = require('./list');
 const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
@@ -49,7 +49,7 @@ const filter = curry1(function filter(predicate, sourcelist) {
     isfunction(predicate) || raisebadpredicaterror(predicate);
 
     return isfunction(sourcelist.filter) ? sourcelist.filter(predicate)
-         : isiterablenotstring(sourcelist) ? filterlist(predicate, sourcelist)
+         : isiterable(sourcelist) ? filterlist(predicate, sourcelist)
          : raisebadlisterror(sourcelist);
 
 })
