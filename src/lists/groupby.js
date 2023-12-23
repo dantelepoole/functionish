@@ -4,22 +4,39 @@
 
 'use strict';
 
-const GROUP_NONE = undefined;
+const ERR_BAD_LIST = `functionish/lists/groupby(): The sourcelist has type %s. Expected an iterable object.`;
+const ERR_BAD_KEYSELECTOR = `functionish/lists/groupby(): The keyselector has type %s. Expected a function.`;
+const GROUP_BOGUS = { push:()=>{} }
 
-const curry = require('../curry');
+const curry1 = require('../curry1');
+const exception = require('../errors/exception');
 const isdefined = require('../types/isdefined');
-const isvoid = require('../types/isvoid');
+const isfunction = require('../types/isfunction');
+const isiterable = require('../types/isiterable');
+const typeorclassname = require('../types/typeorclassname');
+const validator = require('../errors/validator');
 
-const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
-                                : isdefined(target[key]) ? target[key]
-                                : (target[key] = []);
+const selectgroup = (groups, groupname) => isdefined(groupname)
+                                         ? groups[groupname] ?? (groups[groupname] = [])
+                                         : GROUP_BOGUS;
+
+const validatekeyselector = validator(
+    exception('TypeError', ERR_BAD_KEYSELECTOR, typeorclassname),
+    isfunction
+);
+
+const validatesourcelist = validator(
+    exception('TypeError', ERR_BAD_LIST, typeorclassname),
+    isiterable
+);
 
 /**
+ * 
  * Split a list into sub-lists stored in an object, based on the result of calling a key-returning function on each
  * element, and grouping the results according to values returned. Each key on the returned object contains an array
  * holding the items for which *selectgroup* returned that key.
  * 
- * If *keyselector* returns `null` or `undefined` for an item, that item is discarded.
+ * If *keyselector* returns <abbr title="null or undefined">void</abbr> for an item, that item is discarded.
  * 
  * `groupby()` is curried by default with unary arity.
  * 
@@ -28,6 +45,7 @@ const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
  * const groupby = require('functionish/lists/groupby');
  * 
  * function getstudentgrade(student) {
+ * 
  *     return student?.score === undefined ? undefined
  *          : student.score < 65 ? 'F'
  *          : student.score < 70 ? 'D'
@@ -46,9 +64,8 @@ const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
  * ]
  *
  * const studentgrades = groupby(getstudentgrade, studentscores);
- * console.log(studentgrades)
  * 
- * // Prints:
+ * // studentgrades:
  * // {
  * //    F : [{ name:'Anne', score:55 }, { name:'Edward', score:0 }],
  * //    C : [{ name:'Bruce', score:73 }],
@@ -57,23 +74,23 @@ const getgroup = (target, key) => isvoid(key) ? GROUP_NONE
  * // }
  * 
  * @function groupby
- * @param {func} keyselector A function that returns a key for a given item
+ * @param {function} keyselector A function that returns a key for a given item
  * @param {iterable} sourcelist An iterable object producing the items to group
  * @returns {object} 
  */
-function groupby(keyselector, sourcelist) {
+const groupby = curry1(function groupby(keyselector, sourcelist) {
 
-    const target = {};
+    validatekeyselector(keyselector);
+    validatesourcelist(sourcelist);
+
+    const groups = {};
 
     for(const item of sourcelist) {
-
         const key = keyselector(item);
-        const group = getgroup(target, key);
-        
-        isdefined(group) && group.push(item);
+        selectgroup(groups, key).push(item);
     }
 
-    return target;
-}
+    return groups;
+});
                                  
-module.exports = curry(1, groupby);
+module.exports = groupby;
