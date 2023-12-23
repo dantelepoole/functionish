@@ -70,7 +70,7 @@ describe( 'lists/diff()', function() {
 
                 [...diff(getid, list1, list2)];
 
-                should.be.less.than.or.equal.to(list1.length + list2.length <= getid.callCount);
+                should.be.greater.than.or.equal.to(list1.length + list2.length, getid.callCount);
             })
 
             it('should produce the items from the first list that are not present in the second list', function() {
