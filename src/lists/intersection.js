@@ -4,11 +4,13 @@
 
 'use strict';
 
+const and = require('../logic/and');
 const bind = require('../bind');
 const compose = require('../compose');
-const curry = require('../curry');
-const filter = require('./filter');
+const curry2 = require('../curry2');
 const hashset = require('../misc/hashset');
+const isiterable = require('../types/isiterable');
+const list = require('./list');
 const uniqfilter = require('../misc/uniqfilter');
 
 const intersectfilter = compose( bind('has'), hashset );
@@ -34,18 +36,24 @@ const intersectfilter = compose( bind('has'), hashset );
  * Array.from(result); // returns [3,4,5]
  * 
  * @function intersection
- * @param {function} hashfunc The hashing function 
+ * @param {function} [hashfunc] The hashing function 
  * @param {iterable} list1 An iterable object
  * @param {iterable} list2 Another iterable object to intersect with
  * @returns {iterable}
  */
-function intersection(hashfunc, list1, list2) {
+const intersection = curry2(function intersection(hashfunc, list1, list2) {
 
-    const isintersect = intersectfilter(hashfunc, list2);
-    const predicate = [ isintersect, uniqfilter(hashfunc) ];
+    return list(
 
-    return filter(predicate, list1);
+        function* () {
 
-}
+            const isintersect = intersectfilter(hashfunc, list2);
+            const isuniq = uniqfilter(hashfunc);
+            const predicate = and(isintersect, isuniq);
 
-module.exports = curry(2, intersection);
+            for(const item of list1) predicate(item) && (yield item);
+        }
+    )
+})
+
+module.exports = intersection;
