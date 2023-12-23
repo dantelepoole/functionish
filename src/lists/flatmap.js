@@ -4,23 +4,26 @@
 
 'use strict';
 
-const curry = require('../curry');
+const ERR_BAD_LIST = `functionish/lists/flatmap(): The source has type %s. Expected an iterable object.`;
+const ERR_BAD_MAPFUNC = `functionish/lists/flatmap(): The map function has type %s. Expected a function.`;
 
+const compose = require('../compose');
+const curry1 = require('../curry1');
+const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
 const isiterablenotstring = require('../types/isiterablenotstring');
 const list = require('./list');
+const raise = require('../errors/raise');
+const typeorclassname = require('../types/typeorclassname');
+
+const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
+const raisebadmapfuncerror = compose(raise, error.Type(ERR_BAD_MAPFUNC), typeorclassname);
 
 /**
- * Return an iterable object that passes each value in *list* to the *mapfunc* function and flattens the result by one
- * level, meaning that if result is iterable, the result itself is expanded.
- * 
- * If *list* is an array, this function calls its {@link external:Array.prototype.flatMap Array.prototype.flatMap()}
- * method and returns the result. However, the *mapfunc* function will only ever be called with a single
- * argument (the current list item), not the additional arguments that {@link external:Array.prototype.flatMap Array.prototype.flatMap()}
- * passes to its function.
- * 
- * If *list* is not an array, it is presumed to be iterable and an iterable object is returned
- * that operates lazily.
+ * If *source* has a {@link external:Array.prototype.flatMap Array.prototype.flatMap()} method, pass *mapfunc* to it and
+ * return the result. Otherwise, return a lazy iterable object that passes each value in *source* to the *mapfunc*
+ * function and flattens the result by one level. Effectively the combination of a call to 
+ * {@link module:lists/flat flat()} followed by a call to {@link module:lists/map map()}.
  * 
  * `flatmap()` is curried by default with unary arity.
  * 
@@ -41,25 +44,27 @@ const list = require('./list');
  * 
  * @function flatmap
  * @param {function} mapfunc The mapping function
- * @param {iterable} targetlist An iterable object
+ * @param {iterable} sourcelist An iterable object
  * @returns {iterable}
  */
-function flatmap(mapfunc, targetlist) {
+const flatmap = curry1(function flatmap(mapfunc, source) {
 
-    return isfunction(targetlist.flatMap)
-         ? targetlist.flatMap(mapfunc)
-         : flatmaplist(mapfunc, targetlist);
-}
+    isfunction(mapfunc) || raisebadmapfuncerror(mapfunc);
 
-function flatmaplist(mapfunc, targetlist) {
+    return isfunction(source.flatMap) ? source.flatMap(mapfunc)
+         : isiterablenotstring(source) ? flatmaplist(mapfunc, source)
+         : raisebadlisterror(source);
+});
+
+function flatmaplist(mapfunc, source) {
 
     return list(
 
         function* () {
 
-            for(const value of targetlist) {
+            for(const item of source) {
 
-                const mapresult = mapfunc(value);
+                const mapresult = mapfunc(item);
 
                 isiterablenotstring(mapresult) ? yield* mapresult : yield mapresult;
             }
@@ -67,4 +72,4 @@ function flatmaplist(mapfunc, targetlist) {
     )
 }
 
-module.exports = curry(1, flatmap);
+module.exports = flatmap;
