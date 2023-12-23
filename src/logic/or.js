@@ -5,13 +5,10 @@
 'use strict';
 
 const ALWAYS_FALSE = ()=>false;
-const THIS_NULL = null;
 
 const always = require('../always');
 const callable = require('../callable');
 const head = require('../arrays/head');
-
-const allcallable = array => array.map(callable);
 
 const disjunctormap = Object.freeze([
     always(ALWAYS_FALSE),
@@ -22,7 +19,7 @@ const disjunctormap = Object.freeze([
     ([f1, f2, f3, f4, f5]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args)
 ]);
 
-const largedisjunctor = predicates => rundisjunction.bind(THIS_NULL, predicates);
+const largedisjunctor = predicates => disjunct.bind(null, predicates);
 
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
@@ -58,12 +55,14 @@ const largedisjunctor = predicates => rundisjunction.bind(THIS_NULL, predicates)
  */
 function or(...predicates) {
 
+    predicates = predicates.map(callable);
+
     const disjunctor = disjunctormap[predicates.length] ?? largedisjunctor;
 
-    return disjunctor( allcallable(predicates) );
+    return disjunctor(predicates);
 }
 
-function rundisjunction(predicates, ...args) {
+function disjunct(predicates, ...args) {
 
     let result = false;
 

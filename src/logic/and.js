@@ -5,13 +5,10 @@
 'use strict';
 
 const ALWAYS_TRUE = x=>true;
-const THIS_NULL = null;
 
 const always = require('../always');
 const callable = require('../callable');
 const head = require('../arrays/head');
-
-const allcallable = array => array.map(callable);
 
 const conjunctormap = Object.freeze([
     always(ALWAYS_TRUE),
@@ -22,7 +19,7 @@ const conjunctormap = Object.freeze([
     ([f1, f2, f3, f4, f5]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args)
 ]);
 
-const largeconjunctor = predicates => runconjunction.bind(THIS_NULL, predicates);
+const largeconjunctor = predicates => conjunct.bind(null, predicates);
 
 /**
  * Functional variant of Javascript's `&&` operator. Returns a function that passes its arguments to each
@@ -59,12 +56,14 @@ const largeconjunctor = predicates => runconjunction.bind(THIS_NULL, predicates)
  */
 function and(...predicates) {
 
+    predicates = predicates.map(callable);
+
     const conjunctor = conjunctormap[predicates.length] ?? largeconjunctor;
 
-    return conjunctor( allcallable(predicates) );
+    return conjunctor(predicates);
 }
 
-function runconjunction(predicates, ...args) {
+function conjunct(predicates, ...args) {
 
     let result = true;
 
