@@ -4,16 +4,36 @@
 
 'use strict';
 
+const ERR_BAD_HASHFUNC = `functionish/lists/intersection(): The hashing function has type %s. Expected a function.`;
+const ERR_BAD_LIST = `functionish/lists/intersection(): The list has type %s. Expected an iterable object.`;
+
 const and = require('../logic/and');
 const bind = require('../bind');
 const compose = require('../compose');
 const curry2 = require('../curry2');
+const exception = require('../errors/exception');
 const hashset = require('../misc/hashset');
+const isdefined = require('../types/isdefined');
+const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
+const isvoid = require('../types/isvoid');
 const list = require('./list');
+const or = require('../logic/or');
+const typeorclassname = require('../types/typeorclassname');
 const uniqfilter = require('../misc/uniqfilter');
+const validator = require('../errors/validator');
 
 const intersectfilter = compose( bind('has'), hashset );
+
+const validatehashfunc = validator(
+    exception('TypeError', ERR_BAD_HASHFUNC, typeorclassname),
+    or(isfunction, isvoid)
+)
+
+const validatelist = validator(
+    exception('TypeError', ERR_BAD_LIST, typeorclassname),
+    isiterable
+)
 
 /**
  * Return an iterable producing all items common to both *list1* and *list2*, but without duplicates.
@@ -37,11 +57,15 @@ const intersectfilter = compose( bind('has'), hashset );
  * 
  * @function intersection
  * @param {function} [hashfunc] The hashing function 
- * @param {iterable} list1 An iterable object
+ * @param {iterable} list1 An iterable object to intersect with
  * @param {iterable} list2 Another iterable object to intersect with
  * @returns {iterable}
  */
 const intersection = curry2(function intersection(hashfunc, list1, list2) {
+
+    validatehashfunc(hashfunc);
+    validatelist(list1);
+    validatelist(list2);
 
     return list(
 
