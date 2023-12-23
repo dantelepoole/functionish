@@ -22,10 +22,10 @@ describe( 'unless()', function() {
     })
 
     it(`should throw if the condition is not a function`, function() {
-        expect( () => unless(null, lift) ).to.throw;
-        expect( () => unless(undefined, lift) ).to.throw;
-        expect( () => unless(42, lift) ).to.throw;
-        expect( () => unless({}, lift) ).to.throw;
+        expect( () => unless(null, lift) ).to.throw();
+        expect( () => unless(undefined, lift) ).to.throw();
+        expect( () => unless(42, lift) ).to.throw();
+        expect( () => unless({}, lift) ).to.throw();
     })
 
     it('should be curried with unary arity', function() {

@@ -29,7 +29,7 @@ describe( 'pipe()', function() {
         })
 
         it('should throw if called without arguments', function() {
-            expect( () => pipe() ).to.throw;
+            expect( () => pipe() ).to.throw();
         })
 
         describe( 'The result function', function() {

@@ -19,8 +19,8 @@ describe( 'uniadic()', function() {
         })
 
         it('should throw if the target function is not a function', function() {
-            expect( () => uniadic() ).to.throw;
-            expect( () => uniadic(42) ).to.throw;
+            expect( () => uniadic() ).to.throw();
+            expect( () => uniadic(42) ).to.throw();
         })
 
         describe( 'The result function', function() {
@@ -59,7 +59,7 @@ describe( 'uniadic()', function() {
             it(`should throw if the target function throws`, function() {
 
                 const uniadicraise = uniadic(raise);
-                expect(uniadicraise).to.throw;
+                expect(uniadicraise).to.throw();
             })
         })
     }

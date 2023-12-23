@@ -14,6 +14,15 @@ describe( 'defer()', function() {
             fakecollect.resetHistory();
         })
 
+        it(`should throw if the target function is not a function`, function() {
+
+            expect(defer).to.throw();
+            expect( ()=>defer(null) ).to.throw();
+            expect( ()=>defer({}) ).to.throw();
+            expect( ()=>defer('fubar') ).to.throw();
+            expect( ()=>defer(0) ).to.throw();
+        })
+
         it('should return a function', function() {
             expect( defer(fakecollect, UNIQTHING) ).to.be.a('function');
         })
@@ -41,12 +50,6 @@ describe( 'defer()', function() {
                 const deferredcollect = defer(fakecollect);
                 const retval = deferredcollect(42);
                 expect(retval).to.deep.equal([]);
-            })
-
-            it(`should throw if the target function is not a function`, function() {
-                
-                const deferredcollect = defer(null);
-                expect(() => deferredcollect).to.throw;
             })
         })
     }

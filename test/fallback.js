@@ -71,7 +71,7 @@ describe( 'fallback()', function() {
                 
                 const withfallback = fallback(id, raiseerror);
 
-                expect( withfallback ).to.throw;
+                expect( withfallback ).to.throw();
             })
 
             it('should return its first argument if no target functions were passed to fallback()', function() {

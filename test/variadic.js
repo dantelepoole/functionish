@@ -19,8 +19,8 @@ describe( 'variadic()', function() {
         })
 
         it('should throw if the target function is not a function', function() {
-            expect( () => variadic() ).to.throw;
-            expect( () => variadic(42) ).to.throw;
+            expect( () => variadic() ).to.throw();
+            expect( () => variadic(42) ).to.throw();
         })
 
         describe( 'The result function', function() {
@@ -53,7 +53,7 @@ describe( 'variadic()', function() {
             it(`should throw if the target function throws`, function() {
 
                 const variadicraise = variadic(raise);
-                expect(variadicraise).to.throw;
+                expect(variadicraise).to.throw();
             })
         })
     }

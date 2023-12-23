@@ -30,7 +30,7 @@ describe( 'applicable()', function() {
 
             it('should throw if its argument is not a function', function() {
                 const apply1 = applicable(UNIQTHING);
-                expect( () => apply1('not-a-function') ).to.throw;
+                expect( () => apply1('not-a-function') ).to.throw();
             })
 
         })

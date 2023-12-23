@@ -51,15 +51,22 @@ describe( 'repeat()', function() {
 
         it(`should throw if the count argument is not an integer number of at least 0`, function() {
 
-            expect( ()=>repeat(-1, id, UNIQTHING) ).to.throw;
-            expect( ()=>repeat(null, id, UNIQTHING) ).to.throw;
-            expect( ()=>repeat('fubar', id, UNIQTHING) ).to.throw;
+            expect( ()=>repeat(-1, id, UNIQTHING) ).to.throw();
+            expect( ()=>repeat(null, id, UNIQTHING) ).to.throw();
+            expect( ()=>repeat('fubar', id, UNIQTHING) ).to.throw();
         })
 
-        it(`should throw if the target function is not a function`, function() {
+        it(`should throw if the target function is not a function, unless the count is 0`, function() {
 
-            expect( ()=>repeat(0, UNIQTHING) ).to.throw;
-            expect( ()=>repeat(0) ).to.throw;
+            expect( ()=>repeat(1, UNIQTHING) ).to.throw();
+            expect( ()=>repeat(1, {}) ).to.throw();
+            expect( ()=>repeat(1, null) ).to.throw();
+            expect( ()=>repeat(1, 'fubar') ).to.throw();
+
+            expect( ()=>repeat(0, UNIQTHING) ).not.to.throw();
+            expect( ()=>repeat(0, {}) ).not.to.throw();
+            expect( ()=>repeat(0, null) ).not.to.throw();
+            expect( ()=>repeat(0, 'fubar') ).not.to.throw();
         })
     }
 );

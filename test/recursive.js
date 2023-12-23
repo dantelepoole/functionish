@@ -26,15 +26,15 @@ describe( 'recursive()', function() {
         })
 
         it('should throw if the target function is not a function', function() {
-            expect( () => recursive() ).to.throw;
-            expect( () => recursive(42) ).to.throw;
+            expect( () => recursive() ).to.throw();
+            expect( () => recursive(42) ).to.throw();
         })
 
         it('should throw if the target function is already bound to a this-value', function() {
 
             const boundrecursivesum = recursivesum.bind({});
 
-            expect( () => recursive(boundrecursivesum, 0, 0) ).to.throw;
+            expect( () => recursive(boundrecursivesum, 0, 0) ).to.throw();
         })
 
         describe( 'The result function', function() {

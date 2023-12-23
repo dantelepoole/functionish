@@ -15,16 +15,16 @@ describe( 'curry()', function() {
 
         it('should throw if the arity is not a positive integer of at least 0', function() {
 
-            expect( () => curry(-1, collect) ).to.throw;
-            expect( () => curry(null, collect) ).to.throw;
-            expect( () => curry('fubar', collect) ).to.throw;
+            expect( () => curry(-1, collect) ).to.throw();
+            expect( () => curry(null, collect) ).to.throw();
+            expect( () => curry('fubar', collect) ).to.throw();
         })
 
         it('should throw if the targetfunction is not a function', function() {
 
-            expect( () => curry(1, null) ).to.throw;
-            expect( () => curry(1, {}) ).to.throw;
-            expect( () => curry(1, 42) ).to.throw;
+            expect( () => curry(1, null) ).to.throw();
+            expect( () => curry(1, {}) ).to.throw();
+            expect( () => curry(1, 42) ).to.throw();
         })
 
         describe( 'The result function', function() {

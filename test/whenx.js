@@ -79,9 +79,9 @@ describe( 'whenx()', function() {
 
             it(`should throw if either the condition, the true-branch or the false-branch throw`, function() {
 
-                expect( () => whenx(raise, double, id)(42) ).to.throw;
-                expect( () => whenx(iseven, raise, id)(42) ).to.throw;
-                expect( () => whenx(iseven, double, raise)(41) ).to.throw;
+                expect( () => whenx(raise, double, id)(42) ).to.throw();
+                expect( () => whenx(iseven, raise, id)(42) ).to.throw();
+                expect( () => whenx(iseven, double, raise)(41) ).to.throw();
             })
 
             it('should pass its first argument to the condition', function() {

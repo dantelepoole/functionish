@@ -24,8 +24,9 @@ describe( 'trycatch()', function() {
 
         it('should throw if the target function is not a function', function() {
             
-            expect( trycatch ).to.throw;
-            expect( () => trycatch(null,UNIQTHING) ).to.throw;
+            expect( () => trycatch(null,{}) ).to.throw();
+            expect( () => trycatch(null,UNIQTHING) ).to.throw();
+            expect( () => trycatch(null,'fubar') ).to.throw();
         })
 
         describe( 'The result function', function() {

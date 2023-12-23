@@ -20,9 +20,9 @@ describe( 'curry1()', function() {
 
         it('should throw if the targetfunction is not a function', function() {
 
-            expect( () => curry1(null) ).to.throw;
-            expect( () => curry1({}) ).to.throw;
-            expect( () => curry1(42) ).to.throw;
+            expect( () => curry1(null) ).to.throw();
+            expect( () => curry1({}) ).to.throw();
+            expect( () => curry1(42) ).to.throw();
         })
 
         describe( 'The result function', function() {

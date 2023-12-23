@@ -19,9 +19,9 @@ describe( 'partial()', function() {
 
         it('should throw if the target function is not a function', function() {
 
-            expect(partial).to.throw;
-            expect(() => partial(UNIQTHING) ).to.throw;
-            expect(() => partial(null) ).to.throw;
+            expect(partial).to.throw();
+            expect(() => partial(UNIQTHING) ).to.throw();
+            expect(() => partial(null) ).to.throw();
         })
 
         describe( 'The result function', function() {

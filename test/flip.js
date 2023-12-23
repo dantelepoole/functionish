@@ -19,8 +19,8 @@ describe( 'flip()', function() {
 
         it('should throw if the target function is not a function', function() {
             
-            expect( flip ).to.throw;
-            expect( () => flip(UNIQTHING) ).to.throw;
+            expect( flip ).to.throw();
+            expect( () => flip(UNIQTHING) ).to.throw();
         })
 
         describe( 'The result function', function() {

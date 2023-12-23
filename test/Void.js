@@ -34,7 +34,7 @@ describe( 'Void()', function() {
         })
 
         it(`should throw if the expression throws`, function() {
-            expect( () => Void( ()=> {throw new Error()}, UNIQTHING) ).to.throw;
+            expect( () => Void( ()=> {throw new Error()}, UNIQTHING) ).to.throw();
         })
     }
 );

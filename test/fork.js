@@ -31,7 +31,7 @@ describe( 'fork()', function() {
         
                 const forkedfunctions = fork(id, fubar, UNIQTHING);
                 
-                expect(forkedfunctions).to.throw;
+                expect(forkedfunctions).to.throw();
             })
 
             it('should call each target function in order', function() {
@@ -98,8 +98,8 @@ describe( 'fork()', function() {
     
                     const forkedfunctions = fork(id, fubar, uniqthing);
 
-                    expect( () => forkedfunctions.join() ).to.throw;
-                    expect( () => forkedfunctions.join(UNIQTHING) ).to.throw;
+                    expect( () => forkedfunctions.join() ).to.throw();
+                    expect( () => forkedfunctions.join(UNIQTHING) ).to.throw();
                 })
     
                 describe( `The join() method's result function`, function() {

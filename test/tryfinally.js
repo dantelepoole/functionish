@@ -35,14 +35,18 @@ describe( 'tryfinally()', function() {
 
         it('should throw if the finally handler is not a function', function() {
             
-            expect( tryfinally ).to.throw;
-            expect( () => tryfinally(UNIQTHING,collect) ).to.throw;
+            expect( () => tryfinally(null,collect) ).to.throw();
+            expect( () => tryfinally({},collect) ).to.throw();
+            expect( () => tryfinally('fubar',collect) ).to.throw();
+            expect( () => tryfinally(UNIQTHING,collect) ).to.throw();
         })
 
         it('should throw if the target function is not a function', function() {
             
-            expect( tryfinally ).to.throw;
-            expect( () => tryfinally(onfinally_collect,UNIQTHING) ).to.throw;
+            expect( () => tryfinally(onfinally_collect,null) ).to.throw();
+            expect( () => tryfinally(onfinally_collect,{}) ).to.throw();
+            expect( () => tryfinally(onfinally_collect,'fubar') ).to.throw();
+            expect( () => tryfinally(onfinally_collect,UNIQTHING) ).to.throw();
         })
 
         describe( 'The result function', function() {
@@ -92,7 +96,7 @@ describe( 'tryfinally()', function() {
             it('should throw if the finally handler throws', function() {
 
                 const trycollect = tryfinally(onfinally_customthrow, collect);
-                expect( () => trycollect(...testargs) ).to.throw;
+                expect( () => trycollect(...testargs) ).to.throw();
             })
         })
 
@@ -125,7 +129,7 @@ describe( 'tryfinally()', function() {
 
                 const trycollect = tryfinally(onfinally_collect, collect);
                 
-                expect( () => trycollect( new Error() ) ).not.to.throw;
+                expect( () => trycollect( new Error() ) ).not.to.throw();
                 
                 let retval;
 
@@ -143,8 +147,8 @@ describe( 'tryfinally()', function() {
                 const trycollect_null = tryfinally(onfinally_always(null), collect);
                 const trycollect_undefined = tryfinally(onfinally_always(undefined), collect);
 
-                expect( trycollect_null ).not.to.throw;
-                expect( trycollect_undefined ).not.to.throw;
+                expect( trycollect_null ).not.to.throw();
+                expect( trycollect_undefined ).not.to.throw();
                 
                 let retval;
 
@@ -186,7 +190,7 @@ describe( 'tryfinally()', function() {
             it('should rethrow the thrown value if the finally handler returns it', function() {
 
                 const tryraise = tryfinally(onfinally_id, raise);
-                expect( () => tryraise(...testargs) ).to.throw;
+                expect( () => tryraise(...testargs) ).to.throw();
                 
             })
 

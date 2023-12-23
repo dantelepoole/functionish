@@ -39,16 +39,17 @@ describe( 'delay()', function() {
 
         it('should throw if the delayms argument is not an integer of at least 0', function() {
 
-            expect( ()=>delay(-1, id, UNIQTHING) ).to.throw;
-            expect( ()=>delay(0.5, id, UNIQTHING) ).to.throw;
-            expect( ()=>delay(null, id, UNIQTHING) ).to.throw;
+            expect( ()=>delay(-1, id, UNIQTHING) ).to.throw();
+            expect( ()=>delay(0.5, id, UNIQTHING) ).to.throw();
+            expect( ()=>delay(null, id, UNIQTHING) ).to.throw();
         })
 
         it('should throw if the target function is not a function', function() {
 
-            expect( ()=>delay(1, null, UNIQTHING) ).to.throw;
-            expect( ()=>delay(1, UNIQTHING) ).to.throw;
-            expect( ()=>delay(1) ).to.throw;
+            expect( ()=>delay(1, null, UNIQTHING) ).to.throw();
+            expect( ()=>delay(1, UNIQTHING) ).to.throw();
+            expect( ()=>delay(1, {}) ).to.throw();
+            expect( ()=>delay(1, 'fubar') ).to.throw();
         })
 
         it('should call the target function after at least 90% of delayms milliseconds have elapsed', function(done) {

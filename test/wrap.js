@@ -31,18 +31,20 @@ describe( 'wrap()', function() {
 
         it('should throw if the target function is not a function', function() {
             
-            expect( () => wrap(wrapdouble) ).to.throw;
-            expect( () => wrap(wrapdouble, 42) ).to.throw;
+            expect( () => wrap(wrapdouble, {}) ).to.throw();
+            expect( () => wrap(wrapdouble, null) ).to.throw();
+            expect( () => wrap(wrapdouble, 'fubar') ).to.throw();
+            expect( () => wrap(wrapdouble, 42) ).to.throw();
         })
 
         it('should throw if the wrapper argument is neither a function nor a function-array', function() {
             
-            expect( () => wrap(42, sum) ).to.throw;
-            expect( () => wrap(undefined, 42) ).to.throw;
+            expect( () => wrap(42, sum) ).to.throw();
+            expect( () => wrap(undefined, 42) ).to.throw();
         })
 
         it('should throw if the wrapper argument is an empty array', function() {
-            expect( () => wrap([], 42) ).to.throw;
+            expect( () => wrap([], 42) ).to.throw();
         })
 
         describe( 'If the wrapper is a function, the result function', function() {
@@ -70,13 +72,13 @@ describe( 'wrap()', function() {
             it(`should throw if the wrapper function throws`, function() {
 
                 const raisesum = wrap(raise, sum);
-                expect( () => raisesum(...testnumbers) ).to.throw;
+                expect( () => raisesum(...testnumbers) ).to.throw();
             })
 
             it(`should throw if the target function throws`, function() {
 
                 const doubleraise = wrap(wrapdouble, raise);
-                expect( () => doubleraise(...testnumbers) ).to.throw;
+                expect( () => doubleraise(...testnumbers) ).to.throw();
             })
         })
 
@@ -155,19 +157,19 @@ describe( 'wrap()', function() {
             it(`should throw if any wrapper function throws`, function() {
 
                 let raisesum = wrap( [wrapdouble, raise, wraponlyodd], sum);
-                expect( () => raisesum(...testnumbers) ).to.throw;
+                expect( () => raisesum(...testnumbers) ).to.throw();
 
                 raisesum = wrap( [raise, wrapdouble, wraponlyodd], sum);
-                expect( () => raisesum(...testnumbers) ).to.throw;
+                expect( () => raisesum(...testnumbers) ).to.throw();
 
                 raisesum = wrap( [wrapdouble, wraponlyodd, raise], sum);
-                expect( () => raisesum(...testnumbers) ).to.throw;
+                expect( () => raisesum(...testnumbers) ).to.throw();
             })
 
             it(`should throw if the target function throws`, function() {
 
                 const doubleraise = wrap([wrapdouble, wraponlyodd], raise);
-                expect( () => doubleraise(...testnumbers) ).to.throw;
+                expect( () => doubleraise(...testnumbers) ).to.throw();
             })
         })
     }

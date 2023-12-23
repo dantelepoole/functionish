@@ -18,14 +18,16 @@ describe( 'witharity()', function() {
         })
 
         it(`should throw if the arity is not an integer of 0 or higher`, function() {
-            expect( () => witharity(-1, collect) ).to.throw;
-            expect( () => witharity(null, collect) ).to.throw;
-            expect( () => witharity(2.42, collect) ).to.throw;
+            expect( () => witharity(-1, collect) ).to.throw();
+            expect( () => witharity(null, collect) ).to.throw();
+            expect( () => witharity(2.42, collect) ).to.throw();
         })
 
         it(`should throw if the target function is not a function`, function() {
-            expect( witharity ).to.throw;
-            expect( () => witharity(42) ).to.throw;
+            expect( () => witharity(1, null) ).to.throw();
+            expect( () => witharity(1, {}) ).to.throw();
+            expect( () => witharity(1, 'fubar') ).to.throw();
+            expect( () => witharity(1, 42) ).to.throw();
         })
 
         it(`should be curried with unary arity`, function() {
@@ -98,12 +100,6 @@ describe( 'witharity()', function() {
 
             })
 
-            it(`should throw if the target function`, function() {
-                
-                const collectwitharity = witharity(3, collect);
-                expect(collectwitharity).to.throw;
-
-            })
         })
     }
 );

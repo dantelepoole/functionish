@@ -18,9 +18,9 @@ describe( 'tap()', function() {
         })
 
         it('should throw if the target function is not a function', function() {
-            expect( ()=>tap() ).to.throw;
-            expect( ()=>tap(null) ).to.throw;
-            expect( ()=>tap(42) ).to.throw;
+            expect( ()=>tap() ).to.throw();
+            expect( ()=>tap(null) ).to.throw();
+            expect( ()=>tap(42) ).to.throw();
         })
 
         describe( 'The result function', function() {
