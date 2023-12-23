@@ -20,7 +20,7 @@
  * ispositiveorzero(-42); // returns false
  * ispositiveorzero(0); // returns true
  * 
- * @function isposiispositiveorzeroive
+ * @function ispositiveorzero
  * @param {number} a The number to check
  * @returns {boolean}
  */
