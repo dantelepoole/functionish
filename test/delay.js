@@ -10,14 +10,6 @@ const fakeclearTimeout = sinon.fake(clearTimeout);
 const nativeclearTimeout = global.clearTimeout;
 global.clearTimeout = fakeclearTimeout;
 
-function iswithin10percent(targetvalue, actualvalue) {
-
-    const rangelow = targetvalue * 0.9;
-    const rangehi = targetvalue * 1.1;
-
-    return (actualvalue >= rangelow && actualvalue <= rangehi);
-}
-
 describe( 'delay()', function() {
 
         after(function () {
