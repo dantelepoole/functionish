@@ -4,6 +4,16 @@
 
 'use strict';
 
+const ERR_BAD_TARGETFUNC = `functionish/defer(): The target function has type %s. Expected a function.`;
+
+const compose = require('./compose');
+const error = require('./errors/error');
+const isfunction = require('./types/isfunction');
+const raise = require('./errors/raise');
+const typeorclassname = require('./types/typeorclassname');
+
+const raisebadtargetfuncerror = compose(raise, error.Type(ERR_BAD_TARGETFUNC), typeorclassname);
+
 /**
  * Return a function that calls *targetfunc* with the specified *args*. This function behaves very similar to
  * {@link module:partial partial()} except that the returned function disregards its own arguments.
@@ -26,6 +36,9 @@
  * @returns {function}
  */
 function defer(targetfunc, ...args) {
+
+    isfunction(targetfunc) || raisebadtargetfuncerror(targetfunc);
+    
     return () => targetfunc(...args);
 }
 
