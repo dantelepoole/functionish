@@ -4,15 +4,14 @@
 
 'use strict';
 
-const ERR_MISSING_FUNCTIONS = `functionish/compose(): The targetfuncs argument array is empty. Expected at least one function.`;
+const always = require('./always');
+const id = require('./id');
 
 const head = array => array[0];
-
 const largecomposer = funcs => runcompose.bind(null, funcs);
-const raisemissingfunctionserror = () => { throw new TypeError(ERR_MISSING_FUNCTIONS); }
 
 const composermap = Object.freeze([
-    raisemissingfunctionserror,
+    always(id),
     head,
     ([f1,f2]) => (...args) => f1(f2(...args)),
     ([f1,f2,f3]) => (...args) => f1(f2(f3(...args))),

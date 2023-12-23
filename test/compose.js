@@ -28,8 +28,12 @@ describe( 'compose()', function() {
             expect( compose(double, id, double) ).to.be.a('function');
         })
 
-        it('should throw if called without arguments', function() {
-            expect( () => compose() ).to.throw;
+        it('should return an identity function if called without arguments', function() {
+            
+            const result = compose();
+
+            expect(result).to.be.a('function');
+            expect( result(UNIQTHING) ).to.equal(UNIQTHING);
         })
 
         describe( 'The result function', function() {
