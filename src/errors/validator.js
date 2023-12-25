@@ -14,7 +14,6 @@ const error = require('./error');
 const hasitems = require('../misc/hasitems');
 const isfunction = require('../types/isfunction');
 const isvoid = require('../types/isvoid');
-const iterate = require('../lists/iterate');
 const or = require('../logic/or');
 const raise = require('./raise');
 const typeorclassname = require('../types/typeorclassname');
@@ -27,7 +26,7 @@ const raisenovalidators = compose(raise, error.Type(ERR_NO_VALIDATORS));
 
 const validateerrorhandler = or(isfunction, isvoid, raisebaderrorhandler);
 const validatevalidator = or(isfunction, raisebadvalidator);
-const validatevalidators = iterate(validatevalidator);
+const validatevalidators = validators => validators.forEach(validatevalidator);
 
 /**
  * to do

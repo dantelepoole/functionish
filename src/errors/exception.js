@@ -9,14 +9,13 @@ const compose = require('../compose');
 const curry1 = require('../curry1');
 const error = require('./error');
 const isfunction = require('../types/isfunction');
-const iterate = require('../lists/iterate');
 const or = require('../logic/or');
 const raise = require('./raise');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadprocessor = compose(raise, error.Type(ERR_BAD_PROCESSOR), typeorclassname);
 const validateprocessor = or(isfunction, raisebadprocessor);
-const validateprocessors = iterate(validateprocessor);
+const validateprocessors = processors => processors.forEach(validateprocessor);
 
 /**
  * to do
