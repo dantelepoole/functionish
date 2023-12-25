@@ -7,10 +7,6 @@ describe('lists/iterator()', function() {
     it('should return an object',
         function() {
             should.return.an.object(iterator, [1,2,3,4,5]);
-            // should.be.an.object(iterator([1,2,3,4,5]));
-            // const result = iterator([1,2,3,4,5]);
-            // should.be('object', typeof result);
-            // should.be.an.object(result);
         }
     )
 
