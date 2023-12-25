@@ -10,7 +10,6 @@ const SOURCE_VOID = {};
 
 const isarray = require('../types/isarray');
 const isstring = require('../types/isstring');
-const tagcurryarity = require('../../lib/tagcurryarity');
 
 const pluckkey = key => source => source[key];
 const pluckreducer = (source, key) => (source ?? SOURCE_VOID)[key];
@@ -67,7 +66,5 @@ function pluck(path, source) {
          ? plucker
          : plucker(source);
 }
-
-tagcurryarity(pluck, 1);
 
 module.exports = pluck;
