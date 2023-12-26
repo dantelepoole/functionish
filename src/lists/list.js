@@ -26,8 +26,8 @@ const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassnam
  *  
  * If the *source* is already a List instance, it is returned unaltered.
  * 
- * Otherwise, the *source* is itself assumed to be an iterable object, and the returned object bind's to *source*'s
- * @@iterator method, effectively masking the *source* object itself. The return value will perform lazy iteration,
+ * Otherwise, the *source* is itself assumed to be an iterable object, and the returned object binds to *source*'s
+ * `@@iterator` method, effectively masking the *source* object itself. The return value will perform lazy iteration,
  * so it will reflects any changes to *source*'s contents in between iterations.
  * 
  * The returned object has a {@link external:Symbol.isConcatSpreadable Symbol.isConcatSpreadable} property set to
@@ -38,21 +38,21 @@ const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassnam
  * const { list } = require('functionish/lists');
  * 
  * const array = [1,2,3];
- * const x1 = list(array);
+ * const list1 = list(array);
  * 
- * typeof x1; // 'object'
- * x1 === array; // false
+ * typeof list1; // 'object'
+ * list1 === array; // false
  * 
- * [...x1]; // [1,2,3];
- * array..clear;
- * [...x1]; // []
+ * [...list1]; // [1,2,3];
+ * array.clear;
+ * [...list1]; // []
  * 
  * const yieldnumbers = function* () { yield 1; yield 2; yield 3 }
- * const x2 = list(yieldnumbers);
+ * const list2 = list(yieldnumbers);
  * 
- * typeof x2; // 'object';
- * x2 === yieldnumbers; // false
- * [...x2]; // [1,2,3]
+ * typeof list2; // 'object';
+ * list2 === yieldnumbers; // false
+ * [...list2]; // [1,2,3]
  * 
  * @function list
  * @see {@link external:Symbol.isConcatSpreadable Symbol.isConcatSpreadable}
@@ -61,8 +61,8 @@ const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassnam
  */
 function list(source) {
     
-    return islist(source) ? source
-         : isfunction(source) ? new List(source)
+    return isfunction(source) ? new List(source)
+         : islist(source) ? source
          : isiterable(source) ? new List( source[Symbol.iterator].bind(source) )
          : raisebadsource(source);
 }
