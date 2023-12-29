@@ -4,7 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_LIST = `functionish/lists/filter(): The source list has type %s. Expected an iterable object.`;
+const ERR_BAD_LIST = `functionish/lists/find(): The source list has type %s. Expected an iterable object.`;
 
 const exception = require('../errors/exception');
 const isfunction = require('../types/isfunction');
