@@ -45,7 +45,7 @@ const isfilterable = obj => isfunction(obj?.filter);
  * 
  * @function filter
  * @see {@link module:misc/resolve resolve()}
- * @param {function} predicate The predicate function
+ * @param {(function|string)} predicate The predicate function
  * @param {iterable} sourcelist An iterable object
  * @returns {iterable} 
  */

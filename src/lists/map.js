@@ -44,7 +44,7 @@ const ismappable = obj => isfunction(obj?.map);
  *     
  * @function map
  * @see {@link module:misc/resolve resolve()}
- * @param {function} mapfunc The function to apply to each item the *sourcelist*
+ * @param {(function|string)} mapfunc The function to apply to each item the *sourcelist*
  * @param {iterable} sourcelist An iterable object
  * @returns {iterable}
  */
