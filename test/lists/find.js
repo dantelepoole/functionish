@@ -4,6 +4,7 @@ const should = require('../../lib/test/should');
 
 const UNIQTHING = { label:'UNIQTHING' }
 
+const paths = ['/', '/home', '../'];
 const numbers1to5 = Object.freeze([1,2,3,4,5]);
 
 const id = fake(x=>x);
@@ -27,12 +28,18 @@ describe('lists/find()', function() {
         }
     )
 
-    it('should throw if the predicate is not a function',
+    it('should throw if the predicate is not a function or a string',
         function() {
             should.throw(find, null, numbers1to5)
             should.throw(find, {}, numbers1to5);
         }
     )
+
+    it('should throw if the predicate is a string that does not resolve to a function in a package or file module', function() {
+            
+        should.throw(find, 'path#FuBar', paths);
+        should.throw(find, 'path#delimiter', paths);
+    })
 
     it('should throw if the list is not iterable',
         function() {
@@ -40,6 +47,14 @@ describe('lists/find()', function() {
             should.throw(find, iseven, null);
         }
     )
+
+    it('should resolve a string predicate argument to a function in a package', function() {
+            
+        const sourcelist = { [Symbol.iterator]:paths.values.bind(paths) }
+        const result = find('path#isAbsolute', sourcelist);
+
+        should.be('/', result);
+    })
 
     it(`should pass the predicate to the list's find() method if it has one`,
         function() {

@@ -4,12 +4,23 @@
 
 'use strict';
 
-const curry1 = require('../curry1');
+const ERR_BAD_LIST = `functionish/lists/filter(): The source list has type %s. Expected an iterable object.`;
+
+const exception = require('../errors/exception');
 const isfunction = require('../types/isfunction');
+const isiterable = require('../types/isiterable');
+const issingleton = require('../arrays/issingleton');
+const resolve = require('../misc/resolve');
+const typeorclassname = require('../types/typeorclassname');
+
+const raisebadlisterror = exception('TypeError', ERR_BAD_LIST, typeorclassname);
 
 /**
- * If *list* has a `find()` method, it is passed the *predicate* and the result is returned. Otherwise, return the first
- * value in *list* for which the *predicate* function returns a truthy value, or `undefined` if no such value is found.
+ * If *sourcelist* has a `find()` method, it is passed the *predicate* and the result is returned. Otherwise, return the first
+ * value in *sourcelist* for which the *predicate* function returns a truthy value, or `undefined` if no such value is found.
+ * 
+ * If the *predicate* is not a function, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `find()` is curried by default with unary arity.
  * 
@@ -23,15 +34,23 @@ const isfunction = require('../types/isfunction');
  * find(iseven, [1,3,5]); // returns `undefined`
  * 
  * @function find
+ * @see {@link module:misc/resolve resolve()}
  * @param {function} predicate The predicate function identifying the item being searched
- * @param {iterable} list The list of items to search
+ * @param {iterable} sourcelist The list of items to search
  * @returns {any}
  */
-const find = curry1(function find(predicate, list) {
+function find(predicate, sourcelist) {
 
-    if( isfunction(list.find) ) return list.find(predicate);
+    isfunction(predicate) || (predicate = resolve(predicate));
 
-    for(const item of list) if( predicate(item) ) return item;
-});
+    return issingleton(arguments) ? find.bind(null, predicate)
+         : isfunction(sourcelist?.find) ? sourcelist.find(predicate)
+         : isiterable(sourcelist) ? findlist(predicate, sourcelist)
+         : raisebadlisterror(sourcelist);
+}
+
+function findlist(predicate, sourcelist) {
+    for(const item of sourcelist) if( predicate(item) ) return item;
+}
 
 module.exports = find;
