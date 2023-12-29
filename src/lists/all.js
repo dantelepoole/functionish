@@ -70,6 +70,6 @@ function all(predicate, sourcelist) {
     }
 
     return true;
-};
+}
 
 module.exports = all;
