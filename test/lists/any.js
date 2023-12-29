@@ -2,6 +2,7 @@ const any = require('../../src/lists/any');
 const fake = require('sinon').fake;
 const should = require('../../lib/test/should');
 
+const paths = ['/', '/home', '../'];
 const emptylist = { [Symbol.iterator]:Array.prototype.values.bind([]) }
 const list1to10 = { [Symbol.iterator]:Array.prototype.values.bind([1,2,3,4,5,6,7,8,9,10]) }
 
@@ -18,6 +19,24 @@ describe('lists/any()', function() {
             isnumber.resetHistory();
             islessthan.resetHistory();
             isstring.resetHistory();
+        }
+    )
+
+    it('should throw if the predicate is not a function, a string or null/undefined', function() {
+        should.throw(any, 42, paths);
+        should.throw(any, {}, paths);
+        should.throw(any, paths, paths);
+    })
+    
+    it('should throw if the predicate is a string that does not resolve to a function in a package or file module', function() {
+        
+        should.throw(any, 'path#FuBar', paths);
+        should.throw(any, 'path#delimiter', paths);
+    })
+
+    it('should throw if the list is not iterable',
+        function () {
+            should.throw(any, isnumber, {});
         }
     )
 
@@ -74,15 +93,4 @@ describe('lists/any()', function() {
         }
     )
 
-    it('should throw if the predicate is not a function nor null or undefined',
-        function () {
-            should.throw(any, 41, list1to10);
-        }
-    )
-
-    it('should throw if the list is not iterable',
-        function () {
-            should.throw(any, isnumber, {});
-        }
-    )
 })
