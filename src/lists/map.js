@@ -5,19 +5,20 @@
 'use strict';
 
 const ERR_BAD_LIST = `functionish/lists/map(): The source argument has type %s. Expected an iterable object.`;
-const ERR_BAD_MAPFUNC = `functionish/lists/map(): The map function has type %s. Expected a function.`;
 
 const compose = require('../compose');
-const curry1 = require('../curry1');
 const error = require('../errors/error');
+const resolve = require('../misc/resolve');
 const isfunction = require('../types/isfunction');
-const isiterablenotstring = require('../types/isiterablenotstring');
+const isiterable = require('../types/isiterable');
+const issingleton = require('../arrays/issingleton');
 const list = require('./list');
 const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
-const raisebadmapfuncerror = compose(raise, error.Type(ERR_BAD_MAPFUNC), typeorclassname);
+
+const ismappable = obj => isfunction(obj?.map);
 
 /**
  * If the *sourcelist* has a method called `map()`, pass the *mapfunc* function to this method and return the
@@ -26,6 +27,9 @@ const raisebadmapfuncerror = compose(raise, error.Type(ERR_BAD_MAPFUNC), typeorc
  * 
  * If the *sourcelist* has a `map()`-method (e.g. an Array) the *mapfunc* is passed to this method and result
  * is returned.
+ * 
+ * If the *mapfunc* is not a function, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `map()` is curried by default with unary arity.
  * 
@@ -39,18 +43,21 @@ const raisebadmapfuncerror = compose(raise, error.Type(ERR_BAD_MAPFUNC), typeorc
  * Array.from(results); // returns [2,4,6]
  *     
  * @function map
+ * @see {@link module:misc/resolve resolve()}
  * @param {function} mapfunc The function to apply to each item the *sourcelist*
  * @param {iterable} sourcelist An iterable object
  * @returns {iterable}
  */
-const map = curry1(function map(mapfunc, sourcelist) {
-    
-    isfunction(mapfunc) || raisebadmapfuncerror(mapfunc);
-    
-    return isfunction(sourcelist.map) ? sourcelist.map(mapfunc)
-         : isiterablenotstring(sourcelist) ? maplist(mapfunc, sourcelist)
+function map(mapfunc, sourcelist) {
+
+    isfunction(mapfunc) || (mapfunc = resolve(mapfunc));
+
+    return issingleton(arguments) ? maplist.bind(null, mapfunc)
+         : ismappable(sourcelist) ? sourcelist.map(mapfunc)
+         : isiterable(sourcelist) ? maplist(mapfunc, sourcelist)
          : raisebadlisterror(sourcelist);
-});
+}
+
 
 function maplist(mapfunc, sourcelist) {
 
