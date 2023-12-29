@@ -2,6 +2,7 @@ const filter = require('../../src/lists/filter');
 const should = require('../../lib/test/should');
 const fake = require('sinon').fake;
 
+const paths = ['/', '/home', '../'];
 const numbers1to10 = [1,2,3,4,5,6,7,8,9,10];
 const iseven = fake( x => (x%2) === 0 );
 const isnegative = fake(x => (x < 0));
@@ -20,7 +21,7 @@ describe( 'lists/filter()', function() {
             }
         )
         
-        it('should throw if the predicate is not a function', function() {
+        it('should throw if the predicate is not a function nor a string', function() {
             
             should.throw(filter, 0, numbers1to10);
             should.throw(filter, {}, numbers1to10);
@@ -31,12 +32,26 @@ describe( 'lists/filter()', function() {
             should.throw(filter, 1n, numbers1to10);
         })
 
+        it('should throw if the predicate is a string that does not resolve to a function in a package or file module', function() {
+            
+            should.throw(filter, 'path#FuBar', numbers1to10);
+            should.throw(filter, 'path#delimiter', numbers1to10);
+        })
+
         it(`should throw if the source list has no filter()-method and is not iterable`, function() {
             
             should.throw(filter, iseven, {});
             should.throw(filter, iseven, null);
             should.throw(filter, iseven, filter);
             should.throw(filter, iseven, { filter:'notamethod' });
+        })
+
+        it('should resolve a string predicate argument to a function in a package', function() {
+            
+            const sourcelist = { [Symbol.iterator]:paths.values.bind(paths) }
+            const resultlist = filter('path#isAbsolute', sourcelist);
+
+            should.be.like(['/', '/home'], [...resultlist]);
         })
 
         it(`should call the source list's filter() method if it has one and return the result`, function() {

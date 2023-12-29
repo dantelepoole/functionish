@@ -5,19 +5,21 @@
 'use strict';
 
 const ERR_BAD_LIST = `functionish/lists/filter(): The source list has type %s. Expected an iterable object.`;
-const ERR_BAD_PREDICATE = `functionish/lists/filter(): The predicate has type %s. Expected a function.`;
 
 const compose = require('../compose');
 const curry1 = require('../curry1');
 const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
+const issingleton = require('../arrays/issingleton');
 const list = require('./list');
 const raise = require('../errors/raise');
+const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
-const raisebadpredicaterror = compose(raise, error.Type(ERR_BAD_PREDICATE), typeorclassname);
+
+const isfilterable = obj => isfunction(obj?.filter);
 
 /**
  * If the *sourcelist* has a method called `filter()`, pass the *predicate* function to this method and return the
@@ -26,6 +28,9 @@ const raisebadpredicaterror = compose(raise, error.Type(ERR_BAD_PREDICATE), type
  * 
  * If the *sourcelist* has a `filter()`-method (e.g. an Array) the *predicate* is passed to this method and result
  * is returned.
+ * 
+ * If the *predicate* is not a function, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `filter()` is curried by default with unary arity.
  * 
@@ -40,15 +45,23 @@ const raisebadpredicaterror = compose(raise, error.Type(ERR_BAD_PREDICATE), type
  * Array.from(evennumbers); // returns [2,4]
  * 
  * @function filter
+ * @see {@link module:misc/resolve resolve()}
  * @param {function} predicate The predicate function
  * @param {iterable} sourcelist An iterable object
  * @returns {iterable} 
  */
 const filter = curry1(function filter(predicate, sourcelist) {
 
-    isfunction(predicate) || raisebadpredicaterror(predicate);
+    // isfunction(predicate) || raisebadpredicaterror(predicate);
 
-    return isfunction(sourcelist.filter) ? sourcelist.filter(predicate)
+    // return isfunction(sourcelist.filter) ? sourcelist.filter(predicate)
+    //      : isiterable(sourcelist) ? filterlist(predicate, sourcelist)
+    //      : raisebadlisterror(sourcelist);
+
+    isfunction(predicate) || (predicate = resolve(predicate));
+
+    return issingleton(arguments) ? filterlist.bind(null, predicate)
+         : isfilterable(sourcelist) ? sourcelist.filter(predicate)
          : isiterable(sourcelist) ? filterlist(predicate, sourcelist)
          : raisebadlisterror(sourcelist);
 
