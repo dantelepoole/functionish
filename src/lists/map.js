@@ -8,12 +8,12 @@ const ERR_BAD_LIST = `functionish/lists/map(): The source argument has type %s. 
 
 const compose = require('../compose');
 const error = require('../errors/error');
-const resolve = require('../misc/resolve');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const issingleton = require('../arrays/issingleton');
 const list = require('./list');
 const raise = require('../errors/raise');
+const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
