@@ -52,7 +52,7 @@ function map(mapfunc, sourcelist) {
 
     isfunction(mapfunc) || (mapfunc = resolve(mapfunc));
 
-    return issingleton(arguments) ? maplist.bind(null, mapfunc)
+    return issingleton(arguments) ? map.bind(null, mapfunc)
          : ismappable(sourcelist) ? sourcelist.map(mapfunc)
          : isiterable(sourcelist) ? maplist(mapfunc, sourcelist)
          : raisebadlisterror(sourcelist);

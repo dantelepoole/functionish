@@ -53,7 +53,7 @@ function filter(predicate, sourcelist) {
 
     isfunction(predicate) || (predicate = resolve(predicate));
 
-    return issingleton(arguments) ? filterlist.bind(null, predicate)
+    return issingleton(arguments) ? filter.bind(null, predicate)
          : isfilterable(sourcelist) ? sourcelist.filter(predicate)
          : isiterable(sourcelist) ? filterlist(predicate, sourcelist)
          : raisebadlisterror(sourcelist);
