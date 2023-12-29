@@ -4,8 +4,10 @@
 
 'use strict';
 
-const curry1 = require('../curry1');
+const isfunction = require('../types/isfunction');
+const issingleton = require('../arrays/issingleton');
 const reduce = require('./reduce');
+const resolve = require('../misc/resolve');
 
 /**
  * Similar to {@link module:lists/reduce reduce()} except that no initial value is used. Instead, the first item in the
@@ -32,15 +34,19 @@ const reduce = require('./reduce');
  * @param {iterable} list The iterable object producing the items to reduce
  * @returns {any}
  */
-const autoreduce = curry1(function autoreduce(reducer, list) {
+function autoreduce(reducer, list) {
 
     let started = false;
+
+    isfunction(reducer) || (reducer = resolve(reducer));
 
     const autoreducer = (accumulator, nextvalue) => started
                                                   ? reducer(accumulator, nextvalue)
                                                   : (started = true, nextvalue);
 
-    return reduce(autoreducer, undefined, list);
-});
+    return issingleton(arguments)    
+         ? reduce.bind(null, autoreducer, undefined)
+         : reduce(autoreducer, undefined, list);
+}
 
 module.exports = autoreduce;

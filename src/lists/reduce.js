@@ -4,14 +4,14 @@
 
 'use strict';
 
-const ERR_BAD_SOURCELIST = `functionish/lists/reduce(): The sourcelist argument has type %s. Expected an iterable object.`;
+const ERR_BAD_SOURCELIST = `functionish/lists/reduce(): The source list has type %s. Expected an iterable object.`;
 
 const compose = require('../compose');
-const curry = require('../curry');
 const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const raise = require('../errors/raise');
+const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), typeorclassname);
@@ -31,7 +31,13 @@ const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), t
  */
 function reduce(reducer, initialvalue, sourcelist) {
 
-    return isfunction(sourcelist.reduce) ? sourcelist.reduce(reducer, initialvalue)
+    isfunction(reducer) || (reducer = resolve(reducer));
+
+    const arity = arguments.length;
+
+    return (arity === 1) ? reduce.bind(null, reducer)
+         : (arity === 2) ? reduce.bind(null, reducer, initialvalue)
+         : isfunction(sourcelist?.reduce) ? sourcelist.reduce(reducer, initialvalue)
          : isiterable(sourcelist) ? reducelist(reducer, initialvalue, sourcelist)
          : raisebadsourcelisterror(sourcelist);
 }
@@ -45,4 +51,4 @@ function reducelist(reducer, initialvalue, list) {
     return accumulator;
 }
 
-module.exports = curry(2, reduce);
+module.exports = reduce;
