@@ -4,18 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_SOURCE = `functionish/lists/lookaheaditerator(): The source argument has type %s. Expected an iterable or iterator object.`;
-
-const compose = require('../compose');
-const error = require('../errors/error');
-const isfunction = require('../types/isfunction');
-const raise = require('../errors/raise');
-const typeorclassname = require('../types/typeorclassname');
-
-const isiterable = source => isfunction(source?.[Symbol.iterator]);
-const isiterator = source => isfunction(source?.next);
-
-const raisebadsource = compose(raise, error.Type(ERR_BAD_SOURCE), typeorclassname);
+const iterator = require('./iterator');
 
 class LookAheadIterator {
 
@@ -27,20 +16,15 @@ class LookAheadIterator {
         
         this.#iterator = iterator;
         this.#nextitem = iterator.next();
-
     }
     
-    #advance() {
-
-        this.#nextitem = this.#iterator.next();
-        this.#count += 1;
-    }
-
     next() {
 
+        this.#nextitem.done || (this.#count += 1);
+        
         const currentitem = this.#nextitem;
 
-        currentitem.done || this.#advance();
+        this.#nextitem = this.#iterator.next();
 
         return currentitem;
     }
@@ -67,23 +51,46 @@ class LookAheadIterator {
 }
 
 /**
- * to do
+ * Return an enhanced iterator object that iterates over the items produced by *iterable*.
+ * 
+ * In addition to the standard `next()` method, the iterator object has the following properties:
+ * 
+ * `peek()` : Return the next object that the following call to `next()` will return, but without actually iterating
+ *            over it. Consecutive calls to `peek()` will return the same object, as will a subsequent call to
+ *            `next()`. 
+ * `done`   : Return boolean `true` if there are no more items to iterate over, or boolean `false` if the iteration
+ *            is not yet completed.
+ * `hasnext`: Opposite of `done`.
+ * `count`  : The zero-based index of the next item object that the following call to `next()` will return. After the
+ *            iteration is complete, this property holds the total number of items produced by the iterable.
+ * 
+ * The enhanced iterator object is itself iterable. It's `@@iterator` method will return itself.
  * 
  * @example <caption>Example usage of `lookaheaditerator()`</caption>
  * 
- * to do
+ * const { lookaheaditerator } = require('functionish');
+ * 
+ * const iter = lookaheaditerator( [1,2,3] );
+ * 
+ * iter.done; // false
+ * iter.hasnext; // true
+ * iter.peek(); // { done:false, value:1 }
+ * 
+ * while( iter.hasnext ) {
+ *     console.log(iter.count, iter.next().value);
+ * }
+ * 
+ * // prints:
+ * //     0 1
+ * //     1 2
+ * //     2 3
  * 
  * @function lookaheaditerator
- * @param {iterable} source The iterable object to get an iterator for 
+ * @param {iterable} iterable The iterable object to get an iterator for 
  * @returns {iterator}
  */
-function lookaheaditerator(source) {
-
-    const iterator = isiterable(source) ? source[Symbol.iterator]()
-                   : isiterator(source) ? source
-                   : raisebadsource(source);
-
-    return new LookAheadIterator(iterator);
+function lookaheaditerator(iterable) {
+    return new LookAheadIterator( iterator(iterable) );
 }
 
 module.exports = lookaheaditerator;
