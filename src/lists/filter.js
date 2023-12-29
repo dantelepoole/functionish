@@ -7,7 +7,6 @@
 const ERR_BAD_LIST = `functionish/lists/filter(): The source list has type %s. Expected an iterable object.`;
 
 const compose = require('../compose');
-const curry1 = require('../curry1');
 const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
