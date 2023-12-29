@@ -50,13 +50,7 @@ const isfilterable = obj => isfunction(obj?.filter);
  * @param {iterable} sourcelist An iterable object
  * @returns {iterable} 
  */
-const filter = curry1(function filter(predicate, sourcelist) {
-
-    // isfunction(predicate) || raisebadpredicaterror(predicate);
-
-    // return isfunction(sourcelist.filter) ? sourcelist.filter(predicate)
-    //      : isiterable(sourcelist) ? filterlist(predicate, sourcelist)
-    //      : raisebadlisterror(sourcelist);
+function filter(predicate, sourcelist) {
 
     isfunction(predicate) || (predicate = resolve(predicate));
 
@@ -65,7 +59,7 @@ const filter = curry1(function filter(predicate, sourcelist) {
          : isiterable(sourcelist) ? filterlist(predicate, sourcelist)
          : raisebadlisterror(sourcelist);
 
-})
+}
 
 function filterlist(predicate, sourcelist) {
 
