@@ -2,6 +2,7 @@ const groupby = require('../../src/lists/groupby');
 const fake = require('sinon').fake;
 const should = require('../../lib/test/should');
 
+const paths = ['/', '/home', '../'];
 const numbers1to5 = Object.freeze([1,2,3,4,5]);
 
 const oddoreven = fake(x => (x % 2) === 0 ? 'even' : 'odd');
@@ -21,13 +22,17 @@ describe('lists/groupby()', function() {
         }
     )
 
-    it('should throw if the key selector is not a function',
-        function() {
-            should.throw(groupby, null, numbers1to5)
-            should.throw(groupby, {}, numbers1to5);
-            should.throw(groupby, 'fubar', numbers1to5);
-        }
-    )
+    it('should throw if the keyselector is not a function or a string', function() {
+        should.throw(groupby, 42, paths);
+        should.throw(groupby, {}, paths);
+        should.throw(groupby, paths, paths);
+    })
+    
+    it('should throw if the keyselector is a string that does not resolve to a function in a package or file module', function() {
+        
+        should.throw(groupby, 'path#FuBar', paths);
+        should.throw(groupby, 'path#delimiter', paths);
+    })
 
     it('should throw if the list is not iterable',
         function() {

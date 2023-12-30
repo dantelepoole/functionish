@@ -5,25 +5,20 @@
 'use strict';
 
 const ERR_BAD_LIST = `functionish/lists/groupby(): The sourcelist has type %s. Expected an iterable object.`;
-const ERR_BAD_KEYSELECTOR = `functionish/lists/groupby(): The keyselector has type %s. Expected a function.`;
 const GROUP_BOGUS = { push:()=>{} }
 
-const curry1 = require('../curry1');
 const exception = require('../errors/exception');
 const isdefined = require('../types/isdefined');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
+const issingleton = require('../arrays/issingleton');
+const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 const validator = require('../errors/validator');
 
 const selectgroup = (groups, groupname) => isdefined(groupname)
                                          ? groups[groupname] ?? (groups[groupname] = [])
                                          : GROUP_BOGUS;
-
-const validatekeyselector = validator(
-    exception('TypeError', ERR_BAD_KEYSELECTOR, typeorclassname),
-    isfunction
-);
 
 const validatesourcelist = validator(
     exception('TypeError', ERR_BAD_LIST, typeorclassname),
@@ -37,6 +32,9 @@ const validatesourcelist = validator(
  * holding the items for which *selectgroup* returned that key.
  * 
  * If *keyselector* returns <abbr title="null or undefined">void</abbr> for an item, that item is discarded.
+ * 
+ * If the *keyselector* is a string, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `groupby()` is curried by default with unary arity.
  * 
@@ -74,13 +72,17 @@ const validatesourcelist = validator(
  * // }
  * 
  * @function groupby
- * @param {function} keyselector A function that returns a key for a given item
+ * @see {@link module:misc/resolve resolve()}
+ * @param {(function|string)} keyselector A function that returns a key for a given item
  * @param {iterable} sourcelist An iterable object producing the items to group
  * @returns {object} 
  */
-const groupby = curry1(function groupby(keyselector, sourcelist) {
+function groupby(keyselector, sourcelist) {
 
-    validatekeyselector(keyselector);
+    isfunction(keyselector) || (keyselector = resolve(keyselector));
+
+    if( issingleton(arguments) ) return groupby.bind(null, keyselector);
+
     validatesourcelist(sourcelist);
 
     const groups = {};
@@ -91,6 +93,6 @@ const groupby = curry1(function groupby(keyselector, sourcelist) {
     }
 
     return groups;
-});
+}
                                  
 module.exports = groupby;
