@@ -4,6 +4,7 @@ const should = require('../../lib/test/should');
 
 const UNIQTHING = { label:'UNIQTHING' }
 
+const paths = ['/', '/home', '../'];
 const numbers1to5 = Object.freeze([1,2,3,4,5]);
 
 const id = fake(x=>x);
@@ -29,12 +30,18 @@ describe('lists/autoreduce()', function() {
         }
     )
 
-    it('should throw if the reducer is not a function',
-        function() {
-            should.throw(autoreduce, null, numbers1to5)
-            should.throw(autoreduce, {}, numbers1to5);
-        }
-    )
+    it('should throw if the reducder is not a function or a string', function() {
+        should.throw(autoreduce, 42, paths);
+        should.throw(autoreduce, {}, paths);
+        should.throw(autoreduce, paths, paths);
+    })
+    
+    it('should throw if the reducer is a string that does not resolve to a function in a package or file module', function() {
+        
+        should.throw(autoreduce, 'path#FuBar', paths);
+        should.throw(autoreduce, 'path#delimiter', paths);
+    })
+    
 
     it('should throw if the list is not iterable',
         function() {
