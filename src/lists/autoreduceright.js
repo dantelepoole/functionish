@@ -35,6 +35,7 @@ const resolve = require('../misc/resolve');
  * 
  * @function autoreduceright
  * @see {@link module:lists/reduce reduce()}
+ * @see {@link module:misc/resolve resolve()}
  * @param {function} reducer The reducer function
  * @param {iterable} list The iterable object producing the items to reduce
  * @returns {any}
