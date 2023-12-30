@@ -4,6 +4,7 @@ const should = require('../../lib/test/should');
 
 const UNIQTHING = { label:'UNIQTHING' }
 
+const paths = ['/', '/home', '../'];
 const numbers1to5 = Object.freeze([1,2,3,4,5]);
 
 const id = fake(x=>x);
@@ -27,12 +28,17 @@ describe('lists/findindex()', function() {
         }
     )
 
-    it('should throw if the predicate is not a function',
-        function() {
-            should.throw(findindex, null, numbers1to5)
-            should.throw(findindex, {}, numbers1to5);
-        }
-    )
+    it('should throw if the predicate is not a function or a string', function() {
+        should.throw(findindex, 42, paths);
+        should.throw(findindex, {}, paths);
+        should.throw(findindex, paths, paths);
+    })
+    
+    it('should throw if the predicate is a string that does not resolve to a function in a package or file module', function() {
+        
+        should.throw(findindex, 'path#FuBar', paths);
+        should.throw(findindex, 'path#delimiter', paths);
+    })
 
     it('should throw if the list is not iterable',
         function() {

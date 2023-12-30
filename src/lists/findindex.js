@@ -6,13 +6,18 @@
 
 const INDEX_NOT_FOUND = -1;
 
-const curry1 = require('../curry1');
 const isfunction = require('../types/isfunction');
+const issingleton = require('../arrays/issingleton');
+const reduce = require('./reduce');
+const resolve = require('../misc/resolve');
 
 /**
- * If *list* has a `findIndex()` method, it is passed the *predicate* and the result is returned. Otherwise, return the
- * index of the first value in *list* for which the *predicate* function returns a truthy value or `-1` if the
- * *predicate* returns a falsy value for each item in the *list*.
+ * If *sourcelist* has a `findIndex()` method, it is passed the *predicate* and the result is returned. Otherwise,
+ * return the index of the first value in *sourcelistlist* for which the *predicate* function returns a truthy value
+ * or `-1` if the *predicate* returns a falsy value for each item in the *sourcelist*.
+ * 
+ * If the *predicate* is a string, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `findindex()` is curried by default with unary arity.
  * 
@@ -26,22 +31,31 @@ const isfunction = require('../types/isfunction');
  * findindex(iseven, [1,3,5]); // returns -1
  * 
  * @function find
+ * @see {@link module:misc/resolve resolve()}
  * @param {function} predicate The predicate function identifying the item being searched
- * @param {iterable} list The list of items to search
+ * @param {iterable} sourcelist The list of items to search
  * @returns {any}
  */
-const findindex = curry1(function findindex(predicate, list) {
+function findindex(predicate, sourcelist) {
 
-    if( isfunction(list.findIndex) ) return list.findIndex(predicate);
+    isfunction(predicate) || (predicate = resolve(predicate));
+
+    return issingleton(arguments) ? findindex.bind(null, predicate)
+         : isfunction(sourcelist?.findIndex) ? sourcelist.findIndex(predicate)
+         : _findindex(predicate, sourcelist);
+
+}
+
+function _findindex(predicate, sourcelist) {
 
     let index = INDEX_NOT_FOUND;
 
-    for(const value of list) {
+    for(const item of sourcelist) {
         index += 1;
-        if( predicate(value) ) break;
+        if( predicate(item) ) break;
     }
 
     return index;
-});
+}
 
 module.exports = findindex;
