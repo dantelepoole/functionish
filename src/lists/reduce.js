@@ -17,14 +17,30 @@ const typeorclassname = require('../types/typeorclassname');
 const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), typeorclassname);
 
 /**
- * to do
+ * Function variant of {@link external:Array.prototype.reduce Array.prototype.reduce()}. If *sourcelist* has a `reduce()`
+ * method, call with the *reducer* function and the *initialvalue* and return the result. Otherwise, iterate over
+ * *sourcelist* and call the *reducer* with each item and the previous call's return value (or, on the first call, the
+ * *initialvalue*) and return the result.
+ * 
+ * If the *reducer* is a string, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
+ * 
+ * `reduce()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `reduce()`</caption>
  * 
- * to do
+ * const { reduce } = require('functionish/lists');
+ * 
+ * const sum = (a,b) => (a+b);
+ * 
+ * reduce(sum, 0, [1,2,4]); // returns 7
+ * reduce(sum, 0, [42]); // returns 42
+ * reduce(sum, 0, []); // returns 0
  * 
  * @function reduce
- * @param {function} reducer The reducer function
+ * @see {@link external:Array.prototype.reduce Array.prototype.reduce()}
+ * @see {@link module:misc/resolve resolve()}
+ * @param {(function|string)} reducer The reducer function
  * @param {any} initialvalue The initial value to pass to *reducer* as the accumulator
  * @param {iterable} sourcelist An iterable object
  * @returns {any} The reduced value
