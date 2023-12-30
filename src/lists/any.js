@@ -46,8 +46,8 @@ const raisebadlisterror = exception('TypeError', ERR_BAD_LIST, typeorclassname);
  * any(null, [1, '', false]); // returns true because the first list item is truthy;
  * 
  * @function any
- * @see {@link module:all all()}
- * @see {@link module:none none()}
+ * @see {@link module:lists/all all()}
+ * @see {@link module:lists/none none()}
  * @see {@link module:misc/resolve resolve()
  * @param {(function|string)} [predicate=undefined] The predicate function
  * @param {iterable} list An iterable object producing items to test
