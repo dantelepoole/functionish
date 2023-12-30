@@ -5,8 +5,11 @@
 'use strict';
 
 const always = require('../always');
+const compose = require('../compose');
 const iterator = require('./iterator');
 const list = require('./list');
+
+const initstatefuliterator = compose(list, always, iterator);
 
 /**
  * to do
@@ -16,14 +19,11 @@ const list = require('./list');
  * to do
  * 
  * @function filter
- * @param {iterable} targetlist An iterable object
+ * @param {iterable} sourcelist An iterable object
  * @returns {iterable} 
  */
-function stateful(targetlist) {
-
-    let targetiterator = iterator(targetlist);
-
-    return list( always(targetiterator) );
+function stateful(sourcelist) {
+    return initstatefuliterator(sourcelist);
 }
 
 module.exports = stateful;
