@@ -4,20 +4,15 @@
 
 'use strict';
 
-const ERR_BAD_FUNC = `functionish/lists/iterate(): The function has type %s. Expected a function.`;
 const ERR_BAD_LIST = `functionish/lists/iterate(): The list has type %s. Expected an iterable object.`;
 
-const curry1 = require('../curry1');
 const exception = require('../errors/exception');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
+const issingleton = require('../arrays/issingleton');
+const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 const validator = require('../errors/validator');
-
-const validatefunc = validator(
-    exception('TypeError', ERR_BAD_FUNC, typeorclassname),
-    isfunction
-)
 
 const validatelist = validator(
     exception('TypeError', ERR_BAD_LIST, typeorclassname),
@@ -25,11 +20,14 @@ const validatelist = validator(
 )
 
 /**
- * Pass each item in *sourcelist* to *func* in order and return *sourcelist* itself. 
+ * Pass each item in *sourcelist* to *iteratorfunc* in order and return *sourcelist* itself. 
  * 
- * The *func* is actually called with two parameters: the current item of *sourcelist* and an `abort()` function that
- * *func* can call abort iterating any further. In that event, the argument passed to the `abort()` function is returned
- * instead of the *sourcelist* itself.
+ * The *iteratorfunc* is actually called with two parameters: the current item of *sourcelist* and an `abort()` function
+ * that *iteratorfunc* can call to abort further iteration. In that event, the argument passed to the `abort()` 
+ * unction is returned instead of the *sourcelist* itself.
+ * 
+ * If the *iteratorfunc* is not a function, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `iterate()` is curried by default with unary arity.
  * 
@@ -37,16 +35,24 @@ const validatelist = validator(
  *     
  * const { iterate } = require('functionish/lists');
  * 
- * 
+ * iterate(console.log, [1,2,3]);
+ * // prints:
+ * //   1
+ * //   2
+ * //   3
  *     
  * @function iterate
- * @param {function} func The function to apply to each item in *list*
+ * @see {@link module:misc/resolve resolve()}
+ * @param {(function|string)} iteratorfunc The function to apply to each item in *list*
  * @param {iterable} sourcelist An iterable object
  * @returns {iterable} 
  */
-const iterate = curry1(function iterate(func, sourcelist) {
+function iterate(iteratorfunc, sourcelist) {
 
-    validatefunc(func);
+    isfunction(iteratorfunc) || (iteratorfunc = resolve(iteratorfunc));
+
+    if( issingleton(arguments) ) return iterate.bind(null, iteratorfunc);
+    
     validatelist(sourcelist);
     
     let result = sourcelist;
@@ -54,12 +60,12 @@ const iterate = curry1(function iterate(func, sourcelist) {
 
     for(const item of sourcelist) {
         
-        func(item, abort);
+        iteratorfunc(item, abort);
 
         if(result !== sourcelist) break;
     }
 
     return result;
-})
+}
 
 module.exports = iterate;
