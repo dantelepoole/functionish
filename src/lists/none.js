@@ -4,21 +4,33 @@
 
 'use strict';
 
-const curry1 = require('../curry1');
+const ERR_BAD_LIST = `functionish/lists/none(): The source list has type %s. Expected an iterable object.`;
+
+const exception = require('../errors/exception');
+const isiterable = require('../types/isiterable');
+const issingleton = require('../arrays/issingleton');
+const isstring = require('../types/isstring');
 const isvoid = require('../types/isvoid');
+const not = require('../logic/not');
+const resolve = require('../misc/resolve');
+const typeorclassname = require('../types/typeorclassname');
+
+const notiterable = not(isiterable);
+const raisebadlisterror = exception('TypeError', ERR_BAD_LIST, typeorclassname);
 
 /**
- * Apply the *predicate* function to each item in *list* and return `true` if and only if *predicate* returns a falsy
+ * Apply the *predicate* function to each item in *sourcelist* and return `true` if and only if *predicate* returns a falsy
  * value for each item. This function is the counterpart to {@link module:any any()}.
  * 
  * If the *predicate* is <abbr title="null or undefined">void</abbr>, `none()` evaluates the boolish values of the
- * individual *list* items instead. If *predicate* is neither <abbr title="null or undefined">void</abbr> nor a
- * function, an error is thrown.
+ * individual *sourcelist* items instead. If the *predicate* is a string, it is assumed to be the path to a function in a
+ * package or file module to be resolved using {@link module:misc/resolve resolve()}. If *predicate* is neither
+ * <abbr title="null or undefined">void</abbr> nor a function or string, an error is thrown.
  * 
- * If the *list* is empty, `none()` returns `true`.
+ * If the *sourcelist* is empty, `none()` returns `true`.
  * 
  * The function is short-circuited, so it returns `false` as soon as the *predicate* returns a truthy value, without
- * evaluating any remaining items in *list*.
+ * evaluating any remaining items in *sourcelist*.
  * 
  * `none()` is curried by default with unary arity.
  *
@@ -34,22 +46,28 @@ const isvoid = require('../types/isvoid');
  * none(null, [0, '', -0, null, undefined, 0n, false]); // returns true because the list contains no truthy items
  *
  * @function none
- * @see {@link module:any any()}
- * @see {@link module:all all()}
- * @param {function} [predicate] The predicate function
- * @param {iterable} list An iterable object producing the items to test
+ * @see {@link module:lists/any any()}
+ * @see {@link module:lists/all all()}
+ * @see {@link module:misc/resolve resolve()}
+ * @param {(function|string)} [predicate] The predicate function
+ * @param {iterable} sourcelist An iterable object producing the items to test
  * @returns {boolean} 
  */
-const none = curry1(function none(predicate, list) {
+function none(predicate, sourcelist) {
 
-    if( isvoid(predicate) ) {
-        for(const value of list) if(value) return false;
+    isstring(predicate) && (predicate = resolve(predicate));
+
+    if( issingleton(arguments) ) {
+        return none.bind(null, predicate);
+    } else if( notiterable(sourcelist) ) {
+        raisebadlisterror(sourcelist); 
+    } else if( isvoid(predicate) ) {
+        for(const value of sourcelist) if( value ) return false;
     } else {
-        for(const value of list) if( predicate(value) ) return false;
+        for(const value of sourcelist) if( predicate(value) ) return false;
     }
 
     return true;
-
-});
+}
 
 module.exports = none;
