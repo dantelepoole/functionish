@@ -3,6 +3,8 @@ const list = require('../../src/lists/list');
 const should = require('../../lib/test/should');
 const fake = require('sinon').fake;
 
+const paths = ['/', '/home', '../'];
+
 const idarray1 = [ { id:0 }, { id:1 }, { id:2 }, { id:3 }, { id:4 } ];
 const idarray2 = [ { id:1 }, { id:3 }, { id:5 } ];
 const idlist1 = list(idarray1);
@@ -29,16 +31,16 @@ describe( 'lists/diff()', function() {
             }
         )
         
-        it('should throw if the hashing function is not a function nor null or undefined', function() {
+        it('should throw if the hash function is not a function, a string or null/undefined', function() {
+            should.throw(diff, 42, paths, paths);
+            should.throw(diff, {}, paths, paths);
+            should.throw(diff, paths, paths, paths);
+        })
+        
+        it('should throw if the hash function is a string that does not resolve to a function in a package or file module', function() {
             
-            should.throw(diff, 0, idlist1, idlist2);
-            should.throw(diff, {}, idlist1, idlist2);
-            should.throw(diff, -1, idlist1, idlist2);
-            should.throw(diff, 1.3, idlist1, idlist2);
-
-            should.not.throw(diff, null, idlist1, idlist2);
-            should.not.throw(diff, undefined, idlist1, idlist2);
-            should.not.throw(diff, getid, idlist1, idlist2);
+            should.throw(diff, 'path#FuBar', paths, paths);
+            should.throw(diff, 'path#delimiter', paths, paths);
         })
 
         it(`should throw if the first list is not iterable`, function() {

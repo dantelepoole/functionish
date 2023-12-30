@@ -4,8 +4,7 @@
 
 'use strict';
 
-const ERR_BAD_LIST1 = `functionish/lists/diff(): The list1 argument has type %s. Expected an iterable object.`;
-const ERR_BAD_LIST2 = `functionish/lists/diff(): The list2 argument has type %s. Expected an iterable object.`;
+const ERR_BAD_LIST = `functionish/lists/diff(): The list argument has type %s. Expected an iterable object.`;
 
 const compose = require('../compose');
 const error = require('../errors/error');
@@ -14,18 +13,27 @@ const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const isvoid = require('../types/isvoid');
 const list = require('./list');
+const or = require('../logic/or');
 const raise = require('../errors/raise');
+const resolve = require('../misc/resolve');
+const tap = require('../tap');
 const typeorclassname = require('../types/typeorclassname');
 const uniqfilter = require('../misc/uniqfilter');
 
-const raisebadhashfunction = compose(raise, error.Type(ERR_BAD_HASHFUNC), typeorclassname);
-const raisebadlist1error = compose(raise, error.Type(ERR_BAD_LIST1), typeorclassname);
-const raisebadlist2error = compose(raise, error.Type(ERR_BAD_LIST2), typeorclassname);
+const isfunctionorvoid = or(isfunction, isvoid);
+
+const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
+const validatelist = tap( or(isiterable, raisebadlisterror) );
+
+const partialdiff = (hashfunc, list1) => _difflist.bind(null, hashfunc, validatelist(list1));
 
 /**
  * Return a lazy iterable object that produces only those items from *list1* that are not present in *list2*, with
  * any duplicates removed, using the optional *hashfunc* to compare list items. If *hashfunc* is
  * <abbr title="null or undefined">void</abbr>, list items are compared using string equality.
+ * 
+ * If the *hashfunc* is a string, it is assumed to be the path to a function in a package or file module 
+ * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `diff()` is curried by default with binary arity.
  * 
@@ -56,16 +64,24 @@ const raisebadlist2error = compose(raise, error.Type(ERR_BAD_LIST2), typeorclass
  * [ ...diff(getuserid, users1, users2) ]; // returns []
  * 
  * @function diff
+ * @see {@link module:misc/resolve resolve()}
  * @param {function} [hashfunc=null] The hashing function
  * @param {iterable} list1 The first iterable
  * @param {iterable} list2 The second iterable
  * @returns {iterable}
  */
-const diff = curry2(function diff(hashfunc=null, list1, list2) {
+function diff(hashfunc=null, list1, list2) {
 
-    isvoid(hashfunc) || isfunction(hashfunc) || raisebadhashfunction(hashfunc);
-    isiterable(list1) || raisebadlist1error(list1);
-    isiterable(list2) || raisebadlist2error(list2);
+    isfunctionorvoid(hashfunc) || (hashfunc = resolve(hashfunc));
+
+    const arity = arguments.length;
+
+    return (arity === 1) ? diff.bind(null, hashfunc)
+         : (arity === 2) ? compose( partialdiff(hashfunc, list1), validatelist)
+         : _difflist(hashfunc, validatelist(list1), validatelist(list2));
+}
+
+function _difflist(hashfunc, list1, list2) {
 
     return list(
 
@@ -75,10 +91,9 @@ const diff = curry2(function diff(hashfunc=null, list1, list2) {
             const isuniq = uniqfilter(null, list2set);
 
             for(const item of list1) isuniq(item) && (yield item);
-
         }
     )
-});
 
+}
 
 module.exports = diff;
