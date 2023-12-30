@@ -51,18 +51,23 @@ function reduce(reducer, initialvalue, sourcelist) {
 
     const arity = arguments.length;
 
-    return (arity === 1) ? reduce.bind(null, reducer)
-         : (arity === 2) ? reduce.bind(null, reducer, initialvalue)
-         : isfunction(sourcelist?.reduce) ? sourcelist.reduce(reducer, initialvalue)
+    return (arity === 1) ? doreduce.bind(null, reducer)
+         : (arity === 2) ? doreduce.bind(null, reducer, initialvalue)
+         : doreduce(reducer, initialvalue, sourcelist);
+}
+
+function doreduce(reducer, initialvalue, sourcelist) {
+
+    return isfunction(sourcelist?.reduce) ? sourcelist.reduce(reducer, initialvalue)
          : isiterable(sourcelist) ? reducelist(reducer, initialvalue, sourcelist)
          : raisebadsourcelisterror(sourcelist);
 }
 
-function reducelist(reducer, initialvalue, list) {
+function reducelist(reducer, initialvalue, sourcelist) {
 
     let accumulator = initialvalue;
 
-    for(const item of list) accumulator = reducer(accumulator, item);
+    for(const item of sourcelist) accumulator = reducer(accumulator, item);
 
     return accumulator;
 }
