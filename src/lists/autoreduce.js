@@ -25,7 +25,7 @@ const resolve = require('../misc/resolve');
  * 
  * @example <caption>Example usage of `autoreduce()`</caption>
  * 
- * const { autoreduce } = require('functionish/autoreduce');
+ * const { autoreduce } = require('functionish/lists');
  * 
  * const product = (a,b) => (a*b);
  * 
