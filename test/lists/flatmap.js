@@ -2,6 +2,7 @@ const flatmap = require('../../src/lists/flatmap');
 const should = require('../../lib/test/should');
 const fake = require('sinon').fake;
 
+const paths = ['/', '/home', '../'];
 const multidimensionalarray = [1,2,3, [4,5, [6,7,8] ,9,10] ];
 const id = fake(x => x);
 const lift = fake(x => [x]);
@@ -19,12 +20,16 @@ describe( 'lists/flatmap()', function() {
             should.return.an.iterable( flatmap(id), multidimensionalarray );
         })
 
-        it(`should throw if the mapping function is not a function`, function() {
+        it('should throw if the mapping function is not a function or a string', function() {
+            should.throw(flatmap, 42, paths);
+            should.throw(flatmap, {}, paths);
+            should.throw(flatmap, paths, paths);
+        })
+        
+        it('should throw if the mapping function is a string that does not resolve to a function in a package or file module', function() {
             
-            should.throw(flatmap, {}, multidimensionalarray);
-            should.throw(flatmap, null, multidimensionalarray);
-            should.throw(flatmap, 1, multidimensionalarray);
-            should.throw(flatmap, 'fubar', multidimensionalarray);
+            should.throw(flatmap, 'path#FuBar', paths);
+            should.throw(flatmap, 'path#delimiter', paths);
         })
 
         it(`should throw if the source list has no flatMap()-method and is not iterable`, function() {
