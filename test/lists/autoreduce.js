@@ -30,7 +30,7 @@ describe('lists/autoreduce()', function() {
         }
     )
 
-    it('should throw if the reducder is not a function or a string', function() {
+    it('should throw if the reducer is not a function or a string', function() {
         should.throw(autoreduce, 42, paths);
         should.throw(autoreduce, {}, paths);
         should.throw(autoreduce, paths, paths);
@@ -41,7 +41,6 @@ describe('lists/autoreduce()', function() {
         should.throw(autoreduce, 'path#FuBar', paths);
         should.throw(autoreduce, 'path#delimiter', paths);
     })
-    
 
     it('should throw if the list is not iterable',
         function() {
