@@ -8,7 +8,6 @@ const INDEX_NOT_FOUND = -1;
 
 const isfunction = require('../types/isfunction');
 const issingleton = require('../arrays/issingleton');
-const reduce = require('./reduce');
 const resolve = require('../misc/resolve');
 
 /**
