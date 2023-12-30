@@ -31,7 +31,7 @@ const resolve = require('../misc/resolve');
  * 
  * @function find
  * @see {@link module:misc/resolve resolve()}
- * @param {function} predicate The predicate function identifying the item being searched
+ * @param {(function|string)} predicate The predicate function identifying the item being searched
  * @param {iterable} sourcelist The list of items to search
  * @returns {any}
  */

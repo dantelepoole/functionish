@@ -46,7 +46,7 @@ const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassna
  * 
  * @function flatmap
  * @see {@link module:misc/resolve resolve()}
- * @param {function} mapfunc The mapping function
+ * @param {(function|string)} mapfunc The mapping function
  * @param {iterable} sourcelist An iterable object
  * @returns {iterable}
  */
