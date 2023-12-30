@@ -4,16 +4,14 @@
 
 'use strict';
 
-const ERR_BAD_HASHFUNC = `functionish/lists/diff(): The hashing function has type %s. Expected a function.`;
 const ERR_BAD_LIST1 = `functionish/lists/diff(): The list1 argument has type %s. Expected an iterable object.`;
 const ERR_BAD_LIST2 = `functionish/lists/diff(): The list2 argument has type %s. Expected an iterable object.`;
 
 const compose = require('../compose');
-const curry2 = require('../curry2');
 const error = require('../errors/error');
 const hashset = require('../misc/hashset');
 const isfunction = require('../types/isfunction');
-const isiterablenotstring = require('../types/isiterablenotstring');
+const isiterable = require('../types/isiterable');
 const isvoid = require('../types/isvoid');
 const list = require('./list');
 const raise = require('../errors/raise');
@@ -66,8 +64,8 @@ const raisebadlist2error = compose(raise, error.Type(ERR_BAD_LIST2), typeorclass
 const diff = curry2(function diff(hashfunc=null, list1, list2) {
 
     isvoid(hashfunc) || isfunction(hashfunc) || raisebadhashfunction(hashfunc);
-    isiterablenotstring(list1) || raisebadlist1error(list1);
-    isiterablenotstring(list2) || raisebadlist2error(list2);
+    isiterable(list1) || raisebadlist1error(list1);
+    isiterable(list2) || raisebadlist2error(list2);
 
     return list(
 
