@@ -20,7 +20,7 @@ describe( 'lists/iterate()', function() {
             }
         )
         
-        it('should throw if the mapfunc is not a function nor a string', function() {
+        it('should throw if the target function is not a function nor a string', function() {
             
             should.throw(iterate, 0, numbers1to5);
             should.throw(iterate, {}, numbers1to5);
@@ -31,7 +31,7 @@ describe( 'lists/iterate()', function() {
             should.throw(iterate, 1n, numbers1to5);
         })
 
-        it('should throw if the mapfunc is a string that does not resolve to a function in a package or file module', function() {
+        it('should throw if the target function is a string that does not resolve to a function in a package or file module', function() {
             
             should.throw(iterate, 'path#FuBar', numbers1to5);
             should.throw(iterate, 'path#delimiter', numbers1to5);
@@ -41,7 +41,7 @@ describe( 'lists/iterate()', function() {
             should.throw(iterate, bogusfunc, {});
             should.throw(iterate, bogusfunc, null);
             should.throw(iterate, bogusfunc, iterate);
-            should.throw(iterate, bogusfunc, { map:'notamethod' });
+            should.throw(iterate, bogusfunc, { forEach:'notamethod' });
         })
 
         it('should return the source list if the target function does not call the abort() function', function() {
