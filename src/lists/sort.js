@@ -23,31 +23,39 @@ const issortable = obj => isfunction(obj?.sort);
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
 
 /**
- * to do
+ * If *sourcelist* has a `sort()` method, call it with the *comparefunc* function and return
+ * the result. Otherwise, return a lazy list that iterates over *sourcelist*'s item in sorted order, using
+ * *comparefunc* to compare items.
+ * 
+ * If the *comparefunc* is neither a function nor <abbr title="null or undefined">void</abbr>, it is assumed
+ * to be the path to a function in a package or file module to be resolved using {@link module:misc/resolve resolve()}.
+ * 
+ * `sort()` is curried by default with unary arity.
  * 
  * @function sort
- * @param {(function|string)} [sortfunc] The optional sorting function
+ * @see {@link module:misc/resolve resolve()}
+ * @param {(function|string)} [comparefunc] The optional function for comparing two items
  * @param {iterable} sourcelist An iterable object producing the items to sort
  * @returns {iterable}
  */
-function sort(sortfunc, sourcelist) {
+function sort(comparefunc, sourcelist) {
 
-    isfunctionorvoid(sortfunc) || (sortfunc = resolve(sortfunc));
+    isfunctionorvoid(comparefunc) || (comparefunc = resolve(comparefunc));
 
-    return issingleton(arguments) ? sort.bind(null, sortfunc)
-         : issortable(sourcelist) ? sourcelist.sort(sortfunc)
-         : isiterable(sourcelist) ? sortlist(sortfunc, sourcelist)
+    return issingleton(arguments) ? sort.bind(null, comparefunc)
+         : issortable(sourcelist) ? sourcelist.sort(comparefunc)
+         : isiterable(sourcelist) ? sortlist(comparefunc, sourcelist)
          : raisebadlisterror(sourcelist);
 }
 
-function sortlist(sortfunc, sourcelist) {
+function sortlist(comparefunc, sourcelist) {
 
     return list(
 
         function* () {
             
-            yield* isfunction(sortfunc)
-                 ? Array.from(sourcelist).sort(sortfunc)
+            yield* isfunction(comparefunc)
+                 ? Array.from(sourcelist).sort(comparefunc)
                  : Array.from(sourcelist).sort();
         }
     )
