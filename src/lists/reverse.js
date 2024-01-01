@@ -8,14 +8,16 @@ const EMPTY_STRING = '';
 
 const ERR_BAD_LIST = `functionish/lists/reverse(): The sourcelist argument has type %s. Expected an iterable object.`;
 
+const compose = require('../compose');
 const error = require('../errors/error');
-const isarray = require('../types/isarray');
+const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const isstring = require('../types/isstring');
 const list = require('./list');
 const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
 
+const isreversable = obj => isfunction(obj?.reverse);
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
 
 /**
@@ -28,7 +30,7 @@ const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassna
 function reverse(sourcelist) {
 
     return isstring(sourcelist) ? sourcelist.split(EMPTY_STRING).reverse().join(EMPTY_STRING)
-         : isarray(sourcelist) ? sourcelist.slice().reverse()
+         : isreversable(sourcelist) ? sourcelist.reverse()
          : isiterable(sourcelist) ? reverselist(sourcelist)
          : raisebadlisterror(sourcelist);
 }
