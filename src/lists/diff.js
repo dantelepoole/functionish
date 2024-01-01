@@ -44,12 +44,14 @@ const partialdiff = (hashfunc, list1) => _difflist.bind(null, hashfunc, validate
  * const list1 = [1,2,3,4,5];
  * const list2 = [3,4,5,6,7];
  * 
- * [ ...diff(null, list1, list2) ]; // returns [1,2]
+ * const difference = diff(null, list1, list2);
+ * 
+ * [...difference]; // returns [1,2]
  * 
  * list1.shift();
  * list1.shift();
  *  
- * [ ...diff(null, list1, list2) ]; // returns []
+ * [...difference]; // returns []
  * 
  * @example <caption>Example usage of `diff()` with a hashing function</caption>
  * 
@@ -57,11 +59,13 @@ const partialdiff = (hashfunc, list1) => _difflist.bind(null, hashfunc, validate
  * const users2 = [ { id:2, name:'Fubar' }, { id:3, name:'Bar' }, { id:42, name:'Douglas Adams' } ];
  * const getuserid = user => user.id;
  * 
- * [ ...diff(getuserid, users1, users2) ]; // returns [ { id:1, name:'Fu' } ]
+ * const difference = diff(getuserid, users1, users2);
+ * 
+ * [...difference] // returns [ { id:1, name:'Fu' } ]
  * 
  * users1.shift();
  * 
- * [ ...diff(getuserid, users1, users2) ]; // returns []
+ * [...difference]; // returns []
  * 
  * @function diff
  * @see {@link module:misc/resolve resolve()}
