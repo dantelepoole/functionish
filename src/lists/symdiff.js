@@ -101,30 +101,8 @@ function _symdiff(hashfunc,list1,list2) {
         const list1filter = and( uniqfilter(hashfunc), not(isintersect) );
         const difflist1 = filter(list1filter, list1);
     
-        // return concatlists(difflist1, difflist2)
         yield* difflist1,
         yield* difflist2
     })
 }
-
-// function builddifffilter(isuniq, listfilter, sourcelist) {
-
-//     return list(
-//         function* _difffilter() {
-//             for(const item of sourcelist) listfilter(item) && (yield item);
-//             isuniq.clear();
-//         }
-//     )
-// }
-
-// function concatlists(list1, list2) {
-
-//     return list(
-//         function* (){
-//             yield* list1,
-//             yield* list2
-//         }
-//     )
-// }
-
 module.exports = symdiff;
