@@ -7,14 +7,14 @@
 const random = Math.random;
 
 /**
- * Return either `true` or `false` with 50/50% probability. Pass a number between 0
+ * Return either `true` or `false` with 50% probability. Pass a number between 0
  * and 1 (inclusive) to adjust the probability of returning `true`.
  * 
- * @example <caption>Example usage of `coalesce()`</caption>
+ * @example <caption>Example usage of `coinflip()`</caption>
  * 
  * const { coinflip } = require('functionish/misc');
  * 
- * coinflip(); // returns true or false with 50/50% probability
+ * coinflip(); // returns true or false with 50% probability
  * 
  * coinflip(0.33); // returns true with 33% probability
  * coinflip(0);    // always returns false
