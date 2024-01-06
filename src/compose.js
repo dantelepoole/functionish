@@ -5,10 +5,11 @@
 'use strict';
 
 const always = require('./always');
+const head = array => array[0];
 const id = require('./id');
 
-const head = array => array[0];
-const largecomposer = funcs => runcompose.bind(null, funcs);
+const composereducer = (args, composer) => [ composer(...args) ];
+const largecomposer = composers => (...args) => composers.reduceRight(composereducer, args)[0];
 
 const composermap = Object.freeze([
     always(id),
@@ -19,6 +20,9 @@ const composermap = Object.freeze([
     ([f1,f2,f3,f4,f5]) => (...args) => f1(f2(f3(f4(f5(...args))))),
 ]);
 
+const initcompose = composers => (composers.length < composermap.length)
+                                 ? composermap[composers.length](composers)
+                                 : largecomposer(composers);
 /**
  * Return a function that runs each function in the *targetfuncs* array in reverse order (i.e. from last
  * to first) passing the previous function's return value to the following function each time.
@@ -43,19 +47,7 @@ const composermap = Object.freeze([
  * @returns {function}
  */
 function compose(...targetfuncs) {
-
-    const composer = (composermap[targetfuncs.length] ?? largecomposer);
-
-    return composer(targetfuncs);
-}
-
-function runcompose(targetfuncs, ...args) {
-
-    let result = targetfuncs[targetfuncs.length-1](...args);
-
-    for(let i = (targetfuncs.length-2); i >= 0; i -= 1) result = targetfuncs[i](result);
-
-    return result;
+    return initcompose(targetfuncs);
 }
 
 module.exports = compose;
