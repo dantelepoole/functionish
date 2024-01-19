@@ -27,11 +27,14 @@ const truncate = Math.trunc;
 
 const casttopositiveinteger = x => maximumvalue(0, truncate( +x || 0 ));
 
+const getiterator = iterable => iterable[Symbol.iterator]();
 const getiteratorfunction = iterable => iterable[Symbol.iterator].bind(iterable);
 const isconstructorlock = lock => (lock === CONSTRUCTORLOCK);
 const isempty = array => (array.length === 0);
+const isconcatspreadable = obj => (obj?.[Symbol.isConcatSpreadable] ?? true);
 const isfunction = func => (typeof func === 'function');
 const isiterable = obj => isfunction(obj?.[Symbol.iterator]);
+const isiterablenotstring = obj => notstring(obj) && isfunction(obj?.[Symbol.iterator]);
 const isflattenable = obj => notstring(obj) && isfunction(obj?.[Symbol.iterator]);
 const islazylist = obj => (obj?.[SYMBOL_DUCKTYPE] === SYMBOL_DUCKTYPE);
 const ispositiveinteger = num => (Number.isSafeInteger(num) && (num >= 0));
@@ -51,13 +54,12 @@ const True = () => true;
 
 class LazyList {
 
-    static from(source) {
+    static from = source => isfunction(source) && newlazylist(source)
+                         || islazylist(source) && newlazylist(source)
+                         || isiterable(source) && newlazylist( getiteratorfunction(source) )
+                         || raisebadsourceerror(source);
 
-        return  isfunction(source) && newlazylist(source)
-             || islazylist(source) && source
-             || isiterable(source) && newlazylist( getiteratorfunction(source) )
-             || raisebadsourceerror(source);
-    }
+    static is = islazylist;
 
     constructor(iteratorfunc, lock) {
 
@@ -66,11 +68,20 @@ class LazyList {
         this[Symbol.iterator] = iteratorfunc;
     }
 
+    concat(...items) {
+
+        if( isempty(items) ) return this;
+
+        const _listconcat = listconcat.bind(null, this, items);
+
+        return newlazylist(_listconcat);
+    }
+
     filter(predicate) {
 
         isfunction(predicate) || raisebadfilterpredicate(predicate);
 
-        const _listfilter = listfilter.bind(null, predicate, this[Symbol.iterator]);
+        const _listfilter = listfilter.bind(null, predicate, this);
 
         return newlazylist(_listfilter);
     }
@@ -98,7 +109,7 @@ class LazyList {
 
         isfunction(mapfunc) || raisebadmapfunction(mapfunc);
 
-        const _listmap = listmap.bind(null, mapfunc, this[Symbol.iterator]);
+        const _listmap = listmap.bind(null, mapfunc, this);
 
         return newlazylist(_listmap);
     }
@@ -108,8 +119,8 @@ class LazyList {
         isfunction(reducer) || raisebadreducer(reducer);
 
         return issingleton(arguments) 
-             ? listreduceauto(reducer, this[Symbol.iterator])
-             : listreduce(reducer, initialvalue, this[Symbol.iterator]);
+             ? listreduceauto(reducer, this)
+             : listreduce(reducer, initialvalue, this);
     }
 
     reduceRight(reducer, initialvalue) {
@@ -117,13 +128,13 @@ class LazyList {
         isfunction(reducer) || raisebadrightreducer(reducer);
 
         return issingleton(arguments)
-             ? listreducerightauto(reducer, this[Symbol.iterator])
-             : listreduceright(reducer, initialvalue, this[Symbol.iterator]);
+             ? listreducerightauto(reducer, this)
+             : listreduceright(reducer, initialvalue, this);
     }
 
     reverse() {
 
-        const _listreverse = listreverse.bind(null, this[Symbol.iterator]);
+        const _listreverse = listreverse.bind(null, this);
 
         return newlazylist(_listreverse);
     }
@@ -131,16 +142,16 @@ class LazyList {
     slice(start=0, end) {
 
         const _listslice = (arguments.length < 2)
-                         ? listslicepartial.bind(null, this[Symbol.iterator], start)
-                         : listslicerange.bind(null, this[Symbol.iterator], start, end);
+                         ? listslicepartial.bind(null, this, start)
+                         : listslicerange.bind(null, this, start, end);
 
         return newlazylist(_listslice);
     }
 
     sort(comparefunc) {
 
-        const _listsort = isempty(arguments) ? listsort.bind(null, this[Symbol.iterator])
-                        : isfunction(comparefunc) ? listsortcustom.bind(null, comparefunc, this[Symbol.iterator])
+        const _listsort = isempty(arguments) ? listsort.bind(null, this)
+                        : isfunction(comparefunc) ? listsortcustom.bind(null, comparefunc, this)
                         : raisebadsortfunction(comparefunc);
         
         return newlazylist(_listsort);
@@ -150,11 +161,25 @@ class LazyList {
         return SYMBOL_DUCKTYPE;
     
     }
+
+    [Symbol.isConcatSpreadable] = true;
+
     [Symbol.iterator]
 }
 
-function* listfilter(predicate, iteratorfunc) {
-    for(const item of iteratorfunc()) predicate(item) && (yield item);
+function* listconcat(baselist, items) {
+
+    yield* baselist;
+
+    for(const item of items) {
+
+        if( isiterablenotstring(item) && isconcatspreadable(item) ) yield* item;
+        else yield item;
+    }
+}
+
+function* listfilter(predicate, list) {
+    for(const item of list) predicate(item) && (yield item);
 }
 
 function* listflat(depth, list) {
@@ -192,68 +217,72 @@ function* listflatMap(depth, mapfunc, list) {
     }
 }
 
-function* listmap(mapfunc, iteratorfunc) {
-    for(const item of iteratorfunc()) yield mapfunc(item);
+function* listmap(mapfunc, list) {
+    for(const item of list) yield mapfunc(item);
 }
 
-function listreduce(reducer, initialvalue, iteratorfunc) {
+function listreduce(reducer, initialvalue, list) {
 
     let result = initialvalue;
 
-    for(const item of iteratorfunc()) result = reducer(result, item);
+    for(const item of list) result = reducer(result, item);
 
     return result;
 }
 
-function listreduceauto(reducer, iteratorfunc) {
+function getnextiteratorvalue(iterator, donevalue) {
 
-    let isvirgin = true;
-    let result = undefined;
+    const item = iterator.next();
 
-    const initresult = value => True(result = value, isvirgin = false);
+    return item.done ? donevalue : item.value;
+}
 
-    for(const item of iteratorfunc()) {
-        isvirgin && initresult(item) || (result = reducer(result, item));
-    }
+function listreduceauto(reducer, list) {
+
+    const iterator = getiterator(list);
+
+    let result = getnextiteratorvalue(iterator);
+    
+    for(const item of iterator) result = reducer(result, item);
 
     return result;
 }
 
-function listreduceright(reducer, initialvalue, iteratorfunc) {
-    return Array.from( iteratorfunc() ).reduceRight(reducer, initialvalue);
+function listreduceright(reducer, initialvalue, list) {
+    return Array.from(list).reduceRight(reducer, initialvalue);
 }
 
-function listreducerightauto(reducer, iteratorfunc) {
+function listreducerightauto(reducer, list) {
 
-    const array = Array.from( iteratorfunc() );
-    const initialitem = array.pop();
+    const array = Array.from(list);
+    const initialvalue = array.pop();
 
-    return array.reduceRight(reducer, initialitem);
+    return array.reduceRight(reducer, initialvalue);
 }
 
-function* listreverse(iteratorfunc) {
+function* listreverse(list) {
 
-    const array = Array.from( iteratorfunc() );
+    const array = Array.from(list);
 
     for(let i=array.length-1; i >= 0; i -= 1) yield array[i];
 }
 
-function* listslicepartial(iteratorfunc, start) {
+function* listslicepartial(list, start) {
 
     start = casttopositiveinteger(start);
 
-    const iterator = iteratorfunc();
+    const iterator = getiterator(list);
     skiptoindex(start, iterator);
 
     yield* iterator;
 }
 
-function* listslicerange(iteratorfunc, start, end) {
+function* listslicerange(list, start, end) {
 
     start = casttopositiveinteger(start);
     end = casttopositiveinteger(end);
 
-    const iterator = iteratorfunc();
+    const iterator = getiterator(list);
     skiptoindex(start, iterator);
 
     if(end > start) {
@@ -271,12 +300,12 @@ function* listslicerange(iteratorfunc, start, end) {
     }
 }
 
-function* listsort(iteratorfunc) {
-    yield* Array.from( iteratorfunc() ).sort();
+function* listsort(list) {
+    yield* Array.from(list).sort();
 }
 
-function* listsortcustom(comparefunc, iteratorfunc) {
-    yield* Array.from( iteratorfunc() ).sort(comparefunc);
+function* listsortcustom(comparefunc, list) {
+    yield* Array.from(list).sort(comparefunc);
 }
 
 function skiptoindex(targetindex, iterator) {
