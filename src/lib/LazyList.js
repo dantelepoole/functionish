@@ -50,7 +50,6 @@ const raisebadrightreducer = reducer => { throw new TypeError( format(ERR_BAD_RI
 const raisebadsortfunction = comparefunc => { throw new TypeError( format(ERR_BAD_SORTFUNCTION, typeof comparefunc) ) }
 const raisebadsourceerror = source => { throw new TypeError( format(ERR_BAD_SOURCE, typeof source)) }
 const raiseconstructorlockerror = () => { throw new Error(ERR_INSTANTIATIONERROR) }
-const True = () => true;
 
 class LazyList {
 
