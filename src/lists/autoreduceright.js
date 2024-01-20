@@ -4,22 +4,29 @@
 
 'use strict';
 
-const NO_INITIAL_VALUE = undefined;
+const ERR_BAD_SOURCELIST = `functionish/lists/autoreduceright(): The source list has type %s. Expected an iterable object.`;
 
+const compose = require('../compose');
+const curry1 = require('../curry1');
+const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
-const issingleton = require('../arrays/issingleton');
-const reduceright = require('./reduceright');
+const isiterable = require('../types/isiterable');
+const raise = require('../errors/raise');
 const resolve = require('../misc/resolve');
+const typeorclassname = require('../types/typeorclassname');
+
+const getiterator = iterable => iterable[Symbol.iterator]();
+const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), typeorclassname);
 
 /**
  * Similar to {@link module:lists/reduceright reduceright()} except that no initial value is used. Instead, the last
- * item in the *list* is passed to the *reducer* on the first call along with the *list*'s second-to-last item. 
+ * item in the *sourcelist* is passed to the *reducer* on the first call along with the *sourcelist*'s second-to-last item. 
  * 
  * If the *reducer* is a string, it is assumed to be the path to a function in a package or file module 
  * to be resolved using {@link module:misc/resolve resolve()}.
  * 
- * If the *list* contains a single item, that item is returned as `autoreducerights()`'s return value. If the *list* is
- * empty, `undefined` is returned.
+ * If the *sourcelist* contains a single item, that item is returned as `autoreducerights()`'s return value. If
+ * the *sourcelist* is empty, `undefined` is returned.
  * 
  * `autoreduceright()` is curried by default with unary arity.
  * 
@@ -37,22 +44,18 @@ const resolve = require('../misc/resolve');
  * @see {@link module:lists/reduce reduce()}
  * @see {@link module:misc/resolve resolve()}
  * @param {function} reducer The reducer function
- * @param {iterable} list The iterable object producing the items to reduce
+ * @param {iterable} sourcelist The iterable object producing the items to reduce
  * @returns {any}
  */
-function autoreduceright(reducer, list) {
-
-    let started = false;
+const autoreduceright = curry1(function autoreduceright(reducer, sourcelist) {
 
     isfunction(reducer) || (reducer = resolve(reducer));
+    isiterable(sourcelist) || raisebadsourcelisterror(sourcelist);
 
-    const autoreducer = (accumulator, nextvalue) => started
-                                                  ? reducer(accumulator, nextvalue)
-                                                  : (started = true, nextvalue);
-    
-    return issingleton(arguments)    
-         ? reduceright.bind(null, autoreducer, NO_INITIAL_VALUE)
-         : reduceright(autoreducer, NO_INITIAL_VALUE, list);
-}
+    const array = Array.from(sourcelist);
+    const initialvalue = array.pop();
+
+    return array.reduceRight(reducer, initialvalue);
+})
 
 module.exports = autoreduceright;
