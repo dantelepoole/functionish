@@ -11,6 +11,10 @@ const iseven = sinon.fake(x => (x%2) === 0);
 const double = sinon.fake(x => (x*2));
 const raise = x => { throw new Error() }
 
+const numbers = [1,2,3,4,5]; // product: 120, sum:15
+const product = sinon.fake( (...factors) => factors.reduce( (a,b)=>(a*b), 1 ) );
+const sum = sinon.fake( (...numbers) => numbers.reduce( (a,b)=>(a+b), 0 ) );
+
 describe( 'when()', function() {
 
     beforeEach(function () {
@@ -18,6 +22,8 @@ describe( 'when()', function() {
         id.resetHistory();
         iseven.resetHistory();
         double.resetHistory();
+        product.resetHistory();
+        sum.resetHistory();
     })
 
     it('should be curried with unary arity', function() {
@@ -135,6 +141,54 @@ describe( 'when()', function() {
                 const retval = neverdouble(UNIQTHING, 'fubar', 42);
 
                 expect(retval).to.equal(UNIQTHING);
+            })
+        })
+
+        describe( `The returned function's for()-method`, function() {
+
+            it(`should return a function`, function() {
+                expect( when(raise, double, id).for(42) ).to.be.a('function');
+            })
+
+            describe( `The function returned by the for()-method`, function() {
+
+                it('should pass its arguments to the condition', function() {
+        
+                    const productorsum = when(iseven, product, sum).for(42, 41, 40);
+                    
+                    expect(iseven.callCount).to.equal(0);
+    
+                    productorsum(...numbers);
+    
+                    expect(iseven.callCount).to.equal(1);
+                    expect(iseven.args[0]).deep.equals([42,41,40])
+                })
+
+                it('should pass its own arguments to the true-branch if the condition returns a truthy value', function() {
+        
+                    const productorsum = when(iseven, product, sum).for(42);
+                    
+                    expect(product.callCount).to.equal(0);
+    
+                    const retval = productorsum(...numbers);
+    
+                    expect(product.callCount).to.equal(1);
+                    expect(product.args[0]).to.deep.equal(numbers);
+                    expect(retval).to.equal(120);
+                })
+
+                it('should pass its own arguments to the false-branch if the condition returns a falsy value', function() {
+        
+                    const productorsum = when(iseven, product, sum).for(41);
+                    
+                    expect(sum.callCount).to.equal(0);
+    
+                    const retval = productorsum(...numbers);
+    
+                    expect(sum.callCount).to.equal(1);
+                    expect(sum.args[0]).to.deep.equal(numbers);
+                    expect(retval).to.equal(15);
+                })
             })
         })
     })

@@ -4,27 +4,33 @@
 
 'use strict';
 
+const callable = require('./callable');
 const curry1 = require('./curry1');
 const id = require('./id');
 
+const initselectaction = (condition, action, alternate) => (...args) => (condition(...args) && action || alternate);
 const isfunction = require('./types/isfunction');
 
 /**
  * Return a function that encapsulates an if-then-else statement. The function first passes its arguments to the
- * *condition* and subsequently to either *truebranch* or *falsebranch* depending on whether the *condition* returned
+ * *condition* and subsequently to either *onsuccess* or *onfail* depending on whether the *condition* returned
  * a truthy or falsy value.
  * 
- * The *condition*, *truebranch and *falsebranch* may each be either a function or another value type. If the
- * *condition* is not a function, it is immediately evaluated and *truebranch* or *falsebranch* is returned depending
+ * The *condition*, *onsuccess* and *onfail* may each be either a function or another value type. If the
+ * *condition* is not a function, it is immediately evaluated and *onsuccess* or *onfail* is returned depending
  * on the *condition*'s boolish value.
  * 
  * If the *condition* is a function, a function is returned that passes its arguments to the *condition* and selects
- * either the *truebranch* or the *falsebranch* depending on the *condition*'s boolish value. If the selected branch
+ * either the *onsuccess* or the *onfail* depending on the *condition*'s boolish value. If the selected action
  * is a function, it is called with the same argument. Otherwise, it's value is returned.
  * 
- * If the *condition* is a function that evaluates to a falsy value while the *falsebranch* was omitted, the returned
- * function returns its own first argument. This only applies when the *condition* is a function. In all other case,
- * if the *falsebranch* is omitted it will evaluate to `undefined` instead.
+ * If the *condition* function evaluates to a falsy value and the *onfail* was omitted, the returned
+ * function returns its own first argument. This only applies when the *condition* is a function. Otherwise,
+ * if the *onfail* is omitted it will evaluate to `undefined` instead.
+ * 
+ * The returned function has a `for()`-method that allows you to pass different arguments to the *condition* and the
+ * selected action. The arguments passed to the `for()`-method are passed to the *condition*, while the arguments
+ * passed to the returned function are passed to the selected action.
  * 
  * `when()` is curried by default with unary arity.
  * 
@@ -49,7 +55,7 @@ const isfunction = require('./types/isfunction');
  * when(false, 42, 43); // returns 43
  * when(false, 42); // returns undefined
  * 
- * @example <caption>Example usage of `when()` with the false-branch omitted</caption> 
+ * @example <caption>Example usage of `when()` with the `onfail` actoin omitted</caption> 
  * 
  * const { when } = require('functionish');
  * 
@@ -58,37 +64,45 @@ const isfunction = require('./types/isfunction');
  * 
  * const touppercase = when(notuppercase, uppercase);
  * 
- * touppercase('fubar'); // follows the true branch and returns 'FUBAR'
- * touppercase('FUBAR'); // false branch is omitted so the first argument is returned
+ * touppercase('fubar'); // executes the onsuccess-action and returns 'FUBAR'
+ * touppercase('FUBAR'); // the onfail-action was omitted so the first argument is returned
+ * 
+ * @example <caption>Example usage of `when()`'s `for()`-method</caption> 
+ * 
+ * const iseven = x => (x%2) === 0;
+ * const product = (...numbers) => numbers.reduce( (a,b) => (a*b), 1 );
+ * const sum = (...numbers) => numbers.reduce( (a,b)=>(a+b), 0 );
+ * 
+ * const productorsum = when(iseven, product, sum);
+ * 
+ * productorsum.for(42)(1, 2, 3, 4, 5); // pass 42 to the condition and returns the product of 120 (onsuccess)
+ * productorsum.for(41)(1, 2, 3, 4, 5); // pass 41 to the condition and returns the sum of 15 (onfail)
  * 
  * @function when
- * @see {@link module:whenx whenx()}
  * @param {any} condition The condition function or value
- * @param {any} truebranch The function to call or value to return if the *condition* evaluates to a truthy value
- * @param {any} falsebranch The function to call or value to return if the *condition* evaluates to a falsy value
+ * @param {any} onsuccess The function to call or value to return if the *condition* evaluates to a truthy value
+ * @param {any} onfail The function to call or value to return if the *condition* evaluates to a falsy value
  * @returns {function}
  */
-const when = curry1(function when(condition, truebranch, falsebranch) {
+const when = curry1(function when(condition, onsuccess, onfail) {
 
-    return isfunction(condition) ? dynamicwhen(...arguments)
-         : condition ? truebranch
-         : falsebranch;
+    if( isfunction(condition) ) return initwhen(...arguments, id);
+
+    let result = onsuccess;
+
+    condition || (result = onfail);
+
+    return result;
 })
 
-function dynamicwhen(condition, truebranch, falsebranch) {
+function initwhen(condition, onsuccess, onfail) {
 
-    (arguments.length >= 3) || (falsebranch = id);
+    const selectaction = initselectaction(condition, callable(onsuccess), callable(onfail));
 
-    return _when.bind(null, condition, truebranch, falsebranch);
-}
-
-function _when(condition, truebranch, falsebranch, ...args) {
-
-    const selectedbranch = condition(...args) ? truebranch : falsebranch;
-
-    return isfunction(selectedbranch)
-         ? selectedbranch(...args)
-         : selectedbranch;
+    const _when = (...args) => selectaction(...args)(...args);
+    _when.for = (...args) => (...actionargs) => selectaction(...args)(...actionargs);
+    
+    return _when;
 }
 
 module.exports = when;
