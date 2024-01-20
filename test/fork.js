@@ -28,10 +28,7 @@ describe( 'fork()', function() {
         describe( 'The result function', function() {
 
             it(`should throw if any target function is not a function`, function() {
-        
-                const forkedfunctions = fork(id, fubar, UNIQTHING);
-                
-                expect(forkedfunctions).to.throw();
+                expect( ()=>fork(id, fubar, UNIQTHING) ).to.throw();
             })
 
             it('should call each target function in order', function() {
