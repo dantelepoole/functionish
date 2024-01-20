@@ -5,10 +5,11 @@
 'use strict';
 
 const applicable = require('./applicable');
-const compose = require('./compose');
-const uniadic = require('./uniadic');
+const isfunction = require('./types/isfunction');
 
-const _fork = (forkfuncs, ...args) => forkfuncs.map( applicable(...args) )
+const validatejoinfunction = func => isfunction(func) || raisebadjoinfunction(func);
+const validatetargetfunction = func => isfunction(func) || raisebadtargetfunction(func);
+const validatetargetfunctions = funcs => funcs.forEach(validatetargetfunction);
 
 /**
  * Return a function that passes its arguments to each *targetfunc* and returns an array holding the return values.
@@ -26,11 +27,25 @@ const _fork = (forkfuncs, ...args) => forkfuncs.map( applicable(...args) )
  */
 function fork(...targetfuncs) {
     
-    const forkrunner = _fork.bind(null, targetfuncs);
+    validatetargetfunctions(targetfuncs);
 
-    forkrunner.join = joinfunc => compose(uniadic(joinfunc), forkrunner);
+    const _fork = (...args) => targetfuncs.map( applicable(...args) );
 
-    return forkrunner;
+    _fork.join = func => validatejoinfunction(func) && ((...args) => func( ..._fork(...args) ));
+
+    return _fork;
+}
+
+function raisebadtargetfunction(func) {
+
+    const errormessage = `functionish/fork(): One or more target functions has type ${typeof func}. Expected a function.`;
+    throw new TypeError(errormessage);
+}
+
+function raisebadjoinfunction(func) {
+
+    const errormessage = `functionish/fork().join(): The join function has type ${typeof func}. Expected a function.`;
+    throw new TypeError(errormessage);
 }
 
 module.exports = fork;
