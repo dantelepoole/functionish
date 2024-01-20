@@ -4,18 +4,26 @@
 
 'use strict';
 
-const ERR_BAD_COMPOSITEWRAPPER = `functionish/wrap(): One or more of the items in the wrapper-array is not a function or the wrapper-array is empty.`;
+const ERR_BAD_COMPOSITEWRAPPER = `functionish/wrap(): One or more of the items in the wrapper-array is not a function.`;
 const ERR_BAD_WRAPPER = `functionish/wrap(): The wrapper argument has type '%s'. Expected a function or function-array.`;
 const ERR_BAD_TARGETFUNCTION = `functionish/wrap(): The target function has type '%s'. Expected a function.`;
+const ERR_EMPTY_WRAPPERARRAY = `functionish/wrap(): The wrapper-array is empty. Expected at least one wrapper function.`;
 
 const curry1 = require('./curry1');
 const format = require('./misc/format');
+const hasitems = require('./misc/hasitems');
 const isarray = require('./types/isarray');
 const isfunction = require('./types/isfunction');
+const type = require('./types/type');
 const typeorclassname = require('./types/typeorclassname');
 
 const iscompositewrapper = wrapper => isarray(wrapper) && wrapper.every(isfunction) && (wrapper.length > 0);
-const wrapreducer = (nextwrapper, wrapper) => wrapper.bind(null, nextwrapper);
+const raisebadcompositewrapper = () => { throw new TypeError(ERR_BAD_COMPOSITEWRAPPER) }
+const raisebadtargetfunction = func => { throw new TypeError(format(ERR_BAD_TARGETFUNCTION, typeorclassname(func))) }
+const raiseemptywrapperarray = () => { throw new TypeError(ERR_EMPTY_WRAPPERARRAY) }
+const wrapreducer = (nextwrapper, wrapper) => isfunction(wrapper) && wrapper.bind(null, nextwrapper)
+                                               ||
+                                              raisebadcompositewrapper();
 
 /**
  * Wrap a target function with one or more wrapper functions.
@@ -48,32 +56,14 @@ const wrapreducer = (nextwrapper, wrapper) => wrapper.bind(null, nextwrapper);
  */
 const wrap = curry1(function wrap(wrapper, targetfunc) {
 
-    validatewrapper(wrapper);
-    validatetargetfunction(targetfunc);
+    isfunction(targetfunc) || raisebadtargetfunction(targetfunc);
 
-    return isfunction(wrapper)
-         ? wrapper.bind(null, targetfunc)
-         : wrapper.reduceRight(wrapreducer, targetfunc);
+    return isfunction(wrapper) && wrapper.bind(null, targetfunc)
+            ||
+           (hasitems(wrapper) && wrapper.reduceRight(wrapreducer, targetfunc))
+            ||
+           raiseemptywrapperarray();
 
 })
-
-function validatetargetfunction(targetfunc) {
-
-    if( isfunction(targetfunc) ) return targetfunc;
-
-    const errormessage = format(ERR_BAD_TARGETFUNCTION, typeorclassname(targetfunc));
-    throw new TypeError(errormessage);
-}
-
-function validatewrapper(wrapper) {
-
-    if( isfunction(wrapper) ) return wrapper;
-    
-    else if ( iscompositewrapper(wrapper) ) return wrapper;
-
-    else if( isarray(wrapper) ) throw new TypeError(ERR_BAD_COMPOSITEWRAPPER);
-
-    else throw new TypeError( format(ERR_BAD_WRAPPER, typeorclassname(wrapper)) );
-}
 
 module.exports = wrap;

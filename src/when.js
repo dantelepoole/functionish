@@ -4,6 +4,7 @@
 
 'use strict';
 
+const always = require('./always');
 const callable = require('./callable');
 const curry1 = require('./curry1');
 const id = require('./id');
@@ -97,10 +98,13 @@ const when = curry1(function when(condition, onsuccess, onfail) {
 
 function initwhen(condition, onsuccess, onfail) {
 
-    const selectaction = initselectaction(condition, callable(onsuccess), callable(onfail));
+    isfunction(onsuccess) || (onsuccess = always(onsuccess));
+    isfunction(onfail) || (onfail = always(onfail));
+
+    const selectaction = initselectaction(condition, onsuccess, onfail);
 
     const _when = (...args) => selectaction(...args)(...args);
-    _when.for = (...args) => (...actionargs) => selectaction(...args)(...actionargs);
+    _when.for = (...conditionargs) => (...actionargs) => selectaction(...conditionargs)(...actionargs);
     
     return _when;
 }

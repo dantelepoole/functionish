@@ -6,7 +6,6 @@
 
 const curry1 = require('./curry1');
 const id = require('./id');
-const isfunction = require('./types/isfunction');
 const not = require('./logic/not');
 const when = require('./when');
 
@@ -40,7 +39,7 @@ const notfunction = func => (typeof func !== 'function');
 const unless = curry1(function unless(condition, onsuccess, onfail) {
 
     return notfunction(condition) ? when(!condition, onsuccess, onfail)
-         : isonfailmissing(arguments) ? when( not(condition), onsuccess )
+         : isonfailmissing(arguments) ? when( not(condition), onsuccess, id )
          : when( not(condition), onsuccess, onfail );
 });
 

@@ -29,7 +29,10 @@ function tap(targetfunc) {
 
     validatetargetfunction(targetfunc);
     
-    return (...args) => (targetfunc(...args), args[0]);
+    return function _tap(arg1) {
+        targetfunc(...arguments);
+        return arg1
+    }
 }
 
 function validatetargetfunction(targetfunc) {
