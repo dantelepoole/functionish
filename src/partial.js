@@ -10,6 +10,8 @@ const format = require('./misc/format');
 const isfunction = require('./types/isfunction');
 const typeorclassname = require('./types/typeorclassname');
 
+const validatefunction = func => isfunction(func) || raisebadtargetfunction(func);
+
 /**
  * Return a function that pre-binds the *partialargs* to *targetfunc*, so that when the returned function is called
  * it is passed the *partialargs* followed by its own arguments.
@@ -31,14 +33,14 @@ const typeorclassname = require('./types/typeorclassname');
  */
 function partial(targetfunc, ...partialargs) {
 
-    validatetargetfunction(targetfunc);
+    validatefunction(targetfunc);
     
-    return (partialargs.length > 0) && targetfunc.bind(null, ...partialargs) || targetfunc; 
+    return partialargs.length && targetfunc.bind(null, ...partialargs)
+            ||
+           targetfunc;
 }
 
-function validatetargetfunction(targetfunc) {
-
-    if( isfunction(targetfunc) ) return targetfunc;
+function raisebadtargetfunction(targetfunc) {
 
     const errormessage = format(ERR_BAD_TARGETFUNCTION, typeorclassname(targetfunc));
     throw new TypeError(errormessage);
