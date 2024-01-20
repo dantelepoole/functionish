@@ -13,8 +13,6 @@ const ERR_BAD_FILTERPREDICATE = `functionish/lib/LazyList.filter: The predicate 
 const ERR_BAD_FLATMAP_DEPTH = `functionish/lib/LazyList.flatMap:The depth is negative or not a number.`;
 const ERR_BAD_FLATMAP_MAPFUNCTION = `functionish/lib/LazyList.flatMap: The map function has type %s. Expected a function.`;
 const ERR_BAD_MAPFUNCTION = `functionish/lib/LazyList.map: The map function has type %s. Expected a function.`;
-const ERR_BAD_REDUCER = `functionish/lib/LazyList.reduce: The reducer has type %s. Expected a function.`;
-const ERR_BAD_RIGHT_REDUCER = `functionish/lib/LazyList.reduceRight: The reducer has type %s. Expected a function.`;
 const ERR_BAD_SORTFUNCTION = `functionish/lib/LazyList.sort: The compare function has type %s. Expected a function.`;
 const ERR_BAD_SOURCE = 'functionish/lib/LazyList.from: The argument is neither interable nor a function.';
 const ERR_INSTANTIATIONERROR = 'functionish/lib/LazyList: The LazyList class cannot be instantiated directly.';
@@ -38,15 +36,12 @@ const isiterablenotstring = obj => notstring(obj) && isfunction(obj?.[Symbol.ite
 const isflattenable = obj => notstring(obj) && isfunction(obj?.[Symbol.iterator]);
 const islazylist = obj => (obj?.[SYMBOL_DUCKTYPE] === SYMBOL_DUCKTYPE);
 const ispositiveinteger = num => (Number.isSafeInteger(num) && (num >= 0));
-const issingleton = array => (array.length === 1);
 const newlazylist = iteratorfunc => ( new LazyList(iteratorfunc, CONSTRUCTORLOCK) );
 const raisebaddepth = () => { throw new TypeError(ERR_BAD_DEPTH) }
 const raisebadfilterpredicate = predicate => { throw new TypeError( format(ERR_BAD_FILTERPREDICATE, typeof predicate) ) }
 const raisebadflatMapdepth = () => { throw new TypeError(ERR_BAD_FLATMAP_DEPTH) }
 const raisebadflatMapmapfunction = mapfunc => { throw new TypeError( format(ERR_BAD_FLATMAP_MAPFUNCTION, typeof mapfunc) ) }
 const raisebadmapfunction = mapfunc => { throw new TypeError( format(ERR_BAD_MAPFUNCTION, typeof mapfunc) ) }
-const raisebadreducer = reducer => { throw new TypeError( format(ERR_BAD_REDUCER, typeof reducer) ) }
-const raisebadrightreducer = reducer => { throw new TypeError( format(ERR_BAD_RIGHT_REDUCER, typeof reducer) ) }
 const raisebadsortfunction = comparefunc => { throw new TypeError( format(ERR_BAD_SORTFUNCTION, typeof comparefunc) ) }
 const raisebadsourceerror = source => { throw new TypeError( format(ERR_BAD_SOURCE, typeof source)) }
 const raiseconstructorlockerror = () => { throw new Error(ERR_INSTANTIATIONERROR) }
@@ -111,24 +106,6 @@ class LazyList {
         const _listmap = listmap.bind(null, mapfunc, this);
 
         return newlazylist(_listmap);
-    }
-
-    reduce(reducer, initialvalue) {
-
-        isfunction(reducer) || raisebadreducer(reducer);
-
-        return issingleton(arguments) 
-             ? listreduceauto(reducer, this)
-             : listreduce(reducer, initialvalue, this);
-    }
-
-    reduceRight(reducer, initialvalue) {
-
-        isfunction(reducer) || raisebadrightreducer(reducer);
-
-        return issingleton(arguments)
-             ? listreducerightauto(reducer, this)
-             : listreduceright(reducer, initialvalue, this);
     }
 
     reverse() {
@@ -218,45 +195,6 @@ function* listflatMap(depth, mapfunc, list) {
 
 function* listmap(mapfunc, list) {
     for(const item of list) yield mapfunc(item);
-}
-
-function listreduce(reducer, initialvalue, list) {
-
-    let result = initialvalue;
-
-    for(const item of list) result = reducer(result, item);
-
-    return result;
-}
-
-function getnextiteratorvalue(iterator, donevalue) {
-
-    const item = iterator.next();
-
-    return item.done ? donevalue : item.value;
-}
-
-function listreduceauto(reducer, list) {
-
-    const iterator = getiterator(list);
-
-    let result = getnextiteratorvalue(iterator);
-    
-    for(const item of iterator) result = reducer(result, item);
-
-    return result;
-}
-
-function listreduceright(reducer, initialvalue, list) {
-    return Array.from(list).reduceRight(reducer, initialvalue);
-}
-
-function listreducerightauto(reducer, list) {
-
-    const array = Array.from(list);
-    const initialvalue = array.pop();
-
-    return array.reduceRight(reducer, initialvalue);
 }
 
 function* listreverse(list) {
