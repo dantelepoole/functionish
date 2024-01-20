@@ -4,21 +4,20 @@
 
 'use strict';
 
-const ERR_BAD_CONDITION = `functionish/unless(): The condition argument has type '%s'. Expected a function.`;
-
-const always = require('./always');
 const curry1 = require('./curry1');
-const format = require('./misc/format');
+const id = require('./id');
 const isfunction = require('./types/isfunction');
-const typeorclassname = require('./types/typeorclassname');
+const not = require('./logic/not');
+const when = require('./when');
+
+const isonfailmissing = args => (args.length < 3);
+const notfunction = func => (typeof func !== 'function');
 
 /**
- * Return a function that pass its arguments to the *condition* function and then calls the *branch* function (with the
- * same arguments) if and only if the condition returns a falsy value. If the *condition*'s return value is truthy, the
- * first argument is return unchanged.
+ * The complement to the {@link module:when when()} function, i.e. the *onsuccess* handler applies if the *condition*
+ * returns a *falsy* value and the *onfail* handler is applies if the *condition* returns a *truthy* value.
  * 
- * The *condition* must be a function, otherwise an error is thrown. The *branch* may be any value. If the *branch* is
- * not a function and the *condition* returns a falsy value, the *branch*'s value is returned.
+ * See {@link module:when when()} for further details.
  * 
  * `unless()` is curried by default with unary arity.
  * 
@@ -29,32 +28,20 @@ const typeorclassname = require('./types/typeorclassname');
  * const toarray = unless(Array.isArray, x => [x])
  * 
  * toarray( 42 ); // returns [42]
- * toarray( [1,2,3] ); // returns the argument array
+ * toarray( [1,2,3] ); // returns the argument array unaltered
  * 
  * @function unless
- * @see {@link module:unlessx unlessx()}
  * @see {@link module:when when()}
  * @param {function} condition The condition function
- * @param {any} branch The function to call or value to return if the *condition* evaluates to a truthy value
- * @returns {function}
+ * @param {any} onsuccess The function to call or value to return if the *condition* evaluates to a falsy value
+ * @param {any} onfail The function to call or value to return if the *condition* evaluates to a truthy value
+ * @returns {any}
  */
-const unless = curry1(function unless(condition, branch) {
+const unless = curry1(function unless(condition, onsuccess, onfail) {
 
-    validatecondition(condition);
-
-    isfunction(branch) || (branch = always(branch));
-    
-    return (...args) => condition(...args)
-                      ?  args[0]
-                      : branch(...args);
+    return notfunction(condition) ? when(!condition, onsuccess, onfail)
+         : isonfailmissing(arguments) ? when( not(condition), onsuccess )
+         : when( not(condition), onsuccess, onfail );
 });
-
-function validatecondition(condition) {
-
-    if( isfunction(condition) ) return condition;
-
-    const errormessage = format(ERR_BAD_CONDITION, typeorclassname(condition));
-    throw new TypeError(errormessage);
-}
 
 module.exports = unless;
