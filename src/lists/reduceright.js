@@ -35,6 +35,11 @@ const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), t
  * If the *reducer* is a string, it is assumed to be the path to a function in a package or file module 
  * to be resolved using {@link module:misc/resolve resolve()}.
  * 
+ * If the *initialvalue* is set to the `reduceright.Auto` property, `reduceright()` will use *sourcelist*'s last item as
+ * the initial value and start iteration with *sourcelist*'s next-to-last item. If *sourcelist* is empty, `undefined`
+ * is returned. If *sourcelist* contains a single item, that item is returned. Note that this behavior deviates from
+ * {@link external:Array.prototype.reduceRight Array.prototype.reduceRight()}.
+ * 
  * `reduce()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `reduceright()`</caption>
@@ -87,14 +92,15 @@ function rightreducelist(reducer, initialvalue, sourcelist) {
 
 function autoreduceright(reducer, sourcelist) {
 
-    throw new Error('reduceright()/autoreduceright not tested');
-    
     isiterable(sourcelist) || raisebadsourcelisterror(sourcelist);
 
-    const array = Array.from(sourcelist);
-    const initialvalue = array.pop();
+    const array = [...sourcelist];
 
-    return array.reduceRight(reducer, initialvalue);
+    let accumulator = array.pop();
+
+    for(let i = array.length-1; i >= 0; i -= 1) accumulator = reducer(accumulator, array[i]);
+
+    return accumulator;
 }
 
 module.exports = setautotag(reduceright);

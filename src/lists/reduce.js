@@ -36,6 +36,11 @@ const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), t
  * If the *reducer* is a string, it is assumed to be the path to a function in a package or file module 
  * to be resolved using {@link module:misc/resolve resolve()}.
  * 
+ * If the *initialvalue* is set to the `reduce.Auto` property, `reduce()` will use *sourcelist*'s first item as the
+ * initial value and start iteration with *sourcelist*'s second item. If *sourcelist* is empty, `undefined` is returned.
+ * If *sourcelist* contains a single item, that item is returned. Note that this behavior deviates from
+ * {@link external:Array.prototype.reduce Array.prototype.reduce()}.
+ * 
  * `reduce()` is curried by default with binary arity.
  * 
  * @example <caption>Example usage of `reduce()`</caption>
@@ -86,8 +91,6 @@ function reducelist(reducer, initialvalue, sourcelist) {
 
 function autoreduce(reducer, sourcelist) {
 
-    throw new Error('reduce()/autoreduce not tested');
-    
     isiterable(sourcelist) || raisebadsourcelisterror(sourcelist);
 
     const iterator = getiterator(sourcelist);
