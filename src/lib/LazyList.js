@@ -5,7 +5,6 @@
 
 'use strict';
 
-const SYMBOL_DUCKTYPE = Symbol.for('functionish/lib/LazyList/Symbol.DuckType');
 const CONSTRUCTORLOCK = Symbol('functionish/lib/LazyList/constructorlock');
 
 const ERR_BAD_DEPTH = `functionish/lib/LazyList.flat:The depth is negative or not a number.`;
@@ -19,24 +18,22 @@ const ERR_INSTANTIATIONERROR = 'functionish/lib/LazyList: The LazyList class can
 
 const format = require('util').format;
 
+const isempty = array => (array.length === 0);
 const maximumvalue = Math.max;
 const notstring = x => (typeof x !== 'string');
 const truncate = Math.trunc;
 
 const casttopositiveinteger = x => maximumvalue(0, truncate( +x || 0 ));
 
+const defer = (func, args=[]) => isempty(args) ? func : () => func(...args);
 const getiterator = iterable => iterable[Symbol.iterator]();
-const getiteratorfunction = iterable => iterable[Symbol.iterator].bind(iterable);
 const isconstructorlock = lock => (lock === CONSTRUCTORLOCK);
-const isempty = array => (array.length === 0);
-const isconcatspreadable = obj => (obj?.[Symbol.isConcatSpreadable] ?? true);
 const isfunction = func => (typeof func === 'function');
 const isiterable = obj => isfunction(obj?.[Symbol.iterator]);
 const isiterablenotstring = obj => notstring(obj) && isfunction(obj?.[Symbol.iterator]);
 const isflattenable = obj => notstring(obj) && isfunction(obj?.[Symbol.iterator]);
-const islazylist = obj => (obj?.[SYMBOL_DUCKTYPE] === SYMBOL_DUCKTYPE);
 const ispositiveinteger = num => (Number.isSafeInteger(num) && (num >= 0));
-const newlazylist = iteratorfunc => ( new LazyList(iteratorfunc, CONSTRUCTORLOCK) );
+const newlazylist = (func, ...args) => ( new LazyList( defer(func, args), CONSTRUCTORLOCK) );
 const raisebaddepth = () => { throw new TypeError(ERR_BAD_DEPTH) }
 const raisebadfilterpredicate = predicate => { throw new TypeError( format(ERR_BAD_FILTERPREDICATE, typeof predicate) ) }
 const raisebadflatMapdepth = () => { throw new TypeError(ERR_BAD_FLATMAP_DEPTH) }
@@ -48,10 +45,10 @@ const raiseconstructorlockerror = () => { throw new Error(ERR_INSTANTIATIONERROR
 
 class LazyList {
 
-    static from = source => isfunction(source) && newlazylist(source)
-                         || islazylist(source) && newlazylist(source)
-                         || isiterable(source) && newlazylist( getiteratorfunction(source) )
-                         || raisebadsourceerror(source);
+    static from = (source, ...args) => isfunction(source) && newlazylist(source, ...args)
+                                    || islazylist(source) && source
+                                    || isiterable(source) && newlazylist(getiterator, source)
+                                    || raisebadsourceerror(source);
 
     static is = islazylist;
 
@@ -63,95 +60,71 @@ class LazyList {
     }
 
     concat(...items) {
-
-        if( isempty(items) ) return this;
-
-        const _listconcat = listconcat.bind(null, this, items);
-
-        return newlazylist(_listconcat);
+        return isempty(items) && this || newlazylist(listconcat, this, items);
     }
 
     filter(predicate) {
 
-        isfunction(predicate) || raisebadfilterpredicate(predicate);
-
-        const _listfilter = listfilter.bind(null, predicate, this);
-
-        return newlazylist(_listfilter);
+        return isfunction(predicate) && newlazylist(listfilter, predicate, this)
+                ||
+               raisebadfilterpredicate(predicate);
     }
 
     flat(depth=1) {
 
-        ispositiveinteger(depth) || raisebaddepth();
-
-        const _listflat = listflat.bind(null, depth, this);
-
-        return newlazylist(_listflat);
+        return ispositiveinteger(depth) && newlazylist(listflat, depth, this)
+                ||
+               raisebaddepth();
     }
 
     flatMap(mapfunc, depth=1) {
 
-        isfunction(mapfunc) || raisebadflatMapmapfunction(mapfunc);
-        ispositiveinteger(depth) || raisebadflatMapdepth();
-
-        const _listflatMap = listflatMap.bind(null, depth, mapfunc, this);
-
-        return newlazylist(_listflatMap);
+        return isfunction(mapfunc) && ispositiveinteger(depth) && newlazylist(listflatMap, depth, mapfunc, this)
+                ||
+               (isfunction(mapfunc) && raisebadflatMapdepth())
+                ||
+               raisebadflatMapmapfunction(mapfunc);
     }
 
     map(mapfunc) {
 
-        isfunction(mapfunc) || raisebadmapfunction(mapfunc);
-
-        const _listmap = listmap.bind(null, mapfunc, this);
-
-        return newlazylist(_listmap);
+        return isfunction(mapfunc) && newlazylist(listmap, mapfunc, this)
+                ||
+               raisebadmapfunction(mapfunc);
     }
 
     reverse() {
-
-        const _listreverse = listreverse.bind(null, this);
-
-        return newlazylist(_listreverse);
+        return newlazylist(listreverse, this);
     }
 
-    slice(start=0, end) {
+    slice(start=0, end=Infinity) {
 
-        const _listslice = (arguments.length < 2)
-                         ? listslicepartial.bind(null, this, start)
-                         : listslicerange.bind(null, this, start, end);
-
-        return newlazylist(_listslice);
+        return (end === Infinity) ? newlazylist(listslicepartial, this, casttopositiveinteger(start))
+                                  : newlazylist(listslicerange, this, casttopositiveinteger(start), casttopositiveinteger(end));
     }
 
     sort(comparefunc) {
 
-        const _listsort = isempty(arguments) ? listsort.bind(null, this)
-                        : isfunction(comparefunc) ? listsortcustom.bind(null, comparefunc, this)
-                        : raisebadsortfunction(comparefunc);
-        
-        return newlazylist(_listsort);
+        return isempty(arguments) && newlazylist(listsort, this)
+                ||
+               (isfunction(comparefunc) && newlazylist(listsortcustom, comparefunc, this))
+                ||
+               raisebadsortfunction(comparefunc);
     }
-
-    get [SYMBOL_DUCKTYPE]() {
-        return SYMBOL_DUCKTYPE;
-    
-    }
-
-    [Symbol.isConcatSpreadable] = true;
 
     [Symbol.iterator]
+}
+
+function islazylist(list) {
+    return (list instanceof LazyList);
 }
 
 function* listconcat(baselist, items) {
 
     yield* baselist;
 
-    for(const item of items) {
-
-        if( isiterablenotstring(item) && isconcatspreadable(item) ) yield* item;
-        else yield item;
-    }
+    for(const item of items) isiterablenotstring(item) ? yield* item
+                                                       : yield item;
 }
 
 function* listfilter(predicate, list) {
@@ -160,25 +133,15 @@ function* listfilter(predicate, list) {
 
 function* listflat(depth, list) {
 
-    if(depth === 0) {
-
-        yield* list;
-
-    } else {
-        
-        for(const item of list) {
-            isflattenable(item)
-            ? yield* listflat(depth-1, item)
-            : yield item;
-        }
-    }
+    if(depth) for(const item of list) isflattenable(item) ? yield* listflat(depth-1, item) : yield item;
+    else yield* list;
 }
 
 function* listflatMap(depth, mapfunc, list) {
 
     if(depth === 0) {
 
-        for(const item of list) yield mapfunc(item);
+        yield* listmap(mapfunc, list);
 
     } else {
 
@@ -186,9 +149,8 @@ function* listflatMap(depth, mapfunc, list) {
             
             const mappeditem = mapfunc(item);
 
-            isflattenable(mappeditem)
-            ? yield* listflatMap(depth-1, mappeditem)
-            : yield mappeditem;
+            isflattenable(mappeditem) ? yield* listflatMap(depth-1, mappeditem)
+                                      : yield mappeditem;
         }
     }
 }
@@ -206,21 +168,18 @@ function* listreverse(list) {
 
 function* listslicepartial(list, start) {
 
-    start = casttopositiveinteger(start);
-
     const iterator = getiterator(list);
-    skiptoindex(start, iterator);
+
+    positioniterator(start, iterator);
 
     yield* iterator;
 }
 
 function* listslicerange(list, start, end) {
 
-    start = casttopositiveinteger(start);
-    end = casttopositiveinteger(end);
-
     const iterator = getiterator(list);
-    skiptoindex(start, iterator);
+
+    positioniterator(start, iterator);
 
     if(end > start) {
 
@@ -245,14 +204,8 @@ function* listsortcustom(comparefunc, list) {
     yield* Array.from(list).sort(comparefunc);
 }
 
-function skiptoindex(targetindex, iterator) {
-
-    if(targetindex > 0) {
-
-        let counter = 0;
-        
-        while(counter != targetindex && !iterator.next().done) counter += 1;
-    }
+function positioniterator(targetindex, iterator) {
+    if(targetindex > 0) while(targetindex-- && !iterator.next().done);
 }
 
 module.exports = LazyList;
