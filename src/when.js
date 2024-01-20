@@ -7,9 +7,9 @@
 const callable = require('./callable');
 const curry1 = require('./curry1');
 const id = require('./id');
-
-const initselectaction = (condition, action, alternate) => (...args) => (condition(...args) && action || alternate);
 const isfunction = require('./types/isfunction');
+
+const initselectaction = (condition, onsuccess, onfail) => (...args) => condition(...args) && onsuccess || onfail;
 
 /**
  * Return a function that encapsulates an if-then-else statement. The function first passes its arguments to the
