@@ -5,9 +5,16 @@
 'use strict';
 
 const ERR_BAD_SOURCELIST = `functionish/lists/reduceright(): The source list has type %s. Expected an iterable object.`;
+const SYMBOL_AUTOREDUCERIGHT = `functionish/lists/reduceright/autoreduceright/tag`;
+
+const AUTO_PROPERTYDESCRIPTOR = Object.freeze({
+    configurable: false,
+    enumerable  : true,
+    value       : SYMBOL_AUTOREDUCERIGHT,
+    writable    : false
+})
 
 const compose = require('../compose');
-const curry = require('../curry');
 const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
@@ -15,6 +22,8 @@ const raise = require('../errors/raise');
 const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
+const setautotag = reduce => Object.defineProperty(reduce, 'Auto', AUTO_PROPERTYDESCRIPTOR);
+const isautoreduceright = x => (x === SYMBOL_AUTOREDUCERIGHT);
 const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), typeorclassname);
 
 /**
@@ -49,17 +58,18 @@ function reduceright(reducer, initialvalue, sourcelist) {
 
     isfunction(reducer) || (reducer = resolve(reducer));
 
-    const arity = arguments.length;
-
-    return (arity === 1) ? doreduceright.bind(null, reducer)
-         : (arity === 2) ? doreduceright.bind(null, reducer, initialvalue)
-         : doreduceright(reducer, initialvalue, sourcelist);
+    switch(arguments.length) {
+        case 1: return _reduceright.bind(null, reducer);
+        case 2: return _reduceright.bind(null, reducer, initialvalue);
+        default: return _reduceright(reducer, initialvalue, sourcelist);
+    }
 
 }
 
-function doreduceright(reducer, initialvalue, sourcelist) {
+function _reduceright(reducer, initialvalue, sourcelist) {
 
-    return isfunction(sourcelist?.reduceRight) ? sourcelist.reduceRight(reducer, initialvalue)
+    return isautoreduceright(initialvalue) ? autoreduceright(reducer, sourcelist)
+         : isfunction(sourcelist?.reduceRight) ? sourcelist.reduceRight(reducer, initialvalue)
          : isiterable(sourcelist) ? rightreducelist(reducer, initialvalue, sourcelist)
          : raisebadsourcelisterror(sourcelist);
 }
@@ -75,4 +85,16 @@ function rightreducelist(reducer, initialvalue, sourcelist) {
     return accumulator;
 }
 
-module.exports = curry(2, reduceright);
+function autoreduceright(reducer, sourcelist) {
+
+    throw new Error('reduceright()/autoreduceright not tested');
+    
+    isiterable(sourcelist) || raisebadsourcelisterror(sourcelist);
+
+    const array = Array.from(sourcelist);
+    const initialvalue = array.pop();
+
+    return array.reduceRight(reducer, initialvalue);
+}
+
+module.exports = setautotag(reduceright);

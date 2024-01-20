@@ -5,6 +5,14 @@
 'use strict';
 
 const ERR_BAD_SOURCELIST = `functionish/lists/reduce(): The source list has type %s. Expected an iterable object.`;
+const SYMBOL_AUTOREDUCE = `functionish/lists/reduce/autoreduce/tag`;
+
+const AUTO_PROPERTYDESCRIPTOR = Object.freeze({
+    configurable: false,
+    enumerable  : true,
+    value       : SYMBOL_AUTOREDUCE,
+    writable    : false
+})
 
 const compose = require('../compose');
 const error = require('../errors/error');
@@ -14,6 +22,9 @@ const raise = require('../errors/raise');
 const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
+const setautotag = reduce => Object.defineProperty(reduce, 'Auto', AUTO_PROPERTYDESCRIPTOR);
+const getiterator = iterable => iterable[Symbol.iterator]();
+const isautoreduce = x => (x === SYMBOL_AUTOREDUCE);
 const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), typeorclassname);
 
 /**
@@ -49,16 +60,17 @@ function reduce(reducer, initialvalue, sourcelist) {
 
     isfunction(reducer) || (reducer = resolve(reducer));
 
-    const arity = arguments.length;
-
-    return (arity === 1) ? doreduce.bind(null, reducer)
-         : (arity === 2) ? doreduce.bind(null, reducer, initialvalue)
-         : doreduce(reducer, initialvalue, sourcelist);
+    switch(arguments.length) {
+        case 1: return _reduce.bind(null, reducer);
+        case 2: return _reduce.bind(null, reducer, initialvalue)
+        default: return _reduce(reducer, initialvalue, sourcelist);
+    }
 }
 
-function doreduce(reducer, initialvalue, sourcelist) {
+function _reduce(reducer, initialvalue, sourcelist) {
 
-    return isfunction(sourcelist?.reduce) ? sourcelist.reduce(reducer, initialvalue)
+    return isautoreduce(initialvalue) ? autoreduce(reducer, sourcelist)
+         : isfunction(sourcelist?.reduce) ? sourcelist.reduce(reducer, initialvalue)
          : isiterable(sourcelist) ? reducelist(reducer, initialvalue, sourcelist)
          : raisebadsourcelisterror(sourcelist);
 }
@@ -72,4 +84,29 @@ function reducelist(reducer, initialvalue, sourcelist) {
     return accumulator;
 }
 
-module.exports = reduce;
+function autoreduce(reducer, sourcelist) {
+
+    throw new Error('reduce()/autoreduce not tested');
+    
+    isiterable(sourcelist) || raisebadsourcelisterror(sourcelist);
+
+    const iterator = getiterator(sourcelist);
+
+    let result = getfirstiteratorvalue(iterator);
+
+    for(const item of iterator) result = reducer(result, item);
+
+    return result;
+}
+
+function getfirstiteratorvalue(iterator) {
+
+    let result = undefined;
+    const itemobject = iterator.next();
+
+    itemobject.done || (result = itemobject.value);
+
+    return result;
+}
+
+module.exports = setautotag(reduce);

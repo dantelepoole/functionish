@@ -7,7 +7,6 @@ const UNIQTHING = { label:'UNIQTHING' }
 const numbers1to5 = Object.freeze([1,2,3,4,5]);
 const numbers1to5list = Object.freeze({ [Symbol.iterator]:numbers1to5.values.bind(numbers1to5) });
 
-const id = fake(x=>x);
 const subtract = fake( (a,b)=>(a-b) );
 
 describe('lists/reduceright()', function() {
