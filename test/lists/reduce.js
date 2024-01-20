@@ -110,4 +110,52 @@ describe('lists/reduce()', function() {
             should.be(result, 15);
         }
     )
+
+    describe('If the initialvalue is set to the reduce.Auto property, reduce()', function() {
+
+        beforeEach(
+            function() {
+
+            }
+        )
+
+        it('should return undefined if the list is empty without calling the reducer', function() {
+
+                should.return.undefined(reduce, product, reduce.Auto, []);
+                should.not.be.called(product);
+        })
+
+        it(`should return the list's first item if it is the sole item in the list without calling the reducer`, function() {
+
+            should.return(UNIQTHING, reduce, id, reduce.Auto, [UNIQTHING]);
+            should.not.be.called(id);
+        })
+
+        it(`should call the reducer n-1 times with n being the number of items in the list`, function() {
+
+            reduce(product, reduce.Auto, [1,2,3,4]);
+            should.be(3, product.callCount);
+
+            reduce(sum, reduce.Auto, [1,2,3,4,5,6,7,8,9,10]);
+            should.be(9, sum.callCount);
+
+            reduce(subtract, reduce.Auto, [1,2]);
+            should.be(1, subtract.callCount);
+        })
+
+        it(`should pass the list's first and second items to the reducer on the first call`, function() {
+
+            reduce(product, reduce.Auto, [1,2,3,4]);
+            should.be.like([1,2], product.args[0]);
+        })
+
+        it(`should iterate over the list's items, starting from the second item, in the manner of reduce()`, function() {
+
+            reduce(product, reduce.Auto, [1,2,3,4]);
+
+            should.be.like([1,2], product.args[0]);
+            should.be.like([2,3], product.args[1]);
+            should.be.like([6,4], product.args[2]);
+        })
+    })
 })

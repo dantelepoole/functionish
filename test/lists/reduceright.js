@@ -7,7 +7,10 @@ const UNIQTHING = { label:'UNIQTHING' }
 const numbers1to5 = Object.freeze([1,2,3,4,5]);
 const numbers1to5list = Object.freeze({ [Symbol.iterator]:numbers1to5.values.bind(numbers1to5) });
 
+const id = fake(x=>x);
+const product = fake( (a,b)=>(a*b) );
 const subtract = fake( (a,b)=>(a-b) );
+const sum = fake( (a,b)=>(a+b) );
 
 describe('lists/reduceright()', function() {
 
@@ -103,4 +106,52 @@ describe('lists/reduceright()', function() {
             should.be(result, 85);
         }
     )
+
+    describe('If the initialvalue is set to the reduceright.Auto property, reduceright()', function() {
+
+        beforeEach(
+            function() {
+
+            }
+        )
+
+        it('should return undefined if the list is empty without calling the reducer', function() {
+
+                should.return.undefined(reduceright, subtract, reduceright.Auto, []);
+                should.not.be.called(subtract);
+        })
+
+        it(`should return the list's last item if it is the sole item in the list without calling the reducer`, function() {
+
+            should.return(UNIQTHING, reduceright, id, reduceright.Auto, [UNIQTHING]);
+            should.not.be.called(id);
+        })
+
+        it(`should call the reducer n-1 times with n being the number of items in the list`, function() {
+
+            reduceright(product, reduceright.Auto, [1,2,3,4]);
+            should.be(3, product.callCount);
+
+            reduceright(sum, reduceright.Auto, [1,2,3,4,5,6,7,8,9,10]);
+            should.be(9, sum.callCount);
+
+            reduceright(subtract, reduceright.Auto, [1,2]);
+            should.be(1, subtract.callCount);
+        })
+
+        it(`should pass the list's last and second-to-last items to the reducer on the first call`, function() {
+
+            reduceright(product, reduceright.Auto, [1,2,3,4]);
+            should.be.like([4,3], product.args[0]);
+        })
+
+        it(`should iterate over the list's items, starting from the second-to-last item, in the manner of reduce()`, function() {
+
+            reduceright(product, reduceright.Auto, [1,2,3,4]);
+
+            should.be.like([4,3], product.args[0]);
+            should.be.like([12,2], product.args[1]);
+            should.be.like([24,1], product.args[2]);
+        })
+    })
 })
