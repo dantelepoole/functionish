@@ -33,9 +33,8 @@ const isfunction = require('./types/isfunction');
  */
 const bind = curry1(function bind(target, thisvalue, ...boundargs) {
 
-    return isfunction(target)
-        ? target.bind(thisvalue, ...boundargs)
-        : thisvalue[target].bind(thisvalue, ...boundargs);
+    return isfunction(target) && target.bind(thisvalue, ...boundargs)
+                              || thisvalue[target].bind(thisvalue, ...boundargs);
 
 })
 
