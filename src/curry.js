@@ -4,18 +4,21 @@
 
 'use strict';
 
-const ERRORMSG_BAD_ARITY = `functionish/curry(): The arity is %s. Expected a positive integer.`;
+const ERRORMSG_BAD_ARITY = `functionish/curry(): The arity %s. Expected a positive integer.`;
 const ERRORMSG_BAD_FUNCTION = `functionish/curry(): The function has type %s. Expected a function.`;
 
 const compose = require('./compose');
 const error = require('./errors/error');
 const isfunction = require('./types/isfunction');
 const isinteger = require('./types/isinteger');
+const isnumberornan = require('./types/isnumberornan');
 const ispositive = require('./math/ispositive');
 const raise = require('./errors/raise');
 const type = require('./types/type');
 
-const badarityerror = compose(raise, error.Type(ERRORMSG_BAD_ARITY));
+const getarityvalueortype = x => isnumberornan(x) ? `is ${x}` : `has type ${typeof x}`;
+
+const badarityerror = compose(raise, error.Type(ERRORMSG_BAD_ARITY), getarityvalueortype);
 const badfunctionerror = compose(raise, error.Type(ERRORMSG_BAD_FUNCTION), type);
 
 /**
@@ -56,32 +59,33 @@ function curry(arity, targetfunc) {
     isinteger(arity) && ispositive(arity) || badarityerror(arity);
     isfunction(targetfunc) || badfunctionerror(targetfunc);
 
-    const cmap = new Array(arity + 2);
-    const curried = initcurried(cmap);
-    initcmap(cmap, curried, targetfunc, arity);
-
-    return curried;
+    return applycurry(arity, targetfunc);
 }
 
-function initcurried(cmap) {
+function initcurriedfunc(cmap) {
 
-    return function curried(...args) {
+    return function curriedfunc(...args) {
 
-        const curriedfunc = cmap[args.length] ?? cmap[0];
+        const curried = cmap[args.length] ?? cmap[0];
 
-        return curriedfunc(args);
+        return curried(args);
     }
 }
 
-function initcmap(cmap, curried, targetfunc, arity) {
+function applycurry(arity, targetfunc) {
+
+    const cmap = new Array(arity + 2);
+    const curriedfunc = initcurriedfunc(cmap);
 
     cmap[0] = args => targetfunc(...args);
     cmap[arity] = args => targetfunc.bind(null, ...args);;
     cmap[arity + 1] = args => targetfunc(...args);
 
-    if(arity === 1) return;
+    if(arity > 1) {
+        for(let i = 1; i < arity; i += 1) cmap[i] = args => curriedfunc.bind(null, ...args);
+    }
 
-    for(let i = 1; i < arity; i += 1) cmap[i] = args => curried.bind(null, ...args);
+    return curriedfunc;
 }
 
 module.exports = curry;
