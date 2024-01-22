@@ -1,42 +1,62 @@
 /**
- * @module misc/format
+ * @module misc/formatter
  */
 
 'use strict';
 
-const format = require('util').format;
+const ERR_BAD_FORMATSTRING = `functionish/misc/formatter(): The format string has type %s. Expected a string.`;
+const ERR_BAD_PREPROCESSOR = `functionish/misc/formatter(): The preprocessor has type %s. Expected a function.`;
+
+const compose = require('../compose');
+const error = require('../errors/error');
+const format = require('./format');
+const hasitems = require('./hasitems');
+const id = require('../id');
+const isfunction = require('../types/isfunction');
+const isstring = require('../types/isstring');
+const isvoid = require('../types/isvoid');
+const raise = require('../errors/raise');
+const typeorclassname = require('../types/typeorclassname');
+
+const raisebadformatstring = compose(raise, error.Type(ERR_BAD_FORMATSTRING), typeorclassname);
+const raisebadpreprocessor = compose(raise, error.Type(ERR_BAD_PREPROCESSOR), typeorclassname);
+
+const initformatter = (formatstring, processor) => (...args) => format(formatstring, ...processor(...args));
 
 /**
- * Return a function that passes its arguments to their corresponding *argumenthandlers* and returns a string formatted
- * with the *formatstring*. If an argument has no corresponding *argumenthandler*, its value is used instead.
- * 
- * @example <caption>Example usage of `formatter()`</caption>
- * 
- * const { formatter } = require('functionish/misc');
- * 
- * const user = { name:'Douglas Adams' }
- * const getusername = user => user.name;
- * const welcomemessage = formatter('Welcome, %s. Your user-id is %d', getusername);
- * 
- * welcomemessage(user, 42); // returns "Welcome, Douglas Adams. Your user-id is 42."
- * 
- * @function formatter
- * @see {@link externel:util.format format()}
- * @param {string} formatstring A printf-like format string
- * @param {...function[]} argumenthandlers The optional argumenthandlers
- * @returns {string}
+ * to do
  */
-function formatter(formatstring, ...argumenthandlers) {
+function formatter(formatstring, ...processors) {
 
-    formatstring = String(formatstring);
+    isstring(formatstring) || raisebadformatstring(formatstring);
 
-    return function _formatter(...args) {
+    return hasitems(processors)
+         ? initformatter(formatstring, initpreprocessor(processors))
+         : format.bind(null, formatstring);
+}
 
-        for(let i = 0; i < argumenthandlers.length; i += 1) args[i] = argumenthandlers[i]( args[i] );
+function initpreprocessor(processors) {
 
-        return format(formatstring, ...args);
-    }   
+    for(let i=0; i<processors.length; i += 1) {
 
+        if( isfunction(processors[i]) ) continue;
+        else if( isvoid(processors[i]) ) processors[i] = id;
+        else raisebadpreprocessor(processors[i]);
+    }
+
+    return composeprocessors(processors);
+}
+
+function composeprocessors(processors) {
+
+    return function preprocessor(...args) {
+
+        if(args.length < processors.length) args.length = processors.length;
+
+        for(let i = 0; i < processors.length; i += 1) args[i] = processors[i]( args[i] );
+
+        return args;
+    }
 }
 
 module.exports = formatter;
