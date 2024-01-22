@@ -13,7 +13,6 @@ const isiterable = require('../types/isiterable');
 const issingleton = require('../arrays/issingleton');
 const list = require('./list');
 const raise = require('../errors/raise');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
@@ -27,9 +26,6 @@ const isfilterable = obj => isfunction(obj?.filter);
  * 
  * If the *sourcelist* has a `filter()`-method (e.g. an Array) the *predicate* is passed to this method and result
  * is returned.
- * 
- * If the *predicate* is not a function, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `filter()` is curried by default with unary arity.
  * 
@@ -50,8 +46,6 @@ const isfilterable = obj => isfunction(obj?.filter);
  * @returns {iterable} 
  */
 function filter(predicate, sourcelist) {
-
-    isfunction(predicate) || (predicate = resolve(predicate));
 
     return issingleton(arguments) ? filter.bind(null, predicate)
          : isfilterable(sourcelist) ? sourcelist.filter(predicate)

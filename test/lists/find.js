@@ -48,14 +48,6 @@ describe('lists/find()', function() {
         }
     )
 
-    it('should resolve a string predicate argument to a function in a package', function() {
-            
-        const sourcelist = { [Symbol.iterator]:paths.values.bind(paths) }
-        const result = find('path#isAbsolute', sourcelist);
-
-        should.be('/', result);
-    })
-
     it(`should pass the predicate to the list's find() method if it has one`,
         function() {
             

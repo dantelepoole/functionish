@@ -46,14 +46,6 @@ describe( 'lists/filter()', function() {
             should.throw(filter, iseven, { filter:'notamethod' });
         })
 
-        it('should resolve a string predicate argument to a function in a package', function() {
-            
-            const sourcelist = { [Symbol.iterator]:paths.values.bind(paths) }
-            const resultlist = filter('path#isAbsolute', sourcelist);
-
-            should.be.like(['/', '/home'], [...resultlist]);
-        })
-
         it(`should call the source list's filter() method if it has one and return the result`, function() {
 
             const fakefilter = fake(x=>x);

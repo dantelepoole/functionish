@@ -12,7 +12,6 @@ const issingleton = require('../arrays/issingleton');
 const isstring = require('../types/isstring');
 const isvoid = require('../types/isvoid');
 const not = require('../logic/not');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const notiterable = not(isiterable);
@@ -23,9 +22,8 @@ const raisebadlisterror = exception('TypeError', ERR_BAD_LIST, typeorclassname);
  * value for each item. This function is the counterpart to {@link module:any any()}.
  * 
  * If the *predicate* is <abbr title="null or undefined">void</abbr>, `none()` evaluates the boolish values of the
- * individual *sourcelist* items instead. If the *predicate* is a string, it is assumed to be the path to a function in a
- * package or file module to be resolved using {@link module:misc/resolve resolve()}. If *predicate* is neither
- * <abbr title="null or undefined">void</abbr> nor a function or string, an error is thrown.
+ * individual *sourcelist* items instead. If *predicate* is neither
+ * <abbr title="null or undefined">void</abbr> nor a function, an error is thrown.
  * 
  * If the *sourcelist* is empty, `none()` returns `true`.
  * 
@@ -54,8 +52,6 @@ const raisebadlisterror = exception('TypeError', ERR_BAD_LIST, typeorclassname);
  * @returns {boolean} 
  */
 function none(predicate, sourcelist) {
-
-    isstring(predicate) && (predicate = resolve(predicate));
 
     if( issingleton(arguments) ) {
         return none.bind(null, predicate);

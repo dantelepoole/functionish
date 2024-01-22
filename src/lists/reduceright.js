@@ -19,7 +19,6 @@ const error = require('../errors/error');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const raise = require('../errors/raise');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const setautotag = reduce => Object.defineProperty(reduce, 'Auto', AUTO_PROPERTYDESCRIPTOR);
@@ -31,9 +30,6 @@ const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), t
  * a `reduceRight()` method, call with the *reducer* function and the *initialvalue* and return the result. Otherwise,
  * iterate over *sourcelist* in reverse and call the *reducer* with each item and the previous call's return value (or,
  * on the first call, the *initialvalue*) and return the result.
- * 
- * If the *reducer* is a string, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * If the *initialvalue* is set to the `reduceright.Auto` property, `reduceright()` will use *sourcelist*'s last item as
  * the initial value and start iteration with *sourcelist*'s next-to-last item. If *sourcelist* is empty, `undefined`
@@ -60,8 +56,6 @@ const raisebadsourcelisterror = compose(raise, error.Type(ERR_BAD_SOURCELIST), t
  * @returns {any} The reduced value
  */
 function reduceright(reducer, initialvalue, sourcelist) {
-
-    isfunction(reducer) || (reducer = resolve(reducer));
 
     switch(arguments.length) {
         case 1: return _reduceright.bind(null, reducer);

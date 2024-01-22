@@ -8,15 +8,11 @@ const INDEX_NOT_FOUND = -1;
 
 const isfunction = require('../types/isfunction');
 const issingleton = require('../arrays/issingleton');
-const resolve = require('../misc/resolve');
 
 /**
  * If *sourcelist* has a `findIndex()` method, it is passed the *predicate* and the result is returned. Otherwise,
  * return the index of the first value in *sourcelistlist* for which the *predicate* function returns a truthy value
  * or `-1` if the *predicate* returns a falsy value for each item in the *sourcelist*.
- * 
- * If the *predicate* is a string, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `findindex()` is curried by default with unary arity.
  * 
@@ -36,8 +32,6 @@ const resolve = require('../misc/resolve');
  * @returns {any}
  */
 function findindex(predicate, sourcelist) {
-
-    isfunction(predicate) || (predicate = resolve(predicate));
 
     return issingleton(arguments) ? findindex.bind(null, predicate)
          : isfunction(sourcelist?.findIndex) ? sourcelist.findIndex(predicate)

@@ -13,7 +13,6 @@ const isiterable = require('../types/isiterable');
 const issingleton = require('../arrays/issingleton');
 const list = require('./list');
 const raise = require('../errors/raise');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
@@ -23,9 +22,6 @@ const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassna
  * return the result. Otherwise, return a lazy iterable object that passes each value in *source* to the *mapfunc*
  * function and flattens the result by one level. Effectively the combination of a call to 
  * {@link module:lists/flat flat()} followed by a call to {@link module:lists/map map()}.
- * 
- * If the *mapfunc* is a string, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `flatmap()` is curried by default with unary arity.
  * 
@@ -51,8 +47,6 @@ const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassna
  * @returns {iterable}
  */
 function flatmap(mapfunc, source) {
-
-    isfunction(mapfunc) || (mapfunc = resolve(mapfunc));
 
     return issingleton(arguments) ? flatmap.bind(null, mapfunc)
          : isfunction(source?.flatMap) ? source.flatMap(mapfunc)

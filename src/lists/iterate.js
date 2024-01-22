@@ -10,7 +10,6 @@ const exception = require('../errors/exception');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const issingleton = require('../arrays/issingleton');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 const validator = require('../errors/validator');
 
@@ -25,9 +24,6 @@ const validatelist = validator(
  * The *iteratorfunc* is actually called with two parameters: the current item of *sourcelist* and an `abort()` function
  * that *iteratorfunc* can call to abort further iteration. In that event, the argument passed to the `abort()` 
  * unction is returned instead of the *sourcelist* itself.
- * 
- * If the *iteratorfunc* is not a function, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `iterate()` is curried by default with unary arity.
  * 
@@ -48,8 +44,6 @@ const validatelist = validator(
  * @returns {iterable} 
  */
 function iterate(iteratorfunc, sourcelist) {
-
-    isfunction(iteratorfunc) || (iteratorfunc = resolve(iteratorfunc));
 
     if( issingleton(arguments) ) return iterate.bind(null, iteratorfunc);
     

@@ -10,7 +10,6 @@ const exception = require('../errors/exception');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const issingleton = require('../arrays/issingleton');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 const validator = require('../errors/validator');
 
@@ -25,9 +24,6 @@ const bufferselector = (predicate, buffertrue, bufferfalse) => item => predicate
  * Separate the items in *sourcelist* depending on whether or not *predicate* accepts or rejects an
  * item. The return value is a two-item array with the first array containing an array of items for which *predicate*
  * returned `true` and the second containing an array of items for which *predicate* returned `false`.
- * 
- * If the *predicate* is not a function, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `separate()` is curried by default with unary arity.
  * 
@@ -47,8 +43,6 @@ const bufferselector = (predicate, buffertrue, bufferfalse) => item => predicate
  * @returns {any[][]}
  */
 function separate(predicate, sourcelist) {
-
-    isfunction(predicate) || (predicate = resolve(predicate));
 
     return issingleton(arguments)
          ? _separate.bind(null, predicate)

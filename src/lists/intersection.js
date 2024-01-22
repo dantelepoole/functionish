@@ -4,11 +4,13 @@
 
 'use strict';
 
+const ERR_BAD_HASHFUNC = `functionish/lists/intersection(): The hash function has type %s. Expected a function or null/undefined.`;
 const ERR_BAD_LIST = `functionish/lists/intersection(): The list has type %s. Expected an iterable object.`;
 
 const and = require('../logic/and');
 const bind = require('../bind');
 const compose = require('../compose');
+const error = require('../errors/error');
 const exception = require('../errors/exception');
 const hashset = require('../misc/hashset');
 const isfunction = require('../types/isfunction');
@@ -16,7 +18,7 @@ const isiterable = require('../types/isiterable');
 const isvoid = require('../types/isvoid');
 const list = require('./list');
 const or = require('../logic/or');
-const resolve = require('../misc/resolve');
+const raise = require('../errors/raise');
 const tap = require('../tap');
 const typeorclassname = require('../types/typeorclassname');
 const uniqfilter = require('../misc/uniqfilter');
@@ -32,6 +34,9 @@ const validatelist = tap(
     )
 )
 
+const raisebadhashfuncerror = compose(raise, error.Type(ERR_BAD_HASHFUNC), typeorclassname);
+const validatehashfunction = or(isfunctionorvoid, raisebadhashfuncerror);
+
 const partialintersection = (hashfunc, list1) => _intersectionlist.bind(null, hashfunc, validatelist(list1));
 
 /**
@@ -44,9 +49,6 @@ const partialintersection = (hashfunc, list1) => _intersectionlist.bind(null, ha
  * 
  * If *list1* is an array, an array is returned. Otherwise, *list1* and *list2* are presumed to be
  * iterable objects and an iterable object is returned that operates lazily.
- * 
- * If the *hashfunc* is a string, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `intersection()` is curried by default with binary arity.
  * 
@@ -66,9 +68,9 @@ const partialintersection = (hashfunc, list1) => _intersectionlist.bind(null, ha
  */
 function intersection(hashfunc, list1, list2) {
 
-    isfunctionorvoid(hashfunc) || (hashfunc = resolve(hashfunc));
+    validatehashfunction(hashfunc);
 
-    let arity = arguments.length;
+    const arity = arguments.length;
 
     return (arity === 1) ? intersection.bind(null, hashfunc)
          : (arity === 2) ? compose( partialintersection(hashfunc, list1), validatelist)

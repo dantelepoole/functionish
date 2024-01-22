@@ -4,6 +4,7 @@
 
 'use strict';
 
+const ERR_BAD_COMPAREFUNC = `functionish/lists/sort(): The compare function has type %s. Expected a function or null/undefined.`;
 const ERR_BAD_LIST = `functionish/lists/sort(): The source list has type %s. Expected an iterable object.`;
 
 const compose = require('../compose');
@@ -15,20 +16,19 @@ const isvoid = require('../types/isvoid');
 const list = require('./list');
 const or = require('../logic/or');
 const raise = require('../errors/raise');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const isfunctionorvoid = or(isfunction, isvoid);
 const issortable = obj => isfunction(obj?.sort);
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
 
+const raisebadcomparefuncerror = compose(raise, error.Type(ERR_BAD_COMPAREFUNC), typeorclassname);
+const validatecomparefunction = or(isfunctionorvoid, raisebadcomparefuncerror);
+
 /**
  * If *sourcelist* has a `sort()` method, call it with the *comparefunc* function and return
  * the result. Otherwise, return a lazy list that iterates over *sourcelist*'s item in sorted order, using
  * *comparefunc* to compare items.
- * 
- * If the *comparefunc* is neither a function nor <abbr title="null or undefined">void</abbr>, it is assumed
- * to be the path to a function in a package or file module to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `sort()` is curried by default with unary arity.
  * 
@@ -40,7 +40,7 @@ const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassna
  */
 function sort(comparefunc, sourcelist) {
 
-    isfunctionorvoid(comparefunc) || (comparefunc = resolve(comparefunc));
+    validatecomparefunction(comparefunc);
 
     return issingleton(arguments) ? sort.bind(null, comparefunc)
          : issortable(sourcelist) ? sourcelist.sort(comparefunc)

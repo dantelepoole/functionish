@@ -31,16 +31,10 @@ describe( 'lists/diff()', function() {
             }
         )
         
-        it('should throw if the hash function is not a function, a string or null/undefined', function() {
+        it('should throw if the hash function is not a function or null/undefined', function() {
             should.throw(diff, 42, paths, paths);
             should.throw(diff, {}, paths, paths);
             should.throw(diff, paths, paths, paths);
-        })
-        
-        it('should throw if the hash function is a string that does not resolve to a function in a package or file module', function() {
-            
-            should.throw(diff, 'path#FuBar', paths, paths);
-            should.throw(diff, 'path#delimiter', paths, paths);
         })
 
         it(`should throw if the first list is not iterable`, function() {

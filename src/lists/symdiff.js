@@ -19,7 +19,6 @@ const list = require('./list');
 const not = require('../logic/not');
 const or = require('../logic/or');
 const raise = require('../errors/raise');
-const resolve = require('../misc/resolve');
 const uniqfilter = require('../misc/uniqfilter');
 const tap = require('../tap');
 const typeorclassname = require('../types/typeorclassname');
@@ -39,8 +38,6 @@ const partialsymdiff = (hashfunc, list1) => _symdiff.bind(null, hashfunc, valida
  * *list*, with any duplicates removed, using the optional *hashfunc* to compare list items.
  * 
  * If *hashfunc* is <abbr title="null or undefined">void</abbr>, list items are compared using string equality.
- * If the *hashfunc* is a string, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `symdiff()` is curried by default with binary arity.
  * 

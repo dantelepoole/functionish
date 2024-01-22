@@ -35,12 +35,6 @@ describe( 'lists/intersection()', function() {
             should.throw(intersection, {}, paths, paths);
             should.throw(intersection, paths, paths, paths);
         })
-        
-        it('should throw if the hash function is a string that does not resolve to a function in a package or file module', function() {
-            
-            should.throw(intersection, 'path#FuBar', paths, paths);
-            should.throw(intersection, 'path#delimiter', paths, paths);
-        })
 
         it(`should throw if the first list is not iterable`, function() {
             

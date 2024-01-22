@@ -12,7 +12,6 @@ const isdefined = require('../types/isdefined');
 const isfunction = require('../types/isfunction');
 const isiterable = require('../types/isiterable');
 const issingleton = require('../arrays/issingleton');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 const validator = require('../errors/validator');
 
@@ -32,9 +31,6 @@ const validatesourcelist = validator(
  * holding the items for which *selectgroup* returned that key.
  * 
  * If *keyselector* returns <abbr title="null or undefined">void</abbr> for an item, that item is discarded.
- * 
- * If the *keyselector* is a string, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `groupby()` is curried by default with unary arity.
  * 
@@ -78,8 +74,6 @@ const validatesourcelist = validator(
  * @returns {object} 
  */
 function groupby(keyselector, sourcelist) {
-
-    isfunction(keyselector) || (keyselector = resolve(keyselector));
 
     if( issingleton(arguments) ) return groupby.bind(null, keyselector);
 

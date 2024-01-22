@@ -19,7 +19,7 @@ describe( 'lists/map()', function() {
             }
         )
         
-        it('should throw if the mapfunc is not a function nor a string', function() {
+        it('should throw if the mapfunc is not a function', function() {
             
             should.throw(map, 0, numbers1to10);
             should.throw(map, {}, numbers1to10);
@@ -30,26 +30,12 @@ describe( 'lists/map()', function() {
             should.throw(map, 1n, numbers1to10);
         })
 
-        it('should throw if the mapfunc is a string that does not resolve to a function in a package or file module', function() {
-            
-            should.throw(map, 'path#FuBar', numbers1to10);
-            should.throw(map, 'path#delimiter', numbers1to10);
-        })
-
         it(`should throw if the source list has no map()-method and is not iterable`, function() {
             
             should.throw(map, double, {});
             should.throw(map, double, null);
             should.throw(map, double, map);
             should.throw(map, double, { map:'notamethod' });
-        })
-
-        it('should resolve a string mapfunc argument to a function in a package', function() {
-            
-            const sourcelist = { [Symbol.iterator]:absolutepaths.values.bind(absolutepaths) }
-            const resultlist = map('path#isAbsolute', sourcelist);
-
-            should.be.like([true, true], [...resultlist]);
         })
 
         it(`should call the source list's map() method if it has one and return the result`, function() {

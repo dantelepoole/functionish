@@ -45,13 +45,6 @@ describe( 'lists/sort()', function() {
             should.throw(sort, subtract, { filter:'notamethod' });
         })
 
-        it('should resolve a string predicate argument to a function in a package', function() {
-            
-            const sourcelist = { [Symbol.iterator]:paths.values.bind(paths) }
-
-            should.return.an.iterable(sort, 'path#isAbsolute', sourcelist);
-        })
-
         it(`should call the source list's sort() method if it has one and return the result`, function() {
 
             const fakesort = fake(x=>x);

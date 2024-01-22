@@ -13,7 +13,6 @@ const isiterable = require('../types/isiterable');
 const issingleton = require('../arrays/issingleton');
 const list = require('./list');
 const raise = require('../errors/raise');
-const resolve = require('../misc/resolve');
 const typeorclassname = require('../types/typeorclassname');
 
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
@@ -27,9 +26,6 @@ const ismappable = obj => isfunction(obj?.map);
  * 
  * If the *sourcelist* has a `map()`-method (e.g. an Array) the *mapfunc* is passed to this method and result
  * is returned.
- * 
- * If the *mapfunc* is not a function, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `map()` is curried by default with unary arity.
  * 
@@ -49,8 +45,6 @@ const ismappable = obj => isfunction(obj?.map);
  * @returns {iterable}
  */
 function map(mapfunc, sourcelist) {
-
-    isfunction(mapfunc) || (mapfunc = resolve(mapfunc));
 
     return issingleton(arguments) ? map.bind(null, mapfunc)
          : ismappable(sourcelist) ? sourcelist.map(mapfunc)

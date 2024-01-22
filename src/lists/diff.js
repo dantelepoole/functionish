@@ -4,6 +4,7 @@
 
 'use strict';
 
+const ERR_BAD_HASHFUNC = `functionish/lists/diff(): The hash function has type %s. Expected a function or null/undefined.`;
 const ERR_BAD_LIST = `functionish/lists/diff(): The list argument has type %s. Expected an iterable object.`;
 
 const compose = require('../compose');
@@ -15,13 +16,14 @@ const isvoid = require('../types/isvoid');
 const list = require('./list');
 const or = require('../logic/or');
 const raise = require('../errors/raise');
-const resolve = require('../misc/resolve');
 const tap = require('../tap');
 const typeorclassname = require('../types/typeorclassname');
 const uniqfilter = require('../misc/uniqfilter');
 
 const isfunctionorvoid = or(isfunction, isvoid);
 
+const raisebadhashfuncerror = compose(raise, error.Type(ERR_BAD_HASHFUNC), typeorclassname);
+const validatehashfunction = or(isfunctionorvoid, raisebadhashfuncerror);
 const raisebadlisterror = compose(raise, error.Type(ERR_BAD_LIST), typeorclassname);
 const validatelist = tap( or(isiterable, raisebadlisterror) );
 
@@ -31,9 +33,6 @@ const partialdiff = (hashfunc, list1) => _difflist.bind(null, hashfunc, validate
  * Return a lazy iterable object that produces only those items from *list1* that are not present in *list2*, with
  * any duplicates removed, using the optional *hashfunc* to compare list items. If *hashfunc* is
  * <abbr title="null or undefined">void</abbr>, list items are compared using string equality.
- * 
- * If the *hashfunc* is a string, it is assumed to be the path to a function in a package or file module 
- * to be resolved using {@link module:misc/resolve resolve()}.
  * 
  * `diff()` is curried by default with binary arity.
  * 
@@ -76,8 +75,8 @@ const partialdiff = (hashfunc, list1) => _difflist.bind(null, hashfunc, validate
  */
 function diff(hashfunc=null, list1, list2) {
 
-    isfunctionorvoid(hashfunc) || (hashfunc = resolve(hashfunc));
-
+    validatehashfunction(hashfunc);
+    
     const arity = arguments.length;
 
     return (arity === 1) ? diff.bind(null, hashfunc)
