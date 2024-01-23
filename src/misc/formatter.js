@@ -15,6 +15,7 @@ const id = require('../id');
 const isfunction = require('../types/isfunction');
 const isstring = require('../types/isstring');
 const isvoid = require('../types/isvoid');
+const partial = require('../partial');
 const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
 
@@ -31,11 +32,12 @@ function formatter(formatstring, ...processors) {
     isstring(formatstring) || raisebadformatstring(formatstring);
 
     return hasitems(processors)
-         ? initformatter(formatstring, initpreprocessor(processors))
+         ? initformatter(formatstring, initprocessor(processors))
          : format.bind(null, formatstring);
 }
 
-function initpreprocessor(processors) {
+
+function initprocessor(processors) {
 
     for(let i=0; i<processors.length; i += 1) {
 
