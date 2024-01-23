@@ -15,7 +15,6 @@ const id = require('../id');
 const isfunction = require('../types/isfunction');
 const isstring = require('../types/isstring');
 const isvoid = require('../types/isvoid');
-const partial = require('../partial');
 const raise = require('../errors/raise');
 const typeorclassname = require('../types/typeorclassname');
 
