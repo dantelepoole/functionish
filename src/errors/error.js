@@ -4,8 +4,7 @@
 'use strict';
 
 const compose = require('../compose');
-const format = require('../misc/format');
-const isfunction = require('../types/isfunction');
+const formatter = require('../misc/formatter');
 
 const errorctormap = Object.freeze({
     ['Error']          : message => new Error(message), 
@@ -14,12 +13,15 @@ const errorctormap = Object.freeze({
     ['TypeError']      : message => new TypeError(message)
 });
 
+const geterrorctor = errorname => errorctormap[errorname] ?? customerrorctor.bind(null, errorname);
+
 /**
  * Return a function that creates an Error-instance with the specified *errorname* (default: 'Error'). The 
  * errormessage is formatted using the *messageformat* and the returned function's arguments.
  * 
- * If the *messageformat* is a function instead of a string, the messageformat function is called with the arguments
- * passed to the returned function and its return value is used as the errormessage.
+ * One or more *processor* functions can be passed, each which will called with the corresponding argument passed to
+ * the returned function. If any *processor* is <abbr title="null or undefined">void</abbr>, the corresponding argument
+ * will pass through unchanged, as are any surplus argument without corresponding *processor* functions.
  * 
  * `error()` has three methods names `error.Range`, `error.Reference` and `error.Type` that return functions to build
  * Error-instances with the names 'RangeError', 'ReferenceError' and 'TypeError' respectively.
@@ -36,30 +38,27 @@ const errorctormap = Object.freeze({
  * throw buildargumenterror('username'); // throws an Error called `ArgumentError` and with the message:
  *                                       // "The type of the argument username is invalid."
  * 
- * @example <caption>Example usage of `error()` with a function messageformat</caption>
+ * @example <caption>Example usage of `error()` with processors</caption>
  * 
  * const { error } require('functionish/errors');
  * 
- * const messageformatter = (...args) => `The arguments ${ args.join() } are invalid.`;
- * const buildargumenterror = error('ArgumentError', messageformatter);
+ * const messageformat = `User %d has insufficient permission: '%s'.`;
+ * const getuserid = user => user.id;
+ * const getpermission => session => session.getpermission();
+ * const buildpermissionerror = error('PermissionError', messageformat, getuser, getpermission);
  * 
- * throw buildargumenterror('username', 'userid', 'useraddress');
- * // throws an Error called `ArgumentError` and with the message: "The arguments username,userid,useraddress are invalid."
+ * throw buildpermissionerror(user, session);
+ * // throws an Error called `PermissionError` with the message: "User 42 has insufficient permission 'read'."
  * 
  * @function error
  * @see {@link external:util.format util.format()}
- * @param {string|function} [errorname='Error'] The name of the errors to build
+ * @param {string} [errorname='Error'] The name of the errors to build
  * @param {string} messageformat The format of the errormessage
+ * @param {...function[]} processors One or more functions to preprocess individual arguments 
  * @returns {Error}
  */
-function error(errorname='Error', messageformat) {
-
-    const errorctor = errorctormap[errorname] ?? customerrorctor.bind(null, errorname);
-    const messageformatter = isfunction(messageformat)
-                           ? messageformat
-                           : format.bind(null, messageformat);
-
-    return compose(errorctor, messageformatter);
+function error(errorname='Error', messageformat, ...processors) {
+    return compose( geterrorctor(errorname), formatter(messageformat, ...processors) );
 }
 
 function customerrorctor(errorname, errormessage) {
