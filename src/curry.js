@@ -59,33 +59,11 @@ function curry(arity, targetfunc) {
     isinteger(arity) && ispositive(arity) || badarityerror(arity);
     isfunction(targetfunc) || badfunctionerror(targetfunc);
 
-    return applycurry(arity, targetfunc);
-}
+    const curried = (...args) => (args.length > arity) ? targetfunc(...args)
+                               : (args.length === arity) ? targetfunc.bind(null, ...args)
+                               : curried.bind(null, ...args);
 
-function initcurriedfunc(cmap) {
-
-    return function curriedfunc(...args) {
-
-        const curried = cmap[args.length] ?? cmap[0];
-
-        return curried(args);
-    }
-}
-
-function applycurry(arity, targetfunc) {
-
-    const cmap = new Array(arity + 2);
-    const curriedfunc = initcurriedfunc(cmap);
-
-    cmap[0] = args => targetfunc(...args);
-    cmap[arity] = args => targetfunc.bind(null, ...args);;
-    cmap[arity + 1] = args => targetfunc(...args);
-
-    if(arity > 1) {
-        for(let i = 1; i < arity; i += 1) cmap[i] = args => curriedfunc.bind(null, ...args);
-    }
-
-    return curriedfunc;
+    return curried;
 }
 
 module.exports = curry;
