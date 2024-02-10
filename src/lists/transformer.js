@@ -21,23 +21,23 @@ class Transformer {
 
     #transformations = []
 
-    #addmap(mapfuncs) {
+    #addmaps(mapfuncs) {
         this.#transformations.push( maptransform( compose(...mapfuncs) ) );
     }
 
-    #addfilter(filterfuncs) {
+    #addfilters(filterfuncs) {
         this.#transformations.push( ...filterfuncs.map(filtertransform) );
     }
 
     map(...mapfuncs) {
 
-        isempty(mapfuncs) || this.#addmap(mapfuncs);
+        isempty(mapfuncs) || this.#addmaps(mapfuncs);
         return this;
     }
 
     filter(...filterfuncs) {
 
-        isempty(filterfuncs) || this.#addfilter(filterfuncs);
+        isempty(filterfuncs) || this.#addfilters(filterfuncs);
         return this;
     }
 
