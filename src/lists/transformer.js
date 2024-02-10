@@ -4,51 +4,56 @@
 
 'use strict';
 
-const True = require('../True');
+const TRANSFORM_DISCARD = null;
+
 const and = require('../logic/and');
 const compose = require('../compose');
+const id = require('../id');
 const isempty = require('../misc/isempty');
+const or = require('../logic/or');
 
-const initfiltertransform = filter => data => !!filter(data.value);
-const initfiltertransforms = compose(initfiltertransform, and);
-const initmaptransform = map => data => True(data.value = map(data.value));
-const initmaptransforms = compose(initmaptransform, compose);
+const compile = transforms => and(...transforms, id);
+const filtertransform = filter => data => !!filter(data.value);
+const maptransform = map => data => (data.value = map(data.value), true);
+const pojo = value => ({value});
 
 class Transformer {
 
-    #transforms = []
+    #transformations = []
 
-    map(...transforms) {
-        isempty(transforms) || this.#transforms.push( initmaptransforms(...transforms) );
+    #addmap(mapfuncs) {
+        this.#transformations.push( maptransform( compose(...mapfuncs) ) );
+    }
+
+    #addfilter(filterfuncs) {
+        this.#transformations.push( ...filterfuncs.map(filtertransform) );
+    }
+
+    map(...mapfuncs) {
+
+        isempty(mapfuncs) || this.#addmap(mapfuncs);
         return this;
     }
 
-    filter(...transforms) {
-        isempty(transforms) || this.#transforms.push( initfiltertransforms(...transforms) );
+    filter(...filterfuncs) {
+
+        isempty(filterfuncs) || this.#addfilter(filterfuncs);
         return this;
     }
 
     compile() {
-        return _transformer.bind(null, this.#transforms.slice());
+
+        const transformation = compile(this.#transformations);
+
+        return or(
+            compose(transformation, pojo),
+            TRANSFORM_DISCARD
+        )
     }
 }
 
 function transformer(...maptransforms) {
-    
-    return isempty(maptransforms)
-         ? new Transformer()
-         : new Transformer().map(...maptransforms);
-}
-
-function _transformer(transforms, value) {
-T
-    const data = { value }
-
-    let success = true;
-
-    for(let i = 0; success && i < transforms.length; i += 1) success = transforms[i](data);
-
-    return success ? data : null;
+    return new Transformer().map(...maptransforms);
 }
 
 module.exports = transformer;
