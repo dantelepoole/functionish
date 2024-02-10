@@ -50,7 +50,7 @@ function raiseerror(errorname, messageformat, ...args) {
 
     error.name = (errorname ?? 'Error');
 
-    raise(error);
+    throw error;
 }
 
 module.exports = validator2;
