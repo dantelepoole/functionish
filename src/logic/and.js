@@ -4,22 +4,27 @@
 
 'use strict';
 
-const ALWAYS_TRUE = x=>true;
+const MAX_PREDICATE_COUNT = 10;
+const PREDICATELESS_CONJUNCTOR = () => () => true;
 
-const always = require('../always');
 const callable = require('../callable');
 const head = require('../arrays/head');
 
 const conjunctormap = Object.freeze([
-    always(ALWAYS_TRUE),
+    PREDICATELESS_CONJUNCTOR,
     head,
     ([f1, f2]) => (...args) => f1(...args) && f2(...args),
     ([f1, f2, f3]) => (...args) => f1(...args) && f2(...args) && f3(...args),
     ([f1, f2, f3, f4]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args),
-    ([f1, f2, f3, f4, f5]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args)
+    ([f1, f2, f3, f4, f5]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args),
+    ([f1, f2, f3, f4, f5, f6]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args) && f6(...args),
+    ([f1, f2, f3, f4, f5, f6, f7]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args) && f6(...args) && f7(...args),
+    ([f1, f2, f3, f4, f5, f6, f7, f8]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args) && f6(...args) && f7(...args) && f8(...args),
+    ([f1, f2, f3, f4, f5, f6, f7, f8, f9]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args) && f6(...args) && f7(...args) && f8(...args) && f9(...args),
+    ([f1, f2, f3, f4, f5, f6, f7, f8, f9, f10]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args) && f6(...args) && f7(...args) && f8(...args) && f9(...args) && f10(...args)
 ]);
 
-const largeconjunctor = predicates => conjunct.bind(null, predicates);
+const conjunct = predicates => conjunctormap[predicates.length](predicates);
 
 /**
  * Functional variant of Javascript's `&&` operator. Returns a function that passes its arguments to each
@@ -58,18 +63,27 @@ function and(...predicates) {
 
     predicates = predicates.map(callable);
 
-    const conjunctor = conjunctormap[predicates.length] ?? largeconjunctor;
+    return (predicates.length > MAX_PREDICATE_COUNT)
+         ? batchconjunct(predicates)
+         : conjunct(predicates);
 
-    return conjunctor(predicates);
 }
 
-function conjunct(predicates, ...args) {
+function batchconjunct(predicates) {
 
-    let result = true;
+    const batchedpredicates = [];
 
-    for(let i = 0; result && i < predicates.length; i += 1) result = predicates[i](...args);
+    for(let i = 0; i < predicates.length; i += MAX_PREDICATE_COUNT) {
 
-    return result;
+        const predicatebatch = predicates.slice(i, i + MAX_PREDICATE_COUNT);
+        const predicate = conjunct(predicatebatch);
+        
+        batchedpredicates.push(predicate);
+    }
+
+    return (batchedpredicates.length > MAX_PREDICATE_COUNT)
+         ? batchconjunct(batchedpredicates)
+         : conjunct(batchedpredicates);
 }
 
 module.exports = and;
