@@ -4,7 +4,7 @@
 
 'use strict';
 
-const curry = require('../curry');
+const curry1 = require('../curry1');
 
 /**
  * Functional variant of {@link external:Promise.prototype.catch Promise.prototype.catch()}.
@@ -20,4 +20,4 @@ function pcatch(rejecthandler, promise) {
     return promise.catch(rejecthandler);
 }
 
-module.exports = curry(1, pcatch);
+module.exports = curry1(pcatch);

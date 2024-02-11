@@ -4,25 +4,27 @@
 
 'use strict';
 
-const always = require('./always');
-const head = array => array[0];
-const id = require('./id');
+const FUNCTIONLESS_COMPOSITION = () => x => x;
 
-const composereducer = (args, composer) => [ composer(...args) ];
-const largecomposer = composers => (...args) => composers.reduceRight(composereducer, args)[0];
+const composereducer = (args, nextfunc) => [ nextfunc(...args) ];
+const largecomposer = funcs => (...args) => funcs.reduceRight(composereducer, args)[0];
 
 const composermap = Object.freeze([
-    always(id),
-    head,
+    FUNCTIONLESS_COMPOSITION,
+    ([f1]) => f1,
     ([f1,f2]) => (...args) => f1(f2(...args)),
     ([f1,f2,f3]) => (...args) => f1(f2(f3(...args))),
     ([f1,f2,f3,f4]) => (...args) => f1(f2(f3(f4(...args)))),
     ([f1,f2,f3,f4,f5]) => (...args) => f1(f2(f3(f4(f5(...args))))),
+    ([f1,f2,f3,f4,f5,f6]) => (...args) => f1(f2(f3(f4(f5(f6(...args)))))),
+    ([f1,f2,f3,f4,f5,f6,f7]) => (...args) => f1(f2(f3(f4(f5(f6(f7(...args))))))),
+    ([f1,f2,f3,f4,f5,f6,f7,f8]) => (...args) => f1(f2(f3(f4(f5(f6(f7(f8(...args)))))))),
+    ([f1,f2,f3,f4,f5,f6,f7,f8,f9]) => (...args) => f1(f2(f3(f4(f5(f6(f7(f8(f9(...args))))))))),
+    ([f1,f2,f3,f4,f5,f6,f7,f8,f9,f10]) => (...args) => f1(f2(f3(f4(f5(f6(f7(f8(f9(f10(...args)))))))))),
 ]);
 
-const initcompose = composers => (composers.length < composermap.length)
-                                 ? composermap[composers.length](composers)
-                                 : largecomposer(composers);
+const getcomposer = functioncount => (composermap[functioncount] ?? largecomposer);
+
 /**
  * Return a function that runs each function in the *targetfuncs* array in reverse order (i.e. from last
  * to first) passing the previous function's return value to the following function each time.
@@ -47,7 +49,10 @@ const initcompose = composers => (composers.length < composermap.length)
  * @returns {function}
  */
 function compose(...targetfuncs) {
-    return initcompose(targetfuncs);
+    
+    const composer = getcomposer(targetfuncs.length);
+
+    return composer(targetfuncs);
 }
 
 module.exports = compose;

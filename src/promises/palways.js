@@ -13,10 +13,7 @@
  * 
  */
 function palways(x) {
-    
-    const _palways = () => Promise.resolve(x);
-
-    return _palways;
+    return () => Promise.resolve(x);
 }
 
 module.exports = palways;

@@ -4,22 +4,25 @@
 
 'use strict';
 
-const ALWAYS_FALSE = ()=>false;
+const PREDICATELESS_DISJUNCTOR = () => () => false;
 
-const always = require('../always');
 const callable = require('../callable');
-const head = require('../arrays/head');
 
 const disjunctormap = Object.freeze([
-    always(ALWAYS_FALSE),
-    head,
-    ([f1, f2]) => (...args) => f1(...args) || f2(...args),
-    ([f1, f2, f3]) => (...args) => f1(...args) || f2(...args) || f3(...args),
-    ([f1, f2, f3, f4]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args),
-    ([f1, f2, f3, f4, f5]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args)
+    PREDICATELESS_DISJUNCTOR,
+    ([f1]) => f1,
+    ([f1,f2]) => (...args) => f1(...args) || f2(...args),
+    ([f1,f2,f3]) => (...args) => f1(...args) || f2(...args) || f3(...args),
+    ([f1,f2,f3,f4]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args),
+    ([f1,f2,f3,f4,f5]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args),
+    ([f1,f2,f3,f4,f5,f6]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args) || f6(...args),
+    ([f1,f2,f3,f4,f5,f6,f7]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args) || f6(...args) || f7(...args),
+    ([f1,f2,f3,f4,f5,f6,f7,f8]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args) || f6(...args) || f7(...args) || f8(...args),
+    ([f1,f2,f3,f4,f5,f6,f7,f8,f9]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args) || f6(...args) || f7(...args) || f8(...args) || f9(...args),
+    ([f1,f2,f3,f4,f5,f6,f7,f8,f9,f10]) => (...args) => f1(...args) || f2(...args) || f3(...args) || f4(...args) || f5(...args) || f6(...args) || f7(...args) || f8(...args) || f9(...args) || f10(...args)
 ]);
 
-const largedisjunctor = predicates => disjunct.bind(null, predicates);
+const getdisjunctor = predicatecount => (disjunctormap[predicatecount] ?? largedisjunctor);
 
 /**
  * Functional variant of Javascript's `||` operator. Returns a function that passes its arguments to each
@@ -57,18 +60,21 @@ function or(...predicates) {
 
     predicates = predicates.map(callable);
 
-    const disjunctor = disjunctormap[predicates.length] ?? largedisjunctor;
+    const disjunctor = getdisjunctor(predicates.length);
 
     return disjunctor(predicates);
 }
 
-function disjunct(predicates, ...args) {
+function largedisjunctor(funcs) {
 
-    let result = false;
+    return function _or(...args) {
 
-    for(let i = 0; result || i < predicates.length; i += 1) result = predicates[i](...args);
+        let result = false;
+        
+        for(let i = 0; !result && i < funcs.length; i += 1) result = funcs[i](...args);
 
-    return result;
+        return result;
+    }
 }
 
 module.exports = or;

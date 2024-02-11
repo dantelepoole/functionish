@@ -28,6 +28,10 @@ describe( 'compose()', function() {
             expect( compose(double, id, double) ).to.be.a('function');
         })
 
+        it.skip('should throw if any argument is not a function', function() {
+            expect( () => compose(double, id, 42) ).to.throw();
+        })
+
         it('should return an identity function if called without arguments', function() {
             
             const result = compose();
@@ -55,7 +59,7 @@ describe( 'compose()', function() {
             })
 
             it('should work with any number of target functions', function() {
-                testcompositionrange(20);
+                testcompositionrange(42);
             })
 
         })

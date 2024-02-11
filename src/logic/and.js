@@ -4,15 +4,13 @@
 
 'use strict';
 
-const MAX_PREDICATE_COUNT = 10;
 const PREDICATELESS_CONJUNCTOR = () => () => true;
 
 const callable = require('../callable');
-const head = require('../arrays/head');
 
 const conjunctormap = Object.freeze([
     PREDICATELESS_CONJUNCTOR,
-    head,
+    ([f1]) => f1,
     ([f1, f2]) => (...args) => f1(...args) && f2(...args),
     ([f1, f2, f3]) => (...args) => f1(...args) && f2(...args) && f3(...args),
     ([f1, f2, f3, f4]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args),
@@ -24,7 +22,7 @@ const conjunctormap = Object.freeze([
     ([f1, f2, f3, f4, f5, f6, f7, f8, f9, f10]) => (...args) => f1(...args) && f2(...args) && f3(...args) && f4(...args) && f5(...args) && f6(...args) && f7(...args) && f8(...args) && f9(...args) && f10(...args)
 ]);
 
-const conjunct = predicates => conjunctormap[predicates.length](predicates);
+const getconjunctor = predicatecount => (conjunctormap[predicatecount] ?? largeconjunctor);
 
 /**
  * Functional variant of Javascript's `&&` operator. Returns a function that passes its arguments to each
@@ -63,27 +61,21 @@ function and(...predicates) {
 
     predicates = predicates.map(callable);
 
-    return (predicates.length > MAX_PREDICATE_COUNT)
-         ? batchconjunct(predicates)
-         : conjunct(predicates);
+    const conjunctor = getconjunctor(predicates.length);
 
+    return conjunctor(predicates);
 }
 
-function batchconjunct(predicates) {
+function largeconjunctor(funcs) {
 
-    const batchedpredicates = [];
+    return function _and(...args) {
 
-    for(let i = 0; i < predicates.length; i += MAX_PREDICATE_COUNT) {
+        let result = true;
 
-        const predicatebatch = predicates.slice(i, i + MAX_PREDICATE_COUNT);
-        const predicate = conjunct(predicatebatch);
-        
-        batchedpredicates.push(predicate);
+        for(let i = 0; result && i < funcs.length; i += 1) result = funcs[i](...args);
+
+        return result;
     }
-
-    return (batchedpredicates.length > MAX_PREDICATE_COUNT)
-         ? batchconjunct(batchedpredicates)
-         : conjunct(batchedpredicates);
 }
 
 module.exports = and;

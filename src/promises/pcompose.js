@@ -4,17 +4,17 @@
 
 'use strict';
 
-const PROMISE_NONE = Symbol('functionish/promises/pcompose#PROMISE_NONE');
+const compose = require('../compose');
 
-const promisereducer = args => (promise, func) => (promise === PROMISE_NONE) ? func(...args) : promise.then(func);
+const promisereducer = (promise, nextfunc) => promise.then(nextfunc);
 
 function pcompose(...funcs) {
 
-    const _pcompose = (funcs.length > 0)
-                    ? (...args) => funcs.reduceRight( promisereducer(args), PROMISE_NONE )
-                    : (...args) => Promise.resolve(args[0]);
+    const firstfunc = funcs.pop() ?? Promise.resolve.bind(Promise)
 
-    return _pcompose;
+    const promisechain = funcs.reduceRight.bind(funcs, promisereducer);
+
+    return compose(promisechain, firstfunc);
 }
 
 module.exports = pcompose;
