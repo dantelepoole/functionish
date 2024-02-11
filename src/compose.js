@@ -4,13 +4,13 @@
 
 'use strict';
 
-const FUNCTIONLESS_COMPOSITION = () => x => x;
+const FUNCTIONLESS_COMPOSER = () => x => x;
 
 const composereducer = (args, nextfunc) => [ nextfunc(...args) ];
 const largecomposer = funcs => (...args) => funcs.reduceRight(composereducer, args)[0];
 
 const composermap = Object.freeze([
-    FUNCTIONLESS_COMPOSITION,
+    FUNCTIONLESS_COMPOSER,
     ([f1]) => f1,
     ([f1,f2]) => (...args) => f1(f2(...args)),
     ([f1,f2,f3]) => (...args) => f1(f2(f3(...args))),
