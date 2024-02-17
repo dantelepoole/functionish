@@ -67,13 +67,15 @@ function or(...predicates) {
 
 function largedisjunctor(funcs) {
 
+    const disjunctorcount = funcs.length;
+
     return function _or(...args) {
 
-        let result = false;
+        let success = false;
         
-        for(let i = 0; !result && i < funcs.length; i += 1) result = funcs[i](...args);
+        for(let i = 0; !success && i < disjunctorcount; i += 1) success = funcs[i](...args);
 
-        return result;
+        return success;
     }
 }
 

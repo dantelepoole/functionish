@@ -4,8 +4,9 @@
 
 'use strict';
 
+const always = require('../always');
 const curry1 = require('../curry1');
-const callable = require('../callable');
+const isfunction = require('../types/isfunction');
 
 /**
  * Return a function that passes its arguments to both *predicate1* and *predicate2* returns `true` and only if
@@ -33,11 +34,10 @@ const callable = require('../callable');
  */
 const xor = curry1(function xor(predicate1, predicate2) {
 
-    [predicate1, predicate2] = [ callable(predicate1), callable(predicate2)];
+    isfunction(predicate1) || (predicate1 = always(predicate1));
+    isfunction(predicate2) || (predicate2 = always(predicate2));
 
-    return (...args) => predicate1(...args) 
-                      ? !predicate2(...args)
-                      : !!predicate2(...args);
-});
+    return (...args) => predicate1(...args) ? !predicate2(...args) : !!predicate2(...args);
+})
 
 module.exports = xor;

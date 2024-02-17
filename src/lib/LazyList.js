@@ -14,6 +14,7 @@ const ERR_BAD_FLATMAP_MAPFUNCTION = `functionish/lib/LazyList.flatMap: The map f
 const ERR_BAD_MAPFUNCTION = `functionish/lib/LazyList.map: The map function has type %s. Expected a function.`;
 const ERR_BAD_SORTFUNCTION = `functionish/lib/LazyList.sort: The compare function has type %s. Expected a function.`;
 const ERR_BAD_SOURCE = 'functionish/lib/LazyList.from: The argument is neither interable nor a function.';
+const ERR_BAD_GENERATE = 'functionish/lib/LazyList.generate: The argument is not a function.';
 const ERR_INSTANTIATIONERROR = 'functionish/lib/LazyList: The LazyList class cannot be instantiated directly.';
 
 const format = require('util').format;
@@ -38,6 +39,7 @@ const raisebaddepth = () => { throw new TypeError(ERR_BAD_DEPTH) }
 const raisebadfilterpredicate = predicate => { throw new TypeError( format(ERR_BAD_FILTERPREDICATE, typeof predicate) ) }
 const raisebadflatMapdepth = () => { throw new TypeError(ERR_BAD_FLATMAP_DEPTH) }
 const raisebadflatMapmapfunction = mapfunc => { throw new TypeError( format(ERR_BAD_FLATMAP_MAPFUNCTION, typeof mapfunc) ) }
+const raisebadgenerate = func => { throw new TypeError( format(ERR_BAD_GENERATE, typeof func) ) }
 const raisebadmapfunction = mapfunc => { throw new TypeError( format(ERR_BAD_MAPFUNCTION, typeof mapfunc) ) }
 const raisebadsortfunction = comparefunc => { throw new TypeError( format(ERR_BAD_SORTFUNCTION, typeof comparefunc) ) }
 const raisebadsourceerror = source => { throw new TypeError( format(ERR_BAD_SOURCE, typeof source)) }
@@ -45,10 +47,11 @@ const raiseconstructorlockerror = () => { throw new Error(ERR_INSTANTIATIONERROR
 
 class LazyList {
 
-    static from = (source, ...args) => isfunction(source) && newlazylist(source, ...args)
-                                    || islazylist(source) && source
-                                    || isiterable(source) && newlazylist(getiterator, source)
-                                    || raisebadsourceerror(source);
+    static from = source => islazylist(source) && source
+                         || isiterable(source) && newlazylist(getiterator, source)
+                         || raisebadsourceerror(source);
+
+    static generate = (func, ...args) => isfunction(func) && newlazylist(func, ...args) || raisebadgenerate(func);
 
     static is = islazylist;
 
@@ -123,8 +126,9 @@ function* listconcat(baselist, items) {
 
     yield* baselist;
 
-    for(const item of items) isiterablenotstring(item) ? yield* item
-                                                       : yield item;
+    if(items.length === 0) return;
+
+    for(const item of items) isiterablenotstring(item) ? yield* item : yield item;
 }
 
 function* listfilter(predicate, list) {
@@ -133,8 +137,8 @@ function* listfilter(predicate, list) {
 
 function* listflat(depth, list) {
 
-    if(depth) for(const item of list) isflattenable(item) ? yield* listflat(depth-1, item) : yield item;
-    else yield* list;
+    if(depth === 0) yield* list; 
+    else for(const item of list) isflattenable(item) ? yield* listflat(depth-1, item) : yield item;
 }
 
 function* listflatMap(depth, mapfunc, list) {
@@ -149,8 +153,7 @@ function* listflatMap(depth, mapfunc, list) {
             
             const mappeditem = mapfunc(item);
 
-            isflattenable(mappeditem) ? yield* listflatMap(depth-1, mappeditem)
-                                      : yield mappeditem;
+            isflattenable(mappeditem) ? yield* listflat(depth-1, mappeditem) : yield mappeditem;
         }
     }
 }

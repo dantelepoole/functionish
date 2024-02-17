@@ -4,6 +4,9 @@
 
 'use strict';
 
+const reject = Promise.resolve.bind(Promise);
+const resolve = Promise.resolve.bind(Promise);
+
 /**
  * Pass *args* to *func* and return the result as a Promise.
  * 
@@ -16,9 +19,9 @@
 function promise(func, ...args) {
 
     try {
-        return Promise.resolve( func(...args) );
+        return resolve( func(...args) );
     } catch(error) {
-        return Promise.reject(error);
+        return reject(error);
     }
 }
 

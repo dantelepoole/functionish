@@ -15,10 +15,7 @@ const promise = require('./promise');
  * @returns {function}
  */
 function promisify(func) {
-    
-    const _promisify = (...args) => promise(func, ...args);
-
-    return _promisify;
+    return promise.bind(null, func);
 }
 
 module.exports = promisify;

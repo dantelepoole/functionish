@@ -5,16 +5,21 @@
 'use strict';
 
 const compose = require('../compose');
+const hasitems = require('../misc/hasitems');
+const pid = require('./pid');
+const pop = require('../arrays/pop');
+const promisify = require('./promisify');
 
-const promisereducer = (promise, nextfunc) => promise.then(nextfunc);
+const getfirstfunc = compose(promisify, pop);
+const promisecomposer = (promisefunc, thenfunc) => (...args) => promisefunc(...args).then(thenfunc);
 
 function pcompose(...funcs) {
 
-    const firstfunc = funcs.pop() ?? Promise.resolve.bind(Promise)
+    return hasitems(funcs)
+         ? funcs.reduceRight(promisecomposer, getfirstfunc(funcs))
+         : pid;
 
-    const promisechain = funcs.reduceRight.bind(funcs, promisereducer);
-
-    return compose(promisechain, firstfunc);
 }
 
 module.exports = pcompose;
+

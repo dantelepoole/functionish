@@ -68,13 +68,15 @@ function and(...predicates) {
 
 function largeconjunctor(funcs) {
 
+    const conjunctorcount = funcs.length;
+
     return function _and(...args) {
 
-        let result = true;
+        let success = true;
 
-        for(let i = 0; result && i < funcs.length; i += 1) result = funcs[i](...args);
+        for(let i = 0; success && i < conjunctorcount; i += 1) success = funcs[i](...args);
 
-        return result;
+        return success;
     }
 }
 
