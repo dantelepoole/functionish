@@ -5,7 +5,6 @@
 'use strict';
 
 const FUNCTIONLESS_COMPOSER = () => x => x;
-const MAX_COMPOSER_COUNT = 10;
 
 const composermap = Object.freeze([
     FUNCTIONLESS_COMPOSER,
@@ -21,14 +20,7 @@ const composermap = Object.freeze([
     ([f1,f2,f3,f4,f5,f6,f7,f8,f9,f10]) => (...args) => f1(f2(f3(f4(f5(f6(f7(f8(f9(f10(...args)))))))))),
 ]);
 
-const composemax = funcs => composermap[MAX_COMPOSER_COUNT](funcs.slice(0, MAX_COMPOSER_COUNT));
-const getsurplusfuncs = funcs => funcs.slice(MAX_COMPOSER_COUNT);
-
-const largecomposer = funcs => compose(
-    composemax(funcs),
-    ...getsurplusfuncs(funcs)
-);
-
+const largecomposer = funcs => largecompose.bind(null, funcs.pop(), funcs);
 const getcomposer = functioncount => (composermap[functioncount] ?? largecomposer);
 
 /**
@@ -38,7 +30,8 @@ const getcomposer = functioncount => (composermap[functioncount] ?? largecompose
  * If the *targetfuncs* array is empty the returned function simply returns its first argument or `undefined`
  * if no arguments are passed.
  * 
- * `compose()` does not check its argument types.
+ * `compose()` does not check its argument types, so if any *targetfunc* is not a function, it will only
+ * throw when the returned function is called. 
  * 
  * @example <caption>Example usage of `compose()`</caption>
  * 
@@ -62,6 +55,15 @@ function compose(...targetfuncs) {
     const composer = getcomposer(targetfuncs.length);
 
     return composer(targetfuncs);
+}
+
+function largecompose(firstfunc, funcs, ...args) {
+
+    let result = firstfunc(...args);
+
+    for(let i = funcs.length-1; i >= 0; i -= 1) result = funcs[i](result);
+
+    return result;
 }
 
 module.exports = compose;
