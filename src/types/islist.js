@@ -4,7 +4,7 @@
 
 'use strict';
 
-const List = require('../../lib/List');
+const LazyList = require('../../lib/LazyList');
 
 /**
  * Return `true` if the argument is a List instance, in which case it will be lazily iterable. Otherwise, return
@@ -27,7 +27,7 @@ const List = require('../../lib/List');
  * @returns {boolean}
  */
 function islist(list) {
-    return (list instanceof List);
+    return (list instanceof LazyList);
 }
 
 module.exports = islist;
