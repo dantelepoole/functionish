@@ -5,9 +5,7 @@
 'use strict';
 
 const FUNCTIONLESS_COMPOSER = () => x => x;
-
-const composereducer = (args, nextfunc) => [ nextfunc(...args) ];
-const largecomposer = funcs => (...args) => funcs.reduceRight(composereducer, args)[0];
+const MAX_COMPOSER_COUNT = 10;
 
 const composermap = Object.freeze([
     FUNCTIONLESS_COMPOSER,
@@ -23,13 +21,24 @@ const composermap = Object.freeze([
     ([f1,f2,f3,f4,f5,f6,f7,f8,f9,f10]) => (...args) => f1(f2(f3(f4(f5(f6(f7(f8(f9(f10(...args)))))))))),
 ]);
 
+const composemax = funcs => composermap[MAX_COMPOSER_COUNT](funcs.slice(0, MAX_COMPOSER_COUNT));
+const getsurplusfuncs = funcs => funcs.slice(MAX_COMPOSER_COUNT);
+
+const largecomposer = funcs => compose(
+    composemax(funcs),
+    ...getsurplusfuncs(funcs)
+);
+
 const getcomposer = functioncount => (composermap[functioncount] ?? largecomposer);
 
 /**
  * Return a function that runs each function in the *targetfuncs* array in reverse order (i.e. from last
  * to first) passing the previous function's return value to the following function each time.
  * 
- * If the *targetfuncs* array is empty an error is thrown.
+ * If the *targetfuncs* array is empty the returned function simply returns its first argument or `undefined`
+ * if no arguments are passed.
+ * 
+ * `compose()` does not check its argument types.
  * 
  * @example <caption>Example usage of `compose()`</caption>
  * 
